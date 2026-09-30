@@ -1,13 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowUpRight,
-  CircleHelp,
-  MapPin,
-  Search,
-  X,
-} from 'lucide-react';
+import { ArrowDown, ArrowLeft, ArrowUpRight, CircleHelp, MapPin, Search, X } from 'lucide-react';
 import type { JobsQuery } from './api/client.js';
 import { useLocationQuery } from './hooks/useLocationQuery.js';
 import { useJobCatalog } from './hooks/useJobCatalog.js';
@@ -151,9 +143,7 @@ export function App() {
         {mode === 'demo' && (
           <div className="demo-banner">
             <CircleHelp size={15} />
-            <span>
-              Preview mode. These are sample listings, not active vacancies.
-            </span>
+            <span>Preview mode. These are sample listings, not active vacancies.</span>
           </div>
         )}
         {!selectedId && (
@@ -221,10 +211,10 @@ export function App() {
                     logoUrl={logoOf(selected.companySlug)}
                   />
                   <div>
-                      <div className="company-label">
-                        {nameOf(selected.companySlug)}
-                        {selected.status === 'closed' && <span className="closed-label">Closed</span>}
-                      </div>
+                    <div className="company-label">
+                      {nameOf(selected.companySlug)}
+                      {selected.status === 'closed' && <span className="closed-label">Closed</span>}
+                    </div>
                     <h1>{selected.title}</h1>
                     <div className="job-meta">
                       <span>
@@ -374,74 +364,74 @@ export function App() {
           <section className="browse-section">
             <div className="search-controls">
               <div className="search-bar">
-              <label className="search-input">
-                <Search size={20} />
-                <input
-                  aria-label="Search job titles, descriptions, or locations"
-                  placeholder="Search by role, keyword or location"
-                  value={queryInput}
-                  onChange={(event) => {
-                    setQueryInput(event.target.value);
-                    update({ q: event.target.value || null }, true);
-                  }}
-                />
-              </label>
+                <label className="search-input">
+                  <Search size={20} />
+                  <input
+                    aria-label="Search job titles, descriptions, or locations"
+                    placeholder="Search by role, keyword or location"
+                    value={queryInput}
+                    onChange={(event) => {
+                      setQueryInput(event.target.value);
+                      update({ q: event.target.value || null }, true);
+                    }}
+                  />
+                </label>
               </div>
               <div className="filter-row">
-              <label className="filter-field">
-                <span>Company</span>
-              <select
-                aria-label="Filter by company"
-                value={params.get('company') ?? ''}
-                onChange={(event) => update({ company: event.target.value || null })}
-              >
-                <option value="">All companies</option>
-                {companies.map((company) => (
-                  <option
-                    key={company.slug}
-                    value={company.slug}
+                <label className="filter-field">
+                  <span>Company</span>
+                  <select
+                    aria-label="Filter by company"
+                    value={params.get('company') ?? ''}
+                    onChange={(event) => update({ company: event.target.value || null })}
                   >
-                    {company.name}
-                  </option>
-                ))}
-              </select>
-              </label>
-              <label className="filter-field">
-                <span>Function</span>
-              <select
-                aria-label="Filter by function"
-                value={params.get('category') ?? ''}
-                onChange={(event) => update({ category: event.target.value || null })}
-              >
-                <option value="">All functions</option>
-                {categories.map((category) => (
-                  <option
-                    key={category.slug}
-                    value={category.slug}
+                    <option value="">All companies</option>
+                    {companies.map((company) => (
+                      <option
+                        key={company.slug}
+                        value={company.slug}
+                      >
+                        {company.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="filter-field">
+                  <span>Function</span>
+                  <select
+                    aria-label="Filter by function"
+                    value={params.get('category') ?? ''}
+                    onChange={(event) => update({ category: event.target.value || null })}
                   >
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              </label>
-              <label className="filter-field">
-                <span>Workplace</span>
-              <select
-                aria-label="Filter by workplace"
-                value={params.get('workplace') ?? ''}
-                onChange={(event) => update({ workplace: event.target.value || null })}
-              >
-                <option value="">Any workplace</option>
-                {Object.entries(workplaceNames).map(([value, label]) => (
-                  <option
-                    key={value}
-                    value={value}
+                    <option value="">All functions</option>
+                    {categories.map((category) => (
+                      <option
+                        key={category.slug}
+                        value={category.slug}
+                      >
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="filter-field">
+                  <span>Workplace</span>
+                  <select
+                    aria-label="Filter by workplace"
+                    value={params.get('workplace') ?? ''}
+                    onChange={(event) => update({ workplace: event.target.value || null })}
                   >
-                    {label}
-                  </option>
-                ))}
-              </select>
-              </label>
+                    <option value="">Any workplace</option>
+                    {Object.entries(workplaceNames).map(([value, label]) => (
+                      <option
+                        key={value}
+                        value={value}
+                      >
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               </div>
             </div>
             <div className="results-heading">
@@ -463,9 +453,7 @@ export function App() {
                   Clear filters <X size={13} />
                 </button>
               ) : (
-                <span className="sort-note">
-                  Recently checked
-                </span>
+                <span className="sort-note">Recently checked</span>
               )}
             </div>
             <div
@@ -555,7 +543,9 @@ export function App() {
         )}
       </main>
       <footer>
-        <span className="footer-brand">jobbely<span>.</span></span>
+        <span className="footer-brand">
+          jobbely<span>.</span>
+        </span>
         <span>
           {mode === 'demo'
             ? 'Sample listings · preview mode'
