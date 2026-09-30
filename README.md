@@ -95,12 +95,12 @@ The frontend development server proxies `/api` to port 3001. No frontend `.env` 
 
 Host the built frontend as static files, run the backend as a persistent Node process, and provide PostgreSQL. Use a reverse proxy to serve the frontend and route `/api/` to the backend under the same HTTPS origin.
 
-| Component | Build/output | Runtime |
-| --- | --- | --- |
-| Frontend | `frontend/dist/` | Static hosting or reverse proxy |
-| API | `backend/dist/` plus `backend/config/` and dependencies | `pnpm --filter @jobbely/backend run start` |
-| Database | Versioned Prisma migrations | PostgreSQL with persistent storage |
-| Ingestion worker, when enabled | Same backend build/config | From `backend/`: `node dist/worker/main.js` |
+| Component                      | Build/output                                            | Runtime                                     |
+| ------------------------------ | ------------------------------------------------------- | ------------------------------------------- |
+| Frontend                       | `frontend/dist/`                                        | Static hosting or reverse proxy             |
+| API                            | `backend/dist/` plus `backend/config/` and dependencies | `pnpm --filter @jobbely/backend run start`  |
+| Database                       | Versioned Prisma migrations                             | PostgreSQL with persistent storage          |
+| Ingestion worker, when enabled | Same backend build/config                               | From `backend/`: `node dist/worker/main.js` |
 
 For a release, install and build from the repository root:
 
@@ -147,14 +147,36 @@ pnpm check
 
 This checks dependency boundaries, lint, strict TypeScript, behavior/API tests, contract generation, and both builds. PostgreSQL tests run only when `TEST_DATABASE_URL` names a dedicated `jobbely_test_*` database; otherwise they are skipped. See [QUALITY.md](docs/QUALITY.md).
 
-| Symptom | Check |
-| --- | --- |
-| Preview examples instead of real jobs | Set `DATA_MODE=postgres`, then restart the backend; terminal environment overrides `.env` |
-| Database connection fails | Check the database process, URL, credentials and port; inspect `/health/ready` on port 3001 |
-| Real catalog is empty | Apply migrations and run a company sync against the same database as the API |
-| API port already in use | Stop the other project server or change `PORT`; update the Vite proxy if changing port 3001 |
-| Browser cannot reach API | Check the reverse proxy or `VITE_API_BASE_URL`, plus the exact `FRONTEND_ORIGIN` for CORS |
-| Source says awaiting audit | A successful feed import does not verify complete employer scope |
+### Linting and formatting
+
+ESLint (`typescript-eslint`) and Prettier cover both `/backend` and `/frontend`. Run them together from the repository root:
+
+```powershell
+pnpm lint             # ESLint, zero warnings allowed
+pnpm lint:fix         # ESLint with autofix
+pnpm format           # Prettier, rewrites files in place
+pnpm format:check     # Prettier in check mode, no writes (use in CI)
+```
+
+Or scope either check to a single package:
+
+```powershell
+pnpm --filter @jobbely/backend run lint
+pnpm --filter @jobbely/backend run format
+pnpm --filter @jobbely/frontend run lint
+pnpm --filter @jobbely/frontend run format
+```
+
+`pnpm check` runs `lint` but not `format`; run `pnpm format` (or `format:check` in CI) separately before committing. See [QUALITY.md](docs/QUALITY.md#linting-and-formatting) for configuration details.
+
+| Symptom                               | Check                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Preview examples instead of real jobs | Set `DATA_MODE=postgres`, then restart the backend; terminal environment overrides `.env`   |
+| Database connection fails             | Check the database process, URL, credentials and port; inspect `/health/ready` on port 3001 |
+| Real catalog is empty                 | Apply migrations and run a company sync against the same database as the API                |
+| API port already in use               | Stop the other project server or change `PORT`; update the Vite proxy if changing port 3001 |
+| Browser cannot reach API              | Check the reverse proxy or `VITE_API_BASE_URL`, plus the exact `FRONTEND_ORIGIN` for CORS   |
+| Source says awaiting audit            | A successful feed import does not verify complete employer scope                            |
 
 ## Architecture references
 
@@ -175,4 +197,3 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.
 
 Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts, in-app job applications, paid data providers and AI classification are outside the initial scope.
-

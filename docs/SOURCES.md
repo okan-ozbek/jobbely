@@ -26,14 +26,14 @@ The audit CLI overwrites the latest ignored report for each source ID. Promote d
 
 ## Coverage signals
 
-| Status | Current rule |
-| --- | --- |
-| `not_onboarded` | No configured source |
-| `partial` | Configured, but audit/success requirements not all met |
-| `blocked` | Any source's latest run failed |
-| `stale` | A successful complete observation is older than 36 hours |
-| `healthy` | Every source verified and its latest run succeeded, complete and not quarantined |
-| `demo` | Synthetic-mode override for configured companies |
+| Status          | Current rule                                                                     |
+| --------------- | -------------------------------------------------------------------------------- |
+| `not_onboarded` | No configured source                                                             |
+| `partial`       | Configured, but audit/success requirements not all met                           |
+| `blocked`       | Any source's latest run failed                                                   |
+| `stale`         | A successful complete observation is older than 36 hours                         |
+| `healthy`       | Every source verified and its latest run succeeded, complete and not quarantined |
+| `demo`          | Synthetic-mode override for configured companies                                 |
 
 Company `lastCheckedAt` is the oldest successful complete check across its configured sources, and is null when any source lacks one. Latest failure takes precedence over stale/healthy signals. The directory communicates audit state rather than claiming all 60 employers are complete.
 

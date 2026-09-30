@@ -10,16 +10,16 @@ The API delegates to `JobCatalog`; it contains no crawling or SQL queries. Its p
 
 ## Routes
 
-| GET route | Behavior |
-| --- | --- |
-| `/api/v1/jobs` | Active jobs, filters, total, cursor, dataset version and runtime mode |
-| `/api/v1/jobs/facets` | Company/category/workplace counts for matching active jobs |
-| `/api/v1/jobs/:id` | Stored detail, including retained closed records; 404 if absent |
-| `/api/v1/companies` | Company directory with source coverage |
-| `/api/v1/companies/:slug` | One company's coverage; 404 if absent |
-| `/api/v1/categories` | Canonical taxonomy |
-| `/health/live` | Process liveness |
-| `/health/ready` | Repository availability; 503 on failure |
+| GET route                 | Behavior                                                              |
+| ------------------------- | --------------------------------------------------------------------- |
+| `/api/v1/jobs`            | Active jobs, filters, total, cursor, dataset version and runtime mode |
+| `/api/v1/jobs/facets`     | Company/category/workplace counts for matching active jobs            |
+| `/api/v1/jobs/:id`        | Stored detail, including retained closed records; 404 if absent       |
+| `/api/v1/companies`       | Company directory with source coverage                                |
+| `/api/v1/companies/:slug` | One company's coverage; 404 if absent                                 |
+| `/api/v1/categories`      | Canonical taxonomy                                                    |
+| `/health/live`            | Process liveness                                                      |
+| `/health/ready`           | Repository availability; 503 on failure                               |
 
 Listing filters are `q`, `company`, `category`, `workplace`, `limit` and `cursor`. Comma-separated company/category/workplace values are supported by the catalog. Search is case-insensitive substring matching across title, description text, departments and locations. Results sort by last-seen time descending with ID as a tie-breaker; limit defaults to 20 and is capped at 100.
 

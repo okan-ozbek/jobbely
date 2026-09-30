@@ -2,6 +2,8 @@
 
 This document turns the MVP plan into dependency rules for the first implementation slice. The application is a modular monolith: one backend package with separate API and worker entry points, plus an independently built frontend. New boards extend the ingestion boundary without changing product logic.
 
+**Status:** Implemented for the first slice, recorded 30 September 2026. See [the reference index](README.md) for individual decisions and extension guidance, and [the hosting guide](DEPLOYMENT.md) for runtime configuration.
+
 ## Layers and permitted dependencies
 
 ```mermaid
@@ -23,6 +25,7 @@ flowchart TD
 - `api/` validates public inputs and shapes responses. It does not crawl or contain database queries.
 - `bootstrap.ts` is the composition root. Constructor/function arguments wire dependencies explicitly; no service locator or dependency-injection container.
 - The frontend imports generated public-contract types, never backend internals. OpenAPI generation detects drift during builds.
+- Application code currently uses `node:crypto` for hashes/cursors; this is the one built-in-module exception enforced by the dependency guard. Domain and ports retain their restricted dependency direction.
 - Frontend hooks separate URL navigation, abortable catalog loading/pagination, and job-detail loading from rendering. UI components consume public API records rather than provider payloads or database entities.
 
 ## Patterns with concrete responsibilities

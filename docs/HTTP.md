@@ -8,17 +8,17 @@ Provider adapters use the `JsonTransport` port. `PublicJsonTransport` owns reque
 
 ## Implemented policy
 
-| Concern | Behavior |
-| --- | --- |
-| Destinations | HTTPS only; exact allowlist of Greenhouse, Ashby, global Lever and EU Lever API hosts |
-| URL constraints | No credentials or explicit port; redirects fail rather than being followed |
+| Concern            | Behavior                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| Destinations       | HTTPS only; exact allowlist of Greenhouse, Ashby, global Lever and EU Lever API hosts   |
+| URL constraints    | No credentials or explicit port; redirects fail rather than being followed              |
 | Concurrency/pacing | One in-flight request per host per transport instance; starts at least one second apart |
-| Timeout | 30 seconds per attempt |
-| Retries | At most four attempts for transient network/type/timeout errors and HTTP 429/5xx |
-| Backoff | Exponential delay; rate-limit/server retries add small jitter |
-| Retry-After | Seconds or HTTP date honored; delays over 30 seconds fail this run for later retry |
-| Body | JSON content type required; streamed size bounded to 32 MiB |
-| Evidence | Requested URL, fetch timestamp and parsed JSON returned together |
+| Timeout            | 30 seconds per attempt                                                                  |
+| Retries            | At most four attempts for transient network/type/timeout errors and HTTP 429/5xx        |
+| Backoff            | Exponential delay; rate-limit/server retries add small jitter                           |
+| Retry-After        | Seconds or HTTP date honored; delays over 30 seconds fail this run for later retry      |
+| Body               | JSON content type required; streamed size bounded to 32 MiB                             |
+| Evidence           | Requested URL, fetch timestamp and parsed JSON returned together                        |
 
 Non-retryable HTTP errors and JSON/schema failures surface to ingestion. A challenge HTML page is an error, not job data. The application does not solve CAPTCHAs or fall back to another host automatically.
 

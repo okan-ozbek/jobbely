@@ -10,14 +10,14 @@ The repository is a port for application behavior, not a generic CRUD framework.
 
 ## Records and evidence
 
-| Record | Purpose |
-| --- | --- |
-| `Posting` | Current normalized job plus query metadata; unique `(sourceId, sourcePostingId)` |
-| `PostingVersion` | Full normalized content when a posting is new or its content hash changes |
-| `Run` | Running/succeeded/failed observation and traversal/removal evidence |
-| `Snapshot` | Successful run's raw provider JSON, source URL and fetch time |
-| `SourceLease` | Current owner and 30-minute expiry for one source |
-| `DatasetVersion` | Shared publication version used by pagination cursors |
+| Record           | Purpose                                                                          |
+| ---------------- | -------------------------------------------------------------------------------- |
+| `Posting`        | Current normalized job plus query metadata; unique `(sourceId, sourcePostingId)` |
+| `PostingVersion` | Full normalized content when a posting is new or its content hash changes        |
+| `Run`            | Running/succeeded/failed observation and traversal/removal evidence              |
+| `Snapshot`       | Successful run's raw provider JSON, source URL and fetch time                    |
+| `SourceLease`    | Current owner and 30-minute expiry for one source                                |
+| `DatasetVersion` | Shared publication version used by pagination cursors                            |
 
 JSON payloads preserve rich canonical records/evidence; selected typed columns enforce identity and support future indexing. Content history does not currently record every unchanged refresh or every lifecycle-only transition. Companies/sources are configuration files, not database tables. pg-boss owns its queue schema separately.
 

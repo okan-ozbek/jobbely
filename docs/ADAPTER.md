@@ -10,11 +10,11 @@ The Adapter pattern isolates upstream differences. Bootstrap selects the provide
 
 ## Current provider behavior
 
-| Provider | Enumeration and translation |
-| --- | --- |
-| Greenhouse | Requests full content, compares item count with `meta.total`, excludes prospect entries with null internal job IDs and generic talent-pool titles |
-| Ashby | Requires API version `1`, filters `isListed`, retains department/team and secondary locations; nullable workplace fields remain unknown |
-| Lever | Traverses pages of 100 up to 100 pages, rejects repeated IDs, finishes only on a short page; assembles description, list sections, closing text and salary description |
+| Provider   | Enumeration and translation                                                                                                                                            |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Greenhouse | Requests full content, compares item count with `meta.total`, excludes prospect entries with null internal job IDs and generic talent-pool titles                      |
+| Ashby      | Requires API version `1`, filters `isListed`, retains department/team and secondary locations; nullable workplace fields remain unknown                                |
+| Lever      | Traverses pages of 100 up to 100 pages, rejects repeated IDs, finishes only on a short page; assembles description, list sections, closing text and salary description |
 
 An adapter validates every received item with Zod before publishing a result. Missing required fields fail the run. Optional information can remain unknown; a missing remote flag does not imply on-site work. Employment labels are currently source strings, with `unknown` for absence. Ashby falls back to its job URL when the feed omits an ID.
 
