@@ -25,23 +25,25 @@ Jobbely collects public employer job listings and categorizes them without AI. T
 
 ## Documentation by concern
 
-| Concern                                          | References                                                         |
-| ------------------------------------------------ | ------------------------------------------------------------------ |
-| Layers, patterns and dependency direction        | [ARCHITECTURE.md](docs/ARCHITECTURE.md)                            |
-| Job-board adapters and network access            | [ADAPTER.md](docs/ADAPTER.md), [HTTP.md](docs/HTTP.md)             |
-| Enterprise integrations and Wave B limits        | [WAVE_B.md](docs/WAVE_B.md)                                        |
-| Native integrations and Wave C priority limits   | [WAVE_C.md](docs/WAVE_C.md)                                        |
-| Deferred employers and Wave D scope              | [WAVE_D.md](docs/WAVE_D.md)                                        |
-| Evidence-backed source activation                | [AUDITING.md](docs/AUDITING.md)                                    |
-| Ingestion, workers, scheduling and source audits | [INGESTION.md](docs/INGESTION.md), [SOURCES.md](docs/SOURCES.md)   |
-| Persistence, transactions and posting lifecycle  | [STORAGE.md](docs/STORAGE.md), [LIFECYCLE.md](docs/LIFECYCLE.md)   |
-| Deterministic categorization                     | [CLASSIFICATION.md](docs/CLASSIFICATION.md)                        |
-| Public API, validation and security              | [API.md](docs/API.md), [SECURITY.md](docs/SECURITY.md)             |
-| React state, navigation and request handling     | [FRONTEND.md](docs/FRONTEND.md)                                    |
-| Visual design, typography and local assets       | [DESIGN.md](docs/DESIGN.md), [LOGOS.md](docs/LOGOS.md)             |
-| Style and verification                           | [FORMATTING.md](docs/FORMATTING.md), [QUALITY.md](docs/QUALITY.md) |
-| Hosting and operations                           | [DEPLOYMENT.md](docs/DEPLOYMENT.md)                                |
-| Dated live-source evidence                       | [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md)                          |
+| Concern                                          | References                                                                                     |
+| ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| Layers, patterns and dependency direction        | [ARCHITECTURE.md](docs/ARCHITECTURE.md)                                                        |
+| Job-board adapters and network access            | [ADAPTER.md](docs/ADAPTER.md), [HTTP.md](docs/HTTP.md)                                         |
+| Enterprise integrations and Wave B limits        | [WAVE_B.md](docs/WAVE_B.md)                                                                    |
+| Native integrations and Wave C priority limits   | [WAVE_C.md](docs/WAVE_C.md)                                                                    |
+| Deferred employers and Wave D scope              | [WAVE_D.md](docs/WAVE_D.md)                                                                    |
+| Proposed resume analysis and matching            | [RESUME_PLAN.md](RESUME_PLAN.md), [RESUME.md](docs/RESUME.md), [MATCHING.md](docs/MATCHING.md) |
+| Proposed private uploads and parser isolation    | [RESUME_PRIVACY.md](docs/RESUME_PRIVACY.md)                                                    |
+| Evidence-backed source activation                | [AUDITING.md](docs/AUDITING.md)                                                                |
+| Ingestion, workers, scheduling and source audits | [INGESTION.md](docs/INGESTION.md), [SOURCES.md](docs/SOURCES.md)                               |
+| Persistence, transactions and posting lifecycle  | [STORAGE.md](docs/STORAGE.md), [LIFECYCLE.md](docs/LIFECYCLE.md)                               |
+| Deterministic categorization                     | [CLASSIFICATION.md](docs/CLASSIFICATION.md)                                                    |
+| Public API, validation and security              | [API.md](docs/API.md), [SECURITY.md](docs/SECURITY.md)                                         |
+| React state, navigation and request handling     | [FRONTEND.md](docs/FRONTEND.md)                                                                |
+| Visual design, typography and local assets       | [DESIGN.md](docs/DESIGN.md), [LOGOS.md](docs/LOGOS.md)                                         |
+| Style and verification                           | [FORMATTING.md](docs/FORMATTING.md), [QUALITY.md](docs/QUALITY.md)                             |
+| Hosting and operations                           | [DEPLOYMENT.md](docs/DEPLOYMENT.md)                                                            |
+| Dated live-source evidence                       | [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md)                                                      |
 
 When changing an architecture decision, update its document and the reference index. For a new decision, add an uppercase concern filename in `/docs` with status/date, rationale, invariants, implementation links and verification. Distinguish proposed work from implemented behavior; dated evidence is not a permanent guarantee.
 

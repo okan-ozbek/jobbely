@@ -11,6 +11,9 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [WAVE_B.md](WAVE_B.md)                 | Enterprise ATS integration, capped search traversal, employer filters and restricted-source limits  |
 | [WAVE_C.md](WAVE_C.md)                 | Priority native boards, structured HTML, Amazon partitions and access gates                         |
 | [WAVE_D.md](WAVE_D.md)                 | Seven deferred employers, planning membership and future onboarding boundaries                      |
+| [RESUME.md](RESUME.md)                 | Proposed document adapters, evidence, editable profiles and overlap-safe experience                 |
+| [MATCHING.md](MATCHING.md)             | Proposed requirement projection, explained scoring, freshness and optional employer context         |
+| [RESUME_PRIVACY.md](RESUME_PRIVACY.md) | Proposed transient candidate data, upload validation, parser isolation and release gates            |
 | [INGESTION.md](INGESTION.md)           | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling  |
 | [STORAGE.md](STORAGE.md)               | PostgreSQL/Prisma, repository and unit of work, leases, JSON evidence and version history           |
 | [CLASSIFICATION.md](CLASSIFICATION.md) | Taxonomy, ordered strategies, company overrides, ambiguity and explainable decisions                |
