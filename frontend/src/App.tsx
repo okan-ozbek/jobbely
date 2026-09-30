@@ -368,6 +368,7 @@ export function App() {
                 ))}
             </div>
             {!loading &&
+              !error &&
               companies.filter((company) =>
                 company.name.toLowerCase().includes(companySearch.toLowerCase()),
               ).length === 0 && <div className="empty-state">No companies match this search.</div>}
