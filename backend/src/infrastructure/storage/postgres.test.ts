@@ -116,6 +116,46 @@ integration('PostgreSQL transactions (isolated test database)', () => {
     await repository.failRun(run!.id, later, 'test cleanup');
   });
 
+  it('persists POST offsets and facets together with the exact response evidence', async () => {
+    const item = source();
+    const at = new Date().toISOString();
+    const run = await repository.startRun(item, at);
+
+    const request = {
+      method: 'POST' as const,
+      body: { offset: 20, appliedFacets: { jobFamilyGroup: ['engineering'] } },
+    };
+
+    const body = {
+      total: 0,
+      jobPostings: [{ title: 'Engineer', externalPath: '/job/London/Engineer_1' }],
+    };
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: run!.id,
+      observedAt: at,
+      postings: [posting('1')],
+      rawResponses: [{ url: 'https://example.com/jobs', fetchedAt: at, request, body }],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const client = new pg.Client({ connectionString });
+
+    await client.connect();
+
+    try {
+      const result = await client.query('SELECT payload FROM "Snapshot" WHERE "runId" = $1', [
+        run!.id,
+      ]);
+
+      expect(result.rows[0]?.payload).toEqual({ format: 'http-exchange-v1', request, body });
+    } finally {
+      await client.end();
+    }
+  });
+
   it('rolls back the whole snapshot on duplicate IDs, including version publication', async () => {
     const item = source();
     const at = new Date().toISOString();

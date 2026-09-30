@@ -1,6 +1,6 @@
 # Decision: Wave B enterprise integrations
 
-**Status:** Adapters and candidate configuration implemented; employer audits and some full-detail live imports remain pending. Recorded 30 September 2026.
+**Status:** All 31 companies configured; 29 feeds fully imported, NVIDIA and LinkedIn blocked. Employer audits remain pending. Recorded 30 September 2026 (UTC).
 
 ## Decision and rationale
 
@@ -45,11 +45,11 @@ pnpm audit:wave-b
 pnpm --filter @jobbely/backend run sync --company nvidia
 ```
 
-Sync requires PostgreSQL mode and continues after a failed source. The whole Wave B command currently exits unsuccessfully for LinkedIn, while successful sources still publish. LinkedIn's [published robots policy](https://www.linkedin.com/robots.txt) requires express permission for automated access. The old empty SmartRecruiters feed was not substituted as evidence of current vacancies.
+Sync requires PostgreSQL mode and continues after a failed source. The whole Wave B command currently exits unsuccessfully for NVIDIA and LinkedIn, while successful sources still publish. LinkedIn's [published robots policy](https://www.linkedin.com/robots.txt) requires express permission for automated access. The old empty SmartRecruiters feed was not substituted as evidence of current vacancies.
 
 All new sources remain `candidate` and unscheduled. Feed retrieval does not establish worldwide employer scope, access/display approval or safe closure. The existing [audit procedure](AUDITING.md) still applies. Plans start pending; JavaScript-only official inventories need reviewed collectors before activation can pass. No approval was fabricated during onboarding. Restart running API/worker processes after configuration changes.
 
-During the initial live check, NVIDIA's feed advertised requisition `JR2018974` as an object containing only `bulletFields`, with no title or detail path. A native requisition search reproduced it and direct detail lookup returned 404. Extraction consequently fails and preserves prior data. This is an upstream integrity blocker, not proof of zero NVIDIA vacancies; do not remove the validation or silently discard the entry to report complete traversal.
+During the initial live check, NVIDIA's feed advertised requisition `JR2018974` as an object containing only `bulletFields`, with no title or detail path. A native requisition search reproduced it. An attempted lookup using the requisition alone returned 404, but the missing native detail path prevents establishing which detail URL belongs to that listing. Extraction consequently fails and preserves prior data. This is an upstream integrity blocker, not proof of an expired posting or zero NVIDIA vacancies; do not remove the validation or silently discard the entry to report complete traversal.
 
 Long imports renew their source lease every minute while preserving the 30-minute crash expiry. Renewal cannot revive an expired lease or replace another owner. The worker queue permits a three-hour job lifetime, including validation/publication overhead; it does not automatically schedule candidates. See [INGESTION.md](INGESTION.md) and [STORAGE.md](STORAGE.md).
 
@@ -59,3 +59,4 @@ Long imports renew their source lease every minute while preserving the 30-minut
 - [Source configuration](../backend/config/sources.json), [audit plans](../backend/config/source-audits.json), [configuration validation](../backend/src/infrastructure/registry.ts).
 - [Enterprise behavior tests](../backend/src/infrastructure/adapters/enterprise.test.ts), [transport tests](../backend/src/infrastructure/http.test.ts), [lease tests](../backend/src/infrastructure/storage/postgres.test.ts).
 - Live counts and validation levels belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md). Full extraction, traversal with sampled details, database publication and official scope verification are separate evidence levels.
+- [Durable integration report](../backend/config/integration-evidence/wave-b.json) records per-company runs, imported counts, representative links and configuration hashes. Its diagnostic file hashes refer to earlier local traversal/extraction artifacts, which can differ in count from a later import. The database `Snapshot` tied to each successful run is the exact publication evidence. This report is separate from audit approval evidence.

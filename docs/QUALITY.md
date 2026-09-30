@@ -58,7 +58,7 @@ PostgreSQL tests require a dedicated `TEST_DATABASE_URL` whose database name sta
 
 The initial implementation passed 35 tests including four against PostgreSQL. Live checks covered three provider boards; browser checks exercised the working UI. These are dated results, not claims about future edits. Queue recovery, production hosting/load, full employer coverage and automated browser regression remain separate pending gates.
 
-Wave B adds behavior coverage for Workday capped partitions, the later-page total sentinel, full hydration, immutable IDs, canonical tenant links, iCIMS employer scope, POST restrictions and lease renewal. On 30 September 2026, the complete suite passed 83 tests against a dedicated `jobbely_test_wave_b` PostgreSQL database. The default `pnpm check` run skips the five database tests when its environment lacks `TEST_DATABASE_URL`; a separate passing database run remains required evidence. See [WAVE_B.md](WAVE_B.md) and [SOURCE_CHECKS.md](SOURCE_CHECKS.md) for live-source limits.
+Wave B adds behavior coverage for Workday capped partitions, the later-page total sentinel, full hydration, immutable IDs, canonical tenant links, iCIMS employer scope, POST restrictions, stored request provenance and lease renewal. On 30 September 2026 (UTC), the complete suite passed 84 tests against a dedicated `jobbely_test_wave_b` PostgreSQL database. The default `pnpm check` run skips the six database tests when its environment lacks `TEST_DATABASE_URL`; a separate passing database run remains required evidence. See [WAVE_B.md](WAVE_B.md) and [SOURCE_CHECKS.md](SOURCE_CHECKS.md) for live-source limits.
 
 ## Change procedure
 

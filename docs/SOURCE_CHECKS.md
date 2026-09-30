@@ -116,3 +116,83 @@ service terms or discovery seeds rather than established job-feed authorization.
 complete employer-scope or access/display review. The software now enforces those decisions,
 reviewed policy hashes and current reconciliation rather than accepting an unsupported flag change.
 See [AUDITING.md](AUDITING.md) for the review, safe activation and runtime guard procedure.
+
+## Wave B full imports
+
+Observed 30 September 2026 (UTC), with the final Salesforce run completing at 22:14 UTC.
+All 31 Wave B companies now have source configuration and pending audit plans. Full
+extraction and atomic PostgreSQL publication succeeded for **29 companies**, storing
+**10,427 active postings**. The following counts describe configured feeds at this observation.
+
+| Company     | Provider    | Imported postings | Excluded entries |
+| ----------- | ----------- | ----------------: | ---------------: |
+| AMD         | iCIMS       |             1,244 |                0 |
+| Databricks  | Greenhouse  |               882 |                0 |
+| Booking.com | iCIMS       |                99 |               43 |
+| Snowflake   | Ashby       |               345 |                0 |
+| Airbnb      | Greenhouse  |               157 |                0 |
+| HRT         | Greenhouse  |                89 |                0 |
+| Optiver     | Greenhouse  |               169 |                0 |
+| Pinterest   | Greenhouse  |               151 |                0 |
+| Datadog     | Greenhouse  |               433 |                0 |
+| Dropbox     | Greenhouse  |                37 |                0 |
+| Coinbase    | Greenhouse  |               216 |                0 |
+| Slack       | Workday     |                16 |                0 |
+| Stripe      | Greenhouse  |               714 |                0 |
+| Spotify     | Lever       |                80 |                0 |
+| MongoDB     | Greenhouse  |               396 |                0 |
+| Okta        | Greenhouse  |               363 |                0 |
+| Salesforce  | Workday     |             1,515 |                0 |
+| Adobe       | Workday     |               541 |                0 |
+| Patreon     | Ashby       |                15 |                0 |
+| Cloudflare  | Greenhouse  |               395 |                0 |
+| Zoom        | Workday     |                91 |                0 |
+| Workday     | Workday     |               370 |                3 |
+| GitHub      | iCIMS       |                73 |                0 |
+| GitLab      | Greenhouse  |               203 |                0 |
+| PayPal      | Workday     |               285 |                0 |
+| Intel       | Workday     |               606 |                0 |
+| ING         | Workday     |               737 |                2 |
+| Riot Games  | Greenhouse  |               167 |                0 |
+| Blizzard    | Workday     |                38 |                0 |
+| NVIDIA      | Workday     |           Blocked |          Unknown |
+| LinkedIn    | Access gate |           Blocked |          Unknown |
+
+Booking.com's 43 exclusions are other brands in the native Booking Holdings feed.
+Workday and ING exclusions follow the existing non-vacancy title policy. Salesforce
+and Slack use separate native sites and may overlap; these are per-source counts, not
+a count of globally unique employer vacancies.
+
+NVIDIA repeatedly returned a listing with only `bulletFields: ["JR2018974"]`, omitting
+the required title and detail path. Complete extraction fails instead of dropping that
+entry or publishing a partial board. LinkedIn's employer search lacks an authorized
+feed; the implementation reports an access blocker rather than scraping the restricted
+guest search or treating an empty historical ATS board as current coverage. Neither
+blocked result establishes zero vacancies. See [WAVE_B.md](WAVE_B.md).
+
+All successful feeds supplied full descriptions. Workday hydrated every enumerated
+posting before publication, including the capped/partitioned Adobe inventory. Salesforce
+took approximately 27 minutes at the configured host pacing; its lease was renewed
+throughout. Drift detected during earlier traversal attempts caused those runs to fail;
+successful retries supplied the counts above. No failed run published partial data.
+
+The running API returned filtered listings for all 29 imported companies. Three detail
+requests per company (**87 details**) verified company attribution, nonempty text/HTML
+descriptions and HTTPS application links. Both blocked companies returned the explicit
+blocked coverage state with no stored listings.
+
+The [durable report](../backend/config/integration-evidence/wave-b.json) records configuration
+hashes, exact publication run IDs and representative posting links. Diagnostic artifact
+hashes refer to earlier ignored observations and can differ from later published counts.
+Exact successful-run response bodies are retained in database `Snapshot` records. Early
+captures predate the versioned POST request envelope; new captures also retain offsets
+and facet filters. Request metadata was not retroactively invented for older captures.
+
+The root `pnpm check` passed formatting, boundaries, logo checks, lint, strict types,
+78 non-database tests, contract generation and both builds. A separate run against
+`jobbely_test_wave_b` passed all **84 tests**, including six PostgreSQL tests for atomic
+publication, lease ownership/expiry and POST evidence storage.
+
+All new sources remain candidate and unscheduled. Company-scope reconciliation and
+access/display review remain pending; full feed imports alone do not approve automatic
+scheduling, posting closure or a worldwide completeness claim.

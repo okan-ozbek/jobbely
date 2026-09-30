@@ -21,6 +21,8 @@ The repository is a port for application behavior, not a generic CRUD framework.
 
 JSON payloads preserve rich canonical records/evidence; selected typed columns enforce identity and support future indexing. Content history does not currently record every unchanged refresh or every lifecycle-only transition. Companies/sources are configuration files, not database tables. pg-boss owns its queue schema separately.
 
+GET snapshots retain the legacy raw-response payload. POST snapshots use `{ format: "http-exchange-v1", request, body }` so Workday offsets and facet filters are retained with the exact JSON response. Their URL and fetch timestamp remain separate columns. Older snapshots predate request-body capture; readers must distinguish the envelope from an unwrapped provider response.
+
 ## Transaction and lease rules
 
 `startRun` takes a source advisory lock and grants one unexpired lease across clients. The next claimant after expiry marks the abandoned running record failed and replaces its lease. During long imports, `renewRun` atomically extends only the same run's still-unexpired lease by 30 minutes. `SyncSource` requests renewal every minute; crashes still expire naturally, and a stale worker cannot renew an expired or replaced owner. There is no periodic cleanup daemon.

@@ -178,7 +178,11 @@ export class PostgresJobRepository implements JobRepository {
               sourceId: commit.source.id,
               url: raw.url,
               fetchedAt: new Date(raw.fetchedAt),
-              payload: json(raw.body),
+              payload: json(
+                raw.request
+                  ? { format: 'http-exchange-v1', request: raw.request, body: raw.body }
+                  : raw.body,
+              ),
             },
           });
         }

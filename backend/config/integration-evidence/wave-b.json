@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "observedAt": "2026-09-30T22:07:50.937Z",
+  "observedAt": "2026-09-30T22:16:41.314Z",
   "scope": "Configured Wave B feeds only; not an employer-scope/access approval",
   "results": [
     {
@@ -26,8 +26,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 0,
-      "rawEvidencePath": null,
-      "rawEvidenceSha256": null,
+      "diagnosticEvidencePath": null,
+      "diagnosticEvidenceSha256": null,
       "samples": []
     },
     {
@@ -53,8 +53,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 1244,
-      "rawEvidencePath": "backend/data/wave-b/extraction-amd.json",
-      "rawEvidenceSha256": "950da2c4348eef000e94f3526e53f9372f3679a00de1844ee56e90d292298e11",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-amd.json",
+      "diagnosticEvidenceSha256": "950da2c4348eef000e94f3526e53f9372f3679a00de1844ee56e90d292298e11",
       "samples": [
         {
           "id": "92921",
@@ -102,8 +102,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 882,
-      "rawEvidencePath": "backend/data/wave-b/extraction-databricks.json",
-      "rawEvidenceSha256": "5e7110cd1c3d7577c589cb3ecfce623be48cc38a4f1a9df5e242bae2b13ff2f0",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-databricks.json",
+      "diagnosticEvidenceSha256": "5e7110cd1c3d7577c589cb3ecfce623be48cc38a4f1a9df5e242bae2b13ff2f0",
       "samples": [
         {
           "id": "8805655002",
@@ -151,8 +151,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 99,
-      "rawEvidencePath": "backend/data/wave-b/extraction-booking.json",
-      "rawEvidenceSha256": "c9ade416ae37545c2445f06319140eca8aced4bec28160bfdae72dd781ebc1e9",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-booking.json",
+      "diagnosticEvidenceSha256": "c9ade416ae37545c2445f06319140eca8aced4bec28160bfdae72dd781ebc1e9",
       "samples": [
         {
           "id": "30322",
@@ -200,8 +200,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 345,
-      "rawEvidencePath": "backend/data/wave-b/extraction-snowflake.json",
-      "rawEvidenceSha256": "8d23efda8c9d016959cb2899ebd8e096fa85eceef4564fae278be52837d5ab66",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-snowflake.json",
+      "diagnosticEvidenceSha256": "8d23efda8c9d016959cb2899ebd8e096fa85eceef4564fae278be52837d5ab66",
       "samples": [
         {
           "id": "479e06f1-273d-4a1b-af56-6543761ebd75",
@@ -249,8 +249,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 157,
-      "rawEvidencePath": "backend/data/wave-b/extraction-airbnb.json",
-      "rawEvidenceSha256": "99a9e9737299c4a96cf0a432804151b97f6bed5f2ac4c09e6accde581a427981",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-airbnb.json",
+      "diagnosticEvidenceSha256": "99a9e9737299c4a96cf0a432804151b97f6bed5f2ac4c09e6accde581a427981",
       "samples": [
         {
           "id": "8232207",
@@ -298,8 +298,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 89,
-      "rawEvidencePath": "backend/data/wave-b/extraction-hrt.json",
-      "rawEvidenceSha256": "b44b2a7764a2e31e60cc27e1cb309827aa03c641cdc2a0545819646c9b93bb93",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-hrt.json",
+      "diagnosticEvidenceSha256": "b44b2a7764a2e31e60cc27e1cb309827aa03c641cdc2a0545819646c9b93bb93",
       "samples": [
         {
           "id": "7972593",
@@ -347,8 +347,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 0,
-      "rawEvidencePath": null,
-      "rawEvidenceSha256": null,
+      "diagnosticEvidencePath": null,
+      "diagnosticEvidenceSha256": null,
       "samples": []
     },
     {
@@ -374,8 +374,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 169,
-      "rawEvidencePath": "backend/data/wave-b/extraction-optiver.json",
-      "rawEvidenceSha256": "fd749f3d983f714abb20f002f0e2831c253c10bb16a10ebdc544f78ad3ae1fd7",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-optiver.json",
+      "diagnosticEvidenceSha256": "fd749f3d983f714abb20f002f0e2831c253c10bb16a10ebdc544f78ad3ae1fd7",
       "samples": [
         {
           "id": "8644364002",
@@ -423,8 +423,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 151,
-      "rawEvidencePath": "backend/data/wave-b/extraction-pinterest.json",
-      "rawEvidenceSha256": "f661433e5f7fbfd290a19c79b736f64eccf0fb7b22504dba619658384c6a4360",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-pinterest.json",
+      "diagnosticEvidenceSha256": "f661433e5f7fbfd290a19c79b736f64eccf0fb7b22504dba619658384c6a4360",
       "samples": [
         {
           "id": "8103612",
@@ -472,8 +472,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 433,
-      "rawEvidencePath": "backend/data/wave-b/extraction-datadog.json",
-      "rawEvidenceSha256": "699d55690f991567ccbf1ad0b91c789977e4611b0261a24d5d01197da74918c9",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-datadog.json",
+      "diagnosticEvidenceSha256": "699d55690f991567ccbf1ad0b91c789977e4611b0261a24d5d01197da74918c9",
       "samples": [
         {
           "id": "7959967",
@@ -521,8 +521,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 37,
-      "rawEvidencePath": "backend/data/wave-b/extraction-dropbox.json",
-      "rawEvidenceSha256": "bab4b2a4f7c7a078e547b9b50ea788a5eaeddc8342358dd7ca51345d8dbb1bf7",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-dropbox.json",
+      "diagnosticEvidenceSha256": "bab4b2a4f7c7a078e547b9b50ea788a5eaeddc8342358dd7ca51345d8dbb1bf7",
       "samples": [
         {
           "id": "8159652",
@@ -570,8 +570,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 216,
-      "rawEvidencePath": "backend/data/wave-b/extraction-coinbase.json",
-      "rawEvidenceSha256": "c362043c509e9397f4b7f73a6a631ef83b6b0111f7356f43049f7a22dd73a379",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-coinbase.json",
+      "diagnosticEvidenceSha256": "c362043c509e9397f4b7f73a6a631ef83b6b0111f7356f43049f7a22dd73a379",
       "samples": [
         {
           "id": "8175363",
@@ -619,8 +619,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 16,
-      "rawEvidencePath": "backend/data/wave-b/inventory-slack.json",
-      "rawEvidenceSha256": "fa1279821c93416ab9d56d23f35e80e1005b6193d00266a57a5fa217668c9a7e",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-slack.json",
+      "diagnosticEvidenceSha256": "fa1279821c93416ab9d56d23f35e80e1005b6193d00266a57a5fa217668c9a7e",
       "samples": [
         {
           "id": "13e9ca75134610039d6346ba2c010000",
@@ -668,8 +668,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 714,
-      "rawEvidencePath": "backend/data/wave-b/extraction-stripe.json",
-      "rawEvidenceSha256": "34570742e49508cb55000ca86dcf0f34d5e417d14f856e3225421f379bdd1c85",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-stripe.json",
+      "diagnosticEvidenceSha256": "34570742e49508cb55000ca86dcf0f34d5e417d14f856e3225421f379bdd1c85",
       "samples": [
         {
           "id": "8172508",
@@ -717,8 +717,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 80,
-      "rawEvidencePath": "backend/data/wave-b/extraction-spotify.json",
-      "rawEvidenceSha256": "4cbbcdf661187753c9c636d983b1a2426ca656249d38b299debee9cf756523c8",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-spotify.json",
+      "diagnosticEvidenceSha256": "4cbbcdf661187753c9c636d983b1a2426ca656249d38b299debee9cf756523c8",
       "samples": [
         {
           "id": "2193db3f-77c5-43b8-b030-8f92c9882bf1",
@@ -766,8 +766,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 396,
-      "rawEvidencePath": "backend/data/wave-b/extraction-mongodb.json",
-      "rawEvidenceSha256": "b78fb27950c59419b0979fc81aa0179fa3646eaae4142ee0242103de20982b6e",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-mongodb.json",
+      "diagnosticEvidenceSha256": "b78fb27950c59419b0979fc81aa0179fa3646eaae4142ee0242103de20982b6e",
       "samples": [
         {
           "id": "7318558",
@@ -815,8 +815,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 363,
-      "rawEvidencePath": "backend/data/wave-b/extraction-okta.json",
-      "rawEvidenceSha256": "d65a2deb2e770611afc6ba72bbd228015c9d6196bbc1cfa8c31d8f668123762b",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-okta.json",
+      "diagnosticEvidenceSha256": "d65a2deb2e770611afc6ba72bbd228015c9d6196bbc1cfa8c31d8f668123762b",
       "samples": [
         {
           "id": "8079108",
@@ -850,23 +850,45 @@
       "auditStatus": "candidate",
       "scheduled": false,
       "configurationHash": "cc827ab0a9f358c783dc6bb6d16a68ca59f6acbb318ec77ec3e79c1cbb8a45ad",
-      "validationLevel": "import_running",
+      "validationLevel": "full_extraction_and_database_publication",
       "latestRun": {
         "id": "d9a8d103-610b-48ae-85de-279e4dea7f8e",
         "error": null,
-        "status": "running",
+        "status": "succeeded",
         "sourceId": "salesforce",
         "startedAt": "2026-09-30T21:46:34.873Z",
-        "finishedAt": null,
-        "listingCount": 0,
+        "finishedAt": "2026-09-30T22:14:01.244Z",
+        "listingCount": 1515,
         "excludedCount": 0,
-        "enumerationComplete": false,
+        "enumerationComplete": true,
         "removalsQuarantined": false
       },
-      "storedActivePostings": 0,
-      "rawEvidencePath": "backend/data/wave-b/inventory-salesforce.json",
-      "rawEvidenceSha256": "d268a48c582aadf96997ef02495405b0c670c69f9b8c0d706ba3b85f9e840ee4",
-      "samples": []
+      "storedActivePostings": 1515,
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-salesforce.json",
+      "diagnosticEvidenceSha256": "d268a48c582aadf96997ef02495405b0c670c69f9b8c0d706ba3b85f9e840ee4",
+      "samples": [
+        {
+          "id": "f99ce8a39b4d1001c9c3e7f4bd290000",
+          "title": "Forward Deployed Engineer (FDE) - Public Sector, Nonprofit & Education",
+          "url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/Virginia---Mclean/Forward-Deployed-Engineer--FDE----Public-Sector--Nonprofit---Education_JR352223",
+          "applyUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/Virginia---Mclean/Forward-Deployed-Engineer--FDE----Public-Sector--Nonprofit---Education_JR352223/apply",
+          "descriptionCharacters": 10004
+        },
+        {
+          "id": "7c8489c558511001bb1a45d57f890000",
+          "title": "Deployment Strategist - Public Sector, Nonprofit & Education",
+          "url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/Virginia---Mclean/Deployment-Strategist---Public-Sector--Nonprofit---Education_JR352189",
+          "applyUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/Virginia---Mclean/Deployment-Strategist---Public-Sector--Nonprofit---Education_JR352189/apply",
+          "descriptionCharacters": 9716
+        },
+        {
+          "id": "4f15f47e1e871003a04b5a44f31e0000",
+          "title": "Principal, Strategic Solution Engineer - Nonprofits",
+          "url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/New-York---New-York/Principal--Strategic-Solution-Engineer---Nonprofits_JR361452",
+          "applyUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site/job/New-York---New-York/Principal--Strategic-Solution-Engineer---Nonprofits_JR361452/apply",
+          "descriptionCharacters": 6974
+        }
+      ]
     },
     {
       "company": "adobe",
@@ -891,8 +913,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 541,
-      "rawEvidencePath": "backend/data/wave-b/inventory-adobe.json",
-      "rawEvidenceSha256": "8a6a90f9e714dbf183c8c7dd471c218c0925eb79aa6753b69ff7b0de9d84f3aa",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-adobe.json",
+      "diagnosticEvidenceSha256": "8a6a90f9e714dbf183c8c7dd471c218c0925eb79aa6753b69ff7b0de9d84f3aa",
       "samples": [
         {
           "id": "cf0155a2a4651001383ce8a1c0480000",
@@ -940,8 +962,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 15,
-      "rawEvidencePath": "backend/data/wave-b/extraction-patreon.json",
-      "rawEvidenceSha256": "a87f95c2c21fba70ff2f3932013b9fa1135103f625867d817609ee1aa94c09bd",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-patreon.json",
+      "diagnosticEvidenceSha256": "a87f95c2c21fba70ff2f3932013b9fa1135103f625867d817609ee1aa94c09bd",
       "samples": [
         {
           "id": "84928a66-fe9d-435e-aced-1253f1c29ff2",
@@ -989,8 +1011,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 395,
-      "rawEvidencePath": "backend/data/wave-b/extraction-cloudflare.json",
-      "rawEvidenceSha256": "ad57aba4d739e036712b5ca25dd6011f40e97d95ca5eb101eba1b66d0333c372",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-cloudflare.json",
+      "diagnosticEvidenceSha256": "ad57aba4d739e036712b5ca25dd6011f40e97d95ca5eb101eba1b66d0333c372",
       "samples": [
         {
           "id": "7695702",
@@ -1038,8 +1060,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 91,
-      "rawEvidencePath": "backend/data/wave-b/inventory-zoom.json",
-      "rawEvidenceSha256": "bb3dfd7a5c2994be0baa2b8588a353e060e3701d6c48d2a6dc8cd7254e1a6c89",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-zoom.json",
+      "diagnosticEvidenceSha256": "bb3dfd7a5c2994be0baa2b8588a353e060e3701d6c48d2a6dc8cd7254e1a6c89",
       "samples": [
         {
           "id": "4dc3b895a4f210015977f68074240000",
@@ -1087,8 +1109,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 370,
-      "rawEvidencePath": "backend/data/wave-b/inventory-workday.json",
-      "rawEvidenceSha256": "a42be942a97409ad2ed05ff5e9902c01fb2d9e5a439a5bf33bc0f81ae75f5c62",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-workday.json",
+      "diagnosticEvidenceSha256": "a42be942a97409ad2ed05ff5e9902c01fb2d9e5a439a5bf33bc0f81ae75f5c62",
       "samples": [
         {
           "id": "923b350927aa1000d03eff99b72f0000",
@@ -1136,8 +1158,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 73,
-      "rawEvidencePath": "backend/data/wave-b/extraction-github.json",
-      "rawEvidenceSha256": "11b91f9b1c72644ad4ecc01ce31c8d7c59926c5fec10a6f9cd56771a1479509c",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-github.json",
+      "diagnosticEvidenceSha256": "11b91f9b1c72644ad4ecc01ce31c8d7c59926c5fec10a6f9cd56771a1479509c",
       "samples": [
         {
           "id": "5580",
@@ -1185,8 +1207,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 203,
-      "rawEvidencePath": "backend/data/wave-b/extraction-gitlab.json",
-      "rawEvidenceSha256": "6a10a43ed7aa63a7350fe8e61440a29864fc71a2895ba8aa9f9aeb669f197251",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-gitlab.json",
+      "diagnosticEvidenceSha256": "6a10a43ed7aa63a7350fe8e61440a29864fc71a2895ba8aa9f9aeb669f197251",
       "samples": [
         {
           "id": "8556658002",
@@ -1234,8 +1256,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 285,
-      "rawEvidencePath": "backend/data/wave-b/inventory-paypal.json",
-      "rawEvidenceSha256": "dc19f61446f807866ee0dbe923c2e283adb42afa432889ce35fa83afebd769c2",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-paypal.json",
+      "diagnosticEvidenceSha256": "dc19f61446f807866ee0dbe923c2e283adb42afa432889ce35fa83afebd769c2",
       "samples": [
         {
           "id": "0b9f1aead6371001452cbd88f3d30000",
@@ -1283,8 +1305,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 606,
-      "rawEvidencePath": "backend/data/wave-b/inventory-intel.json",
-      "rawEvidenceSha256": "0622fd760280820ddea65824cc7a458041485447489b0c3a17178719657fc10f",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-intel.json",
+      "diagnosticEvidenceSha256": "0622fd760280820ddea65824cc7a458041485447489b0c3a17178719657fc10f",
       "samples": [
         {
           "id": "cac4c2cf42681001e719b33364f30000",
@@ -1332,8 +1354,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 737,
-      "rawEvidencePath": "backend/data/wave-b/inventory-ing.json",
-      "rawEvidenceSha256": "2e29aab17f17cc1ee8a5ff29accf57978862aff10e42a7a95871a19712d75a07",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-ing.json",
+      "diagnosticEvidenceSha256": "2e29aab17f17cc1ee8a5ff29accf57978862aff10e42a7a95871a19712d75a07",
       "samples": [
         {
           "id": "ab09390739a41000dbb2d4d1c9980000",
@@ -1381,8 +1403,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 167,
-      "rawEvidencePath": "backend/data/wave-b/extraction-riot-games.json",
-      "rawEvidenceSha256": "d8764fe89e144ec1864d5c17fc592977e0b2697db44587edf8409985d8408f55",
+      "diagnosticEvidencePath": "backend/data/wave-b/extraction-riot-games.json",
+      "diagnosticEvidenceSha256": "d8764fe89e144ec1864d5c17fc592977e0b2697db44587edf8409985d8408f55",
       "samples": [
         {
           "id": "7977844",
@@ -1430,8 +1452,8 @@
         "removalsQuarantined": false
       },
       "storedActivePostings": 38,
-      "rawEvidencePath": "backend/data/wave-b/inventory-blizzard.json",
-      "rawEvidenceSha256": "87b2f1d7a14898d28cb9fbc43100453d3883bc59313b5ff103fdc84f5c07ecc2",
+      "diagnosticEvidencePath": "backend/data/wave-b/inventory-blizzard.json",
+      "diagnosticEvidenceSha256": "87b2f1d7a14898d28cb9fbc43100453d3883bc59313b5ff103fdc84f5c07ecc2",
       "samples": [
         {
           "id": "f7e02fb5ed8110013b26a3e1b48c0000",

@@ -5,6 +5,8 @@
 **Target:** All 60 companies requested, with TypeScript frontend and backend in separate folders.  
 **Runtime AI usage:** Zero for extraction, normalization, categorization, and search.
 
+**Implementation update, 30 September 2026 (UTC):** Wave B now configures 31 additional companies through existing ATS adapters plus Workday and iCIMS. Full imports succeeded for 29; NVIDIA and LinkedIn remain blocked. These candidate feeds have not passed employer-scope/access approval. See [Wave B decisions](docs/WAVE_B.md) and [dated live results](docs/SOURCE_CHECKS.md). Provider names in the proposed inventory below are discovery hypotheses; current source configuration is authoritative.
+
 **Quick navigation:** [MVP boundaries](#1-recommendation-and-boundaries) · [First 10 companies](#4-proposed-first-release-10-companies) · [All 60 companies](#5-full-inventory-all-60-target-companies) · [Extraction](#6-extraction-strategy-structured-sources-first) · [Architecture](#7-typescript-architecture-and-folder-separation) · [Data model](#9-data-model-and-provenance) · [Categorization](#10-categorization-without-ai) · [Release gates](#14-verification-and-acceptance-criteria) · [Delivery estimates](#15-delivery-sequence-and-effort) · [Scope decisions](#17-decisions-to-settle-when-reviewing-the-mvp)
 
 ## 1. Recommendation and boundaries
