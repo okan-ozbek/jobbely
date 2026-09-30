@@ -47,6 +47,7 @@ export const companySchema = Type.Object({
   slug: Type.String(),
   name: Type.String(),
   careersUrl: Type.String(),
+  logoUrl: Type.String(),
   wave: Type.String(),
   status: Type.Union(
     ['not_onboarded', 'partial', 'stale', 'blocked', 'healthy', 'demo'].map((value) =>

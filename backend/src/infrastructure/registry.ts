@@ -6,6 +6,10 @@ const companySchema = z.object({
   slug: z.string(),
   name: z.string(),
   careersUrl: z.url(),
+  logoUrl: z
+    .string()
+    .regex(/^\/logos\/[a-z0-9-]+\.(png|jpg|svg)$/)
+    .default('/logos/default.svg'),
   wave: z.enum(['A', 'B', 'C']),
 });
 

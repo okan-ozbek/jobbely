@@ -670,6 +670,7 @@
                       "slug",
                       "name",
                       "careersUrl",
+                      "logoUrl",
                       "wave",
                       "status",
                       "jobs",
@@ -684,6 +685,9 @@
                         "type": "string"
                       },
                       "careersUrl": {
+                        "type": "string"
+                      },
+                      "logoUrl": {
                         "type": "string"
                       },
                       "wave": {
@@ -801,6 +805,7 @@
                     "slug",
                     "name",
                     "careersUrl",
+                    "logoUrl",
                     "wave",
                     "status",
                     "jobs",
@@ -815,6 +820,9 @@
                       "type": "string"
                     },
                     "careersUrl": {
+                      "type": "string"
+                    },
+                    "logoUrl": {
                       "type": "string"
                     },
                     "wave": {

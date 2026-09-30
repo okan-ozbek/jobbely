@@ -1,0 +1,423 @@
+{
+  "meta": {
+    "domain": "meta.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=meta.com&sz=128",
+    "asset": "/logos/meta.jpg",
+    "sha256": "0ee32bcff9179915f842e12c3d4351b4c8d5de63a96a9c1fbc0ef992f20c7498",
+    "fetchedAt": "2026-09-30T18:31:00.820Z"
+  },
+  "apple": {
+    "domain": "apple.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=apple.com&sz=128",
+    "asset": "/logos/apple.png",
+    "sha256": "eb7f4b32c3d7492e9a0f47a27743924428009dc41d3605a0c59a98a154fc52ad",
+    "fetchedAt": "2026-09-30T18:31:00.789Z"
+  },
+  "netflix": {
+    "domain": "netflix.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=netflix.com&sz=128",
+    "asset": "/logos/netflix.png",
+    "sha256": "330ddc5f685c74123ddaab4f2640f41df8ff65e58f8c374640e2aea5ec16b7dd",
+    "fetchedAt": "2026-09-30T18:31:00.862Z"
+  },
+  "google": {
+    "domain": "google.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
+    "asset": "/logos/google.png",
+    "sha256": "07e659b8dad50a8dcd5cedea1f521c94530286826207524937337fb47f337085",
+    "fetchedAt": "2026-09-30T18:31:00.792Z"
+  },
+  "amazon": {
+    "domain": "amazon.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=amazon.com&sz=128",
+    "asset": "/logos/amazon.png",
+    "sha256": "7e67fb8e6c43002e09c7d363f3b158a716dc09f4043cc058bcc01b206bbd097d",
+    "fetchedAt": "2026-09-30T18:31:00.890Z"
+  },
+  "openai": {
+    "domain": "openai.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
+    "asset": "/logos/openai.png",
+    "sha256": "8dba942326ba6368c2670603c0ef1d2087fc2bf3ed992fed9d57b2ea69907ddf",
+    "fetchedAt": "2026-09-30T18:31:00.874Z"
+  },
+  "anthropic": {
+    "domain": "anthropic.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=anthropic.com&sz=128",
+    "asset": "/logos/anthropic.png",
+    "sha256": "f1d612cf8894e5f47da0e2db35a95d61fda3f33fc3ffa2785998ba2ecf78daab",
+    "fetchedAt": "2026-09-30T18:31:00.878Z"
+  },
+  "nvidia": {
+    "domain": "nvidia.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=nvidia.com&sz=128",
+    "asset": "/logos/nvidia.png",
+    "sha256": "24c21375cca347d2f3e86b9bd27d7fdf4774ca7bd5d59482251723cb6dea82b0",
+    "fetchedAt": "2026-09-30T18:31:00.905Z"
+  },
+  "amd": {
+    "domain": "amd.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=amd.com&sz=128",
+    "asset": "/logos/amd.png",
+    "sha256": "4add9abf7e637b5422ceff3d9e8d74abd5b1c44992196bed40564da97227c998",
+    "fetchedAt": "2026-09-30T18:31:00.952Z"
+  },
+  "databricks": {
+    "domain": "databricks.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=databricks.com&sz=128",
+    "asset": "/logos/databricks.png",
+    "sha256": "afeb47cf6637a5324ff1250e7c4b0386108b29551607b062823df74dc357d344",
+    "fetchedAt": "2026-09-30T18:31:00.919Z"
+  },
+  "booking": {
+    "domain": "booking.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=booking.com&sz=128",
+    "asset": "/logos/booking.png",
+    "sha256": "477039637b3b702b01095559773bc34b3adb1cc70bdb4e4597aa80b9fdf939df",
+    "fetchedAt": "2026-09-30T18:31:00.957Z"
+  },
+  "snowflake": {
+    "domain": "snowflake.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=snowflake.com&sz=128",
+    "asset": "/logos/snowflake.png",
+    "sha256": "06bc457cfa7bb0482ffc3b1ee8d128007667003e31c4315e032b5b8773895472",
+    "fetchedAt": "2026-09-30T18:31:00.940Z"
+  },
+  "airbnb": {
+    "domain": "airbnb.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=airbnb.com&sz=128",
+    "asset": "/logos/airbnb.png",
+    "sha256": "eed2a5046184fc2ad03d946c8dad031df1945606894312f81245ab6f1cf6fa0b",
+    "fetchedAt": "2026-09-30T18:31:01.001Z"
+  },
+  "jane-street": {
+    "domain": "janestreet.com",
+    "sourceUrl": "https://www.janestreet.com/assets/logo-icon-9e6fdb3acda4d55b6bd69fdbd70de6ee35c1e766594753226b6b144866872951.png",
+    "asset": "/logos/jane-street.png",
+    "sha256": "9e6fdb3acda4d55b6bd69fdbd70de6ee35c1e766594753226b6b144866872951",
+    "fetchedAt": "2026-09-30T18:31:01.303Z"
+  },
+  "radix-trading": {
+    "domain": "radixtrading.co",
+    "sourceUrl": "https://cdn.theorg.com/83b9f674-91f9-4c6f-ba59-ebed114c4b5a_medium.jpg",
+    "sourcePage": "https://theorg.com/org/radix-trading",
+    "asset": "/logos/radix-trading.jpg",
+    "sha256": "c177db04e34baeed259704772972646986c0cab402a792c7861a951792672f59",
+    "fetchedAt": "2026-09-30T18:31:01.051Z"
+  },
+  "hrt": {
+    "domain": "hudsonrivertrading.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=hudsonrivertrading.com&sz=128",
+    "asset": "/logos/hrt.png",
+    "sha256": "128d139b9350bd3e8dae05af16a6f0492cd8ce7567d65401829d03f1b7819f7e",
+    "fetchedAt": "2026-09-30T18:31:00.977Z"
+  },
+  "five-rings": {
+    "domain": "fiverings.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=fiverings.com&sz=128",
+    "asset": "/logos/five-rings.png",
+    "sha256": "edb8c4f058f066a231aa2da02d7a2fb9eb12c3b520b4763afe16a74210711a58",
+    "fetchedAt": "2026-09-30T18:31:01.321Z"
+  },
+  "linkedin": {
+    "domain": "linkedin.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=linkedin.com&sz=128",
+    "asset": "/logos/linkedin.png",
+    "sha256": "eda6fe05a8638d28efe6d27dd867cff3259854a02403e234c6a7677db5ad564a",
+    "fetchedAt": "2026-09-30T18:31:01.316Z"
+  },
+  "citadel": {
+    "domain": "citadel.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=citadel.com&sz=128",
+    "asset": "/logos/citadel.png",
+    "sha256": "08c22cf1e0005592367c7749d4fa5231c303c5996401a753ddef3eec4e42232d",
+    "fetchedAt": "2026-09-30T18:31:01.317Z"
+  },
+  "two-sigma": {
+    "domain": "twosigma.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=twosigma.com&sz=128",
+    "asset": "/logos/two-sigma.png",
+    "sha256": "83c0638c40f9879c8f225d616898b49c37c42b113b6614b0baf7650fefc49533",
+    "fetchedAt": "2026-09-30T18:31:01.323Z"
+  },
+  "headlands": {
+    "domain": "headlandstech.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=headlandstech.com&sz=128",
+    "asset": "/logos/headlands.png",
+    "sha256": "209458f056c8862cbaa884148b7988b3dcf28c697025951044f39e9d1a5081a7",
+    "fetchedAt": "2026-09-30T18:31:01.349Z"
+  },
+  "optiver": {
+    "domain": "optiver.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=optiver.com&sz=128",
+    "asset": "/logos/optiver.png",
+    "sha256": "f025456201c681ea9bd7718f03ac7c8da85dc404c6570fcc3e0a50eeb8aeed0e",
+    "fetchedAt": "2026-09-30T18:31:01.336Z"
+  },
+  "figma": {
+    "domain": "figma.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=figma.com&sz=128",
+    "asset": "/logos/figma.png",
+    "sha256": "f072e59a9c0fc36b5005ed541c0eb7d2f94ad9f3ef8204f8fe62f55cd01eaa98",
+    "fetchedAt": "2026-09-30T18:31:01.359Z"
+  },
+  "pinterest": {
+    "domain": "pinterest.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=pinterest.com&sz=128",
+    "asset": "/logos/pinterest.png",
+    "sha256": "09a54dc5227a4c61eb143563895a045068af9b12444e5685f2e766bb01593561",
+    "fetchedAt": "2026-09-30T18:31:01.342Z"
+  },
+  "datadog": {
+    "domain": "datadoghq.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=datadoghq.com&sz=128",
+    "asset": "/logos/datadog.png",
+    "sha256": "10d1c58d2fd63806d013242cde0a6b536437bd715377410808d9ef853bcbf68d",
+    "fetchedAt": "2026-09-30T18:31:01.369Z"
+  },
+  "dropbox": {
+    "domain": "dropbox.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=dropbox.com&sz=128",
+    "asset": "/logos/dropbox.png",
+    "sha256": "ad716eb686f02bcfab436066fd3c8a5b44a7d09b56c588be9d8953425958c5df",
+    "fetchedAt": "2026-09-30T18:31:01.371Z"
+  },
+  "uber": {
+    "domain": "uber.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=uber.com&sz=128",
+    "asset": "/logos/uber.png",
+    "sha256": "00fccd2d5fd317a187d6ad03229884ae36016d4bf3bb48ce2ebb83ebb0fcecce",
+    "fetchedAt": "2026-09-30T18:31:01.372Z"
+  },
+  "discord": {
+    "domain": "discord.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=discord.com&sz=128",
+    "asset": "/logos/discord.png",
+    "sha256": "33cf3d76bd64c8b4f95ff68593095d9df63a6dac758a0434d1abea06ae1e7bbd",
+    "fetchedAt": "2026-09-30T18:31:01.372Z"
+  },
+  "coinbase": {
+    "domain": "coinbase.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=coinbase.com&sz=128",
+    "asset": "/logos/coinbase.png",
+    "sha256": "5584cfbbb445f600acdf174a8afa8b937d839b1844b8a76f3f6ffd2453a38897",
+    "fetchedAt": "2026-09-30T18:31:01.402Z"
+  },
+  "bloomberg": {
+    "domain": "bloomberg.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=bloomberg.com&sz=128",
+    "asset": "/logos/bloomberg.png",
+    "sha256": "a967e0155d7a82a355b4400d958d3ae4c757dcf6f6b6f202fb97c35c3a32b5c8",
+    "fetchedAt": "2026-09-30T18:31:01.384Z"
+  },
+  "slack": {
+    "domain": "slack.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=slack.com&sz=128",
+    "asset": "/logos/slack.png",
+    "sha256": "9969989446edc2d8136e1d518a9a1dca46b6777f4b3172ec0800cc8edcce5fe0",
+    "fetchedAt": "2026-09-30T18:31:01.386Z"
+  },
+  "microsoft": {
+    "domain": "microsoft.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=microsoft.com&sz=128",
+    "asset": "/logos/microsoft.png",
+    "sha256": "b6ba5811173dc31f3b64c874651217571d9ac7f7e5f2533db85eb8ee9ef33b35",
+    "fetchedAt": "2026-09-30T18:31:01.384Z"
+  },
+  "stripe": {
+    "domain": "stripe.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=stripe.com&sz=128",
+    "asset": "/logos/stripe.png",
+    "sha256": "9bfd1838ae9214d0f553ffb9bc703486529f747daaf8590f2741bc8ee76e8caa",
+    "fetchedAt": "2026-09-30T18:31:01.416Z"
+  },
+  "tesla": {
+    "domain": "tesla.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=tesla.com&sz=128",
+    "asset": "/logos/tesla.png",
+    "sha256": "b4be4f01063591bf8e715388c3e798339f22fb5b7e1e20a504d5c7cad796d55d",
+    "fetchedAt": "2026-09-30T18:31:01.413Z"
+  },
+  "palantir": {
+    "domain": "palantir.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=palantir.com&sz=128",
+    "asset": "/logos/palantir.png",
+    "sha256": "4635852d01b7e2ad0d2b6f5a6cce543a61ee8efe3acb9151b443bf451b9ec766",
+    "fetchedAt": "2026-09-30T18:31:01.420Z"
+  },
+  "spotify": {
+    "domain": "spotify.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=spotify.com&sz=128",
+    "asset": "/logos/spotify.png",
+    "sha256": "221c12256905b791dc2268598bbff57aad8ddd1931fcc4e1559c7f6c87b32b8c",
+    "fetchedAt": "2026-09-30T18:31:01.412Z"
+  },
+  "mongodb": {
+    "domain": "mongodb.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=mongodb.com&sz=128",
+    "asset": "/logos/mongodb.png",
+    "sha256": "8476bc88b13f4161da7aea5e538cbff0d793ad55c02af6f941fcd1f263dfdb6d",
+    "fetchedAt": "2026-09-30T18:31:01.430Z"
+  },
+  "tiktok": {
+    "domain": "tiktok.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=tiktok.com&sz=128",
+    "asset": "/logos/tiktok.png",
+    "sha256": "e421a9daf1ebd712bab3febecb1f93b765fbfc2b22d2c3b4231efe3203de2381",
+    "fetchedAt": "2026-09-30T18:31:01.434Z"
+  },
+  "okta": {
+    "domain": "okta.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=okta.com&sz=128",
+    "asset": "/logos/okta.png",
+    "sha256": "ef93cff20091aea6854ddd6a2f4176693728c28c4bce9757f45581a18f83d5c1",
+    "fetchedAt": "2026-09-30T18:31:01.436Z"
+  },
+  "salesforce": {
+    "domain": "salesforce.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=salesforce.com&sz=128",
+    "asset": "/logos/salesforce.png",
+    "sha256": "abcc0840c906aef643ba63da8d2d3f1487a8324ccc6ea7f122dd06168099e586",
+    "fetchedAt": "2026-09-30T18:31:01.429Z"
+  },
+  "adobe": {
+    "domain": "adobe.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=adobe.com&sz=128",
+    "asset": "/logos/adobe.png",
+    "sha256": "b490f3a28f0cb7a0af7c435a683ce6887e2f0a99354943c0892fa394b30835be",
+    "fetchedAt": "2026-09-30T18:31:01.470Z"
+  },
+  "patreon": {
+    "domain": "patreon.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=patreon.com&sz=128",
+    "asset": "/logos/patreon.png",
+    "sha256": "7b243381f54b208ce6a22b63b66c1b7b1a5f4b5caf4c865469c4d9f9b0cb6edb",
+    "fetchedAt": "2026-09-30T18:31:01.451Z"
+  },
+  "cloudflare": {
+    "domain": "cloudflare.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=cloudflare.com&sz=128",
+    "asset": "/logos/cloudflare.png",
+    "sha256": "9cd748335f60c87cf5b70e53a76869162f908a906dc4043947516f063b27d2c3",
+    "fetchedAt": "2026-09-30T18:31:01.454Z"
+  },
+  "zoom": {
+    "domain": "zoom.us",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=zoom.us&sz=128",
+    "asset": "/logos/zoom.png",
+    "sha256": "16d249967f50e144a26c74dfff714844cca1c91c7e78ae1f30e083ff85c02434",
+    "fetchedAt": "2026-09-30T18:31:01.458Z"
+  },
+  "workday": {
+    "domain": "workday.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=workday.com&sz=128",
+    "asset": "/logos/workday.png",
+    "sha256": "615adc2bb8bd91c4df61ab03312c9d7adfa4ee98d4777f259ad07a528012543e",
+    "fetchedAt": "2026-09-30T18:31:01.513Z"
+  },
+  "github": {
+    "domain": "github.com",
+    "sourceUrl": "https://github.com/fluidicon.png",
+    "asset": "/logos/github.png",
+    "sha256": "1bedd6a1948971f07970414717012503805309f25af0b2c542dbc3524b5880e9",
+    "fetchedAt": "2026-09-30T18:31:01.687Z"
+  },
+  "gitlab": {
+    "domain": "gitlab.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=gitlab.com&sz=128",
+    "asset": "/logos/gitlab.png",
+    "sha256": "85e85e66a46a1df46bd442782daf43567e5ce548103646c9ea5a7c4c953e9418",
+    "fetchedAt": "2026-09-30T18:31:01.499Z"
+  },
+  "mozilla": {
+    "domain": "mozilla.org",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=mozilla.org&sz=128",
+    "asset": "/logos/mozilla.png",
+    "sha256": "908089ea1d5fe668e6442da23cdc1bfb41b9fc68f0529c6cb8cf0d61bf8106b6",
+    "fetchedAt": "2026-09-30T18:31:01.488Z"
+  },
+  "paypal": {
+    "domain": "paypal.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=paypal.com&sz=128",
+    "asset": "/logos/paypal.png",
+    "sha256": "e3850303cebe7f8a89ae58c425ff67407eda65e58e157d0ef40109caa24caa60",
+    "fetchedAt": "2026-09-30T18:31:01.730Z"
+  },
+  "oracle": {
+    "domain": "oracle.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=oracle.com&sz=128",
+    "asset": "/logos/oracle.png",
+    "sha256": "c20c4ae2ebd375a3262e14609f3cc9de36ea5ff0481b7c3fd5b9ebb0983a2460",
+    "fetchedAt": "2026-09-30T18:31:01.702Z"
+  },
+  "reddit": {
+    "domain": "reddit.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=reddit.com&sz=128",
+    "asset": "/logos/reddit.png",
+    "sha256": "b8198132047e1c5b1c0d226b450484655b63c2fc28ec3cd8e74091d13fc0a607",
+    "fetchedAt": "2026-09-30T18:31:01.724Z"
+  },
+  "x": {
+    "domain": "x.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=x.com&sz=128",
+    "asset": "/logos/x.png",
+    "sha256": "181049a23035b5a810077d45f33f97cd7b498afd6cd213633bd7426c6b3ad430",
+    "fetchedAt": "2026-09-30T18:31:01.698Z"
+  },
+  "intel": {
+    "domain": "intel.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=intel.com&sz=128",
+    "asset": "/logos/intel.png",
+    "sha256": "980a86e685569b5a066eb2e04d453841a15778647d8e84d27c26eeaa3017c254",
+    "fetchedAt": "2026-09-30T18:31:01.860Z"
+  },
+  "ibm": {
+    "domain": "ibm.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=ibm.com&sz=128",
+    "asset": "/logos/ibm.png",
+    "sha256": "002bf16e498f94efaf9a53d59ab1796fda6662675b7e1ee20e4681449babbd67",
+    "fetchedAt": "2026-09-30T18:31:01.756Z"
+  },
+  "jpmorgan": {
+    "domain": "jpmorganchase.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=jpmorganchase.com&sz=128",
+    "asset": "/logos/jpmorgan.jpg",
+    "sha256": "cccf4caf8bcc1481b1dacfa56ffb85f9a129bf12e212f1e7de6583190493b4c0",
+    "fetchedAt": "2026-09-30T18:31:01.756Z"
+  },
+  "goldman-sachs": {
+    "domain": "goldmansachs.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=goldmansachs.com&sz=128",
+    "asset": "/logos/goldman-sachs.png",
+    "sha256": "6a5a973d69e19c10b8991881ec4632fb5cf218de8832c1f6efc8c6956a2c988f",
+    "fetchedAt": "2026-09-30T18:31:01.881Z"
+  },
+  "abn-amro": {
+    "domain": "abnamro.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=abnamro.com&sz=128",
+    "asset": "/logos/abn-amro.png",
+    "sha256": "74472e682110dd49df3f621dd951259644c9bfe104f75cb6a7723f1dbd749096",
+    "fetchedAt": "2026-09-30T18:31:01.901Z"
+  },
+  "ing": {
+    "domain": "ing.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=ing.com&sz=128",
+    "asset": "/logos/ing.png",
+    "sha256": "ecd4be588b43949cd2dbfecfc445025b3da1d6fc5c9b51ae8ddaeb052f7a1d53",
+    "fetchedAt": "2026-09-30T18:31:01.892Z"
+  },
+  "riot-games": {
+    "domain": "riotgames.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=riotgames.com&sz=128",
+    "asset": "/logos/riot-games.png",
+    "sha256": "0ffc2d9ee0ec193b2e9dede037003411ff31158aaeb440af6db47dc1aa79f528",
+    "fetchedAt": "2026-09-30T18:31:01.903Z"
+  },
+  "blizzard": {
+    "domain": "blizzard.com",
+    "sourceUrl": "https://www.google.com/s2/favicons?domain=blizzard.com&sz=128",
+    "asset": "/logos/blizzard.png",
+    "sha256": "c7bf27d960e95e513bf0a057da70241cb928a86c13e635d05e77988cd36e4a90",
+    "fetchedAt": "2026-09-30T18:31:01.927Z"
+  }
+}

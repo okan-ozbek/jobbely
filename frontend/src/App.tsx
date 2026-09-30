@@ -17,14 +17,7 @@ import type { JobsQuery } from './api/client.js';
 import { useLocationQuery } from './hooks/useLocationQuery.js';
 import { useJobCatalog } from './hooks/useJobCatalog.js';
 import { useJobDetail } from './hooks/useJobDetail.js';
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join('');
-}
+import { CompanyLogo } from './components/CompanyLogo.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -105,6 +98,8 @@ export function App() {
   const { selected, detailError } = useJobDetail(selectedId);
 
   const nameOf = (slug: string) => companies.find((company) => company.slug === slug)?.name ?? slug;
+
+  const logoOf = (slug: string) => companies.find((company) => company.slug === slug)?.logoUrl;
 
   const categoryOf = (slug: string) =>
     categories.find((category) => category.slug === slug)?.name ?? slug;
@@ -239,9 +234,10 @@ export function App() {
             ) : (
               <>
                 <div className="detail-heading">
-                  <div className={`company-icon icon-${selected.companySlug}`}>
-                    {initials(nameOf(selected.companySlug))}
-                  </div>
+                  <CompanyLogo
+                    name={nameOf(selected.companySlug)}
+                    logoUrl={logoOf(selected.companySlug)}
+                  />
                   <div>
                     <div className="company-label">{nameOf(selected.companySlug)}</div>
                     <h1>{selected.title}</h1>
@@ -347,9 +343,10 @@ export function App() {
                     key={company.slug}
                   >
                     <div className="company-card-top">
-                      <div className={`company-icon icon-${company.slug}`}>
-                        {initials(company.name)}
-                      </div>
+                      <CompanyLogo
+                        name={company.name}
+                        logoUrl={company.logoUrl}
+                      />
                       <a
                         href={company.careersUrl}
                         target="_blank"
@@ -497,9 +494,10 @@ export function App() {
                     key={job.id}
                     onClick={() => update({ job: job.id })}
                   >
-                    <div className={`company-icon icon-${job.companySlug}`}>
-                      {initials(nameOf(job.companySlug))}
-                    </div>
+                    <CompanyLogo
+                      name={nameOf(job.companySlug)}
+                      logoUrl={logoOf(job.companySlug)}
+                    />
                     <div className="job-main">
                       <div className="company-label">
                         {nameOf(job.companySlug)}

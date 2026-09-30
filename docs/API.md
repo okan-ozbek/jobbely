@@ -23,6 +23,8 @@ The API delegates to `JobCatalog`; it contains no crawling or SQL queries. Its p
 
 Listing filters are `q`, `company`, `category`, `workplace`, `limit` and `cursor`. Comma-separated company/category/workplace values are supported by the catalog. Search is case-insensitive substring matching across title, description text, departments and locations. Results sort by last-seen time descending with ID as a tie-breaker; limit defaults to 20 and is capped at 100.
 
+Company responses include `logoUrl`, a local asset path served by the frontend origin. See [LOGOS.md](LOGOS.md) for ownership, sources and fallback behavior.
+
 ## Pagination and errors
 
 A cursor carries dataset version, filter fingerprint and last ID. Invalid/different-filter cursors return 400. A newly published dataset makes prior cursors stale and returns 409, requiring pagination restart. This prevents merging pages from different observations. Cursors are pagination state, not authorization tokens.

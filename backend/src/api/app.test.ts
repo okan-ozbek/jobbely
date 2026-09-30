@@ -32,7 +32,17 @@ describe('read API and contract', () => {
   it('lists all 60 companies and explicitly labels demo data', async () => {
     const { app } = await setup();
 
-    expect((await app.inject('/api/v1/companies')).json()).toHaveLength(60);
+    const companies = (await app.inject('/api/v1/companies')).json();
+
+    expect(companies).toHaveLength(60);
+
+    expect(companies.map((company: { logoUrl: string }) => company.logoUrl)).toEqual(
+      loadRegistry().companies.map((company) => company.logoUrl),
+    );
+
+    expect((await app.inject('/api/v1/companies/meta')).json()).toMatchObject({
+      logoUrl: '/logos/meta.jpg',
+    });
 
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',

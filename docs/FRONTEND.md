@@ -8,6 +8,8 @@ Use React and Vite in `/frontend`, built independently from the backend. The pub
 
 The UI searches stored jobs, filters by company/function/workplace, opens full sanitized descriptions, links to employer applications and displays company coverage. All 60 configured employers appear in the directory, including companies that have no connected source.
 
+`CompanyLogo` renders local assets from each company's API-provided `logoUrl` in the directory, job rows and details. Missing/failed images use a local N/A asset. Source records, maintenance and fallback rules live in [LOGOS.md](LOGOS.md).
+
 ## State and responsibilities
 
 - `useLocationQuery` owns query-string state and browser history. Filters and selected job are shareable URL parameters; search typing replaces history entries while navigation pushes them.

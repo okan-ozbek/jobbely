@@ -15,6 +15,7 @@ export interface Company {
   slug: string;
   name: string;
   careersUrl: string;
+  logoUrl: string;
   wave: 'A' | 'B' | 'C';
 }
 

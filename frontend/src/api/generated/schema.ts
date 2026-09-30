@@ -380,6 +380,7 @@ export interface operations {
                         slug: string;
                         name: string;
                         careersUrl: string;
+                        logoUrl: string;
                         wave: string;
                         status: "not_onboarded" | "partial" | "stale" | "blocked" | "healthy" | "demo";
                         jobs: number;
@@ -417,6 +418,7 @@ export interface operations {
                         slug: string;
                         name: string;
                         careersUrl: string;
+                        logoUrl: string;
                         wave: string;
                         status: "not_onboarded" | "partial" | "stale" | "blocked" | "healthy" | "demo";
                         jobs: number;

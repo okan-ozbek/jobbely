@@ -316,39 +316,18 @@ h1 span {
   width: 45px;
   height: 45px;
   border-radius: 10px;
-  background: #e2e7d9;
-  color: #526644;
+  background: #fff;
+  border: 1px solid #e2e7d9;
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 750;
-  font-size: 17px;
-  letter-spacing: -0.6px;
+  overflow: hidden;
 }
-.icon-openai {
-  background: #283f34;
-  color: #eaf0e3;
-}
-.icon-anthropic {
-  background: #e9dcd2;
-  color: #926a50;
-}
-.icon-figma {
-  background: #e6e0f2;
-  color: #8975ae;
-}
-.icon-discord {
-  background: #dde1fa;
-  color: #6778c0;
-}
-.icon-palantir {
-  background: #e0e5e8;
-  color: #576674;
-}
-.icon-reddit {
-  background: #f7e4d8;
-  color: #b66a45;
+.company-icon img {
+  display: block;
+  width: 75%;
+  height: 75%;
+  object-fit: contain;
 }
 .company-label {
   font-size: 11px;

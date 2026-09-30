@@ -18,8 +18,9 @@ Domain code depends only on domain code. Ports may depend on domain/ports. Appli
 | `pnpm typecheck`    | Strict checking in both packages and Prisma client generation                  |
 | `pnpm test`         | Backend policies, adapters, HTTP, use cases, API and optional PostgreSQL tests |
 | `pnpm contracts`    | OpenAPI export and generated frontend contract                                 |
+| `pnpm logos:check`  | Local company assets exist and match their recorded hashes/signatures          |
 | `pnpm build`        | Backend client/code build, contract generation and frontend production build   |
-| `pnpm check`        | Formatting check, dependency boundaries, lint, types, tests and builds         |
+| `pnpm check`        | Formatting, boundaries, logo assets, lint, types, tests and builds             |
 
 The base TypeScript settings include unchecked-index and exact-optional-property checks and unused-variable checks. `check-boundaries.mjs` checks literal import/module references in production domain/application/ports and frontend sources. It is a lightweight textual guard, not complete static dependency analysis. Tests are excluded from the backend layer restriction to allow test fixtures/fakes.
 
