@@ -1,8 +1,13 @@
 import { bootstrap, config } from '../bootstrap.js';
 import { parseArgs } from 'node:util';
+import { selectSources } from './select-sources.js';
 
 const { values } = parseArgs({
-  options: { company: { type: 'string' }, 'all-enabled': { type: 'boolean' } },
+  options: {
+    company: { type: 'string' },
+    wave: { type: 'string' },
+    'all-enabled': { type: 'boolean' },
+  },
 });
 
 if (config.DATA_MODE !== 'postgres') {
@@ -14,15 +19,7 @@ if (config.DATA_MODE !== 'postgres') {
 const dependencies = await bootstrap();
 
 try {
-  const sources = dependencies.sources.filter((source) =>
-    values.company
-      ? source.companySlug === values.company
-      : values['all-enabled'] && source.scheduled,
-  );
-
-  if (!sources.length) {
-    throw new Error('No matching sources. Specify --company <slug> or --all-enabled.');
-  }
+  const sources = selectSources(dependencies.companies, dependencies.sources, values);
 
   let failed = false;
 

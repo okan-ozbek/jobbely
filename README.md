@@ -2,7 +2,7 @@
 
 Jobbely collects public employer job listings, categorizes them without AI, and lets you search full descriptions and apply on the original company website.
 
-TypeScript lives in separate `/frontend` and `/backend` packages. This first slice supports Greenhouse, Ashby and Lever. All 60 target employers are registered; three feeds have been fetched locally, and full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md) and [source-check evidence](docs/SOURCE_CHECKS.md).
+TypeScript lives in separate `/frontend` and `/backend` packages. This first slice supports Greenhouse, Ashby and Lever. All 60 target employers are registered; all 11 feeds for the 10 Wave A companies have been fetched locally, and full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md) and [source-check evidence](docs/SOURCE_CHECKS.md).
 
 ## Prerequisites
 
@@ -71,10 +71,10 @@ Use `Ctrl+C` to stop the servers. Environment variables override `backend/.env`;
    $env:DATA_MODE = "postgres"
    pnpm db:generate
    pnpm db:migrate
-   pnpm --filter @jobbely/backend run sync --company openai
+    pnpm sync:wave-a
    ```
 
-   You can also sync `anthropic` and `palantir`, or another company with a configured source. These commands read the public feed and write to your configured database. An empty database shows no real listings until ingestion succeeds.
+   This imports all 10 Wave A companies, including both Radix Trading boards. For an individual company, use `pnpm --filter @jobbely/backend run sync --company openai` (or another configured company slug). These commands read the public feeds and write to your configured database. An empty database shows no real listings until ingestion succeeds.
 
 5. Start both applications:
 
@@ -122,6 +122,14 @@ Manual ingestion works in PostgreSQL mode:
 ```powershell
 pnpm --filter @jobbely/backend run sync --company openai
 ```
+
+Refresh the entire first-release cohort with `pnpm sync:wave-a`, equivalent to
+`pnpm --filter @jobbely/backend run sync --wave A`. Wave selection uses the company registry
+and includes every configured board for those companies, even when scheduling is disabled.
+Choose exactly one selector: `--company <slug>`, `--wave <A|B|C>`, or `--all-enabled`
+(scheduled sources only). A failed source is reported without preventing the remaining sources
+from running; any failure gives the command a nonzero exit code. Manual ingestion does not
+verify employer scope or enable scheduling.
 
 Audit a configured company's provider payload without publishing listings:
 
