@@ -23,7 +23,7 @@ describe('manual sync source selection', () => {
       ]),
     );
 
-    expect(matching).toHaveLength(11);
+    expect(matching).toHaveLength(13);
 
     expect(
       matching

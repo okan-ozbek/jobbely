@@ -1,0 +1,379 @@
+{
+  "version": 1,
+  "companySlug": "mozilla",
+  "observedAt": "2026-09-30T20:37:54.435Z",
+  "configurationHash": "b1528296862201fd145655a8f09456bd51f6d23fbf1887bc200bc2e6cf0b9e4f",
+  "artifactDirectory": "backend/data/audits/mozilla/2026-09-30T20-37-54.434Z/",
+  "blockers": [
+    "scope review is pending: Official site and feed use differing posting IDs. Resolve Mozilla Corporation, Foundation and Thunderbird entity coverage before approval.",
+    "access review is pending: Review Mozilla website licensing/terms and Greenhouse API use; website content licensing alone does not establish vacancy redisplay rights.",
+    "Unresolved hiring channel: https://www.mozillafoundation.org/",
+    "Unresolved hiring channel: https://www.thunderbird.net/"
+  ],
+  "policies": [
+    {
+      "url": "https://www.mozilla.org/en-US/about/legal/terms/mozilla/",
+      "textSha256": "ba6c14b606e39d1e6495cd9344dc709a2666082ae8f29584cbd342b9328137b5",
+      "rawSha256": "3373f756903964c019b8c807fbd1dd3e0dfadbe403f33870e984ad748f0035c7",
+      "robotsUrl": "https://www.mozilla.org/robots.txt",
+      "robotsSha256": "cf0fd2842659297b0d6fce407bed86bf424ae6666051b881dbd72e871d687fe3",
+      "error": null
+    },
+    {
+      "url": "https://docs.greenhouse.io/job-board.html",
+      "textSha256": "d2c047f79c422c3c000de14020f2d2a494992a46a7aadee28af78ebca6a984e9",
+      "rawSha256": "666dca356fa154a91e382fe55c007d004c67abb79fb6f7f97055e2d1668c5794",
+      "robotsUrl": "https://docs.greenhouse.io/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://www.mozilla.org/en-US/careers/listings/",
+      "sha256": "19018ab995e52a038a08263e6461c624d35cde726dcaaeb7b37a1a1c1cba8481",
+      "robotsUrl": "https://www.mozilla.org/robots.txt",
+      "robotsSha256": "cf0fd2842659297b0d6fce407bed86bf424ae6666051b881dbd72e871d687fe3",
+      "links": [
+        "https://www.mozilla.org/en-US/careers/",
+        "https://www.mozilla.org/en-US/careers/benefits/",
+        "https://www.mozilla.org/en-US/careers/diversity/",
+        "https://www.mozilla.org/en-US/careers/feed/",
+        "https://www.mozilla.org/en-US/careers/listings/",
+        "https://www.mozilla.org/en-US/careers/locations/",
+        "https://www.mozilla.org/en-US/careers/position/gh/7137777/",
+        "https://www.mozilla.org/en-US/careers/position/gh/7583557/",
+        "https://www.mozilla.org/en-US/careers/position/gh/7921645/",
+        "https://www.mozilla.org/en-US/careers/position/gh/7997148/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8035891/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8112211/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8139403/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8153321/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8155077/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8155198/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8167254/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8170952/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8172267/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8177406/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8185965/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8191473/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8191511/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8201924/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8202652/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8202762/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8202797/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8220545/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8220780/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8221861/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8223350/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8223398/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8223520/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8230712/",
+        "https://www.mozilla.org/en-US/careers/position/gh/8234153/",
+        "https://www.mozilla.org/en-US/careers/teams/"
+      ],
+      "discoveredBoards": ["greenhouse:mozilla"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "mozilla",
+      "feedCount": 81,
+      "officialCount": 29,
+      "excludedCount": 0,
+      "matchedCount": 29,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [
+        {
+          "feedId": "7947405",
+          "officialId": "8153321",
+          "requisitionId": "3451689"
+        },
+        {
+          "feedId": "7947230",
+          "officialId": "8153321",
+          "requisitionId": "3451689"
+        },
+        {
+          "feedId": "8126756",
+          "officialId": "8139403",
+          "requisitionId": "3519339"
+        },
+        {
+          "feedId": "8157047",
+          "officialId": "8139403",
+          "requisitionId": "3519339"
+        },
+        {
+          "feedId": "8219384",
+          "officialId": "8221861",
+          "requisitionId": "3557260"
+        },
+        {
+          "feedId": "8112219",
+          "officialId": "8112211",
+          "requisitionId": "3513020"
+        },
+        {
+          "feedId": "8109590",
+          "officialId": "8112211",
+          "requisitionId": "3513020"
+        },
+        {
+          "feedId": "8237818",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8237824",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8237810",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8237815",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8237812",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8189048",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8237816",
+          "officialId": "8191473",
+          "requisitionId": "3543642"
+        },
+        {
+          "feedId": "8204384",
+          "officialId": "8230712",
+          "requisitionId": "3550889"
+        },
+        {
+          "feedId": "8209734",
+          "officialId": "8230712",
+          "requisitionId": "3550889"
+        },
+        {
+          "feedId": "8188889",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "7524337",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188881",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188884",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188887",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188892",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188870",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188873",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8188876",
+          "officialId": "7583557",
+          "requisitionId": "3333321"
+        },
+        {
+          "feedId": "8031378",
+          "officialId": "8035891",
+          "requisitionId": "3481577"
+        },
+        {
+          "feedId": "7921523",
+          "officialId": "7921645",
+          "requisitionId": "3443405"
+        },
+        {
+          "feedId": "8170969",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8170964",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8170961",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8170937",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8214803",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8136490",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8170967",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8170976",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8133522",
+          "officialId": "8170952",
+          "requisitionId": "3521626"
+        },
+        {
+          "feedId": "8198113",
+          "officialId": "8202762",
+          "requisitionId": "3547950"
+        },
+        {
+          "feedId": "8189943",
+          "officialId": "8191511",
+          "requisitionId": "3544038"
+        },
+        {
+          "feedId": "7114644",
+          "officialId": "7137777",
+          "requisitionId": "3205155"
+        },
+        {
+          "feedId": "7997152",
+          "officialId": "7997148",
+          "requisitionId": "3460954"
+        },
+        {
+          "feedId": "7973023",
+          "officialId": "7997148",
+          "requisitionId": "3460954"
+        },
+        {
+          "feedId": "7974328",
+          "officialId": "7997148",
+          "requisitionId": "3460954"
+        },
+        {
+          "feedId": "8174313",
+          "officialId": "8185965",
+          "requisitionId": "3537762"
+        },
+        {
+          "feedId": "8185984",
+          "officialId": "8185965",
+          "requisitionId": "3537762"
+        },
+        {
+          "feedId": "8110120",
+          "officialId": "8155198",
+          "requisitionId": "3513199"
+        },
+        {
+          "feedId": "8127051",
+          "officialId": "8155198",
+          "requisitionId": "3513199"
+        },
+        {
+          "feedId": "8234141",
+          "officialId": "8234153",
+          "requisitionId": "3562657"
+        },
+        {
+          "feedId": "8233080",
+          "officialId": "8234153",
+          "requisitionId": "3562657"
+        },
+        {
+          "feedId": "8198112",
+          "officialId": "8202652",
+          "requisitionId": "3547949"
+        },
+        {
+          "feedId": "8177715",
+          "officialId": "8220780",
+          "requisitionId": "3539007"
+        },
+        {
+          "feedId": "8142161",
+          "officialId": "8155077",
+          "requisitionId": "3523764"
+        },
+        {
+          "feedId": "8198114",
+          "officialId": "8202797",
+          "requisitionId": "3547951"
+        }
+      ],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": true,
+      "feedHashes": ["4a18f61f2783eda16ba59f5b6350e5a93b90dd4b198e08c4b626071f1be34533"],
+      "samples": [
+        {
+          "id": "8223520",
+          "title": "Contract Software Engineer - DOM Core Firefox/Gecko",
+          "url": "https://job-boards.greenhouse.io/mozilla/jobs/8223520",
+          "applyUrl": "https://job-boards.greenhouse.io/mozilla/jobs/8223520"
+        },
+        {
+          "id": "8223398",
+          "title": "Contract Software Engineer - WebCompat Tooling (Dashboards and Reporting), Firefox",
+          "url": "https://job-boards.greenhouse.io/mozilla/jobs/8223398",
+          "applyUrl": "https://job-boards.greenhouse.io/mozilla/jobs/8223398"
+        },
+        {
+          "id": "8223350",
+          "title": "Contract Staff Front End Engineer (Web Conference/Screen Sharing)",
+          "url": "https://job-boards.greenhouse.io/mozilla/jobs/8223350",
+          "applyUrl": "https://job-boards.greenhouse.io/mozilla/jobs/8223350"
+        }
+      ],
+      "error": null
+    }
+  ]
+}

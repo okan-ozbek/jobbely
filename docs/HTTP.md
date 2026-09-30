@@ -24,6 +24,11 @@ Non-retryable HTTP errors and JSON/schema failures surface to ingestion. A chall
 
 ## Tradeoffs and extension points
 
+Official-site auditing uses a separate HTML/policy transport with employer/ATS/documentation
+allowlists, public DNS-address checks, robots rules, redirect rejection, host pacing, bounded bodies
+and elapsed time. It does not reuse the ATS JSON parser or bypass challenges. See
+[AUDITING.md](AUDITING.md) for its exact policy and limitations.
+
 Pacing is process-local. Multiple workers/transports may collectively exceed a provider's preferred rate, so broader concurrency requires shared limits. There is no conditional-request cache, ETag storage or request cancellation tied to graceful shutdown yet. A page traversal can exceed one request's timeout; the repository lease bounds publication ownership separately.
 
 The EU Lever host is allowed for a future adapter/configuration extension; the current Lever adapter uses the global host. Add allowlisted hosts deliberately alongside source/provider support, not through arbitrary user-supplied fetch URLs. Do not duplicate retry loops inside adapters.

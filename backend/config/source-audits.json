@@ -1,0 +1,406 @@
+[
+  {
+    "companySlug": "openai",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers access and additional hiring channels must be reconciled; do not equate Ashby traversal with employer completeness.",
+      "evidenceUrls": ["https://openai.com/careers/search/"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer terms and Ashby public API conditions for private display and scheduled retrieval.",
+      "evidenceUrls": [
+        "https://developers.ashbyhq.com/docs/public-job-posting-api",
+        "https://openai.com/policies/terms-of-use/"
+      ]
+    },
+    "channels": [
+      {
+        "url": "https://openai.com/careers/search/",
+        "disposition": "included",
+        "sourceIds": ["openai"],
+        "reason": "Proposed official careers scope; linkage must be observed during the audit."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://openai.com/careers/search/",
+        "role": "discovery",
+        "sourceIds": [],
+        "complete": false
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/openai",
+        "role": "listings",
+        "sourceIds": ["openai"],
+        "complete": false
+      }
+    ]
+  },
+  {
+    "companySlug": "anthropic",
+    "scope": {
+      "status": "pending",
+      "notes": "Inspect official jobs page for global traversal and any separate recruitment channels; reconcile prospect exclusions.",
+      "evidenceUrls": [
+        "https://www.anthropic.com/careers",
+        "https://www.anthropic.com/careers/jobs"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer access/display conditions and documented Greenhouse public GET API use.",
+      "evidenceUrls": [
+        "https://docs.greenhouse.io/job-board.html",
+        "https://www.anthropic.com/legal/consumer-terms"
+      ]
+    },
+    "channels": [
+      {
+        "url": "https://www.anthropic.com/careers/jobs",
+        "disposition": "included",
+        "sourceIds": ["anthropic"],
+        "reason": "Linked from official careers landing page."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.anthropic.com/careers",
+        "role": "discovery",
+        "sourceIds": [],
+        "complete": false
+      },
+      {
+        "url": "https://www.anthropic.com/careers/jobs",
+        "role": "listings",
+        "sourceIds": ["anthropic"],
+        "complete": false
+      }
+    ]
+  },
+  {
+    "companySlug": "figma",
+    "scope": {
+      "status": "pending",
+      "notes": "Confirm all locations/functions are present without filters, and inspect for additional boards or entities.",
+      "evidenceUrls": ["https://www.figma.com/careers/"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review Figma terms, robots rules and Greenhouse public API conditions; robots permission is not redisplay permission.",
+      "evidenceUrls": [
+        "https://www.figma.com/legal/tos/",
+        "https://docs.greenhouse.io/job-board.html"
+      ]
+    },
+    "channels": [
+      {
+        "url": "https://www.figma.com/careers/",
+        "disposition": "included",
+        "sourceIds": ["figma"],
+        "reason": "Official page exposes Greenhouse vacancy links."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.figma.com/careers/",
+        "role": "listings",
+        "sourceIds": ["figma"],
+        "complete": false
+      }
+    ]
+  },
+  {
+    "companySlug": "discord",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers script names discord, discordinternational and internationaleor. Confirm all three and employer attribution of the EOR board.",
+      "evidenceUrls": [
+        "https://discord.com/careers",
+        "https://discord.com/webflow-scripts/careersNew2025.js"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Captured Discord Terms restrict scraping its services without written consent. Establish applicability to careers reconciliation, authorized Greenhouse API access and full-description display before approving; public availability alone is not permission.",
+      "evidenceUrls": ["https://discord.com/terms", "https://docs.greenhouse.io/job-board.html"]
+    },
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/discord",
+        "disposition": "included",
+        "sourceIds": ["discord"],
+        "reason": "Named by DISCORD_JOB_BOARDS in official careers script."
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/discordinternational",
+        "disposition": "included",
+        "sourceIds": ["discordinternational"],
+        "reason": "Named by DISCORD_JOB_BOARDS in official careers script."
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/internationaleor",
+        "disposition": "included",
+        "sourceIds": ["internationaleor"],
+        "reason": "Named by official careers script, not inferred from a generic board name."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://discord.com/careers",
+        "role": "discovery",
+        "sourceIds": [],
+        "complete": false
+      },
+      {
+        "url": "https://discord.com/webflow-scripts/careersNew2025.js",
+        "role": "discovery",
+        "sourceIds": [],
+        "complete": false,
+        "boardArray": "DISCORD_JOB_BOARDS"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/discord",
+        "role": "listings",
+        "sourceIds": ["discord"],
+        "complete": true
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/discordinternational",
+        "role": "listings",
+        "sourceIds": ["discordinternational"],
+        "complete": true
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/internationaleor",
+        "role": "listings",
+        "sourceIds": ["internationaleor"],
+        "complete": true
+      }
+    ]
+  },
+  {
+    "companySlug": "reddit",
+    "scope": {
+      "status": "pending",
+      "notes": "Reconcile the full official page, regional roles and any additional hiring channels.",
+      "evidenceUrls": ["https://redditinc.com/careers"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer website terms and documented Greenhouse API use; record the intended private display posture.",
+      "evidenceUrls": [
+        "https://redditinc.com/policies",
+        "https://docs.greenhouse.io/job-board.html"
+      ]
+    },
+    "channels": [
+      {
+        "url": "https://redditinc.com/careers",
+        "disposition": "included",
+        "sourceIds": ["reddit"],
+        "reason": "Official careers page exposes Greenhouse vacancy links."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://redditinc.com/careers",
+        "role": "listings",
+        "sourceIds": ["reddit"],
+        "complete": true
+      }
+    ]
+  },
+  {
+    "companySlug": "palantir",
+    "scope": {
+      "status": "pending",
+      "notes": "Verify the official site delegates the full worldwide vacancy inventory to Lever, including student and other channels.",
+      "evidenceUrls": ["https://www.palantir.com/careers/", "https://jobs.lever.co/palantir"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review Palantir access/display terms and Lever public postings API conditions.",
+      "evidenceUrls": ["https://www.palantir.com/legal/", "https://github.com/lever/postings-api"]
+    },
+    "channels": [
+      {
+        "url": "https://jobs.lever.co/palantir",
+        "disposition": "included",
+        "sourceIds": ["palantir"],
+        "reason": "Official careers page contains Lever links; delegation completeness needs review."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.palantir.com/careers/",
+        "role": "discovery",
+        "sourceIds": [],
+        "complete": false
+      },
+      {
+        "url": "https://jobs.lever.co/palantir",
+        "role": "listings",
+        "sourceIds": ["palantir"],
+        "complete": true
+      }
+    ]
+  },
+  {
+    "companySlug": "five-rings",
+    "scope": {
+      "status": "pending",
+      "notes": "Check experienced, campus and location coverage, excluding registrations rather than genuine internships.",
+      "evidenceUrls": ["https://fiverings.com/careers/"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review published employer conditions and Greenhouse API documentation; record permitted access and display scope.",
+      "evidenceUrls": ["https://fiverings.com/", "https://docs.greenhouse.io/job-board.html"]
+    },
+    "channels": [
+      {
+        "url": "https://fiverings.com/careers/",
+        "disposition": "included",
+        "sourceIds": ["fiveringsllc"],
+        "reason": "Official careers page exposes Greenhouse vacancy links."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://fiverings.com/careers/",
+        "role": "listings",
+        "sourceIds": ["fiveringsllc"],
+        "complete": true
+      }
+    ]
+  },
+  {
+    "companySlug": "radix-trading",
+    "scope": {
+      "status": "pending",
+      "notes": "Reconcile both officially linked boards and confirm all advertised locations and graduate/experienced channels.",
+      "evidenceUrls": ["https://radixtrading.co/"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer access/display conditions and documented Greenhouse public GET endpoints.",
+      "evidenceUrls": ["https://radixtrading.co/", "https://docs.greenhouse.io/job-board.html"]
+    },
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/radixuniversity",
+        "disposition": "included",
+        "sourceIds": ["radixuniversity"],
+        "reason": "Official site explicitly links university board."
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/radixexperienced",
+        "disposition": "included",
+        "sourceIds": ["radixexperienced"],
+        "reason": "Official site explicitly links experienced board."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://radixtrading.co/",
+        "role": "discovery",
+        "sourceIds": [],
+        "complete": false
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/radixuniversity",
+        "role": "listings",
+        "sourceIds": ["radixuniversity"],
+        "complete": true
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/radixexperienced",
+        "role": "listings",
+        "sourceIds": ["radixexperienced"],
+        "complete": true
+      }
+    ]
+  },
+  {
+    "companySlug": "headlands",
+    "scope": {
+      "status": "pending",
+      "notes": "Investigate official-site/feed differences and location-specific vacancy links; do not merge roles by title.",
+      "evidenceUrls": ["https://www.headlandstech.com/careers/"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer access/display conditions and Greenhouse API documentation.",
+      "evidenceUrls": [
+        "https://www.headlandstech.com/",
+        "https://docs.greenhouse.io/job-board.html"
+      ]
+    },
+    "channels": [
+      {
+        "url": "https://www.headlandstech.com/careers/",
+        "disposition": "included",
+        "sourceIds": ["headlandstechnologiesllc"],
+        "reason": "Official careers page exposes location-specific Greenhouse vacancies."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.headlandstech.com/careers/",
+        "role": "listings",
+        "sourceIds": ["headlandstechnologiesllc"],
+        "complete": false
+      }
+    ]
+  },
+  {
+    "companySlug": "mozilla",
+    "reconciliation": "greenhouse_requisition_variants",
+    "scope": {
+      "status": "pending",
+      "notes": "Official site and feed use differing posting IDs. Resolve Mozilla Corporation, Foundation and Thunderbird entity coverage before approval.",
+      "evidenceUrls": [
+        "https://www.mozilla.org/en-US/careers/listings/",
+        "https://www.mozillafoundation.org/",
+        "https://www.thunderbird.net/"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review Mozilla website licensing/terms and Greenhouse API use; website content licensing alone does not establish vacancy redisplay rights.",
+      "evidenceUrls": [
+        "https://www.mozilla.org/en-US/about/legal/terms/mozilla/",
+        "https://docs.greenhouse.io/job-board.html"
+      ]
+    },
+    "channels": [
+      {
+        "url": "https://www.mozilla.org/en-US/careers/listings/",
+        "disposition": "included",
+        "sourceIds": ["mozilla"],
+        "reason": "Official employer careers listings; native Greenhouse wrapper URLs expose stable IDs."
+      },
+      {
+        "url": "https://www.mozillafoundation.org/",
+        "disposition": "pending",
+        "sourceIds": [],
+        "reason": "Decide and document Foundation employer scope and hiring board."
+      },
+      {
+        "url": "https://www.thunderbird.net/",
+        "disposition": "pending",
+        "sourceIds": [],
+        "reason": "Decide and document Thunderbird employer scope and hiring board."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.mozilla.org/en-US/careers/listings/",
+        "role": "listings",
+        "sourceIds": ["mozilla"],
+        "complete": false
+      }
+    ]
+  }
+]

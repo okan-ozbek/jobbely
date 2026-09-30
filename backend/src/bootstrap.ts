@@ -12,6 +12,7 @@ import { LeverAdapter } from './infrastructure/adapters/lever.js';
 import { MemoryJobRepository } from './infrastructure/storage/memory.js';
 import { PostgresJobRepository } from './infrastructure/storage/postgres.js';
 import { seedDemo } from './infrastructure/demo.js';
+import { AuditedPostingValidation } from './infrastructure/audits/validation.js';
 
 export const config = z
   .object({
@@ -55,9 +56,13 @@ export async function bootstrap() {
     repository,
     adapters,
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE),
-    sync: new SyncSource(repository, adapters, htmlPreparation, [
-      new LabelMappingStrategy(),
-      new TitleRuleStrategy(),
-    ]),
+    sync: new SyncSource(
+      repository,
+      adapters,
+      htmlPreparation,
+      [new LabelMappingStrategy(), new TitleRuleStrategy()],
+      undefined,
+      new AuditedPostingValidation(companies, sources, adapters),
+    ),
   };
 }

@@ -1,24 +1,27 @@
 import { parseArgs } from 'node:util';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { loadRegistry } from '../infrastructure/registry.js';
 import { PublicJsonTransport } from '../infrastructure/http.js';
 import { GreenhouseAdapter } from '../infrastructure/adapters/greenhouse.js';
 import { AshbyAdapter } from '../infrastructure/adapters/ashby.js';
 import { LeverAdapter } from '../infrastructure/adapters/lever.js';
+import { loadAuditPlans, requireVerifiedEvidence } from '../infrastructure/audits/registry.js';
+import { SourceAuditor, officialHosts } from '../infrastructure/audits/auditor.js';
+import { OfficialPageTransport } from '../infrastructure/audits/official-http.js';
+import { assertAuditEvidence } from '../infrastructure/audits/model.js';
+import { selectSources } from './select-sources.js';
 
-const { values } = parseArgs({ options: { company: { type: 'string' } } });
+const { values } = parseArgs({
+  options: {
+    company: { type: 'string' },
+    wave: { type: 'string' },
+    activate: { type: 'boolean' },
+  },
+});
 
-if (!values.company) {
-  throw new Error('Specify --company <slug>');
-}
-
-const { sources } = loadRegistry();
-const matching = sources.filter((source) => source.companySlug === values.company);
-
-if (!matching.length) {
-  throw new Error('No configured sources for this company');
-}
-
+const { companies, sources } = loadRegistry({ validateAudits: false });
+const selected = selectSources(companies, sources, values);
+const plans = loadAuditPlans();
 const transport = new PublicJsonTransport();
 
 const adapters = {
@@ -27,62 +30,109 @@ const adapters = {
   lever: new LeverAdapter(transport),
 };
 
-const directory = new URL('../../data/audits/', import.meta.url);
+const evidenceDirectory = new URL('../../config/audit-evidence/', import.meta.url);
+const passedCompanies = new Set<string>();
 
-await mkdir(directory, { recursive: true });
+await mkdir(evidenceDirectory, { recursive: true });
 
-for (const source of matching) {
-  const at = new Date().toISOString();
-
+for (const companySlug of new Set(selected.map((source) => source.companySlug))) {
   try {
-    const extraction = await adapters[source.provider].extract(source);
-    const ids = extraction.postings.map((posting) => posting.sourcePostingId);
+    const company = companies.find((entry) => entry.slug === companySlug)!;
+    const plan = plans.find((entry) => entry.companySlug === companySlug);
 
-    if (new Set(ids).size !== ids.length) {
-      throw new Error('Duplicate posting IDs');
+    if (!plan) {
+      throw new Error(`Missing audit plan: ${companySlug}`);
     }
 
-    const report = {
-      sourceId: source.id,
-      at,
-      adapterPayloadValidated: true,
-      companyScopeVerified: false,
-      vacancies: ids.length,
-      excluded: extraction.excluded,
-      enumerationComplete: extraction.enumerationComplete,
-      sample: extraction.postings.slice(0, 3),
-      rawResponses: extraction.rawResponses,
-    };
+    const matching = sources.filter((source) => source.companySlug === companySlug);
+    const stamp = new Date().toISOString().replaceAll(':', '-');
+    const artifactDirectory = `backend/data/audits/${companySlug}/${stamp}/`;
+    const directory = new URL(`../../data/audits/${companySlug}/${stamp}/`, import.meta.url);
 
-    await writeFile(new URL(`${source.id}.json`, directory), JSON.stringify(report, null, 2));
+    await mkdir(directory, { recursive: true });
+
+    const auditor = new SourceAuditor(
+      company,
+      matching,
+      plan,
+      new OfficialPageTransport(officialHosts(company, plan)),
+      adapters,
+    );
+
+    const { report, rawPages, rawResponses, blockers } = await auditor.run(artifactDirectory);
+
+    await writeFile(
+      new URL('raw-evidence.json', directory),
+      JSON.stringify({ rawPages, rawResponses }, null, 2),
+    );
+
+    await writeFile(new URL('report.json', directory), JSON.stringify(report, null, 2));
+
+    await writeFile(
+      new URL(`${companySlug}.json`, evidenceDirectory),
+      `${JSON.stringify(report, null, 2)}\n`,
+    );
 
     console.log(
       JSON.stringify({
-        source: source.id,
-        vacancies: ids.length,
-        excluded: extraction.excluded,
-        payload: 'validated',
-        scope: 'pending review',
+        company: companySlug,
+        passed: blockers.length === 0,
+        sources: report.sources.map((source) => ({
+          source: source.sourceId,
+          feed: source.feedCount,
+          official: source.officialCount,
+          matched: source.matchedCount,
+          linkedLocationVariants: source.coveredVariants.length,
+          missingFromFeed: source.missingFromFeed.length,
+          missingFromOfficial: source.missingFromOfficial.length,
+        })),
+        blockers,
+        artifactDirectory,
       }),
     );
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
 
-    await writeFile(
-      new URL(`${source.id}.json`, directory),
-      JSON.stringify(
-        {
-          sourceId: source.id,
-          at,
-          adapterPayloadValidated: false,
-          error: message,
-        },
-        null,
-        2,
-      ),
+    if (blockers.length) {
+      process.exitCode = 1;
+    } else {
+      assertAuditEvidence(report, plan, matching);
+      passedCompanies.add(companySlug);
+    }
+  } catch (error) {
+    console.error(
+      JSON.stringify({
+        company: companySlug,
+        error: error instanceof Error ? error.message : 'Audit failed',
+      }),
     );
 
-    console.error(JSON.stringify({ source: source.id, error: message }));
     process.exitCode = 1;
   }
+}
+
+if (values.activate) {
+  // Batch activation is all-or-nothing. Failed companies never get promoted by a partial run.
+  if (process.exitCode || !passedCompanies.size) {
+    throw new Error('Activation refused: every selected company must pass its audit first.');
+  }
+
+  const file = new URL('../../config/sources.json', import.meta.url);
+  const current = JSON.parse(await readFile(file, 'utf8')) as typeof sources;
+
+  if (JSON.stringify(current) !== JSON.stringify(sources)) {
+    throw new Error('Source configuration changed during the audit; rerun before activation.');
+  }
+
+  const updated = current.map((source) =>
+    passedCompanies.has(source.companySlug)
+      ? { ...source, auditStatus: 'verified' as const, scheduled: true }
+      : source,
+  );
+
+  requireVerifiedEvidence(updated);
+
+  const temporary = new URL('../../config/sources.json.audit-tmp', import.meta.url);
+
+  await writeFile(temporary, `${JSON.stringify(updated, null, 2)}\n`);
+  await rename(temporary, file);
+  console.log('Audit passed; selected sources verified and scheduled. Restart the API and worker.');
 }

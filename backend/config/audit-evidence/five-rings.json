@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "companySlug": "five-rings",
+  "observedAt": "2026-09-30T20:37:41.948Z",
+  "configurationHash": "f383a2a54d6c24c23d42b29f6151aab9264cad61ee29ed933a54ab75aa8cc1a6",
+  "artifactDirectory": "backend/data/audits/five-rings/2026-09-30T20-37-41.948Z/",
+  "blockers": [
+    "scope review is pending: Check experienced, campus and location coverage, excluding registrations rather than genuine internships.",
+    "access review is pending: Review published employer conditions and Greenhouse API documentation; record permitted access and display scope."
+  ],
+  "policies": [
+    {
+      "url": "https://fiverings.com/",
+      "textSha256": "e3929c61b379220def2752d0cfd82ddb74a8507519ba82d68b44e750476e6b35",
+      "rawSha256": "f4dd1465bbd561e32c9a71b8dacfb566eee882a81c3f2de2a8706cd8c9fbfe52",
+      "robotsUrl": "https://fiverings.com/robots.txt",
+      "robotsSha256": "468a300dbff311524bcacea5c29f95684c0194246994eba2184bdb99bdd00ef3",
+      "error": null
+    },
+    {
+      "url": "https://docs.greenhouse.io/job-board.html",
+      "textSha256": "d2c047f79c422c3c000de14020f2d2a494992a46a7aadee28af78ebca6a984e9",
+      "rawSha256": "666dca356fa154a91e382fe55c007d004c67abb79fb6f7f97055e2d1668c5794",
+      "robotsUrl": "https://docs.greenhouse.io/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://fiverings.com/careers/",
+      "sha256": "82d74a5c9ea8c397c954ec0d161336b775e271700d28f31215db979356dfbc8e",
+      "robotsUrl": "https://fiverings.com/robots.txt",
+      "robotsSha256": "468a300dbff311524bcacea5c29f95684c0194246994eba2184bdb99bdd00ef3",
+      "links": [
+        "https://fiverings.com/campus-recruiting/",
+        "https://fiverings.com/careers/",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/4009569008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/4017982008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/4043325008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/4121623008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5046298008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5139668008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5255334008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5255367008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5344213008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5349219008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5349707008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5349839008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5349905008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5394515008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5414190008",
+        "https://job-boards.greenhouse.io/fiveringsllc/jobs/5420708008"
+      ],
+      "discoveredBoards": ["greenhouse:fiveringsllc"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "fiveringsllc",
+      "feedCount": 16,
+      "officialCount": 16,
+      "excludedCount": 0,
+      "matchedCount": 16,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": true,
+      "feedHashes": ["02dfa392e6d8d964bfbbb9e2027f455f1a7bc57df0fcd6f14e352367a3c6eede"],
+      "samples": [
+        {
+          "id": "5255334008",
+          "title": "Campus Full Time 2027 - Quantitative Trader",
+          "url": "https://job-boards.greenhouse.io/fiveringsllc/jobs/5255334008",
+          "applyUrl": "https://job-boards.greenhouse.io/fiveringsllc/jobs/5255334008"
+        },
+        {
+          "id": "5344213008",
+          "title": "Campus Full Time 2027 - Quantitative Trader - Amsterdam",
+          "url": "https://job-boards.greenhouse.io/fiveringsllc/jobs/5344213008",
+          "applyUrl": "https://job-boards.greenhouse.io/fiveringsllc/jobs/5344213008"
+        },
+        {
+          "id": "5255367008",
+          "title": "Campus Full Time 2027 - Quantitative Trader - London",
+          "url": "https://job-boards.greenhouse.io/fiveringsllc/jobs/5255367008",
+          "applyUrl": "https://job-boards.greenhouse.io/fiveringsllc/jobs/5255367008"
+        }
+      ],
+      "error": null
+    }
+  ]
+}

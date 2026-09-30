@@ -20,7 +20,7 @@ flowchart TD
 
 - `domain/` contains canonical records, taxonomy, classification and lifecycle policies. No HTTP, Fastify, Prisma, environment variables, or filesystem imports.
 - `application/` orchestrates one source run and reading stored data through ports. It chooses policies and controls publication; providers cannot independently close postings.
-- `ports/` defines the few genuinely interchangeable boundaries: source adapter, JSON transport, repository, and HTML preparation. Avoid interfaces for every internal helper.
+- `ports/` defines the few genuinely interchangeable boundaries: source adapter, JSON transport, repository, HTML preparation, and pre-publication posting validation. Official-site auditing implements the latter in infrastructure; the application does not fetch pages or read audit files. Avoid interfaces for every internal helper.
 - `infrastructure/` implements provider translation, network access, HTML preparation, and database transactions. Upstream schemas stop here.
 - `api/` validates public inputs and shapes responses. It does not crawl or contain database queries.
 - `bootstrap.ts` is the composition root. Constructor/function arguments wire dependencies explicitly; no service locator or dependency-injection container.

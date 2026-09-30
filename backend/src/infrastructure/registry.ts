@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import type { Company, Source } from '../domain/model.js';
+import { requireVerifiedEvidence } from './audits/registry.js';
 
 const companySchema = z.object({
   slug: z.string(),
@@ -22,7 +23,10 @@ const sourceSchema = z.object({
   scheduled: z.boolean(),
 });
 
-export function loadRegistry(): { companies: Company[]; sources: Source[] } {
+export function loadRegistry(options: { validateAudits?: boolean } = {}): {
+  companies: Company[];
+  sources: Source[];
+} {
   const companies = z
     .array(companySchema)
     .parse(
@@ -48,6 +52,10 @@ export function loadRegistry(): { companies: Company[]; sources: Source[] } {
     if (source.scheduled && source.auditStatus !== 'verified') {
       throw new Error(`Unaudited source cannot be scheduled: ${source.id}`);
     }
+  }
+
+  if (options.validateAudits !== false) {
+    requireVerifiedEvidence(sources);
   }
 
   return { companies, sources };

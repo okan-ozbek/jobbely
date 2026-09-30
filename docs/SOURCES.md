@@ -1,6 +1,6 @@
 # Decision: explicit source registry and coverage
 
-**Status:** Registry and coverage gates implemented; employer audits incomplete. Recorded 30 September 2026.
+**Status:** Evidence-backed registry and coverage gates implemented; employer scope/access approvals incomplete. Recorded 30 September 2026.
 
 ## Decision and rationale
 
@@ -8,21 +8,21 @@ Keep employers and extraction sources separate. One company may have multiple bo
 
 `companies.json` records slug, name, official careers entry point and planning wave. `sources.json` records stable source ID, company slug, provider, board, `auditStatus` and `scheduled`. Configuration is validated at startup: IDs must be unique, companies must exist, boards must match the allowed identifier format, and unaudited sources cannot be scheduled.
 
-There are currently 60 target companies and 11 candidate source boards for the proposed first 10-company cohort. Every source is unscheduled. Dated live observations belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
+There are currently 60 target companies and 13 candidate source boards for the first 10-company cohort, including three Discord boards discovered from its official careers script. Every source is unscheduled. Dated live observations belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
 
 ## Onboarding procedure
 
 1. Follow official careers entry points and identify relevant provider boards, regional partitions and related entities.
 2. Add stable candidate source entries. Preserve IDs once postings are stored; changing an ID changes posting identity.
-3. Run the audit CLI and inspect traversal, counts, exclusions, representative IDs/links and full descriptions. It writes reports without publishing jobs or changing verification state.
-4. Compare the feed with official employer scope, document access suitability and known exclusions, and record evidence in a dated source note.
-5. Mark `auditStatus: "verified"` only after the scope check. Enable scheduling separately with `scheduled: true`, validate the worker, and restart affected processes.
+3. Run the audit CLI and inspect official/feed identity comparisons, discovered boards, policy documents, traversal, exclusions and detail validity. It writes reports without publishing jobs or changing verification state.
+4. Complete the structured scope/access review in `backend/config/source-audits.json`. Scope approval needs channel decisions and reviewed traversal; access approval needs reviewed document hashes and appropriate full-description display permission.
+5. Use `audit --company <slug> --activate` only when every gate passes. Verification without valid, current configuration-bound evidence is rejected. Activation enables scheduling, but does not start the worker; validate it and restart affected processes. See [AUDITING.md](AUDITING.md) for the full procedure.
 
 ```sh
 pnpm --filter @jobbely/backend run audit --company openai
 ```
 
-The audit CLI overwrites the latest ignored report for each source ID. Promote durable conclusions into documentation; do not treat a transient raw report as permanent completeness evidence.
+The audit CLI preserves timestamped raw artifacts in ignored local data and updates a compact durable company report in `backend/config/audit-evidence/`. Evidence expires after 30 days. Verified refreshes repeat official reconciliation and policy checks before publishing; mismatches preserve existing listings. Durable conclusions belong in documentation as well as structured evidence.
 
 ## Coverage signals
 

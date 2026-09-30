@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { SyncSource } from './sync-source.js';
 import { MemoryJobRepository } from '../infrastructure/storage/memory.js';
 import { htmlPreparation } from '../infrastructure/html.js';
 import { LabelMappingStrategy } from '../domain/classification.js';
 import type { ExtractedPosting, Provider, Source } from '../domain/model.js';
-import type { SourceAdapter } from '../ports/ingestion.js';
+import type { PostingValidation, SourceAdapter } from '../ports/ingestion.js';
 
 const source: Source = {
   id: 'test',
@@ -28,7 +28,7 @@ const posting = (id: string): ExtractedPosting => ({
   publishedAt: null,
 });
 
-function setup() {
+function setup(validation?: PostingValidation) {
   const repository = new MemoryJobRepository();
   let records = [posting('1'), posting('2'), posting('3'), posting('4')];
   let failure = false;
@@ -64,6 +64,7 @@ function setup() {
       htmlPreparation,
       [new LabelMappingStrategy()],
       () => at,
+      validation,
     ),
     records: (value: ExtractedPosting[]) => {
       records = value;
@@ -189,5 +190,47 @@ describe('source synchronization', () => {
 
     await test.repository.startRun(source, '2026-09-30T12:00:00.000Z');
     await expect(test.sync.execute(source)).rejects.toThrow('already');
+  });
+
+  it('preserves all prior listings and publication version when official reconciliation fails', async () => {
+    let reject = false;
+
+    const test = setup({
+      validate: async () => {
+        if (reject) {
+          throw new Error('Official reconciliation failed');
+        }
+
+        return [];
+      },
+    });
+
+    await test.sync.execute(source);
+
+    const before = await test.repository.read();
+
+    reject = true;
+    test.records([posting('1')]);
+    await expect(test.sync.execute(source)).rejects.toThrow('Official reconciliation failed');
+
+    const after = await test.repository.read();
+
+    expect(after.version).toBe(before.version);
+    expect(after.jobs).toEqual(before.jobs);
+    expect(after.runs.at(-1)?.status).toBe('failed');
+  });
+
+  it('persists official reconciliation evidence with the successful snapshot', async () => {
+    const evidence = {
+      url: 'https://example.com/careers',
+      fetchedAt: '2026-09-30T12:00:00.000Z',
+      body: { matched: true },
+    };
+
+    const test = setup({ validate: async () => [evidence] });
+    const commit = vi.spyOn(test.repository, 'commitSnapshot');
+
+    await test.sync.execute(source);
+    expect(commit.mock.calls[0]?.[0].rawResponses).toContainEqual(evidence);
   });
 });

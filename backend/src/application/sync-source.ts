@@ -2,7 +2,12 @@ import { createHash } from 'node:crypto';
 import { classify } from '../domain/classification.js';
 import type { ClassificationStrategy } from '../domain/classification.js';
 import type { NormalizedPosting, Provider, Source } from '../domain/model.js';
-import type { HtmlPreparation, JobRepository, SourceAdapter } from '../ports/ingestion.js';
+import type {
+  HtmlPreparation,
+  JobRepository,
+  PostingValidation,
+  SourceAdapter,
+} from '../ports/ingestion.js';
 
 export class SyncSource {
   constructor(
@@ -11,6 +16,7 @@ export class SyncSource {
     private readonly html: HtmlPreparation,
     private readonly strategies: readonly ClassificationStrategy[],
     private readonly clock: () => Date = () => new Date(),
+    private readonly validation?: PostingValidation,
   ) {}
 
   async execute(source: Source) {
@@ -23,6 +29,7 @@ export class SyncSource {
 
     try {
       const extraction = await this.adapters[source.provider].extract(source);
+      const auditResponses = (await this.validation?.validate(source, extraction)) ?? [];
       const ids = new Set<string>();
 
       const postings: NormalizedPosting[] = extraction.postings.map((posting) => {
@@ -56,7 +63,7 @@ export class SyncSource {
         runId: run.id,
         observedAt: this.clock().toISOString(),
         postings,
-        rawResponses: extraction.rawResponses,
+        rawResponses: [...extraction.rawResponses, ...auditResponses],
         excluded: extraction.excluded,
         enumerationComplete: extraction.enumerationComplete,
       });

@@ -62,3 +62,57 @@ All sources remain `candidate`, unscheduled, and displayed as partial coverage. 
 employer-scope reconciliation, access-policy review, and Mozilla entity/board reconciliation
 remain outstanding. These counts validate the configured feeds, not worldwide employer
 completeness or permission for public redisplay.
+
+## Evidence-backed official-site audits
+
+Observed 30 September 2026, approximately 20:37 UTC. `pnpm audit:wave-a` fetched official
+inventories, source feeds, robots rules and published policy/documentation references. The compact
+company reports are in `backend/config/audit-evidence/`; their `artifactDirectory` fields locate
+timestamped ignored raw evidence. The command correctly returned a nonzero exit code because
+scope/access approval and some source comparisons remain unresolved.
+
+| Company                | Feed vacancies | Official IDs observed | Result                                                                                                                                                                                                        |
+| ---------------------- | -------------: | --------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OpenAI                 |            834 |               Unknown | Official careers page returned 403; hosted Ashby HTML did not expose a usable server-rendered inventory. Not evidence of zero vacancies.                                                                      |
+| Anthropic              |            635 |                   634 | 634 exact IDs matched; one feed-only posting remains unexplained. Two prospect entries excluded from the feed.                                                                                                |
+| Figma                  |            165 |                   163 | 163 exact IDs matched; two feed-only postings remain unexplained.                                                                                                                                             |
+| Discord                |             58 |                    58 | All IDs matched across three boards: 48 main, 8 international, 2 EOR.                                                                                                                                         |
+| Reddit                 |            145 |                   145 | Exact posting-ID set match.                                                                                                                                                                                   |
+| Palantir               |            318 |                   318 | Exact posting-ID set match against its hosted Lever board.                                                                                                                                                    |
+| Five Rings             |             16 |                    16 | Exact posting-ID set match against official careers links.                                                                                                                                                    |
+| Radix Trading          |             15 |                    15 | Both hosted boards matched (8 university, 7 experienced); official-site robots retrieval returned HTML rather than a valid robots response, so attribution/access remain blocked.                             |
+| Headlands Technologies |              8 |                     6 | Six exact IDs matched; two feed-only postings remain unexplained.                                                                                                                                             |
+| Mozilla                |             81 |                    29 | All 29 official IDs matched. The other 52 postings share native Greenhouse requisition IDs with official postings and are recorded as location variants, not merged. Entity/channel scope remains unresolved. |
+
+### Additional hiring channels and differences
+
+Discord's official `careersNew2025.js` names `discord`, `discordinternational` and `internationaleor`
+in `DISCORD_JOB_BOARDS`. The two additional boards were missing from our registry. They are now
+registered as candidates, and a real PostgreSQL sync imported their ten postings. The running API
+confirmed **58 Discord listings across three sources**. No existing source IDs were changed.
+
+The unexplained feed-only postings at this observation were:
+
+- Anthropic `5427938008`: Strategy & Operations, FDE.
+- Figma `6211119004`: Account Executive, Strategic (São Paulo, Brazil).
+- Figma `6112961004`: Strategic Finance, AI Innovation.
+- Headlands `4336806009`: C++ Software Developer - New Grad.
+- Headlands `4273272009`: Legal & Compliance Associate.
+
+These differences may involve refresh/cache lag or deliberate official-site selection, but no cause
+has been established. They were not silently excluded or treated as closed. Counts may change
+between observations.
+
+### Access-policy posture
+
+Published employer references and ATS API documentation were captured where accessible, with
+normalized-text hashes available for review. OpenAI's terms page also returned 403; Palantir's
+legal page failed retrieval during this run. Discord's captured terms contain a restriction on
+scraping its services without written consent: applicability to careers pages, documented ATS API
+access and description display must be resolved, not assumed. Some references are policy indexes,
+service terms or discovery seeds rather than established job-feed authorization.
+
+**No company has been promoted to verified or scheduled.** Exact board matches alone do not
+complete employer-scope or access/display review. The software now enforces those decisions,
+reviewed policy hashes and current reconciliation rather than accepting an unsupported flag change.
+See [AUDITING.md](AUDITING.md) for the review, safe activation and runtime guard procedure.

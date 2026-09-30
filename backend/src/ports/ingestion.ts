@@ -15,6 +15,10 @@ export interface SourceAdapter {
   extract(source: Source): Promise<Extraction>;
 }
 
+export interface PostingValidation {
+  validate(source: Source, extraction: Extraction): Promise<RawResponse[]>;
+}
+
 export interface HtmlPreparation {
   prepare(html: string): { html: string; text: string };
 }

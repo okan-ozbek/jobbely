@@ -19,6 +19,8 @@
     "format": "pnpm lint:fix && prettier --write .",
     "format:check": "prettier --check .",
     "sync": "pnpm --filter @jobbely/backend sync",
+    "sync:wave-a": "pnpm --filter @jobbely/backend run sync --wave A",
+    "audit:wave-a": "pnpm --filter @jobbely/backend run audit --wave A",
     "db:generate": "pnpm --filter @jobbely/backend db:generate",
     "db:migrate": "pnpm --filter @jobbely/backend db:migrate"
   },

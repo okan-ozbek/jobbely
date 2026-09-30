@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "companySlug": "headlands",
+  "observedAt": "2026-09-30T20:37:52.148Z",
+  "configurationHash": "3c5b784c6df819f55943e9b1ef45aa8e9e618066f09a8ea497d2425a9d37dfc9",
+  "artifactDirectory": "backend/data/audits/headlands/2026-09-30T20-37-52.148Z/",
+  "blockers": [
+    "scope review is pending: Investigate official-site/feed differences and location-specific vacancy links; do not merge roles by title.",
+    "access review is pending: Review employer access/display conditions and Greenhouse API documentation."
+  ],
+  "policies": [
+    {
+      "url": "https://www.headlandstech.com/",
+      "textSha256": "31bd6c35d2d119c0b24b52c7218b2198c8cd005a6b59f387de0e0ba2ad8b8063",
+      "rawSha256": "1a04d9c590073bcdd9b549c9a10d61808805d56551abaf49e761a0bd51cb30e1",
+      "robotsUrl": "https://www.headlandstech.com/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    {
+      "url": "https://docs.greenhouse.io/job-board.html",
+      "textSha256": "d2c047f79c422c3c000de14020f2d2a494992a46a7aadee28af78ebca6a984e9",
+      "rawSha256": "666dca356fa154a91e382fe55c007d004c67abb79fb6f7f97055e2d1668c5794",
+      "robotsUrl": "https://docs.greenhouse.io/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://www.headlandstech.com/careers/",
+      "sha256": "f515d18a1ea2cefb661c88cacbfd9af242af62fbe50704a93d17fc3a0425573f",
+      "robotsUrl": "https://www.headlandstech.com/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "links": [
+        "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4194144009",
+        "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4227566009",
+        "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4227758009",
+        "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4227795009",
+        "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4228114009",
+        "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4237953009",
+        "https://www.headlandstech.com/careers/"
+      ],
+      "discoveredBoards": ["greenhouse:headlandstechnologiesllc"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "headlandstechnologiesllc",
+      "feedCount": 8,
+      "officialCount": 6,
+      "excludedCount": 0,
+      "matchedCount": 6,
+      "missingFromFeed": [],
+      "missingFromOfficial": ["4273272009", "4336806009"],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": true,
+      "feedHashes": ["43a78fd9f1f322be5e4169370b1f82936757da69fa0fb284f5db9cff17002d29"],
+      "samples": [
+        {
+          "id": "4227758009",
+          "title": "C++ Software Developer",
+          "url": "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4227758009",
+          "applyUrl": "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4227758009"
+        },
+        {
+          "id": "4336806009",
+          "title": "C++ Software Developer - New Grad",
+          "url": "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4336806009",
+          "applyUrl": "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4336806009"
+        },
+        {
+          "id": "4228114009",
+          "title": "FPGA Engineer",
+          "url": "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4228114009",
+          "applyUrl": "https://job-boards.greenhouse.io/headlandstechnologiesllc/jobs/4228114009"
+        }
+      ],
+      "error": null
+    }
+  ]
+}

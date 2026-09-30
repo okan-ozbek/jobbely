@@ -17,7 +17,7 @@ flowchart LR
   Commit -. failure .-> Fail
 ```
 
-After claiming the lease, the use case selects the adapter, rejects duplicate IDs, prepares HTML/text, rejects empty descriptions, classifies each posting and hashes the normalized content. The repository publishes postings, evidence, versions and successful run state together. Any extraction/preparation/publication exception records failure and is rethrown. A lease conflict fails before another run is created.
+After claiming the lease, the use case selects the adapter, invokes its injected `PostingValidation` port, rejects duplicate IDs, prepares HTML/text, rejects empty descriptions, classifies each posting and hashes the normalized content. Verified-source validation repeats official inventory reconciliation and current access-policy checks; candidate imports remain an investigation path. The repository publishes postings, feed/audit evidence, versions and successful run state together. Any extraction/validation/preparation/publication exception records failure and is rethrown. A lease conflict fails before another run is created. See [AUDITING.md](AUDITING.md).
 
 ## Commands and scheduling
 
@@ -25,11 +25,12 @@ From the repository root:
 
 ```sh
 pnpm --filter @jobbely/backend run sync --company openai
+pnpm sync:wave-a
 pnpm --filter @jobbely/backend run sync --all-enabled
 pnpm --filter @jobbely/backend run worker
 ```
 
-Manual sync requires PostgreSQL mode. `--company` includes configured candidate boards for evaluation; `--all-enabled` selects scheduled sources. One company may have multiple boards, synchronized separately. The CLI continues after a source error and exits unsuccessfully if any source failed.
+Manual sync requires PostgreSQL mode. `--company` and `--wave` include configured candidate boards for evaluation; `--all-enabled` selects scheduled sources. Choose exactly one selector. One company may have multiple boards, synchronized separately. The CLI continues after a source error and exits unsuccessfully if any source failed.
 
 The worker uses pg-boss in the same PostgreSQL database, with local concurrency one, keyed source schedules, UTC refreshes at staggered minutes every 12 hours, and a configured two retries with backoff. It rechecks audit/enabled state before processing a job. The source lease is the cross-process overlap guard; local concurrency alone is not.
 

@@ -1,0 +1,229 @@
+import { load } from 'cheerio';
+import { z } from 'zod';
+import type { Extraction, Source } from '../../domain/model.js';
+import type { AuditPlan } from './model.js';
+
+export interface OfficialIdentity {
+  board: string;
+  id: string | null;
+}
+
+export function officialIdentity(value: string): OfficialIdentity | null {
+  let url: URL;
+
+  try {
+    url = new URL(value);
+  } catch {
+    return null;
+  }
+
+  const parts = url.pathname.split('/').filter(Boolean);
+
+  if (
+    !['https:', 'http:'].includes(url.protocol) ||
+    url.username ||
+    url.password ||
+    !parts[0] ||
+    !/^[a-zA-Z0-9_-]+$/.test(parts[0])
+  ) {
+    return null;
+  }
+
+  if (['boards.greenhouse.io', 'job-boards.greenhouse.io'].includes(url.hostname) && parts[0]) {
+    return { board: `greenhouse:${parts[0]}`, id: parts[1] === 'jobs' ? (parts[2] ?? null) : null };
+  }
+
+  if (['jobs.lever.co', 'jobs.eu.lever.co'].includes(url.hostname) && parts[0]) {
+    return { board: `lever:${parts[0]}`, id: parts[1] && parts[1] !== 'apply' ? parts[1] : null };
+  }
+
+  if (url.hostname === 'jobs.ashbyhq.com' && parts[0]) {
+    return {
+      board: `ashby:${parts[0]}`,
+      id: parts[1] && parts[1] !== 'application' ? parts[1] : null,
+    };
+  }
+
+  return null;
+}
+
+export function inspectOfficialPage(
+  body: string,
+  page: AuditPlan['pages'][number],
+  sources: Source[],
+) {
+  const document = load(body);
+  const ids = new Map<string, Set<string>>();
+  const boards = new Set<string>();
+  const links = new Set<string>();
+  const titles = new Map<string, string>();
+  const paginationHints = new Set<string>();
+
+  for (const element of document('a[rel="next"], a, button').toArray()) {
+    const label = document(element).text().trim();
+
+    if (
+      document(element).attr('rel') === 'next' ||
+      /^(next|load more|show more|more jobs)(\s*[›»→])?$/i.test(label)
+    ) {
+      const href = document(element).attr('href');
+
+      paginationHints.add(
+        href && href !== '#' ? new URL(href, page.url).href : `interactive:${label}`,
+      );
+    }
+  }
+
+  for (const element of document(page.selector).toArray()) {
+    const href = document(element).attr('href');
+
+    if (!href) {
+      continue;
+    }
+
+    let resolved: URL;
+
+    try {
+      resolved = new URL(href, page.url);
+    } catch {
+      continue;
+    }
+
+    if (!['https:', 'http:'].includes(resolved.protocol)) {
+      continue;
+    }
+
+    const link = resolved.href;
+    const identity = officialIdentity(link);
+
+    if (identity || /career|jobs|join-us|recruit|employment/i.test(link)) {
+      links.add(link);
+    }
+
+    if (identity) {
+      boards.add(identity.board);
+
+      if (identity.id) {
+        const values = ids.get(identity.board) ?? new Set<string>();
+
+        values.add(identity.id);
+        ids.set(identity.board, values);
+        titles.set(`${identity.board}:${identity.id}`, document(element).text().trim());
+      }
+    } else if (resolved.origin === new URL(page.url).origin && page.sourceIds.length === 1) {
+      // Mozilla's official wrapper exposes the Greenhouse posting ID in its URL.
+      const mozilla =
+        resolved.hostname === 'www.mozilla.org' &&
+        resolved.pathname.match(/\/careers\/position\/gh\/(\d+)\/?$/);
+
+      const source = sources.find((item) => item.id === page.sourceIds[0]);
+
+      if (mozilla && source?.provider === 'greenhouse') {
+        const key = `${source.provider}:${source.board}`;
+        const values = ids.get(key) ?? new Set<string>();
+
+        values.add(mozilla[1]!);
+        ids.set(key, values);
+        boards.add(key);
+        titles.set(`${key}:${mozilla[1]}`, document(element).text().trim());
+      }
+    }
+  }
+
+  // Embedded URLs establish discovery only, never an exhaustive visible vacancy inventory.
+  for (const match of body.replaceAll('\\/', '/').matchAll(/https?:\/\/[^\s"<>\\&]+/g)) {
+    const identity = officialIdentity(match[0]);
+
+    if (identity) {
+      boards.add(identity.board);
+      links.add(match[0]);
+    }
+  }
+
+  if (page.boardArray) {
+    const name = page.boardArray.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const array = body.match(new RegExp(`${name}\\s*=\\s*(\\[[^\\]]+\\])`));
+
+    if (!array?.[1]) {
+      throw new Error(`Official script no longer exposes ${page.boardArray}`);
+    }
+
+    const tokens = JSON.parse(array[1]) as unknown;
+
+    if (
+      !Array.isArray(tokens) ||
+      tokens.some((token) => typeof token !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(token))
+    ) {
+      throw new Error('Invalid official script board inventory');
+    }
+
+    for (const token of tokens as string[]) {
+      boards.add(`greenhouse:${token}`);
+    }
+  }
+
+  const explicitlyEmpty = Boolean(
+    page.emptySelector &&
+    document(page.emptySelector).length > 0 &&
+    [...ids.values()].every((values) => values.size === 0),
+  );
+
+  return { ids, boards, links, titles, paginationHints, explicitlyEmpty };
+}
+
+export function compareIdentities(feed: Iterable<string>, official: Iterable<string>) {
+  const feedIds = new Set(feed);
+  const officialIds = new Set(official);
+
+  return {
+    matchedCount: [...feedIds].filter((id) => officialIds.has(id)).length,
+    missingFromFeed: [...officialIds].filter((id) => !feedIds.has(id)).sort(),
+    missingFromOfficial: [...feedIds].filter((id) => !officialIds.has(id)).sort(),
+  };
+}
+
+export function greenhouseVariants(extraction: Extraction, officialIds: Set<string>) {
+  const jobsSchema = z.object({
+    jobs: z.array(
+      z.object({
+        id: z.union([z.number().int(), z.string()]),
+        internal_job_id: z.union([z.number().int(), z.string()]).nullish(),
+      }),
+    ),
+  });
+
+  const jobs = extraction.rawResponses.flatMap((raw) => {
+    const result = jobsSchema.safeParse(raw.body);
+
+    return result.success ? result.data.jobs : [];
+  });
+
+  const officialRequisitions = new Map<string, string>();
+  const currentIds = new Set(extraction.postings.map((posting) => posting.sourcePostingId));
+
+  for (const job of jobs) {
+    if (
+      job.internal_job_id !== null &&
+      job.internal_job_id !== undefined &&
+      officialIds.has(String(job.id)) &&
+      currentIds.has(String(job.id))
+    ) {
+      officialRequisitions.set(String(job.internal_job_id), String(job.id));
+    }
+  }
+
+  return jobs.flatMap((job) => {
+    const feedId = String(job.id);
+
+    const requisitionId =
+      job.internal_job_id === null || job.internal_job_id === undefined
+        ? null
+        : String(job.internal_job_id);
+
+    const officialId = requisitionId === null ? undefined : officialRequisitions.get(requisitionId);
+
+    return officialId && requisitionId && currentIds.has(feedId) && !officialIds.has(feedId)
+      ? [{ feedId, officialId, requisitionId }]
+      : [];
+  });
+}

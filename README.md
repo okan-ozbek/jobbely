@@ -2,7 +2,9 @@
 
 Jobbely collects public employer job listings, categorizes them without AI, and lets you search full descriptions and apply on the original company website.
 
-TypeScript lives in separate `/frontend` and `/backend` packages. This first slice supports Greenhouse, Ashby and Lever. All 60 target employers are registered; all 11 feeds for the 10 Wave A companies have been fetched locally, and full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md) and [source-check evidence](docs/SOURCE_CHECKS.md).
+Agents should start with [AGENTS.md](AGENTS.md) for repository boundaries, documentation references and required completion checks.
+
+TypeScript lives in separate `/frontend` and `/backend` packages. This first slice supports Greenhouse, Ashby and Lever. All 60 target employers are registered; all 13 configured feeds for the 10 Wave A companies have been fetched locally, and full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md) and [source-check evidence](docs/SOURCE_CHECKS.md).
 
 ## Prerequisites
 
@@ -131,15 +133,16 @@ Choose exactly one selector: `--company <slug>`, `--wave <A|B|C>`, or `--all-ena
 from running; any failure gives the command a nonzero exit code. Manual ingestion does not
 verify employer scope or enable scheduling.
 
-Audit a configured company's provider payload without publishing listings:
+Audit a company's official listings, hiring channels, policy evidence and provider feeds without publishing listings:
 
 ```powershell
 pnpm --filter @jobbely/backend run audit --company openai
+pnpm audit:wave-a
 ```
 
-Audit reports go to ignored `backend/data/audits/`. Provider traversal is one part of employer-scope verification. Candidate boards may be synced manually, but their missing postings cannot automatically close existing listings.
+Raw audit evidence goes to ignored, timestamped `backend/data/audits/` directories; compact reports go to `backend/config/audit-evidence/`. Audits compare posting IDs, flag new boards, capture policy documents and require recorded scope/access approvals. See [AUDITING.md](docs/AUDITING.md) for review and activation commands. Candidate boards may be synced manually, but their missing postings cannot automatically close existing listings.
 
-Sources in `backend/config/sources.json` are currently candidates with scheduling disabled. After verifying a source and setting `auditStatus: "verified"` and `scheduled: true`, run the separate development worker:
+Sources in `backend/config/sources.json` are currently candidates with scheduling disabled. After the company passes its audit, `audit --company <slug> --activate` can verify its sources and enable schedules; manually setting the flags without passing evidence is rejected. Restart affected processes and run the separate development worker:
 
 ```powershell
 pnpm --filter @jobbely/backend run worker
@@ -203,6 +206,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.
 - [LOGOS](docs/LOGOS.md): local company logos, provenance, refresh commands and N/A fallback.
 - [SOURCES](docs/SOURCES.md): registry, source audits and coverage.
+- [AUDITING](docs/AUDITING.md): official-listing reconciliation, policy evidence, review gates and safe activation.
 - [QUALITY](docs/QUALITY.md): code checks and verification boundaries.
 - [FORMATTING](docs/FORMATTING.md): readable Prettier style, ESLint fixes and editor defaults.
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.

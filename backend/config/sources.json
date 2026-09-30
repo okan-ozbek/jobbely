@@ -32,6 +32,22 @@
     "scheduled": false
   },
   {
+    "id": "discordinternational",
+    "companySlug": "discord",
+    "provider": "greenhouse",
+    "board": "discordinternational",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "internationaleor",
+    "companySlug": "discord",
+    "provider": "greenhouse",
+    "board": "internationaleor",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
     "id": "reddit",
     "companySlug": "reddit",
     "provider": "greenhouse",

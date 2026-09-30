@@ -26,10 +26,12 @@ export async function seedDemo(repository: JobRepository, sources: Source[]) {
     ['palantir', 'Software Engineer, Infrastructure', 'Engineering', 'New York, NY', 'onsite'],
   ];
 
+  const seededCompanies = new Set<string>();
+
   for (const source of sources) {
     const samples = examples.filter(([company]) => company === source.companySlug);
 
-    if (!samples.length) {
+    if (!samples.length || seededCompanies.has(source.companySlug)) {
       continue;
     }
 
@@ -81,5 +83,7 @@ export async function seedDemo(repository: JobRepository, sources: Source[]) {
       rawResponses: [],
       enumerationComplete: false,
     });
+
+    seededCompanies.add(source.companySlug);
   }
 }

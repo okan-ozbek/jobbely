@@ -1,0 +1,264 @@
+{
+  "version": 1,
+  "companySlug": "discord",
+  "observedAt": "2026-09-30T20:42:10.033Z",
+  "configurationHash": "bb4ef0f3dc2aa5c3d441ebceec92a8a75f9c2efd6f91a81014bf488f0134c59d",
+  "artifactDirectory": "backend/data/audits/discord/2026-09-30T20-42-10.032Z/",
+  "blockers": [
+    "scope review is pending: Official careers script names discord, discordinternational and internationaleor. Confirm all three and employer attribution of the EOR board.",
+    "access review is pending: Captured Discord Terms restrict scraping its services without written consent. Establish applicability to careers reconciliation, authorized Greenhouse API access and full-description display before approving; public availability alone is not permission."
+  ],
+  "policies": [
+    {
+      "url": "https://discord.com/terms",
+      "textSha256": "c3bef3ca179d3048d82d55b7ad8f87c190d2d9d2f8b2fd2f4e6fd1b3b2ce1f0c",
+      "rawSha256": "b9d5ce6c27d3258b7080d935d79cb48dae2cf1134ac84367fc6315e757f34ae4",
+      "robotsUrl": "https://discord.com/robots.txt",
+      "robotsSha256": "fd74e7f8abd01d90ce80462af73d0896ed098dd0a61b20f24bf1137dd37979a5",
+      "error": null
+    },
+    {
+      "url": "https://docs.greenhouse.io/job-board.html",
+      "textSha256": "d2c047f79c422c3c000de14020f2d2a494992a46a7aadee28af78ebca6a984e9",
+      "rawSha256": "666dca356fa154a91e382fe55c007d004c67abb79fb6f7f97055e2d1668c5794",
+      "robotsUrl": "https://docs.greenhouse.io/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://discord.com/careers",
+      "sha256": "2da05aef81d2eac0d6a72974a83bb631c2c8167953f8a4e7a30716bd5a473bc5",
+      "robotsUrl": "https://discord.com/robots.txt",
+      "robotsSha256": "fd74e7f8abd01d90ce80462af73d0896ed098dd0a61b20f24bf1137dd37979a5",
+      "links": [
+        "https://discord.com/careers",
+        "https://discord.com/careers#",
+        "https://discord.com/careers#all-jobs",
+        "https://discord.com/careers#main"
+      ],
+      "discoveredBoards": [],
+      "paginationHints": ["interactive:Load More"],
+      "error": null
+    },
+    {
+      "url": "https://discord.com/webflow-scripts/careersNew2025.js",
+      "sha256": "52dd55dc9947383903463332eda297aa4a7700ffce9b7167ab07fe351c9c7155",
+      "robotsUrl": "https://discord.com/robots.txt",
+      "robotsSha256": "fd74e7f8abd01d90ce80462af73d0896ed098dd0a61b20f24bf1137dd37979a5",
+      "links": [],
+      "discoveredBoards": [
+        "greenhouse:discord",
+        "greenhouse:discordinternational",
+        "greenhouse:internationaleor"
+      ],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://job-boards.greenhouse.io/discord",
+      "sha256": "517ed9d9b0c13cf1252a8dc25c55f361b9f1faa9c7b5ec0b4ea5142356883824",
+      "robotsUrl": "https://job-boards.greenhouse.io/robots.txt",
+      "robotsSha256": "17fb1dc3361b057783040fa7f58d72f18707170866d370bd3db6e547bee09058",
+      "links": [
+        "http://job-boards.greenhouse.io/discord",
+        "https://boards.greenhouse.io/discord",
+        "https://job-boards.greenhouse.io/discord",
+        "https://job-boards.greenhouse.io/discord/jobs/8214127002",
+        "https://job-boards.greenhouse.io/discord/jobs/8299493002",
+        "https://job-boards.greenhouse.io/discord/jobs/8369347002",
+        "https://job-boards.greenhouse.io/discord/jobs/8460791002",
+        "https://job-boards.greenhouse.io/discord/jobs/8464570002",
+        "https://job-boards.greenhouse.io/discord/jobs/8498984002",
+        "https://job-boards.greenhouse.io/discord/jobs/8537955002",
+        "https://job-boards.greenhouse.io/discord/jobs/8545675002",
+        "https://job-boards.greenhouse.io/discord/jobs/8575166002",
+        "https://job-boards.greenhouse.io/discord/jobs/8595014002",
+        "https://job-boards.greenhouse.io/discord/jobs/8637188002",
+        "https://job-boards.greenhouse.io/discord/jobs/8637688002",
+        "https://job-boards.greenhouse.io/discord/jobs/8642085002",
+        "https://job-boards.greenhouse.io/discord/jobs/8642087002",
+        "https://job-boards.greenhouse.io/discord/jobs/8642213002",
+        "https://job-boards.greenhouse.io/discord/jobs/8649856002",
+        "https://job-boards.greenhouse.io/discord/jobs/8652853002",
+        "https://job-boards.greenhouse.io/discord/jobs/8656854002",
+        "https://job-boards.greenhouse.io/discord/jobs/8659978002",
+        "https://job-boards.greenhouse.io/discord/jobs/8674411002",
+        "https://job-boards.greenhouse.io/discord/jobs/8675185002",
+        "https://job-boards.greenhouse.io/discord/jobs/8691572002",
+        "https://job-boards.greenhouse.io/discord/jobs/8694476002",
+        "https://job-boards.greenhouse.io/discord/jobs/8697883002",
+        "https://job-boards.greenhouse.io/discord/jobs/8700605002",
+        "https://job-boards.greenhouse.io/discord/jobs/8703614002",
+        "https://job-boards.greenhouse.io/discord/jobs/8722538002",
+        "https://job-boards.greenhouse.io/discord/jobs/8727410002",
+        "https://job-boards.greenhouse.io/discord/jobs/8730666002",
+        "https://job-boards.greenhouse.io/discord/jobs/8731898002",
+        "https://job-boards.greenhouse.io/discord/jobs/8757366002",
+        "https://job-boards.greenhouse.io/discord/jobs/8769799002",
+        "https://job-boards.greenhouse.io/discord/jobs/8771034002",
+        "https://job-boards.greenhouse.io/discord/jobs/8771059002",
+        "https://job-boards.greenhouse.io/discord/jobs/8780263002",
+        "https://job-boards.greenhouse.io/discord/jobs/8801465002",
+        "https://job-boards.greenhouse.io/discord/jobs/8802354002",
+        "https://job-boards.greenhouse.io/discord/jobs/8806163002",
+        "https://job-boards.greenhouse.io/discord/jobs/8806482002",
+        "https://job-boards.greenhouse.io/discord/jobs/8811574002",
+        "https://job-boards.greenhouse.io/discord/jobs/8811982002",
+        "https://job-boards.greenhouse.io/discord/jobs/8815116002",
+        "https://job-boards.greenhouse.io/discord/jobs/8817776002",
+        "https://job-boards.greenhouse.io/discord/jobs/8821508002",
+        "https://job-boards.greenhouse.io/discord/jobs/8823881002",
+        "https://job-boards.greenhouse.io/discord/jobs/8827890002",
+        "https://job-boards.greenhouse.io/discord/jobs/8840756002",
+        "https://job-boards.greenhouse.io/discord/jobs/8846732002"
+      ],
+      "discoveredBoards": ["greenhouse:discord"],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://job-boards.greenhouse.io/discordinternational",
+      "sha256": "59292ba32fe02e2bca142580916e5ad8c08a7b658e167e24e01c93b89e8446ea",
+      "robotsUrl": "https://job-boards.greenhouse.io/robots.txt",
+      "robotsSha256": "17fb1dc3361b057783040fa7f58d72f18707170866d370bd3db6e547bee09058",
+      "links": [
+        "http://job-boards.greenhouse.io/discordinternational",
+        "https://boards.greenhouse.io/discordinternational",
+        "https://job-boards.greenhouse.io/discordinternational",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8797714002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8811951002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8816013002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8817671002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8821947002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8821965002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8821982002",
+        "https://job-boards.greenhouse.io/discordinternational/jobs/8854357002"
+      ],
+      "discoveredBoards": ["greenhouse:discordinternational"],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://job-boards.greenhouse.io/internationaleor",
+      "sha256": "eeb2612218f9b4810a1405a4cfca0d19bbd1c7c0aefff941993306dfdcd22954",
+      "robotsUrl": "https://job-boards.greenhouse.io/robots.txt",
+      "robotsSha256": "17fb1dc3361b057783040fa7f58d72f18707170866d370bd3db6e547bee09058",
+      "links": [
+        "http://job-boards.greenhouse.io/internationaleor",
+        "https://boards.greenhouse.io/internationaleor",
+        "https://job-boards.greenhouse.io/internationaleor",
+        "https://job-boards.greenhouse.io/internationaleor/jobs/8579752002",
+        "https://job-boards.greenhouse.io/internationaleor/jobs/8771051002"
+      ],
+      "discoveredBoards": ["greenhouse:internationaleor"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "discord",
+      "feedCount": 48,
+      "officialCount": 48,
+      "excludedCount": 0,
+      "matchedCount": 48,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": true,
+      "feedHashes": ["f8aa0054a0d869f27a0459d1da8053703d854e37080ff6ccdeab859eb0823e88"],
+      "samples": [
+        {
+          "id": "8806482002",
+          "title": "Commercial Policy Lead",
+          "url": "https://job-boards.greenhouse.io/discord/jobs/8806482002",
+          "applyUrl": "https://job-boards.greenhouse.io/discord/jobs/8806482002"
+        },
+        {
+          "id": "8840756002",
+          "title": "Data Scientist - Client Platform",
+          "url": "https://job-boards.greenhouse.io/discord/jobs/8840756002",
+          "applyUrl": "https://job-boards.greenhouse.io/discord/jobs/8840756002"
+        },
+        {
+          "id": "8722538002",
+          "title": "Engineering Manager, Machine Learning (Safety)",
+          "url": "https://job-boards.greenhouse.io/discord/jobs/8722538002",
+          "applyUrl": "https://job-boards.greenhouse.io/discord/jobs/8722538002"
+        }
+      ],
+      "error": null
+    },
+    {
+      "sourceId": "discordinternational",
+      "feedCount": 8,
+      "officialCount": 8,
+      "excludedCount": 0,
+      "matchedCount": 8,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": true,
+      "feedHashes": ["e9ef06f6af2c2933a32b2298f2e54212fe671b70dda6e2a0ddc8ed594098f8e6"],
+      "samples": [
+        {
+          "id": "8816013002",
+          "title": "Customer Experience Associate (Interim)",
+          "url": "https://job-boards.greenhouse.io/discordinternational/jobs/8816013002",
+          "applyUrl": "https://job-boards.greenhouse.io/discordinternational/jobs/8816013002"
+        },
+        {
+          "id": "8797714002",
+          "title": "Engineering Director & Site Lead- Lisbon",
+          "url": "https://job-boards.greenhouse.io/discordinternational/jobs/8797714002",
+          "applyUrl": "https://job-boards.greenhouse.io/discordinternational/jobs/8797714002"
+        },
+        {
+          "id": "8854357002",
+          "title": "Engineering Manager, Data Platform - Lisbon",
+          "url": "https://job-boards.greenhouse.io/discordinternational/jobs/8854357002",
+          "applyUrl": "https://job-boards.greenhouse.io/discordinternational/jobs/8854357002"
+        }
+      ],
+      "error": null
+    },
+    {
+      "sourceId": "internationaleor",
+      "feedCount": 2,
+      "officialCount": 2,
+      "excludedCount": 0,
+      "matchedCount": 2,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": true,
+      "feedHashes": ["18c559a046080bd81b843c48415ca1dc4bb7a6b7b2b2533c0f783b8446904b6f"],
+      "samples": [
+        {
+          "id": "8771051002",
+          "title": "Account Manager, EMEA",
+          "url": "https://job-boards.greenhouse.io/internationaleor/jobs/8771051002",
+          "applyUrl": "https://job-boards.greenhouse.io/internationaleor/jobs/8771051002"
+        },
+        {
+          "id": "8579752002",
+          "title": "Solutions Architect, Singapore",
+          "url": "https://job-boards.greenhouse.io/internationaleor/jobs/8579752002",
+          "applyUrl": "https://job-boards.greenhouse.io/internationaleor/jobs/8579752002"
+        }
+      ],
+      "error": null
+    }
+  ]
+}

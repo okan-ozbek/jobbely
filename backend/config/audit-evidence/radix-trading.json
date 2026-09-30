@@ -1,0 +1,158 @@
+{
+  "version": 1,
+  "companySlug": "radix-trading",
+  "observedAt": "2026-09-30T20:37:46.352Z",
+  "configurationHash": "771ea60f7927be443c7a5fdce82ee651ba3d7dc518bb82ef5e4672968ce75bc0",
+  "artifactDirectory": "backend/data/audits/radix-trading/2026-09-30T20-37-46.352Z/",
+  "blockers": [
+    "scope review is pending: Reconcile both officially linked boards and confirm all advertised locations and graduate/experienced channels.",
+    "access review is pending: Review employer access/display conditions and documented Greenhouse public GET endpoints.",
+    "https://radixtrading.co/: Unexpected official-site content type: text/html; charset=utf-8"
+  ],
+  "policies": [
+    {
+      "url": "https://radixtrading.co/",
+      "textSha256": "",
+      "rawSha256": "",
+      "robotsUrl": "",
+      "robotsSha256": "",
+      "error": "Unexpected official-site content type: text/html; charset=utf-8"
+    },
+    {
+      "url": "https://docs.greenhouse.io/job-board.html",
+      "textSha256": "d2c047f79c422c3c000de14020f2d2a494992a46a7aadee28af78ebca6a984e9",
+      "rawSha256": "666dca356fa154a91e382fe55c007d004c67abb79fb6f7f97055e2d1668c5794",
+      "robotsUrl": "https://docs.greenhouse.io/robots.txt",
+      "robotsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://radixtrading.co/",
+      "sha256": "",
+      "robotsUrl": "",
+      "robotsSha256": "",
+      "links": [],
+      "discoveredBoards": [],
+      "paginationHints": [],
+      "error": "Unexpected official-site content type: text/html; charset=utf-8"
+    },
+    {
+      "url": "https://job-boards.greenhouse.io/radixuniversity",
+      "sha256": "d3c6968be0b558b6fa3306ee1b4cf638e08faf00e41df2f7ff7fbbd5efe8f718",
+      "robotsUrl": "https://job-boards.greenhouse.io/robots.txt",
+      "robotsSha256": "17fb1dc3361b057783040fa7f58d72f18707170866d370bd3db6e547bee09058",
+      "links": [
+        "http://job-boards.greenhouse.io/radixuniversity",
+        "https://job-boards.greenhouse.io/radixuniversity",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/7841874002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8080910002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8500240002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8500265002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8521638002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8521641002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8521642002",
+        "https://job-boards.greenhouse.io/radixuniversity/jobs/8521654002"
+      ],
+      "discoveredBoards": ["greenhouse:radixuniversity"],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://job-boards.greenhouse.io/radixexperienced",
+      "sha256": "3f109f078458cd63f337a15e15070196006b822b3c8a0474ea80c4199a50ff61",
+      "robotsUrl": "https://job-boards.greenhouse.io/robots.txt",
+      "robotsSha256": "17fb1dc3361b057783040fa7f58d72f18707170866d370bd3db6e547bee09058",
+      "links": [
+        "http://job-boards.greenhouse.io/radixexperienced",
+        "https://boards.greenhouse.io/radixuniversity",
+        "https://job-boards.greenhouse.io/radixexperienced",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/6629844002",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/6629869002",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/6954287002",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/7745843002",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/7997102002",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/8121869002",
+        "https://job-boards.greenhouse.io/radixexperienced/jobs/8468817002"
+      ],
+      "discoveredBoards": ["greenhouse:radixexperienced", "greenhouse:radixuniversity"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "radixuniversity",
+      "feedCount": 8,
+      "officialCount": 8,
+      "excludedCount": 0,
+      "matchedCount": 8,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": false,
+      "feedHashes": ["028d9afe29444eeaa304493420f491907a30f5a61e908c395409c03fcc7b434a"],
+      "samples": [
+        {
+          "id": "8080910002",
+          "title": "Quantitative Business Analyst",
+          "url": "https://job-boards.greenhouse.io/radixuniversity/jobs/8080910002",
+          "applyUrl": "https://job-boards.greenhouse.io/radixuniversity/jobs/8080910002"
+        },
+        {
+          "id": "8521642002",
+          "title": "Quantitative Researcher (Full-Time - Master’s/Bachelor’s)",
+          "url": "https://job-boards.greenhouse.io/radixuniversity/jobs/8521642002",
+          "applyUrl": "https://job-boards.greenhouse.io/radixuniversity/jobs/8521642002"
+        },
+        {
+          "id": "7841874002",
+          "title": "Quantitative Researcher (Full-Time - PhD+)",
+          "url": "https://job-boards.greenhouse.io/radixuniversity/jobs/7841874002",
+          "applyUrl": "https://job-boards.greenhouse.io/radixuniversity/jobs/7841874002"
+        }
+      ],
+      "error": null
+    },
+    {
+      "sourceId": "radixexperienced",
+      "feedCount": 7,
+      "officialCount": 7,
+      "excludedCount": 0,
+      "matchedCount": 7,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": false,
+      "feedHashes": ["b38c62ca02fc86091f37c9621eb0d9331c971c0283cff5361e857e41b6970dc9"],
+      "samples": [
+        {
+          "id": "6954287002",
+          "title": "Compliance Specialist – Amsterdam",
+          "url": "https://job-boards.greenhouse.io/radixexperienced/jobs/6954287002",
+          "applyUrl": "https://job-boards.greenhouse.io/radixexperienced/jobs/6954287002"
+        },
+        {
+          "id": "8121869002",
+          "title": "HPC Systems Engineer",
+          "url": "https://job-boards.greenhouse.io/radixexperienced/jobs/8121869002",
+          "applyUrl": "https://job-boards.greenhouse.io/radixexperienced/jobs/8121869002"
+        },
+        {
+          "id": "7745843002",
+          "title": "Network Engineer",
+          "url": "https://job-boards.greenhouse.io/radixexperienced/jobs/7745843002",
+          "applyUrl": "https://job-boards.greenhouse.io/radixexperienced/jobs/7745843002"
+        }
+      ],
+      "error": null
+    }
+  ]
+}
