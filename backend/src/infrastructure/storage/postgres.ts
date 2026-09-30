@@ -1,10 +1,10 @@
-import { randomUUID } from "node:crypto";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../../generated/prisma/client.js";
-import type { Prisma } from "../../generated/prisma/client.js";
-import type { Dataset, Job, Source, SourceRun } from "../../domain/model.js";
-import type { JobRepository, SnapshotCommit } from "../../ports/ingestion.js";
-import { applySnapshot } from "./snapshot.js";
+import { randomUUID } from 'node:crypto';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../../generated/prisma/client.js';
+import type { Prisma } from '../../generated/prisma/client.js';
+import type { Dataset, Job, Source, SourceRun } from '../../domain/model.js';
+import type { JobRepository, SnapshotCommit } from '../../ports/ingestion.js';
+import { applySnapshot } from './snapshot.js';
 
 function json(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -16,9 +16,7 @@ export class PostgresJobRepository implements JobRepository {
       adapter: new PrismaPg({ connectionString }),
     });
   }
-  private async readWithin(
-    transaction: Prisma.TransactionClient,
-  ): Promise<Dataset> {
+  private async readWithin(transaction: Prisma.TransactionClient): Promise<Dataset> {
     const [version, postings, runs] = await Promise.all([
       transaction.datasetVersion.findUnique({ where: { id: 1 } }),
       transaction.posting.findMany(),
@@ -31,10 +29,9 @@ export class PostgresJobRepository implements JobRepository {
     };
   }
   async read(): Promise<Dataset> {
-    return this.client.$transaction(
-      (transaction) => this.readWithin(transaction),
-      { isolationLevel: "RepeatableRead" },
-    );
+    return this.client.$transaction((transaction) => this.readWithin(transaction), {
+      isolationLevel: 'RepeatableRead',
+    });
   }
   async startRun(source: Source, at: string) {
     return this.client.$transaction(async (transaction) => {
@@ -42,31 +39,34 @@ export class PostgresJobRepository implements JobRepository {
       const lease = await transaction.sourceLease.findUnique({
         where: { sourceId: source.id },
       });
-      if (lease && lease.expiresAt.getTime() > Date.parse(at)) return null;
+      if (lease && lease.expiresAt.getTime() > Date.parse(at)) {
+        return null;
+      }
       if (lease) {
         const old = await transaction.run.findUnique({
           where: { id: lease.runId },
         });
-        if (old?.status === "running")
+        if (old?.status === 'running') {
           await transaction.run.update({
             where: { id: old.id },
             data: {
-              status: "failed",
+              status: 'failed',
               payload: json({
                 ...(old.payload as unknown as SourceRun),
-                status: "failed",
+                status: 'failed',
                 finishedAt: at,
-                error: "Worker lease expired",
+                error: 'Worker lease expired',
               }),
             },
           });
+        }
       }
       const run: SourceRun = {
         id: randomUUID(),
         sourceId: source.id,
         startedAt: at,
         finishedAt: null,
-        status: "running",
+        status: 'running',
         listingCount: 0,
         excludedCount: 0,
         enumerationComplete: false,
@@ -108,13 +108,12 @@ export class PostgresJobRepository implements JobRepository {
         if (
           lease?.runId !== commit.runId ||
           lease.expiresAt.getTime() <= Date.parse(commit.observedAt)
-        )
-          throw new Error("Source lease was lost or expired");
+        ) {
+          throw new Error('Source lease was lost or expired');
+        }
         const before = await this.readWithin(transaction);
         const result = applySnapshot(before, commit);
-        for (const job of result.dataset.jobs.filter(
-          (job) => job.sourceId === commit.source.id,
-        )) {
+        for (const job of result.dataset.jobs.filter((job) => job.sourceId === commit.source.id)) {
           const values = {
             sourceId: job.sourceId,
             sourcePostingId: job.sourcePostingId,
@@ -131,7 +130,7 @@ export class PostgresJobRepository implements JobRepository {
             update: values,
           });
         }
-        for (const job of result.changed)
+        for (const job of result.changed) {
           await transaction.postingVersion.create({
             data: {
               postingId: job.id,
@@ -140,7 +139,8 @@ export class PostgresJobRepository implements JobRepository {
               payload: json(job),
             },
           });
-        for (const raw of commit.rawResponses)
+        }
+        for (const raw of commit.rawResponses) {
           await transaction.snapshot.create({
             data: {
               runId: commit.runId,
@@ -150,6 +150,7 @@ export class PostgresJobRepository implements JobRepository {
               payload: json(raw.body),
             },
           });
+        }
         await transaction.run.update({
           where: { id: commit.runId },
           data: { status: result.run.status, payload: json(result.run) },
@@ -170,19 +171,23 @@ export class PostgresJobRepository implements JobRepository {
   async failRun(runId: string, at: string, error: string) {
     await this.client.$transaction(async (transaction) => {
       const row = await transaction.run.findUnique({ where: { id: runId } });
-      if (!row || row.status !== "running") return;
+      if (!row || row.status !== 'running') {
+        return;
+      }
       await transaction.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${row.sourceId}))`;
       const current = await transaction.run.findUnique({
         where: { id: runId },
       });
-      if (!current || current.status !== "running") return;
+      if (!current || current.status !== 'running') {
+        return;
+      }
       await transaction.run.update({
         where: { id: runId },
         data: {
-          status: "failed",
+          status: 'failed',
           payload: json({
             ...(current.payload as unknown as SourceRun),
-            status: "failed",
+            status: 'failed',
             finishedAt: at,
             error,
           }),

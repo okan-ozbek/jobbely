@@ -5,7 +5,7 @@ import type {
   RawResponse,
   Source,
   SourceRun,
-} from "../domain/model.js";
+} from '../domain/model.js';
 export interface JsonTransport {
   get(url: string): Promise<RawResponse>;
 }

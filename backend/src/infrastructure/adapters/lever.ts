@@ -1,17 +1,7 @@
-import { z } from "zod";
-import type {
-  ExtractedPosting,
-  RawResponse,
-  Source,
-} from "../../domain/model.js";
-import type { JsonTransport, SourceAdapter } from "../../ports/ingestion.js";
-import {
-  decode,
-  httpsUrl,
-  text,
-  vacancyExcluded,
-  workplace,
-} from "./schemas.js";
+import { z } from 'zod';
+import type { ExtractedPosting, RawResponse, Source } from '../../domain/model.js';
+import type { JsonTransport, SourceAdapter } from '../../ports/ingestion.js';
+import { decode, httpsUrl, text, vacancyExcluded, workplace } from './schemas.js';
 const responseSchema = z.array(
   z.object({
     id: text,
@@ -19,11 +9,9 @@ const responseSchema = z.array(
     hostedUrl: httpsUrl,
     applyUrl: httpsUrl,
     description: z.string(),
-    lists: z
-      .array(z.object({ text: z.string(), content: z.string() }))
-      .default([]),
-    additional: z.string().default(""),
-    salaryDescription: z.string().default(""),
+    lists: z.array(z.object({ text: z.string(), content: z.string() })).default([]),
+    additional: z.string().default(''),
+    salaryDescription: z.string().default(''),
     categories: z.object({
       location: z.string().optional(),
       allLocations: z.array(z.string()).optional(),
@@ -51,10 +39,9 @@ export class LeverAdapter implements SourceAdapter {
       rawResponses.push(raw);
       const jobs = decode(responseSchema, raw.body);
       for (const job of jobs) {
-        if (seen.has(job.id))
-          throw new Error(
-            "Lever returned repeated IDs; pagination cannot be trusted",
-          );
+        if (seen.has(job.id)) {
+          throw new Error('Lever returned repeated IDs; pagination cannot be trusted');
+        }
         seen.add(job.id);
         if (vacancyExcluded(job.text)) {
           excluded++;
@@ -67,37 +54,32 @@ export class LeverAdapter implements SourceAdapter {
           applyUrl: job.applyUrl,
           descriptionHtml: [
             job.description,
-            ...job.lists.map(
-              (list) => `<h3>${escapeHtml(list.text)}</h3>${list.content}`,
-            ),
+            ...job.lists.map((list) => `<h3>${escapeHtml(list.text)}</h3>${list.content}`),
             job.additional,
             job.salaryDescription,
-          ].join("\n"),
+          ].join('\n'),
           departments: [job.categories.department, job.categories.team].filter(
             (item): item is string => Boolean(item),
           ),
           locations: [
             ...new Set(
-              [
-                ...(job.categories.allLocations ?? []),
-                job.categories.location ?? "",
-              ].filter(Boolean),
+              [...(job.categories.allLocations ?? []), job.categories.location ?? ''].filter(
+                Boolean,
+              ),
             ),
           ],
           workplace: workplace(job.workplaceType),
-          employment: job.categories.commitment ?? "unknown",
+          employment: job.categories.commitment ?? 'unknown',
           publishedAt: null,
         });
       }
-      if (jobs.length < this.pageSize)
+      if (jobs.length < this.pageSize) {
         return { postings, rawResponses, excluded, enumerationComplete: true };
+      }
     }
-    throw new Error("Lever pagination exceeded the 100-page budget");
+    throw new Error('Lever pagination exceeded the 100-page budget');
   }
 }
 function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

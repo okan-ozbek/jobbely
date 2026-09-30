@@ -1,20 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import {
-  ApiError,
-  listCategories,
-  listCompanies,
-  listJobs,
-} from "../api/client.js";
-import type { Company, Job, JobsQuery } from "../api/client.js";
+import { useEffect, useRef, useState } from 'react';
+import { ApiError, listCategories, listCompanies, listJobs } from '../api/client.js';
+import type { Company, Job, JobsQuery } from '../api/client.js';
 export function useJobCatalog(query: JobsQuery) {
   const [companies, setCompanies] = useState<Company[]>([]);
-  const [categories, setCategories] = useState<
-    { slug: string; name: string }[]
-  >([]);
+  const [categories, setCategories] = useState<{ slug: string; name: string }[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [total, setTotal] = useState(0);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [mode, setMode] = useState<"demo" | "postgres" | null>(null);
+  const [mode, setMode] = useState<'demo' | 'postgres' | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +26,9 @@ export function useJobCatalog(query: JobsQuery) {
         listCategories(controller.signal),
       ])
         .then(([list, companyList, categoryList]) => {
-          if (requestId !== sequence.current) return;
+          if (requestId !== sequence.current) {
+            return;
+          }
           setJobs(list.items);
           setTotal(list.total);
           setNextCursor(list.nextCursor);
@@ -42,16 +37,14 @@ export function useJobCatalog(query: JobsQuery) {
           setCategories(categoryList);
         })
         .catch((reason) => {
-          if (!controller.signal.aborted && requestId === sequence.current)
-            setError(
-              reason instanceof Error
-                ? reason.message
-                : "Could not connect to Jobbely.",
-            );
+          if (!controller.signal.aborted && requestId === sequence.current) {
+            setError(reason instanceof Error ? reason.message : 'Could not connect to Jobbely.');
+          }
         })
         .finally(() => {
-          if (requestId === sequence.current && !controller.signal.aborted)
+          if (requestId === sequence.current && !controller.signal.aborted) {
             setLoading(false);
+          }
         });
     }, 200);
     return () => {
@@ -60,26 +53,31 @@ export function useJobCatalog(query: JobsQuery) {
     };
   }, [query, retry]);
   const loadMore = async () => {
-    if (!nextCursor || loading || loadingMore) return;
+    if (!nextCursor || loading || loadingMore) {
+      return;
+    }
     const requestId = sequence.current;
     setLoadingMore(true);
     try {
       const page = await listJobs({ ...query, cursor: nextCursor });
-      if (requestId !== sequence.current) return;
+      if (requestId !== sequence.current) {
+        return;
+      }
       setJobs((previous) => [...previous, ...page.items]);
       setNextCursor(page.nextCursor);
     } catch (reason) {
-      if (requestId !== sequence.current) return;
-      if (reason instanceof ApiError && reason.code === "cursor_stale")
+      if (requestId !== sequence.current) {
+        return;
+      }
+      if (reason instanceof ApiError && reason.code === 'cursor_stale') {
         setRetry((value) => value + 1);
-      else
-        setError(
-          reason instanceof Error
-            ? reason.message
-            : "Could not load more listings.",
-        );
+      } else {
+        setError(reason instanceof Error ? reason.message : 'Could not load more listings.');
+      }
     } finally {
-      if (requestId === sequence.current) setLoadingMore(false);
+      if (requestId === sequence.current) {
+        setLoadingMore(false);
+      }
     }
   };
 

@@ -1,11 +1,29 @@
 {
-  "name": "@jobbely/frontend", "private": true, "type": "module",
+  "name": "@jobbely/frontend",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vite --configLoader runner --host 127.0.0.1", "build": "tsc --noEmit && vite build --configLoader runner", "typecheck": "tsc --noEmit",
-    "lint": "eslint src --max-warnings 0", "lint:fix": "eslint src --fix",
-    "format": "prettier --write src", "format:check": "prettier --check src",
+    "dev": "vite --configLoader runner --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build --configLoader runner",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src vite.config.ts --max-warnings 0",
+    "lint:fix": "eslint src vite.config.ts --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "generate:api": "openapi-typescript ../contracts/openapi.json -o src/api/generated/schema.ts"
   },
-  "dependencies": { "react": "^19.2.0", "react-dom": "^19.2.0", "openapi-fetch": "^0.15.0", "lucide-react": "^0.468.0" },
-  "devDependencies": { "vite": "^7.1.12", "@vitejs/plugin-react": "^5.0.4", "typescript": "^5.9.3", "@types/react": "^19.2.2", "@types/react-dom": "^19.2.2", "openapi-typescript": "^7.10.1" }
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "openapi-fetch": "^0.15.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.12",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "^5.9.3",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "openapi-typescript": "^7.10.1"
+  }
 }

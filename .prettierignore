@@ -1,7 +1,12 @@
-node_modules/
+**/node_modules/
 **/dist/
+**/coverage/
+**/.env*
 backend/src/generated/
 frontend/src/api/generated/
+backend/data/
 contracts/
 pnpm-lock.yaml
 MVP_PLAN.md
+playwright-report/
+test-results/

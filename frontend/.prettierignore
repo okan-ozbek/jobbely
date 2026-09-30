@@ -1,2 +1,5 @@
 dist/
 src/api/generated/
+node_modules/
+coverage/
+.env*

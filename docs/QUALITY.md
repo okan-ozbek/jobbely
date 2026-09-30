@@ -19,13 +19,13 @@ Domain code depends only on domain code. Ports may depend on domain/ports. Appli
 | `pnpm test`         | Backend policies, adapters, HTTP, use cases, API and optional PostgreSQL tests |
 | `pnpm contracts`    | OpenAPI export and generated frontend contract                                 |
 | `pnpm build`        | Backend client/code build, contract generation and frontend production build   |
-| `pnpm check`        | Dependency boundaries followed by lint, types, tests and builds                |
+| `pnpm check`        | Formatting check, dependency boundaries, lint, types, tests and builds         |
 
 The base TypeScript settings include unchecked-index and exact-optional-property checks and unused-variable checks. `check-boundaries.mjs` checks literal import/module references in production domain/application/ports and frontend sources. It is a lightweight textual guard, not complete static dependency analysis. Tests are excluded from the backend layer restriction to allow test fixtures/fakes.
 
 ### Linting and formatting
 
-[`eslint.config.mjs`](../eslint.config.mjs) at the repository root configures `typescript-eslint`'s recommended rules plus `consistent-type-imports` and a ban on explicit `any`, applied to `backend/src`, `frontend/src` and `scripts`. Prettier formats the same TypeScript/TSX sources plus `docs`, root JSON/YAML and `README.md`; root [`.prettierignore`](../.prettierignore) and the package-local `backend/.prettierignore` / `frontend/.prettierignore` exclude generated Prisma/OpenAPI output and build directories.
+[`eslint.config.mjs`](../eslint.config.mjs) configures `typescript-eslint`'s recommended rules, type-only imports, a ban on explicit `any`, explicit control-flow braces and strict equality. It checks sources, TypeScript configuration files, supporting scripts and the lint configuration itself. Prettier uses the shared [`.prettierrc.json`](../.prettierrc.json) and scans the repository, including package configuration files. Root [`.prettierignore`](../.prettierignore) and package-local ignore files exclude generated outputs, builds, dependencies, secrets and local data. See [FORMATTING.md](FORMATTING.md) for the style and rationale.
 
 Run both checks from the repository root, across both packages at once:
 
@@ -45,7 +45,7 @@ pnpm --filter @jobbely/frontend run lint
 pnpm --filter @jobbely/frontend run format
 ```
 
-Because ESLint's flat config is resolved by walking up from the current directory, package-scoped runs still pick up the root `eslint.config.mjs`. `pnpm check` runs `pnpm lint` but not `pnpm format`; run formatting explicitly before committing, or wire `format:check` into CI alongside `check`.
+Package-scoped runs pick up the shared root ESLint and Prettier configurations. `pnpm check` begins with `format:check` and also runs lint; it never rewrites files. Use `pnpm lint:fix` followed by `pnpm format` to apply fixes before running checks.
 
 Formatting uses Prettier. Generated outputs, build directories and installed dependencies are excluded where appropriate. Keep lockfile changes intentional and use frozen installs for reproduction.
 

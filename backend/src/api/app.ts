@@ -1,12 +1,12 @@
-import Fastify from "fastify";
-import cors from "@fastify/cors";
-import swagger from "@fastify/swagger";
-import { Type } from "@sinclair/typebox";
-import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
-import type { JobCatalog } from "../application/catalog.js";
-import { QueryError } from "../application/catalog.js";
-import { categories } from "../domain/taxonomy.js";
-import type { JobRepository } from "../ports/ingestion.js";
+import Fastify from 'fastify';
+import cors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import { Type } from '@sinclair/typebox';
+import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import type { JobCatalog } from '../application/catalog.js';
+import { QueryError } from '../application/catalog.js';
+import { categories } from '../domain/taxonomy.js';
+import type { JobRepository } from '../ports/ingestion.js';
 import {
   companySchema,
   errorSchema,
@@ -14,7 +14,7 @@ import {
   filterSchema,
   jobSchema,
   listSchema,
-} from "./schemas.js";
+} from './schemas.js';
 
 export async function createApp(dependencies: {
   catalog: JobCatalog;
@@ -37,14 +37,14 @@ export async function createApp(dependencies: {
    * Register CORS plugin for the Fastify application.
    */
   await app.register(cors, {
-    origin: dependencies.origin ?? "http://127.0.0.1:5173",
+    origin: dependencies.origin ?? 'http://127.0.0.1:5173',
   });
 
   /**
    * Register Swagger plugin for the Fastify application.
    */
   await app.register(swagger, {
-    openapi: { info: { title: "Jobbely API", version: "0.1.0" } },
+    openapi: { info: { title: 'Jobbely API', version: '0.1.0' } },
   });
 
   /**
@@ -52,7 +52,7 @@ export async function createApp(dependencies: {
    *
    * @param dependencies - The dependencies required to create the app, including the job catalog, repository, origin, and logger.
    */
-  app.addHook("onClose", () => dependencies.repository.close());
+  app.addHook('onClose', () => dependencies.repository.close());
 
   /**
    * Register the global error handler for the Fastify application.
@@ -64,7 +64,7 @@ export async function createApp(dependencies: {
    */
   app.setErrorHandler((error, request, reply) => {
     if (error instanceof QueryError) {
-      const statusCode: number = error.code === "cursor_stale" ? 409 : 400;
+      const statusCode: number = error.code === 'cursor_stale' ? 409 : 400;
 
       return reply.code(statusCode).send({
         code: error.code,
@@ -72,18 +72,18 @@ export async function createApp(dependencies: {
       });
     }
 
-    if (error instanceof Error && "validation" in error) {
+    if (error instanceof Error && 'validation' in error) {
       return reply.code(400).send({
-        code: "invalid_request",
-        message: "Invalid request parameters",
+        code: 'invalid_request',
+        message: 'Invalid request parameters',
       });
     }
 
     request.log.error(error);
 
     return reply.code(500).send({
-      code: "internal_error",
-      message: "Unable to read listings right now",
+      code: 'internal_error',
+      message: 'Unable to read listings right now',
     });
   });
 
@@ -94,10 +94,10 @@ export async function createApp(dependencies: {
    * @returns A list of jobs matching the provided filters.
    */
   app.get(
-    "/api/v1/jobs",
+    '/api/v1/jobs',
     {
       schema: {
-        operationId: "listJobs",
+        operationId: 'listJobs',
         querystring: filterSchema,
         response: { 200: listSchema, 400: errorSchema, 409: errorSchema },
       },
@@ -112,10 +112,10 @@ export async function createApp(dependencies: {
    * @returns A list of job facets matching the provided filters.
    */
   app.get(
-    "/api/v1/jobs/facets",
+    '/api/v1/jobs/facets',
     {
       schema: {
-        operationId: "jobFacets",
+        operationId: 'jobFacets',
         querystring: filterSchema,
         response: { 200: facetsSchema },
       },
@@ -130,10 +130,10 @@ export async function createApp(dependencies: {
    * @returns The job matching the provided ID, or a 404 error if not found.
    */
   app.get(
-    "/api/v1/jobs/:id",
+    '/api/v1/jobs/:id',
     {
       schema: {
-        operationId: "getJob",
+        operationId: 'getJob',
         params: Type.Object({ id: Type.String({ maxLength: 100 }) }),
         response: { 200: jobSchema, 404: errorSchema },
       },
@@ -143,8 +143,8 @@ export async function createApp(dependencies: {
 
       if (!job) {
         return reply.code(404).send({
-          code: "not_found",
-          message: "This listing could not be found",
+          code: 'not_found',
+          message: 'This listing could not be found',
         });
       }
 
@@ -158,10 +158,10 @@ export async function createApp(dependencies: {
    * @returns A list of all companies.
    */
   app.get(
-    "/api/v1/companies",
+    '/api/v1/companies',
     {
       schema: {
-        operationId: "listCompanies",
+        operationId: 'listCompanies',
         response: { 200: Type.Array(companySchema) },
       },
     },
@@ -175,10 +175,10 @@ export async function createApp(dependencies: {
    * @returns The company matching the provided slug, or a 404 error if not found.
    */
   app.get(
-    "/api/v1/companies/:slug",
+    '/api/v1/companies/:slug',
     {
       schema: {
-        operationId: "getCompany",
+        operationId: 'getCompany',
         params: Type.Object({ slug: Type.String({ maxLength: 100 }) }),
         response: { 200: companySchema, 404: errorSchema },
       },
@@ -190,8 +190,8 @@ export async function createApp(dependencies: {
 
       if (!company) {
         return reply.code(404).send({
-          code: "not_found",
-          message: "Company not found",
+          code: 'not_found',
+          message: 'Company not found',
         });
       }
 
@@ -205,14 +205,12 @@ export async function createApp(dependencies: {
    * @returns A list of all categories.
    */
   app.get(
-    "/api/v1/categories",
+    '/api/v1/categories',
     {
       schema: {
-        operationId: "listCategories",
+        operationId: 'listCategories',
         response: {
-          200: Type.Array(
-            Type.Object({ slug: Type.String(), name: Type.String() }),
-          ),
+          200: Type.Array(Type.Object({ slug: Type.String(), name: Type.String() })),
         },
       },
     },
@@ -224,20 +222,20 @@ export async function createApp(dependencies: {
    *
    * @returns The status of the application.
    */
-  app.get("/health/live", async () => ({ status: "ok" }));
+  app.get('/health/live', async () => ({ status: 'ok' }));
 
   /**
    * Handles the readiness probe for the application.
    *
    * @returns The status of the application.
    */
-  app.get("/health/ready", async (_request, reply) => {
+  app.get('/health/ready', async (_request, reply) => {
     try {
       await dependencies.repository.ping();
 
-      return { status: "ok" };
+      return { status: 'ok' };
     } catch {
-      return reply.code(503).send({ status: "unavailable" });
+      return reply.code(503).send({ status: 'unavailable' });
     }
   });
 

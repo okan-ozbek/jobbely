@@ -1,6 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap');
 :root {
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   color: #242c27;
   background: #f6f5f1;
   font-synthesis: none;
@@ -57,7 +57,7 @@ button:disabled {
   gap: 70px;
 }
 .brand {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 29px;
   letter-spacing: -1.3px;
   font-weight: 800;
@@ -95,7 +95,7 @@ button:disabled {
   font-weight: 600;
 }
 .nav-link.active:after {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   right: 0;
@@ -162,7 +162,7 @@ button:disabled {
   background: #77895e;
 }
 h1 {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 48px;
   line-height: 1.18;
   letter-spacing: -2px;
@@ -187,7 +187,7 @@ h1 span {
   flex-shrink: 0;
 }
 .large-metric {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-size: 57px;
   line-height: 1.1;
   letter-spacing: -2px;
@@ -196,7 +196,7 @@ h1 span {
 }
 .large-metric span {
   display: block;
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-size: 11px;
   letter-spacing: 0;
   color: #7e8675;
@@ -321,7 +321,7 @@ h1 span {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 750;
   font-size: 17px;
   letter-spacing: -0.6px;
@@ -700,7 +700,7 @@ footer span:last-child {
   margin-left: auto;
 }
 .footer-brand {
-  font-family: "Manrope", sans-serif;
+  font-family: 'Manrope', sans-serif;
   font-weight: 800;
   font-size: 16px;
   letter-spacing: -0.5px;

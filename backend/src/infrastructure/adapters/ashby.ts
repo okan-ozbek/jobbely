@@ -1,13 +1,7 @@
-import { z } from "zod";
-import type { Source } from "../../domain/model.js";
-import type { JsonTransport, SourceAdapter } from "../../ports/ingestion.js";
-import {
-  decode,
-  httpsUrl,
-  text,
-  vacancyExcluded,
-  workplace,
-} from "./schemas.js";
+import { z } from 'zod';
+import type { Source } from '../../domain/model.js';
+import type { JsonTransport, SourceAdapter } from '../../ports/ingestion.js';
+import { decode, httpsUrl, text, vacancyExcluded, workplace } from './schemas.js';
 const responseSchema = z.object({
   apiVersion: z.string(),
   jobs: z.array(
@@ -20,9 +14,7 @@ const responseSchema = z.object({
       department: z.string().optional(),
       team: z.string().optional(),
       location: z.string(),
-      secondaryLocations: z
-        .array(z.object({ location: z.string() }))
-        .default([]),
+      secondaryLocations: z.array(z.object({ location: z.string() })).default([]),
       isListed: z.boolean(),
       isRemote: z.boolean().nullish(),
       workplaceType: z.string().nullish(),
@@ -38,11 +30,10 @@ export class AshbyAdapter implements SourceAdapter {
       `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(source.board)}?includeCompensation=true`,
     );
     const response = decode(responseSchema, raw.body);
-    if (response.apiVersion !== "1")
+    if (response.apiVersion !== '1') {
       throw new Error(`Unsupported Ashby API version: ${response.apiVersion}`);
-    const vacancies = response.jobs.filter(
-      (job) => job.isListed && !vacancyExcluded(job.title),
-    );
+    }
+    const vacancies = response.jobs.filter((job) => job.isListed && !vacancyExcluded(job.title));
     return {
       rawResponses: [raw],
       excluded: response.jobs.length - vacancies.length,
@@ -53,19 +44,14 @@ export class AshbyAdapter implements SourceAdapter {
         url: job.jobUrl,
         applyUrl: job.applyUrl,
         descriptionHtml: job.descriptionHtml,
-        departments: [job.department, job.team].filter((item): item is string =>
-          Boolean(item),
-        ),
+        departments: [job.department, job.team].filter((item): item is string => Boolean(item)),
         locations: [
           ...new Set(
-            [
-              job.location,
-              ...job.secondaryLocations.map((item) => item.location),
-            ].filter(Boolean),
+            [job.location, ...job.secondaryLocations.map((item) => item.location)].filter(Boolean),
           ),
         ],
         workplace: workplace(job.workplaceType ?? job.isRemote ?? undefined),
-        employment: job.employmentType ?? "unknown",
+        employment: job.employmentType ?? 'unknown',
         publishedAt: job.publishedAt ?? null,
       })),
     };

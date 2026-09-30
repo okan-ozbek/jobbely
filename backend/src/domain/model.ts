@@ -1,5 +1,5 @@
-export type Provider = "greenhouse" | "ashby" | "lever";
-export type AuditStatus = "candidate" | "verified";
+export type Provider = 'greenhouse' | 'ashby' | 'lever';
+export type AuditStatus = 'candidate' | 'verified';
 export interface Source {
   id: string;
   companySlug: string;
@@ -12,7 +12,7 @@ export interface Company {
   slug: string;
   name: string;
   careersUrl: string;
-  wave: "A" | "B" | "C";
+  wave: 'A' | 'B' | 'C';
 }
 export interface ExtractedPosting {
   sourcePostingId: string;
@@ -22,21 +22,18 @@ export interface ExtractedPosting {
   descriptionHtml: string;
   departments: string[];
   locations: string[];
-  workplace: "remote" | "hybrid" | "onsite" | "unknown";
+  workplace: 'remote' | 'hybrid' | 'onsite' | 'unknown';
   employment: string;
   publishedAt: string | null;
 }
 export interface Classification {
   category: string;
-  method: "source_mapping" | "title_rule" | "unclassified";
+  method: 'source_mapping' | 'title_rule' | 'unclassified';
   rule: string;
   evidence: string;
   version: string;
 }
-export interface NormalizedPosting extends Omit<
-  ExtractedPosting,
-  "descriptionHtml"
-> {
+export interface NormalizedPosting extends Omit<ExtractedPosting, 'descriptionHtml'> {
   descriptionHtml: string;
   descriptionText: string;
   classification: Classification;
@@ -46,7 +43,7 @@ export interface Job extends NormalizedPosting {
   id: string;
   sourceId: string;
   companySlug: string;
-  status: "active" | "closed";
+  status: 'active' | 'closed';
   firstSeenAt: string;
   lastSeenAt: string;
   missingSince: string | null;
@@ -70,7 +67,7 @@ export interface SourceRun {
   sourceId: string;
   startedAt: string;
   finishedAt: string | null;
-  status: "running" | "succeeded" | "failed";
+  status: 'running' | 'succeeded' | 'failed';
   listingCount: number;
   excludedCount: number;
   enumerationComplete: boolean;

@@ -145,7 +145,7 @@ Schedules refresh enabled sources twice daily, staggered by minute in UTC. The A
 pnpm check
 ```
 
-This checks dependency boundaries, lint, strict TypeScript, behavior/API tests, contract generation, and both builds. PostgreSQL tests run only when `TEST_DATABASE_URL` names a dedicated `jobbely_test_*` database; otherwise they are skipped. See [QUALITY.md](docs/QUALITY.md).
+This checks formatting, dependency boundaries, lint, strict TypeScript, behavior/API tests, contract generation, and both builds. PostgreSQL tests run only when `TEST_DATABASE_URL` names a dedicated `jobbely_test_*` database; otherwise they are skipped. See [QUALITY.md](docs/QUALITY.md).
 
 ### Linting and formatting
 
@@ -167,7 +167,7 @@ pnpm --filter @jobbely/frontend run lint
 pnpm --filter @jobbely/frontend run format
 ```
 
-`pnpm check` runs `lint` but not `format`; run `pnpm format` (or `format:check` in CI) separately before committing. See [QUALITY.md](docs/QUALITY.md#linting-and-formatting) for configuration details.
+`pnpm check` runs `format:check` and `lint` without modifying files. To apply fixes, run `pnpm lint:fix` followed by `pnpm format`. The shared style uses two spaces, 100-column wrapping, single quotes, semicolons and explicit control-flow braces. It covers TypeScript configuration files as well as source code. See [FORMATTING.md](docs/FORMATTING.md) for the complete style and exclusions.
 
 | Symptom                               | Check                                                                                       |
 | ------------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -194,6 +194,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
 - [SOURCES](docs/SOURCES.md): registry, source audits and coverage.
 - [QUALITY](docs/QUALITY.md): code checks and verification boundaries.
+- [FORMATTING](docs/FORMATTING.md): readable Prettier style, ESLint fixes and editor defaults.
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.
 
 Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts, in-app job applications, paid data providers and AI classification are outside the initial scope.

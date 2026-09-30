@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowDown,
   ArrowLeft,
@@ -12,66 +12,67 @@ import {
   Search,
   SlidersHorizontal,
   X,
-} from "lucide-react";
-import type { JobsQuery } from "./api/client.js";
-import { useLocationQuery } from "./hooks/useLocationQuery.js";
-import { useJobCatalog } from "./hooks/useJobCatalog.js";
-import { useJobDetail } from "./hooks/useJobDetail.js";
+} from 'lucide-react';
+import type { JobsQuery } from './api/client.js';
+import { useLocationQuery } from './hooks/useLocationQuery.js';
+import { useJobCatalog } from './hooks/useJobCatalog.js';
+import { useJobDetail } from './hooks/useJobDetail.js';
 
 function initials(name: string) {
   return name
     .split(/\s+/)
     .slice(0, 2)
     .map((word) => word[0])
-    .join("");
+    .join('');
 }
 function relativeDate(value: string) {
-  const hours = Math.max(
-    0,
-    Math.floor((Date.now() - Date.parse(value)) / 3_600_000),
-  );
-  return hours < 1
-    ? "just now"
-    : hours < 24
-      ? `${hours}h ago`
-      : `${Math.floor(hours / 24)}d ago`;
+  const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
+  return hours < 1 ? 'just now' : hours < 24 ? `${hours}h ago` : `${Math.floor(hours / 24)}d ago`;
 }
 const workplaceNames = {
-  remote: "Remote",
-  hybrid: "Hybrid",
-  onsite: "On-site",
-  unknown: "Not specified",
+  remote: 'Remote',
+  hybrid: 'Hybrid',
+  onsite: 'On-site',
+  unknown: 'Not specified',
 };
 const coverageNames = {
-  not_onboarded: "Not connected",
-  partial: "Awaiting source audit",
-  stale: "Refresh overdue",
-  blocked: "Refresh failed",
-  healthy: "Up to date",
-  demo: "Demo source",
+  not_onboarded: 'Not connected',
+  partial: 'Awaiting source audit',
+  stale: 'Refresh overdue',
+  blocked: 'Refresh failed',
+  healthy: 'Up to date',
+  demo: 'Demo source',
 };
 
 export function App() {
   const { params, update } = useLocationQuery();
-  const view = params.get("view") === "companies" ? "companies" : "jobs";
-  const selectedId = params.get("job");
-  const [queryInput, setQueryInput] = useState(params.get("q") ?? "");
-  const [companySearch, setCompanySearch] = useState("");
-  const q = params.get("q");
-  const companyFilter = params.get("company");
-  const categoryFilter = params.get("category");
-  const workplaceFilter = params.get("workplace");
+  const view = params.get('view') === 'companies' ? 'companies' : 'jobs';
+  const selectedId = params.get('job');
+  const [queryInput, setQueryInput] = useState(params.get('q') ?? '');
+  const [companySearch, setCompanySearch] = useState('');
+  const q = params.get('q');
+  const companyFilter = params.get('company');
+  const categoryFilter = params.get('category');
+  const workplaceFilter = params.get('workplace');
   const query: JobsQuery = useMemo(() => {
     const result: JobsQuery = { limit: 20 };
-    if (q) result.q = q;
-    if (companyFilter) result.company = companyFilter;
-    if (categoryFilter) result.category = categoryFilter;
-    if (workplaceFilter) result.workplace = workplaceFilter;
+    if (q) {
+      result.q = q;
+    }
+    if (companyFilter) {
+      result.company = companyFilter;
+    }
+    if (categoryFilter) {
+      result.category = categoryFilter;
+    }
+    if (workplaceFilter) {
+      result.workplace = workplaceFilter;
+    }
     return result;
     // Only filters affect the request, not navigation between a listing and its details.
   }, [q, companyFilter, categoryFilter, workplaceFilter]);
   useEffect(() => {
-    setQueryInput(params.get("q") ?? "");
+    setQueryInput(params.get('q') ?? '');
   }, [params]);
   const {
     companies,
@@ -87,15 +88,12 @@ export function App() {
     refresh,
   } = useJobCatalog(query);
   const { selected, detailError } = useJobDetail(selectedId);
-  const nameOf = (slug: string) =>
-    companies.find((company) => company.slug === slug)?.name ?? slug;
+  const nameOf = (slug: string) => companies.find((company) => company.slug === slug)?.name ?? slug;
   const categoryOf = (slug: string) =>
     categories.find((category) => category.slug === slug)?.name ?? slug;
-  const connected = companies.filter(
-    (company) => company.sources.length,
-  ).length;
+  const connected = companies.filter((company) => company.sources.length).length;
   const clear = () => {
-    setQueryInput("");
+    setQueryInput('');
     update({
       q: null,
       company: null,
@@ -108,22 +106,29 @@ export function App() {
   return (
     <div className="app-shell">
       <header className="header">
-        <a className="brand" href="/" aria-label="Jobbely home">
+        <a
+          className="brand"
+          href="/"
+          aria-label="Jobbely home"
+        >
           <span className="brand-icon">
-            <BriefcaseBusiness size={20} strokeWidth={2.2} />
+            <BriefcaseBusiness
+              size={20}
+              strokeWidth={2.2}
+            />
           </span>
           jobbely<span className="brand-dot">.</span>
         </a>
         <nav aria-label="Main navigation">
           <button
-            className={view === "jobs" ? "nav-link active" : "nav-link"}
+            className={view === 'jobs' ? 'nav-link active' : 'nav-link'}
             onClick={() => update({ view: null, job: null })}
           >
             Browse jobs
           </button>
           <button
-            className={view === "companies" ? "nav-link active" : "nav-link"}
-            onClick={() => update({ view: "companies", job: null })}
+            className={view === 'companies' ? 'nav-link active' : 'nav-link'}
+            onClick={() => update({ view: 'companies', job: null })}
           >
             Companies <span className="nav-count">60</span>
           </button>
@@ -133,12 +138,12 @@ export function App() {
         </span>
       </header>
       <main>
-        {mode === "demo" && (
+        {mode === 'demo' && (
           <div className="demo-banner">
             <CircleHelp size={15} />
             <span>
-              Preview mode · All listings below are synthetic examples. Live
-              source coverage has not been verified.
+              Preview mode · All listings below are synthetic examples. Live source coverage has not
+              been verified.
             </span>
           </div>
         )}
@@ -149,7 +154,7 @@ export function App() {
                 <span className="short-line" /> A clearer view of what’s next
               </div>
               <h1>
-                {view === "jobs" ? (
+                {view === 'jobs' ? (
                   <>
                     Good work starts
                     <br />
@@ -164,9 +169,9 @@ export function App() {
                 )}
               </h1>
               <p>
-                {view === "jobs"
-                  ? "Explore opportunities from the companies you care about. Full descriptions, original teams, and a clear view of every source."
-                  : "Every target company, in one place. See which sources are connected and exactly where coverage stands."}
+                {view === 'jobs'
+                  ? 'Explore opportunities from the companies you care about. Full descriptions, original teams, and a clear view of every source.'
+                  : 'Every target company, in one place. See which sources are connected and exactly where coverage stands.'}
               </p>
             </div>
             <aside className="hero-aside">
@@ -181,7 +186,10 @@ export function App() {
           </section>
         )}
         {error && (
-          <div className="error-state" role="alert">
+          <div
+            className="error-state"
+            role="alert"
+          >
             {error}
             <button onClick={refresh}>Try again</button>
           </div>
@@ -195,11 +203,17 @@ export function App() {
               <ArrowLeft size={16} /> Back to opportunities
             </button>
             {detailError ? (
-              <div className="empty-state" role="alert">
+              <div
+                className="empty-state"
+                role="alert"
+              >
                 {detailError}
               </div>
             ) : !selected ? (
-              <div className="empty-state" role="status">
+              <div
+                className="empty-state"
+                role="status"
+              >
                 Loading the full description…
               </div>
             ) : (
@@ -209,15 +223,12 @@ export function App() {
                     {initials(nameOf(selected.companySlug))}
                   </div>
                   <div>
-                    <div className="company-label">
-                      {nameOf(selected.companySlug)}
-                    </div>
+                    <div className="company-label">{nameOf(selected.companySlug)}</div>
                     <h1>{selected.title}</h1>
                     <div className="job-meta">
                       <span>
                         <MapPin size={14} />
-                        {selected.locations.join(" · ") ||
-                          "Location not specified"}
+                        {selected.locations.join(' · ') || 'Location not specified'}
                       </span>
                       <span>{workplaceNames[selected.workplace]}</span>
                     </div>
@@ -236,31 +247,24 @@ export function App() {
                       <dt>Function</dt>
                       <dd>{categoryOf(selected.classification.category)}</dd>
                       <dt>Company department</dt>
-                      <dd>
-                        {selected.departments.join(" / ") || "Not provided"}
-                      </dd>
+                      <dd>{selected.departments.join(' / ') || 'Not provided'}</dd>
                       <dt>Employment</dt>
                       <dd>
-                        {selected.employment === "unknown"
-                          ? "Not specified"
-                          : selected.employment}
+                        {selected.employment === 'unknown' ? 'Not specified' : selected.employment}
                       </dd>
                       <dt>First seen</dt>
-                      <dd>
-                        {new Date(selected.firstSeenAt).toLocaleDateString()}
-                      </dd>
+                      <dd>{new Date(selected.firstSeenAt).toLocaleDateString()}</dd>
                       <dt>Last checked</dt>
                       <dd>{relativeDate(selected.lastSeenAt)}</dd>
                     </dl>
-                    {mode !== "postgres" ? (
+                    {mode !== 'postgres' ? (
                       <p className="small-note">
-                        This example is not an active vacancy. Visit the
-                        company’s careers page to explore real opportunities.
+                        This example is not an active vacancy. Visit the company’s careers page to
+                        explore real opportunities.
                       </p>
-                    ) : selected.status === "closed" ? (
+                    ) : selected.status === 'closed' ? (
                       <p className="small-note">
-                        This vacancy is closed. Check the original posting for
-                        current availability.
+                        This vacancy is closed. Check the original posting for current availability.
                       </p>
                     ) : (
                       <a
@@ -275,19 +279,15 @@ export function App() {
                     <a
                       className="source-link"
                       href={
-                        mode === "demo"
-                          ? companies.find(
-                              (company) =>
-                                company.slug === selected.companySlug,
-                            )?.careersUrl
+                        mode === 'demo'
+                          ? companies.find((company) => company.slug === selected.companySlug)
+                              ?.careersUrl
                           : selected.url
                       }
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {mode === "demo"
-                        ? "Visit company careers"
-                        : "View original posting"}
+                      {mode === 'demo' ? 'Visit company careers' : 'View original posting'}
                       <ArrowUpRight size={14} />
                     </a>
                     {selected.missingSince && (
@@ -300,7 +300,7 @@ export function App() {
               </>
             )}
           </section>
-        ) : view === "companies" ? (
+        ) : view === 'companies' ? (
           <section className="companies-section">
             <div className="section-heading">
               <h2>
@@ -319,12 +319,13 @@ export function App() {
             <div className="company-grid">
               {companies
                 .filter((company) =>
-                  company.name
-                    .toLowerCase()
-                    .includes(companySearch.toLowerCase()),
+                  company.name.toLowerCase().includes(companySearch.toLowerCase()),
                 )
                 .map((company) => (
-                  <article className="company-card" key={company.slug}>
+                  <article
+                    className="company-card"
+                    key={company.slug}
+                  >
                     <div className="company-card-top">
                       <div className={`company-icon icon-${company.slug}`}>
                         {initials(company.name)}
@@ -339,16 +340,13 @@ export function App() {
                       </a>
                     </div>
                     <h3>{company.name}</h3>
-                    <span
-                      className={`coverage-badge coverage-${company.status}`}
-                    >
+                    <span className={`coverage-badge coverage-${company.status}`}>
                       <span className="status-dot" />
                       {coverageNames[company.status]}
                     </span>
                     <div className="company-card-bottom">
                       <span>
-                        {company.jobs}{" "}
-                        {mode === "demo" ? "examples" : "listings"}
+                        {company.jobs} {mode === 'demo' ? 'examples' : 'listings'}
                       </span>
                       <button
                         onClick={() =>
@@ -367,14 +365,8 @@ export function App() {
             </div>
             {!loading &&
               companies.filter((company) =>
-                company.name
-                  .toLowerCase()
-                  .includes(companySearch.toLowerCase()),
-              ).length === 0 && (
-                <div className="empty-state">
-                  No companies match this search.
-                </div>
-              )}
+                company.name.toLowerCase().includes(companySearch.toLowerCase()),
+              ).length === 0 && <div className="empty-state">No companies match this search.</div>}
           </section>
         ) : (
           <section className="browse-section">
@@ -392,45 +384,51 @@ export function App() {
                 />
               </label>
               <div className="search-divider" />
-              <SlidersHorizontal size={17} className="filter-icon" />
+              <SlidersHorizontal
+                size={17}
+                className="filter-icon"
+              />
               <select
                 aria-label="Filter by company"
-                value={params.get("company") ?? ""}
-                onChange={(event) =>
-                  update({ company: event.target.value || null })
-                }
+                value={params.get('company') ?? ''}
+                onChange={(event) => update({ company: event.target.value || null })}
               >
                 <option value="">All companies</option>
                 {companies.map((company) => (
-                  <option key={company.slug} value={company.slug}>
+                  <option
+                    key={company.slug}
+                    value={company.slug}
+                  >
                     {company.name}
                   </option>
                 ))}
               </select>
               <select
                 aria-label="Filter by function"
-                value={params.get("category") ?? ""}
-                onChange={(event) =>
-                  update({ category: event.target.value || null })
-                }
+                value={params.get('category') ?? ''}
+                onChange={(event) => update({ category: event.target.value || null })}
               >
                 <option value="">All functions</option>
                 {categories.map((category) => (
-                  <option key={category.slug} value={category.slug}>
+                  <option
+                    key={category.slug}
+                    value={category.slug}
+                  >
                     {category.name}
                   </option>
                 ))}
               </select>
               <select
                 aria-label="Filter by workplace"
-                value={params.get("workplace") ?? ""}
-                onChange={(event) =>
-                  update({ workplace: event.target.value || null })
-                }
+                value={params.get('workplace') ?? ''}
+                onChange={(event) => update({ workplace: event.target.value || null })}
               >
                 <option value="">Any workplace</option>
                 {Object.entries(workplaceNames).map(([value, label]) => (
-                  <option key={value} value={value}>
+                  <option
+                    key={value}
+                    value={value}
+                  >
                     {label}
                   </option>
                 ))}
@@ -439,16 +437,19 @@ export function App() {
             <div className="results-heading">
               <h2>
                 {loading
-                  ? "Finding opportunities…"
-                  : `${total} ${mode === "demo" ? "sample opportunities" : "opportunities"}`}
+                  ? 'Finding opportunities…'
+                  : `${total} ${mode === 'demo' ? 'sample opportunities' : 'opportunities'}`}
                 <span>
-                  {params.get("company")
-                    ? `at ${nameOf(params.get("company")!)}`
-                    : "across our sources"}
+                  {params.get('company')
+                    ? `at ${nameOf(params.get('company')!)}`
+                    : 'across our sources'}
                 </span>
               </h2>
               {Object.keys(query).length > 1 ? (
-                <button className="clear-button" onClick={clear}>
+                <button
+                  className="clear-button"
+                  onClick={clear}
+                >
                   Clear filters <X size={13} />
                 </button>
               ) : (
@@ -457,9 +458,15 @@ export function App() {
                 </span>
               )}
             </div>
-            <div className="job-list" aria-busy={loading}>
+            <div
+              className="job-list"
+              aria-busy={loading}
+            >
               {loading && jobs.length === 0 ? (
-                <div className="empty-state" role="status">
+                <div
+                  className="empty-state"
+                  role="status"
+                >
                   Loading opportunities…
                 </div>
               ) : (
@@ -478,16 +485,14 @@ export function App() {
                         {nameOf(job.companySlug)}
                         <span className="meta-dot">·</span>
                         <span className="source-department">
-                          {job.departments.at(-1) ||
-                            categoryOf(job.classification.category)}
+                          {job.departments.at(-1) || categoryOf(job.classification.category)}
                         </span>
                       </div>
                       <h3>{job.title}</h3>
                       <div className="job-meta">
                         <span>
                           <MapPin size={13} />
-                          {job.locations.join(" · ") ||
-                            "Location not specified"}
+                          {job.locations.join(' · ') || 'Location not specified'}
                         </span>
                         <span className="meta-dot">·</span>
                         <span>{workplaceNames[job.workplace]}</span>
@@ -498,8 +503,8 @@ export function App() {
                         {categoryOf(job.classification.category)}
                       </span>
                       <span className="checked-label">
-                        {mode === "demo"
-                          ? "Sample listing"
+                        {mode === 'demo'
+                          ? 'Sample listing'
                           : `Checked ${relativeDate(job.lastSeenAt)}`}
                       </span>
                     </div>
@@ -514,11 +519,11 @@ export function App() {
               <div className="empty-state">
                 <Search size={25} />
                 <h3>No matching opportunities yet.</h3>
-                <p>
-                  Try fewer filters, or check the company directory for source
-                  coverage.
-                </p>
-                <button className="back-button" onClick={clear}>
+                <p>Try fewer filters, or check the company directory for source coverage.</p>
+                <button
+                  className="back-button"
+                  onClick={clear}
+                >
                   Reset filters
                 </button>
               </div>
@@ -531,15 +536,15 @@ export function App() {
                   void loadMore();
                 }}
               >
-                {loadingMore ? "Loading…" : "Load more opportunities"}
+                {loadingMore ? 'Loading…' : 'Load more opportunities'}
                 <ArrowDown size={15} />
               </button>
             )}
             <div className="source-note">
               <Check size={15} />
               <p>
-                Original company information. Clear source coverage.{" "}
-                <button onClick={() => update({ view: "companies" })}>
+                Original company information. Clear source coverage.{' '}
+                <button onClick={() => update({ view: 'companies' })}>
                   See the directory <ArrowUpRight size={12} />
                 </button>
               </p>
@@ -551,11 +556,11 @@ export function App() {
         <span className="footer-brand">jobbely.</span>
         <span>A little less searching. A little more possibility.</span>
         <span>
-          {mode === "demo"
-            ? "Synthetic preview · no live extraction"
-            : mode === "postgres"
-              ? "Public employer listings · no AI"
-              : "Connecting to stored listings…"}
+          {mode === 'demo'
+            ? 'Synthetic preview · no live extraction'
+            : mode === 'postgres'
+              ? 'Public employer listings · no AI'
+              : 'Connecting to stored listings…'}
         </span>
       </footer>
     </div>

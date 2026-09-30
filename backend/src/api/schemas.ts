@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from '@sinclair/typebox';
 
 /**
  * SUMMARY: This file contains the TypeBox schemas used for validating and typing the API requests and responses.
@@ -29,15 +29,15 @@ export const jobSchema = Type.Object({
   departments: Type.Array(Type.String()),
   locations: Type.Array(Type.String()),
   workplace: Type.Union([
-    Type.Literal("remote"),
-    Type.Literal("hybrid"),
-    Type.Literal("onsite"),
-    Type.Literal("unknown"),
+    Type.Literal('remote'),
+    Type.Literal('hybrid'),
+    Type.Literal('onsite'),
+    Type.Literal('unknown'),
   ]),
   employment: Type.String(),
   publishedAt: nullableString,
   classification: classificationSchema,
-  status: Type.Union([Type.Literal("active"), Type.Literal("closed")]),
+  status: Type.Union([Type.Literal('active'), Type.Literal('closed')]),
   firstSeenAt: Type.String(),
   lastSeenAt: Type.String(),
   missingSince: nullableString,
@@ -49,8 +49,8 @@ export const companySchema = Type.Object({
   careersUrl: Type.String(),
   wave: Type.String(),
   status: Type.Union(
-    ["not_onboarded", "partial", "stale", "blocked", "healthy", "demo"].map(
-      (value) => Type.Literal(value),
+    ['not_onboarded', 'partial', 'stale', 'blocked', 'healthy', 'demo'].map((value) =>
+      Type.Literal(value),
     ),
   ),
   jobs: Type.Integer(),
@@ -73,13 +73,10 @@ export const filterSchema = Type.Object(
     category: Type.Optional(Type.String({ maxLength: 500 })),
     workplace: Type.Optional(
       Type.String({
-        pattern:
-          "^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$",
+        pattern: '^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$',
       }),
     ),
-    limit: Type.Optional(
-      Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
-    ),
+    limit: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
     cursor: Type.Optional(Type.String({ maxLength: 1000 })),
   },
   { additionalProperties: false },
@@ -95,12 +92,10 @@ export const listSchema = Type.Object({
   total: Type.Integer(),
   nextCursor: nullableString,
   datasetVersion: Type.Integer(),
-  mode: Type.Union([Type.Literal("demo"), Type.Literal("postgres")]),
+  mode: Type.Union([Type.Literal('demo'), Type.Literal('postgres')]),
 });
 
-const facet = Type.Array(
-  Type.Object({ value: Type.String(), count: Type.Integer() }),
-);
+const facet = Type.Array(Type.Object({ value: Type.String(), count: Type.Integer() }));
 
 export const facetsSchema = Type.Object({
   companies: facet,

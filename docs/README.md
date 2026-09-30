@@ -18,6 +18,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [FRONTEND.md](FRONTEND.md)             | React/Vite, API-only dependency, URL state and cancellable request hooks                           |
 | [SOURCES.md](SOURCES.md)               | Company/source separation, explicit audit status, scheduling gate and coverage signals             |
 | [QUALITY.md](QUALITY.md)               | Strict types, dependency checks, behavioral tests and separate integration/live-source gates       |
+| [FORMATTING.md](FORMATTING.md)         | Shared Prettier style, explicit braces, editor defaults, exclusions and formatting gates           |
 | [DEPLOYMENT.md](DEPLOYMENT.md)         | Static frontend, persistent Node API/worker, PostgreSQL, environment and operational recipe        |
 | [SOURCE_CHECKS.md](SOURCE_CHECKS.md)   | Dated evidence of three live provider checks; not a permanent architecture decision                |
 
