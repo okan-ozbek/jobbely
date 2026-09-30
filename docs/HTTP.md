@@ -24,6 +24,8 @@ Provider adapters use the `JsonTransport` port. `PublicJsonTransport` owns reque
 
 Non-retryable HTTP errors and JSON/schema failures surface to ingestion. A challenge HTML page is an error, not job data. The application does not solve CAPTCHAs or fall back to another host automatically.
 
+Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netflix.net`, plus `HtmlTransport.getHtml` on Apple's public `/en-us/search` and `/en-us/details/<position>/<slug>` routes. HTML and JSON share the existing queue, pacing, retry and 32 MiB limit; HTML mode requires `text/html` and retains the raw body. Apple's internal JSON API and native account/application routes are rejected. Meta and Google are absent from the feed-fetch allowlist. See [WAVE_C.md](WAVE_C.md).
+
 ## Tradeoffs and extension points
 
 Official-site auditing uses a separate HTML/policy transport with employer/ATS/documentation

@@ -18,7 +18,19 @@ const sourceSchema = z
   .object({
     id: z.string(),
     companySlug: z.string(),
-    provider: z.enum(['greenhouse', 'ashby', 'lever', 'workday', 'icims', 'linkedin']),
+    provider: z.enum([
+      'greenhouse',
+      'ashby',
+      'lever',
+      'workday',
+      'icims',
+      'linkedin',
+      'apple',
+      'amazon',
+      'eightfold',
+      'meta',
+      'google',
+    ]),
     board: z.string().regex(/^[a-zA-Z0-9_-]+$/),
     auditStatus: z.enum(['candidate', 'verified']),
     scheduled: z.boolean(),
@@ -41,6 +53,29 @@ const sourceSchema = z
         code: 'custom',
         message: 'Employer membership and posting host aliases are iCIMS settings',
       });
+    }
+
+    const nativeEndpoints: Record<string, { board: string; endpoint: string }> = {
+      apple: { board: 'apple', endpoint: 'https://jobs.apple.com/en-us/search' },
+      amazon: { board: 'amazon', endpoint: 'https://www.amazon.jobs/en/search.json' },
+      eightfold: {
+        board: 'netflix',
+        endpoint: 'https://explore.jobs.netflix.net/api/apply/v2/jobs',
+      },
+    };
+
+    const native = nativeEndpoints[source.provider];
+
+    if (native) {
+      if (
+        source.endpoint !== native.endpoint ||
+        source.board !== native.board ||
+        source.companySlug !== native.board
+      ) {
+        context.addIssue({ code: 'custom', message: 'Invalid native employer endpoint or board' });
+      }
+
+      return;
     }
 
     if (source.provider !== 'workday' && source.provider !== 'icims') {

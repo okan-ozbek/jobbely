@@ -111,6 +111,11 @@ function audit(
       workday: adapter,
       icims: adapter,
       linkedin: adapter,
+      apple: adapter,
+      amazon: adapter,
+      eightfold: adapter,
+      meta: adapter,
+      google: adapter,
     },
     () => now,
   ).run('ignored/raw-evidence');
@@ -343,6 +348,11 @@ describe('evidence-backed source audits', () => {
         workday: adapter,
         icims: adapter,
         linkedin: adapter,
+        apple: adapter,
+        amazon: adapter,
+        eightfold: adapter,
+        meta: adapter,
+        google: adapter,
       },
       () => now,
     );

@@ -10,6 +10,12 @@ function json(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
 }
 
+function* batches<T>(items: T[], size: number) {
+  for (let offset = 0; offset < items.length; offset += size) {
+    yield items.slice(offset, offset + size);
+  }
+}
+
 export class PostgresJobRepository implements JobRepository {
   private readonly client: PrismaClient;
 
@@ -141,39 +147,51 @@ export class PostgresJobRepository implements JobRepository {
         const before = await this.readWithin(transaction);
         const result = applySnapshot(before, commit);
 
-        for (const job of result.dataset.jobs.filter((job) => job.sourceId === commit.source.id)) {
-          const values = {
-            sourceId: job.sourceId,
-            sourcePostingId: job.sourcePostingId,
-            companySlug: job.companySlug,
-            category: job.classification.category,
-            status: job.status,
-            title: job.title,
-            contentHash: job.contentHash,
-            payload: json(job),
-          };
+        const sourceJobs = result.dataset.jobs.filter((job) => job.sourceId === commit.source.id);
 
-          await transaction.posting.upsert({
-            where: { id: job.id },
-            create: { id: job.id, ...values },
-            update: values,
-          });
+        // One parameterized JSON batch replaces thousands of sequential round trips.
+        // All batches remain in the same transaction, including versions and evidence.
+        for (const batch of batches(sourceJobs, 250)) {
+          const values = JSON.stringify(
+            batch.map((job) => ({
+              id: job.id,
+              sourceId: job.sourceId,
+              sourcePostingId: job.sourcePostingId,
+              companySlug: job.companySlug,
+              category: job.classification.category,
+              status: job.status,
+              title: job.title,
+              contentHash: job.contentHash,
+              payload: job,
+            })),
+          );
+
+          await transaction.$executeRaw`
+            INSERT INTO "Posting" ("id","sourceId","sourcePostingId","companySlug","category","status","title","contentHash","payload")
+            SELECT value->>'id',value->>'sourceId',value->>'sourcePostingId',value->>'companySlug',value->>'category',value->>'status',value->>'title',value->>'contentHash',value->'payload'
+            FROM jsonb_array_elements(${values}::jsonb)
+            ON CONFLICT ("id") DO UPDATE SET
+              "sourceId"=EXCLUDED."sourceId","sourcePostingId"=EXCLUDED."sourcePostingId",
+              "companySlug"=EXCLUDED."companySlug","category"=EXCLUDED."category",
+              "status"=EXCLUDED."status","title"=EXCLUDED."title",
+              "contentHash"=EXCLUDED."contentHash","payload"=EXCLUDED."payload"
+          `;
         }
 
-        for (const job of result.changed) {
-          await transaction.postingVersion.create({
-            data: {
+        for (const batch of batches(result.changed, 250)) {
+          await transaction.postingVersion.createMany({
+            data: batch.map((job) => ({
               postingId: job.id,
               observedAt: new Date(commit.observedAt),
               contentHash: job.contentHash,
               payload: json(job),
-            },
+            })),
           });
         }
 
-        for (const raw of commit.rawResponses) {
-          await transaction.snapshot.create({
-            data: {
+        for (const batch of batches(commit.rawResponses, 10)) {
+          await transaction.snapshot.createMany({
+            data: batch.map((raw) => ({
               runId: commit.runId,
               sourceId: commit.source.id,
               url: raw.url,
@@ -183,7 +201,7 @@ export class PostgresJobRepository implements JobRepository {
                   ? { format: 'http-exchange-v1', request: raw.request, body: raw.body }
                   : raw.body,
               ),
-            },
+            })),
           });
         }
 

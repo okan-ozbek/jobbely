@@ -16,6 +16,7 @@ legal terms, approve employer scope, bypass challenges, or enable incomplete sou
 ```powershell
 pnpm audit:wave-a
 pnpm audit:wave-b
+pnpm audit:wave-c
 pnpm --filter @jobbely/backend run audit --company discord
 ```
 
@@ -117,6 +118,8 @@ coverage reflects the failed run. Successful reconciliation evidence is stored w
 snapshot. Candidate manual imports remain available for investigation but cannot reconcile closure.
 
 Enterprise source endpoint, canonical host aliases and employer membership rules are included in the configuration hash. Workday official URL slugs are reconciled to immutable posting IDs through captured detail evidence, rather than inventing requisition/title equivalence. The expanded registry includes pending plans for every Wave B company; a configured plan is not an approval. See [WAVE_B.md](WAVE_B.md).
+
+The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix URLs establish posting identity through their public posting numbers, with an explicit `PIPE-` mapping for Apple's managed retail records. Meta and Google remain access-blocked. Native search pagination/HTML collection still needs reviewed official traversal before activation can pass. See [WAVE_C.md](WAVE_C.md).
 
 ## Tradeoffs and limits
 

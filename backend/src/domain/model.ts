@@ -1,4 +1,15 @@
-export type Provider = 'greenhouse' | 'ashby' | 'lever' | 'workday' | 'icims' | 'linkedin';
+export type Provider =
+  | 'greenhouse'
+  | 'ashby'
+  | 'lever'
+  | 'workday'
+  | 'icims'
+  | 'linkedin'
+  | 'apple'
+  | 'amazon'
+  | 'eightfold'
+  | 'meta'
+  | 'google';
 
 export type AuditStatus = 'candidate' | 'verified';
 

@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "observedAt": "2026-09-30T23:10:27.015Z",
+  "scope": "Five Wave C priorities; candidate source validation, not employer-wide scope/access approval",
+  "results": [
+    {
+      "company": "meta",
+      "sourceId": "meta",
+      "provider": "meta",
+      "board": "meta",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "ed9bcc1ae5209850d6a3c0141019855dc2e0fb0ea904fcacf5ceb4a3d3f648ea",
+      "validationLevel": "blocked",
+      "latestRun": {
+        "id": "e5f46137-d723-44f5-b725-897801b0d592",
+        "error": "Meta integration blocked: its published robots policy requires express written permission for automated collection. Configure an authorized employer feed before extraction.",
+        "status": "failed",
+        "sourceId": "meta",
+        "startedAt": "2026-09-30T22:43:16.994Z",
+        "finishedAt": "2026-09-30T22:43:16.996Z",
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "diagnosticEvidence": [
+        {
+          "path": "backend/data/wave-c/meta-robots.txt",
+          "sha256": "6bdb31cf09e7863228e1f1a4de323c168abdef62786762492990386530a38c2d"
+        }
+      ],
+      "samples": []
+    },
+    {
+      "company": "apple",
+      "sourceId": "apple",
+      "provider": "apple",
+      "board": "apple",
+      "endpoint": "https://jobs.apple.com/en-us/search",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "ca6b80d0291957c553ee4c218763dde10250fdd5d43b863762ea724c3f2c8f3f",
+      "validationLevel": "detail_samples_validated_inventory_blocked",
+      "latestRun": {
+        "id": "3aada88f-04fb-4ed1-9286-1f33003c0726",
+        "error": "Apple inventory changed or pagination ended early",
+        "status": "failed",
+        "sourceId": "apple",
+        "startedAt": "2026-09-30T23:00:59.186Z",
+        "finishedAt": "2026-09-30T23:01:08.597Z",
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "diagnosticEvidence": [
+        {
+          "path": "backend/data/wave-c/apple-robots.txt",
+          "sha256": "23a00dd9d6224f03b3e3237084dad6dcb64ad342857a9b3b4f0f801a62cb97b0"
+        },
+        {
+          "path": "backend/data/wave-c/sample-apple-200671122-2911.json",
+          "sha256": "6623a3d7f13502721ac16205bed821163a4dc9f18614568aebe1e5efb48e0418"
+        },
+        {
+          "path": "backend/data/wave-c/sample-apple-200686566-0157.json",
+          "sha256": "0cc1b866efa1a1763f684435a81a511f652faff580d15d7c091550bb565f3402"
+        },
+        {
+          "path": "backend/data/wave-c/sample-apple-200686566-0836.json",
+          "sha256": "76f4b0390cc0f06b883a100d2a5c741e9a75a9fda9c06227af79c276fce5b06e"
+        },
+        {
+          "path": "backend/data/wave-c/sample-apple-PIPE-200313970.json",
+          "sha256": "8e3b36ce6e3afd5597ce68cafa4e3c48637e30f8b1948d528574d22125886b0f"
+        }
+      ],
+      "samples": [
+        {
+          "id": "200671122-2911",
+          "title": "Security Tooling - Software Engineer, SEAR",
+          "url": "https://jobs.apple.com/en-us/details/200671122-2911/security-tooling-software-engineer-sear",
+          "applyUrl": "https://jobs.apple.com/en-us/details/200671122-2911/security-tooling-software-engineer-sear",
+          "descriptionCharacters": 5143
+        },
+        {
+          "id": "200686566-0157",
+          "title": "AI Methodology Design/CAD Engineer",
+          "url": "https://jobs.apple.com/en-us/details/200686566-0157/ai-methodology-design-cad-engineer",
+          "applyUrl": "https://jobs.apple.com/en-us/details/200686566-0157/ai-methodology-design-cad-engineer",
+          "descriptionCharacters": 7800
+        },
+        {
+          "id": "200686566-0836",
+          "title": "AI Methodology Design/CAD Engineer",
+          "url": "https://jobs.apple.com/en-us/details/200686566-0836/ai-methodology-design-cad-engineer",
+          "applyUrl": "https://jobs.apple.com/en-us/details/200686566-0836/ai-methodology-design-cad-engineer",
+          "descriptionCharacters": 7800
+        },
+        {
+          "id": "PIPE-200313970",
+          "title": "IN-Business Expert",
+          "url": "https://jobs.apple.com/en-us/details/200313970/in-business-expert",
+          "applyUrl": "https://jobs.apple.com/en-us/details/200313970/in-business-expert",
+          "descriptionCharacters": 4458
+        }
+      ]
+    },
+    {
+      "company": "netflix",
+      "sourceId": "netflix",
+      "provider": "eightfold",
+      "board": "netflix",
+      "endpoint": "https://explore.jobs.netflix.net/api/apply/v2/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "5b5a6beabb6eb8a89d41d79252eba22132389c6d87e232ca8b1a3c7a8e9dc3f9",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "2b9b480a-c51e-4a7e-a5b4-b5e72a54d063",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "netflix",
+        "startedAt": "2026-09-30T22:43:15.397Z",
+        "finishedAt": "2026-09-30T22:43:15.734Z",
+        "listingCount": 460,
+        "excludedCount": 9,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 460,
+      "diagnosticEvidence": [
+        {
+          "path": "backend/data/wave-c/extraction-netflix.json",
+          "sha256": "f1b9e98b77f4ed9e27741ed615bc589a153c7ceb68f4a1957d0230650d3114fd"
+        },
+        {
+          "path": "backend/data/wave-c/netflix-robots.txt",
+          "sha256": "323d58820850093169d1a0c1825251268dc173846771c5f8479d9bec23a6c4bb"
+        }
+      ],
+      "samples": [
+        {
+          "id": "790317535096",
+          "title": "Product Manager - Games, Kids (L5)",
+          "url": "https://explore.jobs.netflix.net/careers/job/790317535096?microsite=netflix.com",
+          "applyUrl": "https://explore.jobs.netflix.net/careers/job/790317535096?microsite=netflix.com",
+          "descriptionCharacters": 4898
+        },
+        {
+          "id": "790317126858",
+          "title": "Art & Print Producer, Awards",
+          "url": "https://explore.jobs.netflix.net/careers/job/790317126858?microsite=netflix.com",
+          "applyUrl": "https://explore.jobs.netflix.net/careers/job/790317126858?microsite=netflix.com",
+          "descriptionCharacters": 5617
+        },
+        {
+          "id": "790317110266",
+          "title": "Ads Product Marketing Manager",
+          "url": "https://explore.jobs.netflix.net/careers/job/790317110266?microsite=netflix.com",
+          "applyUrl": "https://explore.jobs.netflix.net/careers/job/790317110266?microsite=netflix.com",
+          "descriptionCharacters": 5455
+        }
+      ]
+    },
+    {
+      "company": "google",
+      "sourceId": "google",
+      "provider": "google",
+      "board": "google",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "61e48d51177dbc697b57c026b7dd20ac30ac88288838021d97ce7e824c1e97df",
+      "validationLevel": "blocked",
+      "latestRun": {
+        "id": "7b4971ca-ce23-40f1-89c7-4b62d15d5fa6",
+        "error": "Google integration blocked: robots.txt disallows paginated career searches and no exhaustive authorized feed has been established. Obtain an authorized inventory before extraction; the first page is not complete coverage.",
+        "status": "failed",
+        "sourceId": "google",
+        "startedAt": "2026-09-30T22:43:16.999Z",
+        "finishedAt": "2026-09-30T22:43:17.000Z",
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "diagnosticEvidence": [
+        {
+          "path": "backend/data/wave-c/google-robots.txt",
+          "sha256": "1aba570a1b32deb66941e0c29d4f37be71ee58aa1a624aa20754b3639538cf2c"
+        }
+      ],
+      "samples": []
+    },
+    {
+      "company": "amazon",
+      "sourceId": "amazon",
+      "provider": "amazon",
+      "board": "amazon",
+      "endpoint": "https://www.amazon.jobs/en/search.json",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "2852eaa0065455884c540b7ebcc91cc73f436e054fb41dfabfe7075d6c2aabe6",
+      "validationLevel": "blocked",
+      "latestRun": {
+        "id": "a630cf40-36d3-4991-bdc8-8b0362ff515b",
+        "error": "Amazon count changed or pagination ended early",
+        "status": "failed",
+        "sourceId": "amazon",
+        "startedAt": "2026-09-30T23:03:10.411Z",
+        "finishedAt": "2026-09-30T23:07:18.983Z",
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "diagnosticEvidence": [
+        {
+          "path": "backend/data/wave-c/amazon-robots.txt",
+          "sha256": "23a665abcf5da6674c3d6ba3242dd651febd0d21ed7b50487f5060f53cdfb24e"
+        }
+      ],
+      "samples": []
+    }
+  ]
+}

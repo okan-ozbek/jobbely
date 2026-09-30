@@ -229,7 +229,7 @@ integration('PostgreSQL transactions (isolated test database)', () => {
         source: item,
         runId: run!.id,
         observedAt: at,
-        postings: [posting('1')],
+        postings: Array.from({ length: 280 }, (_, index) => posting(String(index))),
         rawResponses: [
           {
             url: 'https://example.com/feed',
@@ -248,5 +248,62 @@ integration('PostgreSQL transactions (isolated test database)', () => {
     expect(after.jobs.some((job) => job.sourceId === item.id)).toBe(false);
     expect(after.runs.find((row) => row.id === run!.id)?.status).toBe('running');
     await repository.failRun(run!.id, at, 'test cleanup');
+  });
+
+  it('publishes across batches and updates one version without changing stable identities', async () => {
+    const item = source();
+    const at = new Date().toISOString();
+    const records = Array.from({ length: 280 }, (_, index) => posting(String(index)));
+    const first = await repository.startRun(item, at);
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: first!.id,
+      observedAt: at,
+      postings: records,
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const original = (await secondRepository.read()).jobs.filter((job) => job.sourceId === item.id);
+
+    expect(original).toHaveLength(280);
+
+    const updated = records.map((record, index) =>
+      index === 279 ? { ...record, title: "Engineer's new role", contentHash: 'changed' } : record,
+    );
+
+    const second = await repository.startRun(item, at);
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: second!.id,
+      observedAt: at,
+      postings: updated,
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const current = (await secondRepository.read()).jobs.filter((job) => job.sourceId === item.id);
+
+    expect(new Set(current.map((job) => job.id))).toEqual(new Set(original.map((job) => job.id)));
+    expect(current.find((job) => job.sourcePostingId === '279')?.title).toBe("Engineer's new role");
+
+    const client = new pg.Client({ connectionString });
+
+    await client.connect();
+
+    try {
+      const result = await client.query(
+        'SELECT count(*)::int AS count FROM "PostingVersion" v JOIN "Posting" p ON p.id=v."postingId" WHERE p."sourceId"=$1',
+        [item.id],
+      );
+
+      expect(result.rows[0]?.count).toBe(281);
+    } finally {
+      await client.end();
+    }
   });
 });

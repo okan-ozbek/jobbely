@@ -196,3 +196,56 @@ publication, lease ownership/expiry and POST evidence storage.
 All new sources remain candidate and unscheduled. Company-scope reconciliation and
 access/display review remain pending; full feed imports alone do not approve automatic
 scheduling, posting closure or a worldwide completeness claim.
+
+## Wave C priority sources
+
+Observed 1 October 2026, approximately 00:20–01:10 Europe/Amsterdam (30 September, 22:20–23:10 UTC).
+The first Wave C batch configures Meta, Apple, Netflix, Google and Amazon. Fourteen other
+Wave C employers remain unconfigured. See [WAVE_C.md](WAVE_C.md) for implementation decisions.
+
+| Company | Live result                                                                                                                                               | Published postings |
+| ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------: |
+| Meta    | Explicit access gate: published policy requires express written permission                                                                                |               None |
+| Apple   | Full details validated for four representative retail/corporate/location postings; complete search traversal rejected inconsistent totals or repeated IDs |               None |
+| Netflix | All 469 advertised positions hydrated; nine explicit non-vacancy exclusions; successful PostgreSQL publication                                            |                460 |
+| Google  | First career page accessible; paginated searches disallowed and no exhaustive authorized feed established                                                 |               None |
+| Amazon  | Native category traversal and description payloads observed; complete import rejected inconsistent totals/early pagination termination                    |               None |
+
+“None” means no stored Wave C postings for that source, not zero employer vacancies.
+Apple initially advertised 6,144 search results. Amazon initially reported a capped
+10,000 hits while its 37 native category facets summed to 22,554. These observations
+are diagnostic inventory evidence, not complete import counts.
+
+Apple's default search redirected to a USA filter. The adapter instead requested an
+explicitly empty location filter and validated native page/filter/sort echoes. Live checks
+also identified international title slugs, native location suffixes, managed retail `PIPE-`
+IDs, and internal requisition IDs that differ from public posting numbers. Four complete
+details validated after mapping those fields, including two native location postings for
+the same requisition. Their descriptions remain distinct stored identities in the adapter;
+no sampled subset was published. Both newest and documented location ordering encountered
+inventory changes during traversal. The full initial detail import remains unvalidated.
+
+Amazon's feed exposed full descriptions plus basic/preferred qualifications. Native URL
+variants include absent title slugs, account.amazon.com links and `SF` hiring records using
+the exact native Salesforce requisition in their application URL. Fixtures and live payload
+inspection established these mappings. Subsequent full traversals still failed inventory
+consistency checks, including the real `SyncSource` run. No first-10,000 subset or failed
+partition snapshot was published. The latest source error is recorded in PostgreSQL.
+
+Netflix's publication used the captured full extraction through the normal ingestion
+pipeline. The running API returned 460 listings and three tested detail endpoints with
+nonempty sanitized text/HTML and native application entry points. Meta, Google and Apple
+coverage endpoints displayed blocked state with zero stored postings. The
+[durable report](../backend/config/integration-evidence/wave-c.json) records per-source run
+IDs, configuration bindings, validated links and ignored diagnostic hashes. Successful
+Netflix response evidence is retained in database snapshots; failed sources retain error
+summaries and separate local diagnostic artifacts.
+
+`pnpm check` passed formatting, boundaries, all 60 logo paths, zero-warning lint, strict
+types, 105 non-database tests, contract generation and both builds. A separate dedicated
+PostgreSQL run passed all 112 tests, including seven transaction tests. Cross-batch tests
+verified stable identities/version updates and complete rollback after evidence failure.
+
+All five sources remain candidate and unscheduled. Employer-wide scope, additional native
+hiring channels and access/display approval remain pending. Apple/Amazon require a passing
+complete import before their adapters can be described as fully validated live integrations.

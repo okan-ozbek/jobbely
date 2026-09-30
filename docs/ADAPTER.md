@@ -33,3 +33,5 @@ For an existing provider, add a candidate entry to the registry and audit it. Fo
 - [Source onboarding](SOURCES.md), [transport](HTTP.md), [live evidence](SOURCE_CHECKS.md).
 
 Detailed enterprise invariants and source assignments live in [WAVE_B.md](WAVE_B.md). Other custom boards and scraping remain planned extensions. No universal scraper, browser extraction adapter or MCP dependency is implemented.
+
+Wave C's first batch adds Apple structured public HTML, Netflix Eightfold JSON and native Amazon JSON adapters, plus explicit Meta/Google access gates. See [WAVE_C.md](WAVE_C.md) for identity, traversal and completeness rules. Apple's parser decodes literal JSON without executing upstream scripts; native adapters preserve the same extraction port and classification boundary.

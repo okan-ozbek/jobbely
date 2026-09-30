@@ -8,7 +8,7 @@ Keep employers and extraction sources separate. One company may have multiple bo
 
 `companies.json` records slug, name, official careers entry point and planning wave. `sources.json` records stable source ID, company slug, provider, board, `auditStatus` and `scheduled`. Configuration is validated at startup: IDs must be unique, companies must exist, boards must match the allowed identifier format, and unaudited sources cannot be scheduled.
 
-There are currently 60 target companies and 13 candidate source boards for the first 10-company cohort, including three Discord boards discovered from its official careers script. Every source is unscheduled. Dated live observations belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
+There are currently 60 target companies and 49 candidate source boards across 46 configured companies: 13 Wave A boards, 31 Wave B sources and five Wave C priorities. This includes three Discord boards and explicit access gates for restricted employers. Every source is unscheduled. Dated live observations belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
 
 ## Onboarding procedure
 
@@ -42,3 +42,5 @@ Company `lastCheckedAt` is the oldest successful complete check across its confi
 [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [validator](../backend/src/infrastructure/registry.ts), [coverage logic](../backend/src/application/catalog.ts), [audit CLI](../backend/src/cli/audit-source.ts).
 
 Workday tenants/sites, iCIMS endpoints, canonical posting host aliases and native employer membership filters use explicit validated configuration; these settings are bound into audit evidence. Wave B adds 31 candidates, including a restricted LinkedIn source. Their scope/access approvals remain pending. Registry changes are file-based and require restart; there is no source-management UI. See [WAVE_B.md](WAVE_B.md), [ADAPTER.md](ADAPTER.md), [INGESTION.md](INGESTION.md), and [LIFECYCLE.md](LIFECYCLE.md).
+
+Wave C adds Meta, Apple, Netflix, Google and Amazon. Native endpoints and company/board bindings are exact validated values, included in the existing audit configuration hash. Meta and Google use explicit access gates. Fourteen remaining Wave C employers have no sources yet. See [WAVE_C.md](WAVE_C.md).

@@ -4,7 +4,7 @@ Jobbely collects public employer job listings, categorizes them without AI, and 
 
 Agents should start with [AGENTS.md](AGENTS.md) for repository boundaries, documentation references and required completion checks.
 
-TypeScript lives in separate `/frontend` and `/backend` packages. Integrations support Greenhouse, Ashby, Lever, Workday and iCIMS/Jibe. All 60 employers are registered, with sources for all 10 Wave A and 31 Wave B companies. Wave B full imports succeeded for 29 companies; NVIDIA has a malformed feed and LinkedIn requires an authorized feed. Full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md), [Wave B decisions and limits](docs/WAVE_B.md) and [source-check evidence](docs/SOURCE_CHECKS.md).
+TypeScript lives in separate `/frontend` and `/backend` packages. Integrations support Greenhouse, Ashby, Lever, Workday, iCIMS/Jibe and the first native Wave C boards. All 60 employers are registered, with sources for all 10 Wave A and 31 Wave B companies plus Meta, Apple, Netflix, Google and Amazon. Wave B full imports succeeded for 29 companies; NVIDIA has a malformed feed and LinkedIn requires an authorized feed. Meta and Google also have explicit access blockers. Full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md), [Wave B](docs/WAVE_B.md), [Wave C](docs/WAVE_C.md) and [dated source checks](docs/SOURCE_CHECKS.md).
 
 ## Prerequisites
 
@@ -83,6 +83,8 @@ Use `Ctrl+C` to stop the servers. Environment variables override `backend/.env`;
    ```powershell
    pnpm dev
    ```
+
+For the five configured Wave C priorities, run `pnpm sync:wave-c`. Netflix and Amazon use public JSON feeds; Apple reads its public search/detail pages. Apple's full initial detail import can take over 100 minutes at default pacing and fails if traversal changes or a required detail becomes unavailable. Meta and Google report access blockers, so the wave command returns a nonzero exit code while continuing other sources. See [WAVE_C.md](docs/WAVE_C.md) for exact limits and [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md) for which full imports have actually passed. Fourteen other Wave C companies remain unconfigured.
 
 For independent development, use separate terminals:
 

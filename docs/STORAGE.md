@@ -8,6 +8,8 @@ Use PostgreSQL with Prisma's PostgreSQL adapter, behind `JobRepository`. A separ
 
 The repository is a port for application behavior, not a generic CRUD framework. Its unit of work, `commitSnapshot`, ensures readers cannot observe a half-published refresh. Domain lifecycle rules are reused by both implementations through `applySnapshot`.
 
+Wave C replaces sequential row writes with bounded batches: 250 postings per parameterized JSON upsert, 250 version records per `createMany`, and ten raw snapshots per `createMany`. Every batch remains inside the same transaction and the existing 60-second transaction timeout. The shared dataset/source locks, lease check, stable identities, lifecycle policy and version publication remain atomic. Separate PostgreSQL tests cross batch boundaries and verify rollback after evidence failure. This reduces round trips for Amazon's large inventory; it does not change API query scaling. See [WAVE_C.md](WAVE_C.md).
+
 ## Records and evidence
 
 | Record           | Purpose                                                                          |

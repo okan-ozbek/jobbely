@@ -1894,5 +1894,170 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "meta",
+    "scope": {
+      "status": "pending",
+      "notes": "Published robots policy requires express written permission for automated collection.",
+      "evidenceUrls": ["https://www.metacareers.com/jobsearch/"]
+    },
+    "access": {
+      "status": "blocked",
+      "notes": "Published robots policy requires express written permission for automated collection.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://www.metacareers.com/robots.txt"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.metacareers.com/jobsearch/",
+        "disposition": "included",
+        "sourceIds": ["meta"],
+        "reason": "Published robots policy requires express written permission for automated collection."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.metacareers.com/jobsearch/",
+        "role": "listings",
+        "sourceIds": ["meta"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "apple",
+    "scope": {
+      "status": "pending",
+      "notes": "Public source observed; employer-wide scope and access/display review pending.",
+      "evidenceUrls": ["https://jobs.apple.com/en-us/search?location="]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Public source observed; employer-wide scope and access/display review pending.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://jobs.apple.com/robots.txt"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://jobs.apple.com/en-us/search?location=",
+        "disposition": "included",
+        "sourceIds": ["apple"],
+        "reason": "Public source observed; employer-wide scope and access/display review pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://jobs.apple.com/en-us/search?location=",
+        "role": "listings",
+        "sourceIds": ["apple"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "netflix",
+    "scope": {
+      "status": "pending",
+      "notes": "Public source observed; employer-wide scope and access/display review pending.",
+      "evidenceUrls": ["https://explore.jobs.netflix.net/careers"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Public source observed; employer-wide scope and access/display review pending.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://explore.jobs.netflix.net/robots.txt"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://explore.jobs.netflix.net/careers",
+        "disposition": "included",
+        "sourceIds": ["netflix"],
+        "reason": "Public source observed; employer-wide scope and access/display review pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://explore.jobs.netflix.net/careers",
+        "role": "listings",
+        "sourceIds": ["netflix"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "google",
+    "scope": {
+      "status": "pending",
+      "notes": "Published robots policy disallows paginated careers searches; no exhaustive authorized inventory established.",
+      "evidenceUrls": ["https://www.google.com/about/careers/applications/jobs/results/"]
+    },
+    "access": {
+      "status": "blocked",
+      "notes": "Published robots policy disallows paginated careers searches; no exhaustive authorized inventory established.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://www.google.com/robots.txt"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.google.com/about/careers/applications/jobs/results/",
+        "disposition": "included",
+        "sourceIds": ["google"],
+        "reason": "Published robots policy disallows paginated careers searches; no exhaustive authorized inventory established."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.google.com/about/careers/applications/jobs/results/",
+        "role": "listings",
+        "sourceIds": ["google"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "amazon",
+    "scope": {
+      "status": "pending",
+      "notes": "Public source observed; employer-wide scope and access/display review pending.",
+      "evidenceUrls": ["https://www.amazon.jobs/en/search"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Public source observed; employer-wide scope and access/display review pending.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://www.amazon.jobs/robots.txt"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.amazon.jobs/en/search",
+        "disposition": "included",
+        "sourceIds": ["amazon"],
+        "reason": "Public source observed; employer-wide scope and access/display review pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.amazon.jobs/en/search",
+        "role": "listings",
+        "sourceIds": ["amazon"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

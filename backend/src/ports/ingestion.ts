@@ -15,6 +15,10 @@ export interface JsonSearchTransport extends JsonTransport {
   post(url: string, body: unknown): Promise<RawResponse>;
 }
 
+export interface HtmlTransport {
+  getHtml(url: string): Promise<RawResponse & { body: string }>;
+}
+
 export interface SourceAdapter {
   extract(source: Source): Promise<Extraction>;
 }

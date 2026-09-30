@@ -1,4 +1,4 @@
-import type { JsonSearchTransport } from '../ports/ingestion.js';
+import type { HtmlTransport, JsonSearchTransport } from '../ports/ingestion.js';
 import type { RawResponse } from '../domain/model.js';
 
 const allowedHosts = new Set([
@@ -18,6 +18,9 @@ const allowedHosts = new Set([
   'careers.amd.com',
   'jobs.booking.com',
   'www.github.careers',
+  'www.amazon.jobs',
+  'explore.jobs.netflix.net',
+  'jobs.apple.com',
 ]);
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -31,7 +34,7 @@ export class HttpFailure extends Error {
   }
 }
 
-export class PublicJsonTransport implements JsonSearchTransport {
+export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
   private readonly tails = new Map<string, Promise<unknown>>();
   private readonly nextRequest = new Map<string, number>();
 
@@ -48,7 +51,21 @@ export class PublicJsonTransport implements JsonSearchTransport {
     return this.enqueue(url, JSON.stringify(body));
   }
 
-  private async enqueue(url: string, body?: string): Promise<RawResponse> {
+  async getHtml(url: string): Promise<RawResponse & { body: string }> {
+    const result = await this.enqueue(url, undefined, 'html');
+
+    if (typeof result.body !== 'string') {
+      throw new Error('Expected an HTML response body');
+    }
+
+    return { ...result, body: result.body };
+  }
+
+  private async enqueue(
+    url: string,
+    body?: string,
+    format: 'json' | 'html' = 'json',
+  ): Promise<RawResponse> {
     const parsed = new URL(url);
 
     if (
@@ -63,6 +80,22 @@ export class PublicJsonTransport implements JsonSearchTransport {
 
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
 
+    const nativePaths: Record<string, boolean> = {
+      'www.amazon.jobs': format === 'json' && parsed.pathname === '/en/search.json',
+      'explore.jobs.netflix.net':
+        format === 'json' && /^\/api\/apply\/v2\/jobs(?:\/\d+)?$/.test(parsed.pathname),
+      'jobs.apple.com':
+        format === 'html' &&
+        /^\/en-us\/(?:search|details\/\d+(?:-\d+)?\/[^/?#]+)$/.test(parsed.pathname),
+    };
+
+    if (
+      nativePaths[parsed.hostname] === false ||
+      (format === 'html' && parsed.hostname !== 'jobs.apple.com')
+    ) {
+      throw new Error('Destination is outside the read-only native career routes');
+    }
+
     if (
       body !== undefined &&
       (!parsed.hostname.endsWith('.myworkdayjobs.com') ||
@@ -73,14 +106,19 @@ export class PublicJsonTransport implements JsonSearchTransport {
 
     const current = previous
       .catch(() => undefined)
-      .then(() => this.request(url, parsed.hostname, body));
+      .then(() => this.request(url, parsed.hostname, body, format));
 
     this.tails.set(parsed.hostname, current);
 
     return current;
   }
 
-  private async request(url: string, host: string, requestBody?: string): Promise<RawResponse> {
+  private async request(
+    url: string,
+    host: string,
+    requestBody?: string,
+    format: 'json' | 'html' = 'json',
+  ): Promise<RawResponse> {
     for (let attempt = 0; attempt < 4; attempt++) {
       await sleep(Math.max(0, (this.nextRequest.get(host) ?? 0) - Date.now()));
       this.nextRequest.set(host, Date.now() + this.minIntervalMs);
@@ -91,7 +129,7 @@ export class PublicJsonTransport implements JsonSearchTransport {
           signal: AbortSignal.timeout(30_000),
           ...(requestBody === undefined ? {} : { method: 'POST', body: requestBody }),
           headers: {
-            Accept: 'application/json',
+            Accept: format === 'json' ? 'application/json' : 'text/html',
             ...(requestBody === undefined ? {} : { 'Content-Type': 'application/json' }),
             'User-Agent': 'Jobbely/0.1 (public employer job-board reader)',
           },
@@ -125,10 +163,14 @@ export class PublicJsonTransport implements JsonSearchTransport {
           throw new HttpFailure(response.status, `Upstream HTTP ${response.status}`);
         }
 
-        if (!response.headers.get('content-type')?.includes('json')) {
+        if (
+          !response.headers.get('content-type')?.includes(format === 'json' ? 'json' : 'text/html')
+        ) {
           await response.body?.cancel();
 
-          throw new Error('Expected JSON; possible challenge or error page');
+          throw new Error(
+            `Expected ${format === 'json' ? 'JSON' : 'HTML'}; possible challenge or error page`,
+          );
         }
 
         if (!response.body) {
@@ -157,7 +199,8 @@ export class PublicJsonTransport implements JsonSearchTransport {
           chunks.push(chunk.value);
         }
 
-        const body: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8'));
+        const content = Buffer.concat(chunks).toString('utf8');
+        const body: unknown = format === 'json' ? JSON.parse(content) : content;
 
         return {
           url,

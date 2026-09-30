@@ -368,5 +368,48 @@
     "board": "1337",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "meta",
+    "companySlug": "meta",
+    "provider": "meta",
+    "board": "meta",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "apple",
+    "companySlug": "apple",
+    "provider": "apple",
+    "board": "apple",
+    "auditStatus": "candidate",
+    "scheduled": false,
+    "endpoint": "https://jobs.apple.com/en-us/search"
+  },
+  {
+    "id": "netflix",
+    "companySlug": "netflix",
+    "provider": "eightfold",
+    "board": "netflix",
+    "auditStatus": "candidate",
+    "scheduled": false,
+    "endpoint": "https://explore.jobs.netflix.net/api/apply/v2/jobs"
+  },
+  {
+    "id": "google",
+    "companySlug": "google",
+    "provider": "google",
+    "board": "google",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "amazon",
+    "companySlug": "amazon",
+    "provider": "amazon",
+    "board": "amazon",
+    "auditStatus": "candidate",
+    "scheduled": false,
+    "endpoint": "https://www.amazon.jobs/en/search.json"
   }
 ]

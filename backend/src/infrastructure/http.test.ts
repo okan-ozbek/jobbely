@@ -6,6 +6,54 @@ afterEach(() => vi.useRealTimers());
 const url = 'https://boards-api.greenhouse.io/v1/boards/test/jobs';
 
 describe('bounded transport', () => {
+  it('limits native requests to public listing/detail routes and returns raw Apple HTML', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('<html>public detail</html>', {
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      }),
+    );
+
+    const http = new PublicJsonTransport(fetcher, 0);
+    const target = 'https://jobs.apple.com/en-us/details/100-01/engineer';
+
+    expect(await http.getHtml(target)).toMatchObject({
+      url: target,
+      body: '<html>public detail</html>',
+    });
+
+    await expect(http.getHtml('https://jobs.apple.com/api/v1/jobDetails/100')).rejects.toThrow(
+      /native career routes/,
+    );
+
+    await expect(http.getHtml('https://www.amazon.jobs/en/search.json')).rejects.toThrow(
+      /native career routes/,
+    );
+
+    await expect(
+      http.get('https://explore.jobs.netflix.net/api/apply/v2/candidate'),
+    ).rejects.toThrow(/native career routes/);
+
+    await expect(http.get('https://www.amazon.jobs/en/internal/search.json')).rejects.toThrow(
+      /native career routes/,
+    );
+
+    await expect(
+      http.get('https://www.google.com/about/careers/applications/jobs/results/?page=2'),
+    ).rejects.toThrow(/allowlist/);
+
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects JSON/challenge content in Apple HTML mode', async () => {
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response('{}', { headers: { 'content-type': 'application/json' } }));
+
+    await expect(
+      new PublicJsonTransport(fetcher, 0).getHtml('https://jobs.apple.com/en-us/search?location='),
+    ).rejects.toThrow(/Expected HTML/);
+  });
+
   it('allows only read-only Workday search POSTs and preserves their JSON request', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('{"total":0,"jobPostings":[]}', {

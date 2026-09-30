@@ -57,6 +57,11 @@ function setup(validation?: PostingValidation) {
     workday: adapter,
     icims: adapter,
     linkedin: adapter,
+    apple: adapter,
+    amazon: adapter,
+    eightfold: adapter,
+    meta: adapter,
+    google: adapter,
   };
 
   return {

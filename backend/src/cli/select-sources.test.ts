@@ -54,6 +54,22 @@ describe('manual sync source selection', () => {
     expect(selectSources(companies, scheduled, { 'all-enabled': true })).toEqual([scheduled[0]]);
   });
 
+  it('selects the five priority Wave C companies without implying all Wave C is onboarded', () => {
+    const matching = selectSources(companies, sources, { wave: 'C' });
+
+    expect(matching.map((source) => source.companySlug)).toEqual([
+      'meta',
+      'apple',
+      'netflix',
+      'google',
+      'amazon',
+    ]);
+
+    expect(
+      matching.every((source) => source.auditStatus === 'candidate' && !source.scheduled),
+    ).toBe(true);
+  });
+
   it('rejects missing, conflicting, invalid and empty selections', () => {
     for (const selection of [
       {},
@@ -61,7 +77,6 @@ describe('manual sync source selection', () => {
       { wave: 'A', 'all-enabled': true },
       { wave: 'D' },
       { company: 'missing' },
-      { wave: 'C' },
       { 'all-enabled': true },
     ]) {
       expect(() => selectSources(companies, sources, selection)).toThrow();

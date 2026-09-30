@@ -34,7 +34,7 @@ export function workplace(value?: string | boolean): 'remote' | 'hybrid' | 'onsi
     return 'hybrid';
   }
 
-  if (value === 'OnSite' || value === 'on-site') {
+  if (value === 'OnSite' || value === 'Onsite' || value === 'onsite' || value === 'on-site') {
     return 'onsite';
   }
 

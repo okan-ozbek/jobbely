@@ -29,6 +29,31 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     return null;
   }
 
+  if (url.hostname === 'jobs.apple.com') {
+    return {
+      board: 'apple:apple',
+      id: url.pathname.match(/^\/en-us\/details\/(\d+(?:-\d+)?)(?:\/|$)/)?.[1] ?? null,
+    };
+  }
+
+  if (['www.amazon.jobs', 'account.amazon.jobs', 'account.amazon.com'].includes(url.hostname)) {
+    return {
+      board: 'amazon:amazon',
+      id: url.pathname.match(/^\/(?:en\/)?jobs\/((?:SF)?\d+)(?:\/|$)/)?.[1] ?? null,
+    };
+  }
+
+  if (url.hostname === 'explore.jobs.netflix.net') {
+    return {
+      board: 'eightfold:netflix',
+      id: url.pathname.match(/^\/careers\/job\/(\d+)(?:\/|$)/)?.[1] ?? null,
+    };
+  }
+
+  if (url.hostname === 'hvr-amazon.my.site.com' && url.pathname === '/JobDetails') {
+    return { board: 'amazon:amazon', id: url.searchParams.get('reqid') };
+  }
+
   if (['boards.greenhouse.io', 'job-boards.greenhouse.io'].includes(url.hostname) && parts[0]) {
     return { board: `greenhouse:${parts[0]}`, id: parts[1] === 'jobs' ? (parts[2] ?? null) : null };
   }
@@ -99,6 +124,28 @@ export function resolveOfficialIds(
   extraction: Extraction,
   ids: Set<string>,
 ): Set<string> {
+  if (source.provider === 'apple') {
+    const mapping = new Map(
+      extraction.postings.map((posting) => [
+        officialIdentity(posting.url)?.id,
+        posting.sourcePostingId,
+      ]),
+    );
+
+    return new Set([...ids].map((id) => mapping.get(id) ?? id));
+  }
+
+  if (source.provider === 'amazon') {
+    const mapping = new Map(
+      extraction.postings.map((posting) => [
+        officialIdentity(posting.applyUrl)?.id,
+        posting.sourcePostingId,
+      ]),
+    );
+
+    return new Set([...ids].map((id) => mapping.get(id) ?? id));
+  }
+
   if (source.provider !== 'workday') {
     return ids;
   }
