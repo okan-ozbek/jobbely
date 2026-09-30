@@ -26,6 +26,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## How future agents should use these references
 
+Read the root [AGENTS.md](../AGENTS.md) first. It defines repository-wide guidance and requires a successful root lint check after the final code edit.
+
 Before changing a concern, read its reference and follow the implementation links. Validate the current code: documentation can drift and is not executable enforcement. Preserve listed invariants unless a deliberate architecture change updates both implementation and documentation.
 
 For a new decision, add an uppercase concern filename with a `.md` extension and record:

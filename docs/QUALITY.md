@@ -60,6 +60,8 @@ The initial implementation passed 35 tests including four against PostgreSQL. Li
 
 ## Change procedure
 
+Agents must follow [AGENTS.md](../AGENTS.md): after writing or modifying code, run the root `pnpm lint` against the final code and require zero warnings before reporting completion. Rerun after any further code edits. A successful `pnpm check` includes this lint gate; formatting/autofix alone does not replace it. Report failures or blockers accurately.
+
 Run checks appropriate to the affected behavior, and run `pnpm check` before a release. Regenerate contracts for public-schema changes. Add PostgreSQL verification for transaction/concurrency changes and representative live audits for provider changes. Documentation-only updates require formatting, link/command validation and review against code, without claiming deployment tests.
 
 [Type settings](../tsconfig.base.json), [lint config](../eslint.config.mjs), [boundary guard](../scripts/check-boundaries.mjs), [tests](../backend/src/), [PostgreSQL suite](../backend/src/infrastructure/storage/postgres.test.ts), [live evidence](SOURCE_CHECKS.md). Keep related architecture references current when changing their invariants.
