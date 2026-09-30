@@ -3,14 +3,9 @@ import {
   ArrowDown,
   ArrowLeft,
   ArrowUpRight,
-  BriefcaseBusiness,
-  Check,
-  ChevronRight,
   CircleHelp,
-  Clock3,
   MapPin,
   Search,
-  SlidersHorizontal,
   X,
 } from 'lucide-react';
 import type { JobsQuery } from './api/client.js';
@@ -104,8 +99,6 @@ export function App() {
   const categoryOf = (slug: string) =>
     categories.find((category) => category.slug === slug)?.name ?? slug;
 
-  const connected = companies.filter((company) => company.sources.length).length;
-
   const clear = () => {
     setQueryInput('');
 
@@ -120,84 +113,73 @@ export function App() {
 
   return (
     <div className="app-shell">
+      <a
+        className="skip-link"
+        href="#main-content"
+      >
+        Skip to content
+      </a>
       <header className="header">
         <a
           className="brand"
           href="/"
           aria-label="Jobbely home"
         >
-          <span className="brand-icon">
-            <BriefcaseBusiness
-              size={20}
-              strokeWidth={2.2}
-            />
-          </span>
           jobbely<span className="brand-dot">.</span>
         </a>
         <nav aria-label="Main navigation">
           <button
             className={view === 'jobs' ? 'nav-link active' : 'nav-link'}
+            aria-current={view === 'jobs' ? 'page' : undefined}
             onClick={() => update({ view: null, job: null })}
           >
-            Browse jobs
+            Jobs
           </button>
           <button
             className={view === 'companies' ? 'nav-link active' : 'nav-link'}
+            aria-current={view === 'companies' ? 'page' : undefined}
             onClick={() => update({ view: 'companies', job: null })}
           >
-            Companies <span className="nav-count">60</span>
+            Companies
           </button>
         </nav>
-        <span className="header-note">
-          <span className="status-dot" /> Direct from the source
-        </span>
       </header>
-      <main>
+      <main
+        id="main-content"
+        tabIndex={-1}
+      >
         {mode === 'demo' && (
           <div className="demo-banner">
             <CircleHelp size={15} />
             <span>
-              Preview mode · All listings below are synthetic examples. Live source coverage has not
-              been verified.
+              Preview mode. These are sample listings, not active vacancies.
             </span>
           </div>
         )}
         {!selectedId && (
           <section className="hero">
-            <div>
-              <div className="eyebrow">
-                <span className="short-line" /> A clearer view of what’s next
-              </div>
+            <div className="hero-title">
               <h1>
                 {view === 'jobs' ? (
                   <>
-                    Good work starts
+                    Find your
                     <br />
-                    with the right <span>opportunity.</span>
+                    <span>next role.</span>
                   </>
                 ) : (
                   <>
-                    The companies.
+                    Great companies.
                     <br />
-                    <span>The original source.</span>
+                    <span>One place.</span>
                   </>
                 )}
               </h1>
-              <p>
-                {view === 'jobs'
-                  ? 'Explore opportunities from the companies you care about. Full descriptions, original teams, and a clear view of every source.'
-                  : 'Every target company, in one place. See which sources are connected and exactly where coverage stands.'}
-              </p>
             </div>
-            <aside className="hero-aside">
-              <div className="large-metric">
-                60<span>companies on our radar</span>
-              </div>
-              <div className="hero-aside-bottom">
-                <span>{connected} configured companies</span>
-                <ArrowDown size={17} />
-              </div>
-            </aside>
+            <p>
+              {view === 'jobs'
+                ? 'Explore roles from the companies you care about. Direct from their job boards.'
+                : 'Explore our company directory, with original listings and clear source coverage.'}
+            </p>
           </section>
         )}
         {error && (
@@ -215,7 +197,7 @@ export function App() {
               className="back-button"
               onClick={() => update({ job: null })}
             >
-              <ArrowLeft size={16} /> Back to opportunities
+              <ArrowLeft size={16} /> Back to jobs
             </button>
             {detailError ? (
               <div
@@ -239,7 +221,10 @@ export function App() {
                     logoUrl={logoOf(selected.companySlug)}
                   />
                   <div>
-                    <div className="company-label">{nameOf(selected.companySlug)}</div>
+                      <div className="company-label">
+                        {nameOf(selected.companySlug)}
+                        {selected.status === 'closed' && <span className="closed-label">Closed</span>}
+                      </div>
                     <h1>{selected.title}</h1>
                     <div className="job-meta">
                       <span>
@@ -258,7 +243,7 @@ export function App() {
                     }}
                   />
                   <aside className="detail-sidebar">
-                    <div className="sidebar-eyebrow">At a glance</div>
+                    <h2 className="sidebar-heading">The details</h2>
                     <dl>
                       <dt>Function</dt>
                       <dd>{categoryOf(selected.classification.category)}</dd>
@@ -374,7 +359,7 @@ export function App() {
                           })
                         }
                       >
-                        Explore <ChevronRight size={14} />
+                        View jobs <ArrowUpRight size={14} />
                       </button>
                     </div>
                   </article>
@@ -387,12 +372,13 @@ export function App() {
           </section>
         ) : (
           <section className="browse-section">
-            <div className="search-bar">
+            <div className="search-controls">
+              <div className="search-bar">
               <label className="search-input">
                 <Search size={20} />
                 <input
                   aria-label="Search job titles, descriptions, or locations"
-                  placeholder="Job title, keyword, or location"
+                  placeholder="Search by role, keyword or location"
                   value={queryInput}
                   onChange={(event) => {
                     setQueryInput(event.target.value);
@@ -400,11 +386,10 @@ export function App() {
                   }}
                 />
               </label>
-              <div className="search-divider" />
-              <SlidersHorizontal
-                size={17}
-                className="filter-icon"
-              />
+              </div>
+              <div className="filter-row">
+              <label className="filter-field">
+                <span>Company</span>
               <select
                 aria-label="Filter by company"
                 value={params.get('company') ?? ''}
@@ -420,6 +405,9 @@ export function App() {
                   </option>
                 ))}
               </select>
+              </label>
+              <label className="filter-field">
+                <span>Function</span>
               <select
                 aria-label="Filter by function"
                 value={params.get('category') ?? ''}
@@ -435,6 +423,9 @@ export function App() {
                   </option>
                 ))}
               </select>
+              </label>
+              <label className="filter-field">
+                <span>Workplace</span>
               <select
                 aria-label="Filter by workplace"
                 value={params.get('workplace') ?? ''}
@@ -450,16 +441,18 @@ export function App() {
                   </option>
                 ))}
               </select>
+              </label>
+              </div>
             </div>
             <div className="results-heading">
               <h2>
                 {loading
-                  ? 'Finding opportunities…'
-                  : `${total} ${mode === 'demo' ? 'sample opportunities' : 'opportunities'}`}
+                  ? 'Finding jobs…'
+                  : `${total.toLocaleString()} ${mode === 'demo' ? 'sample jobs' : total === 1 ? 'job' : 'jobs'}`}
                 <span>
                   {params.get('company')
                     ? `at ${nameOf(params.get('company')!)}`
-                    : 'across our sources'}
+                    : 'from company sources'}
                 </span>
               </h2>
               {Object.keys(query).length > 1 ? (
@@ -471,7 +464,7 @@ export function App() {
                 </button>
               ) : (
                 <span className="sort-note">
-                  <Clock3 size={13} /> Most recently checked
+                  Recently checked
                 </span>
               )}
             </div>
@@ -484,7 +477,7 @@ export function App() {
                   className="empty-state"
                   role="status"
                 >
-                  Loading opportunities…
+                  Loading jobs…
                 </div>
               ) : (
                 jobs.map((job) => (
@@ -536,13 +529,13 @@ export function App() {
             {!loading && !error && total === 0 && (
               <div className="empty-state">
                 <Search size={25} />
-                <h3>No matching opportunities yet.</h3>
+                <h3>No matching jobs.</h3>
                 <p>Try fewer filters, or check the company directory for source coverage.</p>
                 <button
                   className="back-button"
                   onClick={clear}
                 >
-                  Reset filters
+                  Clear filters
                 </button>
               </div>
             )}
@@ -554,31 +547,21 @@ export function App() {
                   void loadMore();
                 }}
               >
-                {loadingMore ? 'Loading…' : 'Load more opportunities'}
+                {loadingMore ? 'Loading…' : 'Load more jobs'}
                 <ArrowDown size={15} />
               </button>
             )}
-            <div className="source-note">
-              <Check size={15} />
-              <p>
-                Original company information. Clear source coverage.{' '}
-                <button onClick={() => update({ view: 'companies' })}>
-                  See the directory <ArrowUpRight size={12} />
-                </button>
-              </p>
-            </div>
           </section>
         )}
       </main>
       <footer>
-        <span className="footer-brand">jobbely.</span>
-        <span>A little less searching. A little more possibility.</span>
+        <span className="footer-brand">jobbely<span>.</span></span>
         <span>
           {mode === 'demo'
-            ? 'Synthetic preview · no live extraction'
+            ? 'Sample listings · preview mode'
             : mode === 'postgres'
-              ? 'Public employer listings · no AI'
-              : 'Connecting to stored listings…'}
+              ? 'Original listings. Direct sources.'
+              : 'Loading listings…'}
         </span>
       </footer>
     </div>
