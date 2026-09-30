@@ -2,6 +2,8 @@
   "name": "@jobbely/frontend", "private": true, "type": "module",
   "scripts": {
     "dev": "vite --configLoader runner --host 127.0.0.1", "build": "tsc --noEmit && vite build --configLoader runner", "typecheck": "tsc --noEmit",
+    "lint": "eslint src --max-warnings 0", "lint:fix": "eslint src --fix",
+    "format": "prettier --write src", "format:check": "prettier --check src",
     "generate:api": "openapi-typescript ../contracts/openapi.json -o src/api/generated/schema.ts"
   },
   "dependencies": { "react": "^19.2.0", "react-dom": "^19.2.0", "openapi-fetch": "^0.15.0", "lucide-react": "^0.468.0" },

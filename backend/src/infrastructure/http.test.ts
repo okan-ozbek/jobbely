@@ -26,13 +26,11 @@ describe("bounded transport", () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
   it("does not mistake a challenge page for JSON", async () => {
-    const fetcher = vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(
-        new Response("<html>challenge</html>", {
-          headers: { "content-type": "text/html" },
-        }),
-      );
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response("<html>challenge</html>", {
+        headers: { "content-type": "text/html" },
+      }),
+    );
     await expect(new PublicJsonTransport(fetcher, 0).get(url)).rejects.toThrow(
       /Expected JSON/,
     );

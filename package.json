@@ -13,7 +13,9 @@
     "test": "pnpm --filter @jobbely/backend test",
     "check": "node scripts/check-boundaries.mjs && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "lint": "eslint backend/src frontend/src scripts --max-warnings 0",
+    "lint:fix": "eslint backend/src frontend/src scripts --fix",
     "format": "prettier --write backend/src frontend/src scripts docs *.json *.yaml README.md",
+    "format:check": "prettier --check backend/src frontend/src scripts docs *.json *.yaml README.md",
     "sync": "pnpm --filter @jobbely/backend sync",
     "db:generate": "pnpm --filter @jobbely/backend db:generate",
     "db:migrate": "pnpm --filter @jobbely/backend db:migrate"

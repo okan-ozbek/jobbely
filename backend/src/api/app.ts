@@ -24,7 +24,7 @@ export async function createApp(dependencies: {
 }) {
   /**
    * Creates and configures the Fastify application instance with all routes, hooks, and error handling.
-   * 
+   *
    * @param dependencies - The dependencies required to create the app, including the job catalog, repository, origin, and logger.
    * @returns The configured Fastify application instance.
    */
@@ -49,7 +49,7 @@ export async function createApp(dependencies: {
 
   /**
    * Register the onClose hook to ensure the repository is properly closed when the application shuts down.
-   * 
+   *
    * @param dependencies - The dependencies required to create the app, including the job catalog, repository, origin, and logger.
    */
   app.addHook("onClose", () => dependencies.repository.close());
@@ -57,7 +57,7 @@ export async function createApp(dependencies: {
   /**
    * Register the global error handler for the Fastify application.
    * Handles QueryError, validation errors, and internal server errors.
-   * 
+   *
    * @param error - The error object encountered during request processing.
    * @param request - The Fastify request object.
    * @param reply - The Fastify reply object.
@@ -66,36 +66,30 @@ export async function createApp(dependencies: {
     if (error instanceof QueryError) {
       const statusCode: number = error.code === "cursor_stale" ? 409 : 400;
 
-      return reply
-        .code(statusCode)
-        .send({ 
-          code: error.code, 
-          message: error.message 
-        });
+      return reply.code(statusCode).send({
+        code: error.code,
+        message: error.message,
+      });
     }
 
     if (error instanceof Error && "validation" in error) {
-      return reply
-        .code(400)
-        .send({
-          code: "invalid_request",
-          message: "Invalid request parameters",
-        });
+      return reply.code(400).send({
+        code: "invalid_request",
+        message: "Invalid request parameters",
+      });
     }
 
     request.log.error(error);
 
-    return reply
-      .code(500)
-      .send({
-        code: "internal_error",
-        message: "Unable to read listings right now",
-      });
+    return reply.code(500).send({
+      code: "internal_error",
+      message: "Unable to read listings right now",
+    });
   });
 
   /**
    * Handles the request to list all jobs based on the provided filters.
-   * 
+   *
    * @param request - The Fastify request object containing the query parameters.
    * @returns A list of jobs matching the provided filters.
    */
@@ -113,7 +107,7 @@ export async function createApp(dependencies: {
 
   /**
    * Handles the request to retrieve job facets based on the provided filters.
-   * 
+   *
    * @param request - The Fastify request object containing the query parameters.
    * @returns A list of job facets matching the provided filters.
    */
@@ -131,7 +125,7 @@ export async function createApp(dependencies: {
 
   /**
    * Handles the request to retrieve a specific job by its ID.
-   * 
+   *
    * @param request - The Fastify request object containing the job ID as a path parameter.
    * @returns The job matching the provided ID, or a 404 error if not found.
    */
@@ -148,12 +142,10 @@ export async function createApp(dependencies: {
       const job = await dependencies.catalog.job(request.params.id);
 
       if (!job) {
-        return reply
-          .code(404)
-          .send({
-            code: "not_found",
-            message: "This listing could not be found",
-          });
+        return reply.code(404).send({
+          code: "not_found",
+          message: "This listing could not be found",
+        });
       }
 
       return job;
@@ -162,7 +154,7 @@ export async function createApp(dependencies: {
 
   /**
    * Handles the request to list all companies.
-   * 
+   *
    * @returns A list of all companies.
    */
   app.get(
@@ -178,7 +170,7 @@ export async function createApp(dependencies: {
 
   /**
    * Handles the request to retrieve a specific company by its slug.
-   * 
+   *
    * @param request - The Fastify request object containing the company slug as a path parameter.
    * @returns The company matching the provided slug, or a 404 error if not found.
    */
@@ -197,12 +189,10 @@ export async function createApp(dependencies: {
       );
 
       if (!company) {
-        return reply
-          .code(404)
-          .send({ 
-            code: "not_found", 
-            message: "Company not found" 
-          });
+        return reply.code(404).send({
+          code: "not_found",
+          message: "Company not found",
+        });
       }
 
       return company;
@@ -211,7 +201,7 @@ export async function createApp(dependencies: {
 
   /**
    * Handles the request to list all categories.
-   * 
+   *
    * @returns A list of all categories.
    */
   app.get(
@@ -231,14 +221,14 @@ export async function createApp(dependencies: {
 
   /**
    * Handles the liveness probe for the application.
-   * 
+   *
    * @returns The status of the application.
    */
   app.get("/health/live", async () => ({ status: "ok" }));
 
   /**
    * Handles the readiness probe for the application.
-   * 
+   *
    * @returns The status of the application.
    */
   app.get("/health/ready", async (_request, reply) => {
@@ -246,11 +236,8 @@ export async function createApp(dependencies: {
       await dependencies.repository.ping();
 
       return { status: "ok" };
-    } 
-    catch {
-      return reply
-        .code(503)
-        .send({ status: "unavailable" });
+    } catch {
+      return reply.code(503).send({ status: "unavailable" });
     }
   });
 

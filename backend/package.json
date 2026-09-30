@@ -3,6 +3,8 @@
   "scripts": {
     "dev": "tsx watch src/main.ts", "build": "prisma generate && tsc -p tsconfig.json",
     "start": "node dist/main.js", "typecheck": "prisma generate && tsc --noEmit",
+    "lint": "eslint src --max-warnings 0", "lint:fix": "eslint src --fix",
+    "format": "prettier --write src", "format:check": "prettier --check src",
     "test": "vitest run", "export:openapi": "tsx src/cli/export-openapi.ts",
     "sync": "tsx src/cli/sync.ts", "audit": "tsx src/cli/audit-source.ts", "worker": "tsx src/worker/main.ts",
     "db:generate": "prisma generate", "db:migrate": "prisma migrate deploy"
