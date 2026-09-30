@@ -10,6 +10,8 @@ The UI searches stored jobs, filters by company/function/workplace, opens full s
 
 `CompanyLogo` renders local assets from each company's API-provided `logoUrl` in the directory, job rows and details. Missing/failed images use a local N/A asset. Source records, maintenance and fallback rules live in [LOGOS.md](LOGOS.md).
 
+The minimal editorial style uses Faculty Glyphic headings, DM Sans body text, warm paper, near-black and red. Fonts are hosted locally. Visual tokens, responsive layouts and accessibility rules are recorded in [DESIGN.md](DESIGN.md).
+
 ## State and responsibilities
 
 - `useLocationQuery` owns query-string state and browser history. Filters and selected job are shareable URL parameters; search typing replaces history entries while navigation pushes them.

@@ -16,6 +16,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [SECURITY.md](SECURITY.md)             | External-content trust boundary, HTML sanitization, secrets and public read API                    |
 | [API.md](API.md)                       | Fastify/TypeBox, generated OpenAPI contract, catalog queries, pagination and health routes         |
 | [FRONTEND.md](FRONTEND.md)             | React/Vite, API-only dependency, URL state and cancellable request hooks                           |
+| [DESIGN.md](DESIGN.md)                 | Palette, typography, minimal page layouts, responsive behavior and accessible interactions         |
 | [LOGOS.md](LOGOS.md)                   | Local company assets, source records, API paths and the shared N/A fallback                        |
 | [SOURCES.md](SOURCES.md)               | Company/source separation, explicit audit status, scheduling gate and coverage signals             |
 | [QUALITY.md](QUALITY.md)               | Strict types, dependency checks, behavioral tests and separate integration/live-source gates       |

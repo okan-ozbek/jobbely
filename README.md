@@ -192,6 +192,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [SECURITY](docs/SECURITY.md): trust boundaries and HTML preparation.
 - [API](docs/API.md): public contract, query behavior and pagination.
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
+- [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.
 - [LOGOS](docs/LOGOS.md): local company logos, provenance, refresh commands and N/A fallback.
 - [SOURCES](docs/SOURCES.md): registry, source audits and coverage.
 - [QUALITY](docs/QUALITY.md): code checks and verification boundaries.

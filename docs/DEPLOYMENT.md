@@ -131,6 +131,10 @@ server {
         try_files $uri =404;
     }
 
+    location /fonts/ {
+        try_files $uri =404;
+    }
+
     location / {
         try_files $uri $uri/ /index.html;
     }
@@ -140,6 +144,8 @@ server {
 Replace the domain/root with the actual release location. `proxy_pass` deliberately has no trailing URI so `/api/v1/...` reaches Fastify unchanged. Health routes are handled before the SPA fallback. If the edge runs on another machine, use private-network listener/upstream addresses instead of loopback. Validate routing with your host's configuration tools before enabling it. [Nginx proxy URI behavior](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass), [Nginx file fallback](https://nginx.org/en/docs/http/ngx_http_core_module.html#try_files).
 
 The build copies local company logos into `frontend/dist/logos/`. Include them in each static release and serve missing `/logos/` paths as 404 rather than applying the SPA fallback. The browser uses the frontend origin for these paths, including when the API is hosted separately. See [LOGOS.md](LOGOS.md).
+
+The locally hosted fonts and their licenses are copied to `frontend/dist/fonts/`. Include this directory and `favicon.svg` in each release. Serve missing `/fonts/` paths as 404 as well. See [DESIGN.md](DESIGN.md).
 
 ### 6. Populate listings and optionally run the worker
 

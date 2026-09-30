@@ -21,11 +21,11 @@ const workplaceNames = {
 
 const coverageNames = {
   not_onboarded: 'Not connected',
-  partial: 'Awaiting source audit',
+  partial: 'Partial coverage',
   stale: 'Refresh overdue',
   blocked: 'Refresh failed',
   healthy: 'Up to date',
-  demo: 'Demo source',
+  demo: 'Sample source',
 };
 
 export function App() {
@@ -307,7 +307,18 @@ export function App() {
                 />
               </label>
             </div>
-            <div className="company-grid">
+            {loading && companies.length === 0 && (
+              <div
+                className="empty-state"
+                role="status"
+              >
+                Loading companies…
+              </div>
+            )}
+            <div
+              className="company-grid"
+              aria-busy={loading}
+            >
               {companies
                 .filter((company) =>
                   company.name.toLowerCase().includes(companySearch.toLowerCase()),
@@ -341,6 +352,7 @@ export function App() {
                         {company.jobs} {mode === 'demo' ? 'examples' : 'listings'}
                       </span>
                       <button
+                        aria-label={`View ${company.name} jobs`}
                         onClick={() =>
                           update({
                             view: null,
@@ -368,7 +380,7 @@ export function App() {
                   <Search size={20} />
                   <input
                     aria-label="Search job titles, descriptions, or locations"
-                    placeholder="Search by role, keyword or location"
+                    placeholder="Role, keyword or location"
                     value={queryInput}
                     onChange={(event) => {
                       setQueryInput(event.target.value);
