@@ -38,6 +38,16 @@ describe('manual sync source selection', () => {
     expect(selectSources(companies, sources, { company: 'radix-trading' })).toHaveLength(2);
   });
 
+  it('selects all 31 Wave B integrations, including the explicitly restricted LinkedIn source', () => {
+    const matching = selectSources(companies, sources, { wave: 'B' });
+
+    expect(matching).toHaveLength(31);
+
+    expect(new Set(matching.map((source) => source.companySlug))).toEqual(
+      new Set(companies.filter((company) => company.wave === 'B').map((company) => company.slug)),
+    );
+  });
+
   it('keeps scheduled selection separate from manual wave selection', () => {
     const scheduled = sources.map((source, index) => ({ ...source, scheduled: index === 0 }));
 
@@ -51,7 +61,7 @@ describe('manual sync source selection', () => {
       { wave: 'A', 'all-enabled': true },
       { wave: 'D' },
       { company: 'missing' },
-      { wave: 'B' },
+      { wave: 'C' },
       { 'all-enabled': true },
     ]) {
       expect(() => selectSources(companies, sources, selection)).toThrow();

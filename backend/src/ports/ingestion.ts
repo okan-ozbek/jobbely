@@ -11,6 +11,10 @@ export interface JsonTransport {
   get(url: string): Promise<RawResponse>;
 }
 
+export interface JsonSearchTransport extends JsonTransport {
+  post(url: string, body: unknown): Promise<RawResponse>;
+}
+
 export interface SourceAdapter {
   extract(source: Source): Promise<Extraction>;
 }
@@ -36,6 +40,7 @@ export interface SnapshotCommit {
 export interface JobRepository {
   read(): Promise<Dataset>;
   startRun(source: Source, at: string): Promise<SourceRun | null>;
+  renewRun(sourceId: string, runId: string, at: string): Promise<boolean>;
   commitSnapshot(commit: SnapshotCommit): Promise<SourceRun>;
   failRun(runId: string, at: string, error: string): Promise<void>;
   ping(): Promise<void>;

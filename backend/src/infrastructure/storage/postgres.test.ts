@@ -89,6 +89,33 @@ integration('PostgreSQL transactions (isolated test database)', () => {
     await repository.failRun(claims.find(Boolean)!.id, at, 'test cleanup');
   });
 
+  it('renews only the current unexpired owner during long imports', async () => {
+    const item = source();
+    const started = new Date();
+    const run = await repository.startRun(item, started.toISOString());
+    const later = new Date(started.getTime() + 20 * 60_000).toISOString();
+
+    expect(await secondRepository.renewRun(item.id, 'wrong-owner', later)).toBe(false);
+    expect(await repository.renewRun(item.id, run!.id, later)).toBe(true);
+
+    expect(
+      await secondRepository.startRun(
+        item,
+        new Date(started.getTime() + 35 * 60_000).toISOString(),
+      ),
+    ).toBeNull();
+
+    expect(
+      await repository.renewRun(
+        item.id,
+        run!.id,
+        new Date(started.getTime() + 51 * 60_000).toISOString(),
+      ),
+    ).toBe(false);
+
+    await repository.failRun(run!.id, later, 'test cleanup');
+  });
+
   it('rolls back the whole snapshot on duplicate IDs, including version publication', async () => {
     const item = source();
     const at = new Date().toISOString();

@@ -41,6 +41,12 @@ export class MemoryJobRepository implements JobRepository {
     return structuredClone(result.run);
   }
 
+  async renewRun(sourceId: string, runId: string): Promise<boolean> {
+    return this.dataset.runs.some(
+      (run) => run.sourceId === sourceId && run.id === runId && run.status === 'running',
+    );
+  }
+
   async failRun(runId: string, at: string, error: string) {
     this.dataset.runs = this.dataset.runs.map((run) =>
       run.id === runId && run.status === 'running'

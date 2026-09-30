@@ -14,14 +14,69 @@ const companySchema = z.object({
   wave: z.enum(['A', 'B', 'C']),
 });
 
-const sourceSchema = z.object({
-  id: z.string(),
-  companySlug: z.string(),
-  provider: z.enum(['greenhouse', 'ashby', 'lever']),
-  board: z.string().regex(/^[a-zA-Z0-9_-]+$/),
-  auditStatus: z.enum(['candidate', 'verified']),
-  scheduled: z.boolean(),
-});
+const sourceSchema = z
+  .object({
+    id: z.string(),
+    companySlug: z.string(),
+    provider: z.enum(['greenhouse', 'ashby', 'lever', 'workday', 'icims', 'linkedin']),
+    board: z.string().regex(/^[a-zA-Z0-9_-]+$/),
+    auditStatus: z.enum(['candidate', 'verified']),
+    scheduled: z.boolean(),
+    endpoint: z.url().optional(),
+    postingHosts: z
+      .array(z.string().regex(/^[a-z0-9.-]+$/))
+      .min(1)
+      .max(5)
+      .optional(),
+    employerFilter: z
+      .object({
+        field: z.enum(['brand', 'hiring_organization']),
+        values: z.array(z.string().trim().min(1)).min(1).max(5),
+      })
+      .optional(),
+  })
+  .superRefine((source, context) => {
+    if (source.provider !== 'icims' && (source.postingHosts || source.employerFilter)) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Employer membership and posting host aliases are iCIMS settings',
+      });
+    }
+
+    if (source.provider !== 'workday' && source.provider !== 'icims') {
+      if (source.endpoint) {
+        context.addIssue({ code: 'custom', message: 'This provider does not accept an endpoint' });
+      }
+
+      return;
+    }
+
+    if (!source.endpoint) {
+      context.addIssue({ code: 'custom', message: 'Enterprise providers require an endpoint' });
+
+      return;
+    }
+
+    const url = new URL(source.endpoint);
+
+    const validPath =
+      source.provider === 'workday'
+        ? new RegExp(`^/wday/cxs/[a-zA-Z0-9_-]+/${source.board}/jobs$`).test(url.pathname) &&
+          /^[a-z0-9-]+\.wd\d+\.myworkdayjobs\.com$/.test(url.hostname)
+        : url.pathname === '/api/jobs';
+
+    if (
+      url.protocol !== 'https:' ||
+      url.username ||
+      url.password ||
+      url.port ||
+      url.search ||
+      url.hash ||
+      !validPath
+    ) {
+      context.addIssue({ code: 'custom', message: 'Invalid public enterprise endpoint' });
+    }
+  });
 
 export function loadRegistry(options: { validateAudits?: boolean } = {}): {
   companies: Company[];

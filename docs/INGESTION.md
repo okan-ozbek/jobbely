@@ -26,6 +26,7 @@ From the repository root:
 ```sh
 pnpm --filter @jobbely/backend run sync --company openai
 pnpm sync:wave-a
+pnpm sync:wave-b
 pnpm --filter @jobbely/backend run sync --all-enabled
 pnpm --filter @jobbely/backend run worker
 ```
@@ -38,7 +39,7 @@ The worker uses pg-boss in the same PostgreSQL database, with local concurrency 
 
 Failed runs never reconcile removals or publish partial updates. Last successful listings remain readable. Quarantine affects removal reconciliation; valid observed postings still update. Successful snapshots retain raw evidence; failed runs currently retain an error summary rather than their fetched payloads.
 
-All candidate sources are currently unscheduled. Queue restart/retry behavior, schedule removal when disabling a source, and long-running lease renewal need operational verification or implementation. Registry changes require process restart. The worker is not started by `pnpm dev` or the API entry point. SIGINT/SIGTERM trigger queue shutdown and repository closure.
+All candidate sources are currently unscheduled. `SyncSource` renews ownership every minute during long extraction/validation; renewal failures prevent publication and cleanup stops the heartbeat. Workday extraction has a two-hour budget and the worker queue has a three-hour job lifetime. Queue restart/retry behavior and schedule removal when disabling a source still need operational verification. Registry changes require process restart. The worker is not started by `pnpm dev` or the API entry point. SIGINT/SIGTERM trigger queue shutdown and repository closure.
 
 ## Implementation and verification
 

@@ -44,7 +44,80 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     };
   }
 
+  if (/^[a-z0-9-]+\.wd\d+\.myworkdayjobs\.com$/.test(url.hostname)) {
+    const siteIndex = /^[a-z]{2}-[A-Z]{2}$/.test(parts[0]) ? 1 : 0;
+    const site = parts[siteIndex];
+    const jobIndex = parts.indexOf('job', siteIndex + 1);
+    const id = jobIndex >= 0 ? (parts.at(-1) === 'apply' ? parts.at(-2) : parts.at(-1)) : null;
+
+    return site ? { board: `workday:${site}`, id: id ?? null } : null;
+  }
+
+  if (/^wd\d+\.myworkdaysite\.com$/.test(url.hostname)) {
+    const recruiting = parts.indexOf('recruiting');
+    const site = recruiting >= 0 ? parts[recruiting + 2] : undefined;
+
+    return site
+      ? {
+          board: `workday:${site}`,
+          id:
+            parts[recruiting + 3] === 'job'
+              ? parts.at(-1) === 'apply'
+                ? parts.at(-2)!
+                : parts.at(-1)!
+              : null,
+        }
+      : null;
+  }
+
+  const icimsBoards: Record<string, string> = {
+    'careers.amd.com': 'amd',
+    'careers-amd.icims.com': 'amd',
+    'jobs.booking.com': 'workingatbooking',
+    'external-workingatbooking.icims.com': 'workingatbooking',
+    'www.github.careers': 'githubinc',
+    'githubinc.jibeapply.com': 'githubinc',
+    'careers-githubinc.icims.com': 'githubinc',
+    'globalcareers-githubinc.icims.com': 'githubinc',
+  };
+
+  const board = icimsBoards[url.hostname];
+
+  if (board) {
+    return {
+      board: `icims:${board}`,
+      id: url.pathname.match(/\/jobs\/(\d+)(?:\/|$)/)?.[1] ?? null,
+    };
+  }
+
   return null;
+}
+
+/** Workday URLs contain mutable title slugs; map them to immutable IDs from captured detail evidence. */
+export function resolveOfficialIds(
+  source: Source,
+  extraction: Extraction,
+  ids: Set<string>,
+): Set<string> {
+  if (source.provider !== 'workday') {
+    return ids;
+  }
+
+  const detail = z.object({
+    jobPostingInfo: z.object({ id: z.string(), jobPostingId: z.string() }),
+  });
+
+  const nativeIds = new Map<string, string>();
+
+  for (const raw of extraction.rawResponses) {
+    const result = detail.safeParse(raw.body);
+
+    if (result.success) {
+      nativeIds.set(result.data.jobPostingInfo.jobPostingId, result.data.jobPostingInfo.id);
+    }
+  }
+
+  return new Set([...ids].map((id) => nativeIds.get(id) ?? id));
 }
 
 export function inspectOfficialPage(

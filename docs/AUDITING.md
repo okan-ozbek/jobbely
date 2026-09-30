@@ -15,6 +15,7 @@ legal terms, approve employer scope, bypass challenges, or enable incomplete sou
 
 ```powershell
 pnpm audit:wave-a
+pnpm audit:wave-b
 pnpm --filter @jobbely/backend run audit --company discord
 ```
 
@@ -114,6 +115,8 @@ reconciles the extracted source again. A mismatch, new board, challenge, policy 
 scope fails the run before publication. Existing jobs and removal counters are preserved, and
 coverage reflects the failed run. Successful reconciliation evidence is stored with the database
 snapshot. Candidate manual imports remain available for investigation but cannot reconcile closure.
+
+Enterprise source endpoint, canonical host aliases and employer membership rules are included in the configuration hash. Workday official URL slugs are reconciled to immutable posting IDs through captured detail evidence, rather than inventing requisition/title equivalence. The expanded registry includes pending plans for every Wave B company; a configured plan is not an approval. See [WAVE_B.md](WAVE_B.md).
 
 ## Tradeoffs and limits
 

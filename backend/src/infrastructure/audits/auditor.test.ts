@@ -104,7 +104,14 @@ function audit(
         fetchedAt: now.toISOString(),
       }),
     },
-    { greenhouse: adapter, ashby: adapter, lever: adapter },
+    {
+      greenhouse: adapter,
+      ashby: adapter,
+      lever: adapter,
+      workday: adapter,
+      icims: adapter,
+      linkedin: adapter,
+    },
     () => now,
   ).run('ignored/raw-evidence');
 }
@@ -329,7 +336,14 @@ describe('evidence-backed source audits', () => {
           throw new Error('robots denied');
         },
       },
-      { greenhouse: adapter, ashby: adapter, lever: adapter },
+      {
+        greenhouse: adapter,
+        ashby: adapter,
+        lever: adapter,
+        workday: adapter,
+        icims: adapter,
+        linkedin: adapter,
+      },
       () => now,
     );
 

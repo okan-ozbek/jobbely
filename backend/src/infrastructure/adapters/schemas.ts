@@ -5,7 +5,7 @@ export const text = z.string().trim().min(1);
 export const httpsUrl = z.url().refine((value) => {
   const url = new URL(value);
 
-  return url.protocol === 'https:' && !url.username && !url.password;
+  return url.protocol === 'https:' && !url.username && !url.password && !url.port;
 }, 'Expected a public HTTPS URL');
 
 export const identifier = z.union([text, z.number().int()]).transform(String);

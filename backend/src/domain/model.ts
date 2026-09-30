@@ -1,4 +1,4 @@
-export type Provider = 'greenhouse' | 'ashby' | 'lever';
+export type Provider = 'greenhouse' | 'ashby' | 'lever' | 'workday' | 'icims' | 'linkedin';
 
 export type AuditStatus = 'candidate' | 'verified';
 
@@ -9,6 +9,9 @@ export interface Source {
   board: string;
   auditStatus: AuditStatus;
   scheduled: boolean;
+  endpoint?: string | undefined;
+  postingHosts?: string[] | undefined;
+  employerFilter?: { field: 'brand' | 'hiring_organization'; values: string[] } | undefined;
 }
 
 export interface Company {
@@ -64,6 +67,7 @@ export interface RawResponse {
   url: string;
   fetchedAt: string;
   body: unknown;
+  request?: { method: 'POST'; body: unknown };
 }
 
 export interface Extraction {

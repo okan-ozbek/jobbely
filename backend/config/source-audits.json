@@ -402,5 +402,1497 @@
         "complete": false
       }
     ]
+  },
+  {
+    "companySlug": "databricks",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.databricks.com/company/careers/open-positions",
+        "https://job-boards.greenhouse.io/databricks"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.databricks.com/company/careers/open-positions"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/databricks",
+        "disposition": "included",
+        "sourceIds": ["databricks"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.databricks.com/company/careers/open-positions",
+        "disposition": "pending",
+        "sourceIds": ["databricks"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.databricks.com/company/careers/open-positions",
+        "role": "discovery",
+        "sourceIds": ["databricks"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/databricks",
+        "role": "listings",
+        "sourceIds": ["databricks"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "airbnb",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://careers.airbnb.com/positions/",
+        "https://job-boards.greenhouse.io/airbnb"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.airbnb.com/positions/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/airbnb",
+        "disposition": "included",
+        "sourceIds": ["airbnb"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.airbnb.com/positions/",
+        "disposition": "pending",
+        "sourceIds": ["airbnb"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.airbnb.com/positions/",
+        "role": "discovery",
+        "sourceIds": ["airbnb"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/airbnb",
+        "role": "listings",
+        "sourceIds": ["airbnb"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "hrt",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.hudsonrivertrading.com/careers/",
+        "https://job-boards.greenhouse.io/wehrtyou"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.hudsonrivertrading.com/careers/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/wehrtyou",
+        "disposition": "included",
+        "sourceIds": ["hrt"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.hudsonrivertrading.com/careers/",
+        "disposition": "pending",
+        "sourceIds": ["hrt"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.hudsonrivertrading.com/careers/",
+        "role": "discovery",
+        "sourceIds": ["hrt"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/wehrtyou",
+        "role": "listings",
+        "sourceIds": ["hrt"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "optiver",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.optiver.com/join-us/jobs/",
+        "https://job-boards.greenhouse.io/optiverus"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.optiver.com/join-us/jobs/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/optiverus",
+        "disposition": "included",
+        "sourceIds": ["optiver"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.optiver.com/join-us/jobs/",
+        "disposition": "pending",
+        "sourceIds": ["optiver"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.optiver.com/join-us/jobs/",
+        "role": "discovery",
+        "sourceIds": ["optiver"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/optiverus",
+        "role": "listings",
+        "sourceIds": ["optiver"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "pinterest",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.pinterestcareers.com/",
+        "https://job-boards.greenhouse.io/pinterest"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.pinterestcareers.com/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/pinterest",
+        "disposition": "included",
+        "sourceIds": ["pinterest"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.pinterestcareers.com/",
+        "disposition": "pending",
+        "sourceIds": ["pinterest"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.pinterestcareers.com/",
+        "role": "discovery",
+        "sourceIds": ["pinterest"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/pinterest",
+        "role": "listings",
+        "sourceIds": ["pinterest"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "datadog",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://careers.datadoghq.com/all-jobs/",
+        "https://job-boards.greenhouse.io/datadog"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.datadoghq.com/all-jobs/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/datadog",
+        "disposition": "included",
+        "sourceIds": ["datadog"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.datadoghq.com/all-jobs/",
+        "disposition": "pending",
+        "sourceIds": ["datadog"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.datadoghq.com/all-jobs/",
+        "role": "discovery",
+        "sourceIds": ["datadog"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/datadog",
+        "role": "listings",
+        "sourceIds": ["datadog"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "dropbox",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.dropbox.jobs/en/jobs/",
+        "https://job-boards.greenhouse.io/dropbox"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.dropbox.jobs/en/jobs/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/dropbox",
+        "disposition": "included",
+        "sourceIds": ["dropbox"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.dropbox.jobs/en/jobs/",
+        "disposition": "pending",
+        "sourceIds": ["dropbox"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.dropbox.jobs/en/jobs/",
+        "role": "discovery",
+        "sourceIds": ["dropbox"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/dropbox",
+        "role": "listings",
+        "sourceIds": ["dropbox"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "coinbase",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.coinbase.com/careers/positions",
+        "https://job-boards.greenhouse.io/coinbase"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.coinbase.com/careers/positions"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/coinbase",
+        "disposition": "included",
+        "sourceIds": ["coinbase"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.coinbase.com/careers/positions",
+        "disposition": "pending",
+        "sourceIds": ["coinbase"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.coinbase.com/careers/positions",
+        "role": "discovery",
+        "sourceIds": ["coinbase"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/coinbase",
+        "role": "listings",
+        "sourceIds": ["coinbase"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "stripe",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://stripe.com/careers/search",
+        "https://job-boards.greenhouse.io/stripe"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://stripe.com/careers/search"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/stripe",
+        "disposition": "included",
+        "sourceIds": ["stripe"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://stripe.com/careers/search",
+        "disposition": "pending",
+        "sourceIds": ["stripe"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://stripe.com/careers/search",
+        "role": "discovery",
+        "sourceIds": ["stripe"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/stripe",
+        "role": "listings",
+        "sourceIds": ["stripe"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "mongodb",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.mongodb.com/company/careers",
+        "https://job-boards.greenhouse.io/mongodb"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.mongodb.com/company/careers"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/mongodb",
+        "disposition": "included",
+        "sourceIds": ["mongodb"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.mongodb.com/company/careers",
+        "disposition": "pending",
+        "sourceIds": ["mongodb"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.mongodb.com/company/careers",
+        "role": "discovery",
+        "sourceIds": ["mongodb"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/mongodb",
+        "role": "listings",
+        "sourceIds": ["mongodb"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "okta",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.okta.com/company/careers/",
+        "https://job-boards.greenhouse.io/okta"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.okta.com/company/careers/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/okta",
+        "disposition": "included",
+        "sourceIds": ["okta"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.okta.com/company/careers/",
+        "disposition": "pending",
+        "sourceIds": ["okta"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.okta.com/company/careers/",
+        "role": "discovery",
+        "sourceIds": ["okta"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/okta",
+        "role": "listings",
+        "sourceIds": ["okta"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "cloudflare",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.cloudflare.com/careers/",
+        "https://job-boards.greenhouse.io/cloudflare"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.cloudflare.com/careers/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/cloudflare",
+        "disposition": "included",
+        "sourceIds": ["cloudflare"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.cloudflare.com/careers/",
+        "disposition": "pending",
+        "sourceIds": ["cloudflare"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.cloudflare.com/careers/",
+        "role": "discovery",
+        "sourceIds": ["cloudflare"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/cloudflare",
+        "role": "listings",
+        "sourceIds": ["cloudflare"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "gitlab",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://about.gitlab.com/jobs/all-jobs/",
+        "https://job-boards.greenhouse.io/gitlab"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://about.gitlab.com/jobs/all-jobs/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/gitlab",
+        "disposition": "included",
+        "sourceIds": ["gitlab"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://about.gitlab.com/jobs/all-jobs/",
+        "disposition": "pending",
+        "sourceIds": ["gitlab"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://about.gitlab.com/jobs/all-jobs/",
+        "role": "discovery",
+        "sourceIds": ["gitlab"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/gitlab",
+        "role": "listings",
+        "sourceIds": ["gitlab"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "riot-games",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.riotgames.com/en/work-with-us/jobs",
+        "https://job-boards.greenhouse.io/riotgames"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.riotgames.com/en/work-with-us/jobs"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://job-boards.greenhouse.io/riotgames",
+        "disposition": "included",
+        "sourceIds": ["riot-games"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.riotgames.com/en/work-with-us/jobs",
+        "disposition": "pending",
+        "sourceIds": ["riot-games"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.riotgames.com/en/work-with-us/jobs",
+        "role": "discovery",
+        "sourceIds": ["riot-games"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/riotgames",
+        "role": "listings",
+        "sourceIds": ["riot-games"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "snowflake",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://careers.snowflake.com/us/en", "https://jobs.ashbyhq.com/snowflake"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.snowflake.com/us/en"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://jobs.ashbyhq.com/snowflake",
+        "disposition": "included",
+        "sourceIds": ["snowflake"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.snowflake.com/us/en",
+        "disposition": "pending",
+        "sourceIds": ["snowflake"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.snowflake.com/us/en",
+        "role": "discovery",
+        "sourceIds": ["snowflake"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/snowflake",
+        "role": "listings",
+        "sourceIds": ["snowflake"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "patreon",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://www.patreon.com/careers", "https://jobs.ashbyhq.com/patreon"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.patreon.com/careers"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://jobs.ashbyhq.com/patreon",
+        "disposition": "included",
+        "sourceIds": ["patreon"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.patreon.com/careers",
+        "disposition": "pending",
+        "sourceIds": ["patreon"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.patreon.com/careers",
+        "role": "discovery",
+        "sourceIds": ["patreon"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/patreon",
+        "role": "listings",
+        "sourceIds": ["patreon"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "spotify",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://www.lifeatspotify.com/jobs", "https://jobs.lever.co/spotify"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.lifeatspotify.com/jobs"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://jobs.lever.co/spotify",
+        "disposition": "included",
+        "sourceIds": ["spotify"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.lifeatspotify.com/jobs",
+        "disposition": "pending",
+        "sourceIds": ["spotify"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.lifeatspotify.com/jobs",
+        "role": "discovery",
+        "sourceIds": ["spotify"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.lever.co/spotify",
+        "role": "listings",
+        "sourceIds": ["spotify"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "nvidia",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.nvidia.com/en-us/about-nvidia/careers/",
+        "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.nvidia.com/en-us/about-nvidia/careers/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite",
+        "disposition": "included",
+        "sourceIds": ["nvidia"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.nvidia.com/en-us/about-nvidia/careers/",
+        "disposition": "pending",
+        "sourceIds": ["nvidia"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.nvidia.com/en-us/about-nvidia/careers/",
+        "role": "discovery",
+        "sourceIds": ["nvidia"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite",
+        "role": "listings",
+        "sourceIds": ["nvidia"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "salesforce",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.salesforce.com/company/careers/",
+        "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.salesforce.com/company/careers/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site",
+        "disposition": "included",
+        "sourceIds": ["salesforce"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.salesforce.com/company/careers/",
+        "disposition": "pending",
+        "sourceIds": ["salesforce"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.salesforce.com/company/careers/",
+        "role": "discovery",
+        "sourceIds": ["salesforce"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site",
+        "role": "listings",
+        "sourceIds": ["salesforce"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "slack",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://slack.com/careers",
+        "https://salesforce.wd12.myworkdayjobs.com/Slack"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://slack.com/careers"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://salesforce.wd12.myworkdayjobs.com/Slack",
+        "disposition": "included",
+        "sourceIds": ["slack"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://slack.com/careers",
+        "disposition": "pending",
+        "sourceIds": ["slack"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://slack.com/careers",
+        "role": "discovery",
+        "sourceIds": ["slack"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://salesforce.wd12.myworkdayjobs.com/Slack",
+        "role": "listings",
+        "sourceIds": ["slack"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "adobe",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://careers.adobe.com/us/en",
+        "https://adobe.wd5.myworkdayjobs.com/external_experienced"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.adobe.com/us/en"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://adobe.wd5.myworkdayjobs.com/external_experienced",
+        "disposition": "included",
+        "sourceIds": ["adobe"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.adobe.com/us/en",
+        "disposition": "pending",
+        "sourceIds": ["adobe"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.adobe.com/us/en",
+        "role": "discovery",
+        "sourceIds": ["adobe"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://adobe.wd5.myworkdayjobs.com/external_experienced",
+        "role": "listings",
+        "sourceIds": ["adobe"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "workday",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://www.workday.com/en-us/company/careers/open-positions.html",
+        "https://workday.wd5.myworkdayjobs.com/Workday"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.workday.com/en-us/company/careers/open-positions.html"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://workday.wd5.myworkdayjobs.com/Workday",
+        "disposition": "included",
+        "sourceIds": ["workday"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.workday.com/en-us/company/careers/open-positions.html",
+        "disposition": "pending",
+        "sourceIds": ["workday"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.workday.com/en-us/company/careers/open-positions.html",
+        "role": "discovery",
+        "sourceIds": ["workday"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://workday.wd5.myworkdayjobs.com/Workday",
+        "role": "listings",
+        "sourceIds": ["workday"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "paypal",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://careers.pypl.com/home/",
+        "https://paypal.wd1.myworkdayjobs.com/jobs"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.pypl.com/home/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://paypal.wd1.myworkdayjobs.com/jobs",
+        "disposition": "included",
+        "sourceIds": ["paypal"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.pypl.com/home/",
+        "disposition": "pending",
+        "sourceIds": ["paypal"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.pypl.com/home/",
+        "role": "discovery",
+        "sourceIds": ["paypal"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://paypal.wd1.myworkdayjobs.com/jobs",
+        "role": "listings",
+        "sourceIds": ["paypal"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "intel",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://jobs.intel.com/", "https://intel.wd1.myworkdayjobs.com/External"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://jobs.intel.com/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://intel.wd1.myworkdayjobs.com/External",
+        "disposition": "included",
+        "sourceIds": ["intel"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://jobs.intel.com/",
+        "disposition": "pending",
+        "sourceIds": ["intel"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://jobs.intel.com/",
+        "role": "discovery",
+        "sourceIds": ["intel"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://intel.wd1.myworkdayjobs.com/External",
+        "role": "listings",
+        "sourceIds": ["intel"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "ing",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://careers.ing.com/en", "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.ing.com/en"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR",
+        "disposition": "included",
+        "sourceIds": ["ing"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.ing.com/en",
+        "disposition": "pending",
+        "sourceIds": ["ing"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.ing.com/en",
+        "role": "discovery",
+        "sourceIds": ["ing"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR",
+        "role": "listings",
+        "sourceIds": ["ing"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "zoom",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://careers.zoom.us/jobs/search",
+        "https://zoom.wd5.myworkdayjobs.com/Zoom"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.zoom.us/jobs/search"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://zoom.wd5.myworkdayjobs.com/Zoom",
+        "disposition": "included",
+        "sourceIds": ["zoom"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.zoom.us/jobs/search",
+        "disposition": "pending",
+        "sourceIds": ["zoom"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.zoom.us/jobs/search",
+        "role": "discovery",
+        "sourceIds": ["zoom"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://zoom.wd5.myworkdayjobs.com/Zoom",
+        "role": "listings",
+        "sourceIds": ["zoom"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "blizzard",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": [
+        "https://careers.blizzard.com/global/en",
+        "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.blizzard.com/global/en"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers",
+        "disposition": "included",
+        "sourceIds": ["blizzard"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.blizzard.com/global/en",
+        "disposition": "pending",
+        "sourceIds": ["blizzard"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.blizzard.com/global/en",
+        "role": "discovery",
+        "sourceIds": ["blizzard"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers",
+        "role": "listings",
+        "sourceIds": ["blizzard"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "amd",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://careers.amd.com/careers-home", "https://careers.amd.com/jobs"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.amd.com/careers-home"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://careers.amd.com/jobs",
+        "disposition": "included",
+        "sourceIds": ["amd"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.amd.com/careers-home",
+        "disposition": "pending",
+        "sourceIds": ["amd"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.amd.com/careers-home",
+        "role": "discovery",
+        "sourceIds": ["amd"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://careers.amd.com/jobs",
+        "role": "listings",
+        "sourceIds": ["amd"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "booking",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://careers.booking.com/", "https://jobs.booking.com/jobs"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://careers.booking.com/"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://jobs.booking.com/jobs",
+        "disposition": "included",
+        "sourceIds": ["booking"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://careers.booking.com/",
+        "disposition": "pending",
+        "sourceIds": ["booking"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.booking.com/",
+        "role": "discovery",
+        "sourceIds": ["booking"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.booking.com/jobs",
+        "role": "listings",
+        "sourceIds": ["booking"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "github",
+    "scope": {
+      "status": "pending",
+      "notes": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending.",
+      "evidenceUrls": ["https://www.github.careers/careers-home", "https://www.github.careers/jobs"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.github.careers/careers-home"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.github.careers/jobs",
+        "disposition": "included",
+        "sourceIds": ["github"],
+        "reason": "Live search payload observed; worldwide channels, official posting-ID reconciliation and access/display review remain pending."
+      },
+      {
+        "url": "https://www.github.careers/careers-home",
+        "disposition": "pending",
+        "sourceIds": ["github"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.github.careers/careers-home",
+        "role": "discovery",
+        "sourceIds": ["github"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://www.github.careers/jobs",
+        "role": "listings",
+        "sourceIds": ["github"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
+  },
+  {
+    "companySlug": "linkedin",
+    "scope": {
+      "status": "pending",
+      "notes": "Blocked: LinkedIn robots policy requires express permission for automated retrieval; old SmartRecruiters feed is empty and does not prove current coverage.",
+      "evidenceUrls": ["https://careers.linkedin.com/", "https://careers.linkedin.com/"]
+    },
+    "access": {
+      "status": "blocked",
+      "notes": "Review employer policies and description display rights before verification.",
+      "evidenceUrls": ["https://www.linkedin.com/robots.txt"],
+      "display": "pending",
+      "reviewedDocuments": []
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://careers.linkedin.com/",
+        "disposition": "included",
+        "sourceIds": ["linkedin"],
+        "reason": "Blocked: LinkedIn robots policy requires express permission for automated retrieval; old SmartRecruiters feed is empty and does not prove current coverage."
+      },
+      {
+        "url": "https://careers.linkedin.com/",
+        "disposition": "pending",
+        "sourceIds": ["linkedin"],
+        "reason": "Reconcile official worldwide and entity scope."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.linkedin.com/",
+        "role": "discovery",
+        "sourceIds": ["linkedin"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://careers.linkedin.com/",
+        "role": "listings",
+        "sourceIds": ["linkedin"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

@@ -1,6 +1,6 @@
 # Decision: shared bounded public transport
 
-**Status:** Implemented for the three public API adapters, 30 September 2026.
+**Status:** Implemented for public ATS feeds including Workday/iCIMS, 30 September 2026.
 
 ## Decision and rationale
 
@@ -8,17 +8,19 @@ Provider adapters use the `JsonTransport` port. `PublicJsonTransport` owns reque
 
 ## Implemented policy
 
-| Concern            | Behavior                                                                                |
-| ------------------ | --------------------------------------------------------------------------------------- |
-| Destinations       | HTTPS only; exact allowlist of Greenhouse, Ashby, global Lever and EU Lever API hosts   |
-| URL constraints    | No credentials or explicit port; redirects fail rather than being followed              |
-| Concurrency/pacing | One in-flight request per host per transport instance; starts at least one second apart |
-| Timeout            | 30 seconds per attempt                                                                  |
-| Retries            | At most four attempts for transient network/type/timeout errors and HTTP 429/5xx        |
-| Backoff            | Exponential delay; rate-limit/server retries add small jitter                           |
-| Retry-After        | Seconds or HTTP date honored; delays over 30 seconds fail this run for later retry      |
-| Body               | JSON content type required; streamed size bounded to 32 MiB                             |
-| Evidence           | Requested URL, fetch timestamp and parsed JSON returned together                        |
+| Concern            | Behavior                                                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Destinations       | HTTPS only; exact allowlist of Greenhouse, Ashby, Lever, configured Workday tenants and AMD/Booking.com/GitHub public iCIMS feed hosts |
+| URL constraints    | No credentials or explicit port; redirects fail rather than being followed                                                             |
+| Concurrency/pacing | One in-flight request per host per transport instance; starts at least one second apart                                                |
+| Timeout            | 30 seconds per attempt                                                                                                                 |
+| Retries            | At most four attempts for transient network/type/timeout errors and HTTP 429/5xx                                                       |
+| Backoff            | Exponential delay; rate-limit/server retries add small jitter                                                                          |
+| Retry-After        | Seconds or HTTP date honored; delays over 30 seconds fail this run for later retry                                                     |
+| Body               | JSON content type required; streamed size bounded to 32 MiB                                                                            |
+| Evidence           | Requested URL, fetch timestamp and parsed JSON returned together                                                                       |
+
+`JsonSearchTransport` extends the JSON port with POST for Workday's read-only CXS jobs search. POST requires an explicitly allowlisted Workday host and `/wday/cxs/<tenant>/<site>/jobs` path; applications and arbitrary destinations are rejected. Retries, JSON validation, limits and host queues are shared with GET. No authentication or application submission is performed. See [WAVE_B.md](WAVE_B.md).
 
 Non-retryable HTTP errors and JSON/schema failures surface to ingestion. A challenge HTML page is an error, not job data. The application does not solve CAPTCHAs or fall back to another host automatically.
 

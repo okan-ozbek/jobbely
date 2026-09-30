@@ -2,9 +2,7 @@ import { parseArgs } from 'node:util';
 import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { loadRegistry } from '../infrastructure/registry.js';
 import { PublicJsonTransport } from '../infrastructure/http.js';
-import { GreenhouseAdapter } from '../infrastructure/adapters/greenhouse.js';
-import { AshbyAdapter } from '../infrastructure/adapters/ashby.js';
-import { LeverAdapter } from '../infrastructure/adapters/lever.js';
+import { createAdapters } from '../infrastructure/adapters/factory.js';
 import { loadAuditPlans, requireVerifiedEvidence } from '../infrastructure/audits/registry.js';
 import { SourceAuditor, officialHosts } from '../infrastructure/audits/auditor.js';
 import { OfficialPageTransport } from '../infrastructure/audits/official-http.js';
@@ -24,11 +22,7 @@ const selected = selectSources(companies, sources, values);
 const plans = loadAuditPlans();
 const transport = new PublicJsonTransport();
 
-const adapters = {
-  greenhouse: new GreenhouseAdapter(transport),
-  ashby: new AshbyAdapter(transport),
-  lever: new LeverAdapter(transport),
-};
+const adapters = createAdapters(transport);
 
 const evidenceDirectory = new URL('../../config/audit-evidence/', import.meta.url);
 const passedCompanies = new Set<string>();

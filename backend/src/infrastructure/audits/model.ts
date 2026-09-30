@@ -141,7 +141,15 @@ export function configurationHash(plan: AuditPlan, sources: Source[]): string {
     JSON.stringify({
       plan,
       sources: sources
-        .map(({ id, companySlug, provider, board }) => ({ id, companySlug, provider, board }))
+        .map(({ id, companySlug, provider, board, endpoint, postingHosts, employerFilter }) => ({
+          id,
+          companySlug,
+          provider,
+          board,
+          ...(endpoint ? { endpoint } : {}),
+          ...(postingHosts ? { postingHosts } : {}),
+          ...(employerFilter ? { employerFilter } : {}),
+        }))
         .sort((a, b) => a.id.localeCompare(b.id)),
     }),
   );

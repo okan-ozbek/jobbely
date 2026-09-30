@@ -1,0 +1,1460 @@
+{
+  "version": 1,
+  "observedAt": "2026-09-30T22:07:50.937Z",
+  "scope": "Configured Wave B feeds only; not an employer-scope/access approval",
+  "results": [
+    {
+      "company": "nvidia",
+      "sourceId": "nvidia",
+      "provider": "workday",
+      "board": "NVIDIAExternalCareerSite",
+      "endpoint": "https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "aa92090a40cf07e2464a76f83191c7926d6299062ab501f94359b457a76af39a",
+      "validationLevel": "blocked",
+      "latestRun": {
+        "id": "b758d0da-1243-472f-bdc7-c1e7138a1617",
+        "error": "Upstream schema mismatch (2 issues): jobPostings.19.title: Invalid input: expected string, received undefined; jobPostings.19.externalPath: Invalid input: expected string, received undefined",
+        "status": "failed",
+        "sourceId": "nvidia",
+        "startedAt": "2026-09-30T21:44:27.184Z",
+        "finishedAt": "2026-09-30T21:46:15.881Z",
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "rawEvidencePath": null,
+      "rawEvidenceSha256": null,
+      "samples": []
+    },
+    {
+      "company": "amd",
+      "sourceId": "amd",
+      "provider": "icims",
+      "board": "amd",
+      "endpoint": "https://careers.amd.com/api/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "d800ecd2a95e9316fdc6c71b608959506df1dadd783a0dad4cafd5a13aa4df83",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "168f4014-3945-42fa-bb74-97a6b7769616",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "amd",
+        "startedAt": "2026-09-30T21:37:04.765Z",
+        "finishedAt": "2026-09-30T21:37:05.886Z",
+        "listingCount": 1244,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 1244,
+      "rawEvidencePath": "backend/data/wave-b/extraction-amd.json",
+      "rawEvidenceSha256": "950da2c4348eef000e94f3526e53f9372f3679a00de1844ee56e90d292298e11",
+      "samples": [
+        {
+          "id": "92921",
+          "title": "AI Research Scientist",
+          "url": "https://careers.amd.com/jobs/92921?lang=en-us",
+          "applyUrl": "https://careers-amd.icims.com/jobs/92921/login",
+          "descriptionCharacters": 5905
+        },
+        {
+          "id": "92488",
+          "title": "Quality Systems Engineer – AI Transformation",
+          "url": "https://careers.amd.com/jobs/92488?lang=en-us",
+          "applyUrl": "https://careers-amd.icims.com/jobs/92488/login",
+          "descriptionCharacters": 4304
+        },
+        {
+          "id": "92487",
+          "title": "Quality Systems Engineer – AI Transformation",
+          "url": "https://careers.amd.com/jobs/92487?lang=en-us",
+          "applyUrl": "https://careers-amd.icims.com/jobs/92487/login",
+          "descriptionCharacters": 4280
+        }
+      ]
+    },
+    {
+      "company": "databricks",
+      "sourceId": "databricks",
+      "provider": "greenhouse",
+      "board": "databricks",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "d95ad0aedf4d034345e627997b3cb7c31af13664e4405bf5fbdef46c6133bee6",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "cb004d7a-4f62-4455-9c63-79d97235578e",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "databricks",
+        "startedAt": "2026-09-30T21:36:44.091Z",
+        "finishedAt": "2026-09-30T21:36:44.811Z",
+        "listingCount": 882,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 882,
+      "rawEvidencePath": "backend/data/wave-b/extraction-databricks.json",
+      "rawEvidenceSha256": "5e7110cd1c3d7577c589cb3ecfce623be48cc38a4f1a9df5e242bae2b13ff2f0",
+      "samples": [
+        {
+          "id": "8805655002",
+          "title": "デリバリーソリューションアーキテクト",
+          "url": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+          "applyUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8805655002",
+          "descriptionCharacters": 3862
+        },
+        {
+          "id": "6918763002",
+          "title": "Account Executive",
+          "url": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+          "applyUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=6918763002",
+          "descriptionCharacters": 3989
+        },
+        {
+          "id": "8758263002",
+          "title": "Account Executive, Commercial - Hunter",
+          "url": "https://databricks.com/company/careers/open-positions/job?gh_jid=8758263002",
+          "applyUrl": "https://databricks.com/company/careers/open-positions/job?gh_jid=8758263002",
+          "descriptionCharacters": 3723
+        }
+      ]
+    },
+    {
+      "company": "booking",
+      "sourceId": "booking",
+      "provider": "icims",
+      "board": "workingatbooking",
+      "endpoint": "https://jobs.booking.com/api/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "d64aac6f73ffeba11dee739ed959171f3a85c4aa81379210338c6f6ca11e5a82",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "e251f780-f1c9-4437-ac6c-7b16efd7fdae",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "booking",
+        "startedAt": "2026-09-30T21:37:09.586Z",
+        "finishedAt": "2026-09-30T21:37:09.691Z",
+        "listingCount": 99,
+        "excludedCount": 43,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 99,
+      "rawEvidencePath": "backend/data/wave-b/extraction-booking.json",
+      "rawEvidenceSha256": "c9ade416ae37545c2445f06319140eca8aced4bec28160bfdae72dd781ebc1e9",
+      "samples": [
+        {
+          "id": "30322",
+          "title": "ServiceNow - TPM",
+          "url": "https://jobs.booking.com/booking/jobs/30322?lang=en-us",
+          "applyUrl": "https://external-workingatbooking.icims.com/jobs/30322/login",
+          "descriptionCharacters": 8238
+        },
+        {
+          "id": "30278",
+          "title": "Recruiter",
+          "url": "https://jobs.booking.com/booking/jobs/30278?lang=en-us",
+          "applyUrl": "https://external-workingatbooking.icims.com/jobs/30278/login",
+          "descriptionCharacters": 6288
+        },
+        {
+          "id": "20928",
+          "title": "Senior Tax Consultant - Indirect Taxes",
+          "url": "https://jobs.booking.com/booking/jobs/20928?lang=en-us",
+          "applyUrl": "https://external-workingatbooking.icims.com/jobs/20928/login",
+          "descriptionCharacters": 7943
+        }
+      ]
+    },
+    {
+      "company": "snowflake",
+      "sourceId": "snowflake",
+      "provider": "ashby",
+      "board": "snowflake",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "82c62977ccdb558b6f25fea9f1f6ac14d588c608a402f4f996648e1601f60c3a",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "45108d64-b070-4631-92b6-d5f5ad0f660b",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "snowflake",
+        "startedAt": "2026-09-30T21:37:02.094Z",
+        "finishedAt": "2026-09-30T21:37:02.302Z",
+        "listingCount": 345,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 345,
+      "rawEvidencePath": "backend/data/wave-b/extraction-snowflake.json",
+      "rawEvidenceSha256": "8d23efda8c9d016959cb2899ebd8e096fa85eceef4564fae278be52837d5ab66",
+      "samples": [
+        {
+          "id": "479e06f1-273d-4a1b-af56-6543761ebd75",
+          "title": "Lead, Strategic Finance - Deals (International)",
+          "url": "https://jobs.ashbyhq.com/snowflake/479e06f1-273d-4a1b-af56-6543761ebd75",
+          "applyUrl": "https://jobs.ashbyhq.com/snowflake/479e06f1-273d-4a1b-af56-6543761ebd75/application",
+          "descriptionCharacters": 9198
+        },
+        {
+          "id": "db1375f0-ea5d-404a-b640-259f94dbc995",
+          "title": "Software Engineer - Database Engineering",
+          "url": "https://jobs.ashbyhq.com/snowflake/db1375f0-ea5d-404a-b640-259f94dbc995",
+          "applyUrl": "https://jobs.ashbyhq.com/snowflake/db1375f0-ea5d-404a-b640-259f94dbc995/application",
+          "descriptionCharacters": 4013
+        },
+        {
+          "id": "3eb872af-0ab1-4986-8f72-e7321fcd1538",
+          "title": "Software Engineer - Backend",
+          "url": "https://jobs.ashbyhq.com/snowflake/3eb872af-0ab1-4986-8f72-e7321fcd1538",
+          "applyUrl": "https://jobs.ashbyhq.com/snowflake/3eb872af-0ab1-4986-8f72-e7321fcd1538/application",
+          "descriptionCharacters": 3352
+        }
+      ]
+    },
+    {
+      "company": "airbnb",
+      "sourceId": "airbnb",
+      "provider": "greenhouse",
+      "board": "airbnb",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "08804f592be1099c65f113edbad3f5958f4380a026d20f3615950033314475fb",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "ddd03e93-2e3c-4580-9e39-1598fbd9b9a6",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "airbnb",
+        "startedAt": "2026-09-30T21:36:46.492Z",
+        "finishedAt": "2026-09-30T21:36:46.680Z",
+        "listingCount": 157,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 157,
+      "rawEvidencePath": "backend/data/wave-b/extraction-airbnb.json",
+      "rawEvidenceSha256": "99a9e9737299c4a96cf0a432804151b97f6bed5f2ac4c09e6accde581a427981",
+      "samples": [
+        {
+          "id": "8232207",
+          "title": "Accountant",
+          "url": "https://careers.airbnb.com/positions/8232207?gh_jid=8232207",
+          "applyUrl": "https://careers.airbnb.com/positions/8232207?gh_jid=8232207",
+          "descriptionCharacters": 6625
+        },
+        {
+          "id": "8184174",
+          "title": "Account Manager",
+          "url": "https://careers.airbnb.com/positions/8184174?gh_jid=8184174",
+          "applyUrl": "https://careers.airbnb.com/positions/8184174?gh_jid=8184174",
+          "descriptionCharacters": 5329
+        },
+        {
+          "id": "7789554",
+          "title": "Associate Legal Counsel, Japan",
+          "url": "https://careers.airbnb.com/positions/7789554?gh_jid=7789554",
+          "applyUrl": "https://careers.airbnb.com/positions/7789554?gh_jid=7789554",
+          "descriptionCharacters": 4780
+        }
+      ]
+    },
+    {
+      "company": "hrt",
+      "sourceId": "hrt",
+      "provider": "greenhouse",
+      "board": "wehrtyou",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "2d44c4b8abe2e43f4404e761f0641b6636c7de551864cebc73963ad6944402c4",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "07f01c45-36e9-4768-a5e0-3f065f5330a9",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "hrt",
+        "startedAt": "2026-09-30T21:36:47.302Z",
+        "finishedAt": "2026-09-30T21:36:47.388Z",
+        "listingCount": 89,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 89,
+      "rawEvidencePath": "backend/data/wave-b/extraction-hrt.json",
+      "rawEvidenceSha256": "b44b2a7764a2e31e60cc27e1cb309827aa03c641cdc2a0545819646c9b93bb93",
+      "samples": [
+        {
+          "id": "7972593",
+          "title": "AI Research Engineer, Inference",
+          "url": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=7972593",
+          "applyUrl": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=7972593",
+          "descriptionCharacters": 4104
+        },
+        {
+          "id": "7972584",
+          "title": "AI Research Engineer, Pre-Training",
+          "url": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=7972584",
+          "applyUrl": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=7972584",
+          "descriptionCharacters": 4062
+        },
+        {
+          "id": "8161767",
+          "title": "AI Researcher",
+          "url": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=8161767",
+          "applyUrl": "https://www.hudsonrivertrading.com/careers/job/?gh_jid=8161767",
+          "descriptionCharacters": 4227
+        }
+      ]
+    },
+    {
+      "company": "linkedin",
+      "sourceId": "linkedin",
+      "provider": "linkedin",
+      "board": "1337",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "a46263b5718af18f3ae431089482b9edf2c36530bc6fc196d4b37deffe2f2074",
+      "validationLevel": "blocked",
+      "latestRun": {
+        "id": "6fdebf4e-d496-4300-b657-8b6d60426408",
+        "error": "LinkedIn integration blocked: its published robots policy requires express permission for automated access. Obtain an authorized employer feed before enabling extraction.",
+        "status": "failed",
+        "sourceId": "linkedin",
+        "startedAt": "2026-09-30T21:44:27.146Z",
+        "finishedAt": "2026-09-30T21:44:27.178Z",
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "rawEvidencePath": null,
+      "rawEvidenceSha256": null,
+      "samples": []
+    },
+    {
+      "company": "optiver",
+      "sourceId": "optiver",
+      "provider": "greenhouse",
+      "board": "optiverus",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "ba6c9f3ab29688371914aa2c6bd3cadaa9842570629778350538b3a2c962deef",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "f8cd5bbd-b204-4d61-8de6-5ea42615675c",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "optiver",
+        "startedAt": "2026-09-30T21:36:47.815Z",
+        "finishedAt": "2026-09-30T21:36:47.999Z",
+        "listingCount": 169,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 169,
+      "rawEvidencePath": "backend/data/wave-b/extraction-optiver.json",
+      "rawEvidenceSha256": "fd749f3d983f714abb20f002f0e2831c253c10bb16a10ebdc544f78ad3ae1fd7",
+      "samples": [
+        {
+          "id": "8644364002",
+          "title": "2027 Shanghai FPGA Developer Summer Internship",
+          "url": "https://www.optiver.com/join-us/jobs/8644364002/?gh_jid=8644364002",
+          "applyUrl": "https://www.optiver.com/join-us/jobs/8644364002/?gh_jid=8644364002",
+          "descriptionCharacters": 4916
+        },
+        {
+          "id": "8633966002",
+          "title": "2027 Shanghai Machine Learning Engineer Summer Internship",
+          "url": "https://www.optiver.com/join-us/jobs/8633966002/?gh_jid=8633966002",
+          "applyUrl": "https://www.optiver.com/join-us/jobs/8633966002/?gh_jid=8633966002",
+          "descriptionCharacters": 4682
+        },
+        {
+          "id": "8732789002",
+          "title": "2027 Shanghai Performance Researcher Summer Internship",
+          "url": "https://www.optiver.com/join-us/jobs/8732789002/?gh_jid=8732789002",
+          "applyUrl": "https://www.optiver.com/join-us/jobs/8732789002/?gh_jid=8732789002",
+          "descriptionCharacters": 4066
+        }
+      ]
+    },
+    {
+      "company": "pinterest",
+      "sourceId": "pinterest",
+      "provider": "greenhouse",
+      "board": "pinterest",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "d89a6baa31d9324fbb5d1fb392a056b8bf7f3de5455cbe680622e2b6f517e304",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "5734df43-e86f-4369-8082-2651dcef47d8",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "pinterest",
+        "startedAt": "2026-09-30T21:36:48.601Z",
+        "finishedAt": "2026-09-30T21:36:48.767Z",
+        "listingCount": 151,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 151,
+      "rawEvidencePath": "backend/data/wave-b/extraction-pinterest.json",
+      "rawEvidenceSha256": "f661433e5f7fbfd290a19c79b736f64eccf0fb7b22504dba619658384c6a4360",
+      "samples": [
+        {
+          "id": "8103612",
+          "title": "Administrative Business Partner I - Engineering, Product and Design",
+          "url": "https://www.pinterestcareers.com/jobs/?gh_jid=8103612",
+          "applyUrl": "https://www.pinterestcareers.com/jobs/?gh_jid=8103612",
+          "descriptionCharacters": 6554
+        },
+        {
+          "id": "8239063",
+          "title": "Client Account Manager II",
+          "url": "https://www.pinterestcareers.com/jobs/?gh_jid=8239063",
+          "applyUrl": "https://www.pinterestcareers.com/jobs/?gh_jid=8239063",
+          "descriptionCharacters": 4668
+        },
+        {
+          "id": "8114760",
+          "title": "Client Account Manager II, CPG (Food)",
+          "url": "https://www.pinterestcareers.com/jobs/?gh_jid=8114760",
+          "applyUrl": "https://www.pinterestcareers.com/jobs/?gh_jid=8114760",
+          "descriptionCharacters": 6904
+        }
+      ]
+    },
+    {
+      "company": "datadog",
+      "sourceId": "datadog",
+      "provider": "greenhouse",
+      "board": "datadog",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "15ebc8cac562e05d0f42c241c38e0964076fdb98f371cd7bef685fcfcbfb9698",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "bf7429cc-96fb-4570-a1ef-a37cb1a3a380",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "datadog",
+        "startedAt": "2026-09-30T21:36:49.363Z",
+        "finishedAt": "2026-09-30T21:36:49.777Z",
+        "listingCount": 433,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 433,
+      "rawEvidencePath": "backend/data/wave-b/extraction-datadog.json",
+      "rawEvidenceSha256": "699d55690f991567ccbf1ad0b91c789977e4611b0261a24d5d01197da74918c9",
+      "samples": [
+        {
+          "id": "7959967",
+          "title": "Senior Software Engineer - REDAPL Graph Engine",
+          "url": "https://careers.datadoghq.com/detail/7959967/?gh_jid=7959967",
+          "applyUrl": "https://careers.datadoghq.com/detail/7959967/?gh_jid=7959967",
+          "descriptionCharacters": 5256
+        },
+        {
+          "id": "7959962",
+          "title": "Senior Software Engineer - REDAPL Graph Engine",
+          "url": "https://careers.datadoghq.com/detail/7959962/?gh_jid=7959962",
+          "applyUrl": "https://careers.datadoghq.com/detail/7959962/?gh_jid=7959962",
+          "descriptionCharacters": 5253
+        },
+        {
+          "id": "7993551",
+          "title": "Senior Software Engineer - Streaming Platform",
+          "url": "https://careers.datadoghq.com/detail/7993551/?gh_jid=7993551",
+          "applyUrl": "https://careers.datadoghq.com/detail/7993551/?gh_jid=7993551",
+          "descriptionCharacters": 7397
+        }
+      ]
+    },
+    {
+      "company": "dropbox",
+      "sourceId": "dropbox",
+      "provider": "greenhouse",
+      "board": "dropbox",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "1b1528c276d3cc6fea29a6eb03e0429b85472fbfc2f3fcb57a71b403fb5f9310",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "d8340646-78ce-4a99-a5bc-d72aa4c879b3",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "dropbox",
+        "startedAt": "2026-09-30T21:36:50.981Z",
+        "finishedAt": "2026-09-30T21:36:51.035Z",
+        "listingCount": 37,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 37,
+      "rawEvidencePath": "backend/data/wave-b/extraction-dropbox.json",
+      "rawEvidenceSha256": "bab4b2a4f7c7a078e547b9b50ea788a5eaeddc8342358dd7ca51345d8dbb1bf7",
+      "samples": [
+        {
+          "id": "8159652",
+          "title": "Account Executive",
+          "url": "https://jobs.dropbox.com/listing/8159652?gh_jid=8159652",
+          "applyUrl": "https://jobs.dropbox.com/listing/8159652?gh_jid=8159652",
+          "descriptionCharacters": 3887
+        },
+        {
+          "id": "8048848",
+          "title": "Business Development Manager, Strategic Partnerships",
+          "url": "https://jobs.dropbox.com/listing/8048848?gh_jid=8048848",
+          "applyUrl": "https://jobs.dropbox.com/listing/8048848?gh_jid=8048848",
+          "descriptionCharacters": 3893
+        },
+        {
+          "id": "8048847",
+          "title": "Business Development Manager, Strategic Partnerships",
+          "url": "https://jobs.dropbox.com/listing/8048847?gh_jid=8048847",
+          "applyUrl": "https://jobs.dropbox.com/listing/8048847?gh_jid=8048847",
+          "descriptionCharacters": 3968
+        }
+      ]
+    },
+    {
+      "company": "coinbase",
+      "sourceId": "coinbase",
+      "provider": "greenhouse",
+      "board": "coinbase",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "75302d6ea614500ecfad48584155c605a3d314957f9578c922d33f86157f5e01",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "b3b60a80-5bce-43d5-be4b-b480733d8d65",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "coinbase",
+        "startedAt": "2026-09-30T21:36:51.436Z",
+        "finishedAt": "2026-09-30T21:36:51.651Z",
+        "listingCount": 216,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 216,
+      "rawEvidencePath": "backend/data/wave-b/extraction-coinbase.json",
+      "rawEvidenceSha256": "c362043c509e9397f4b7f73a6a631ef83b6b0111f7356f43049f7a22dd73a379",
+      "samples": [
+        {
+          "id": "8175363",
+          "title": "Accelerations Programs Intern",
+          "url": "https://www.coinbase.com/careers/positions/8175363?gh_jid=8175363",
+          "applyUrl": "https://www.coinbase.com/careers/positions/8175363?gh_jid=8175363",
+          "descriptionCharacters": 3625
+        },
+        {
+          "id": "8053751",
+          "title": "Accountant, Cyprus",
+          "url": "https://www.coinbase.com/careers/positions/8053751?gh_jid=8053751",
+          "applyUrl": "https://www.coinbase.com/careers/positions/8053751?gh_jid=8053751",
+          "descriptionCharacters": 4440
+        },
+        {
+          "id": "8173991",
+          "title": "Accounting Intern",
+          "url": "https://www.coinbase.com/careers/positions/8173991?gh_jid=8173991",
+          "applyUrl": "https://www.coinbase.com/careers/positions/8173991?gh_jid=8173991",
+          "descriptionCharacters": 3935
+        }
+      ]
+    },
+    {
+      "company": "slack",
+      "sourceId": "slack",
+      "provider": "workday",
+      "board": "Slack",
+      "endpoint": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/Slack/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "d441bfa34568e74b2c9162c20eb33bac00c9808f16ddec705fd3616fc2e6b0e0",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "a8ba8843-94f2-4465-9e0b-5cfe4315ee3e",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "slack",
+        "startedAt": "2026-09-30T21:37:30.839Z",
+        "finishedAt": "2026-09-30T21:37:52.469Z",
+        "listingCount": 16,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 16,
+      "rawEvidencePath": "backend/data/wave-b/inventory-slack.json",
+      "rawEvidenceSha256": "fa1279821c93416ab9d56d23f35e80e1005b6193d00266a57a5fa217668c9a7e",
+      "samples": [
+        {
+          "id": "13e9ca75134610039d6346ba2c010000",
+          "title": "Senior Director, Data Engineering - Slack",
+          "url": "https://salesforce.wd12.myworkdayjobs.com/Slack/job/California---San-Francisco/Senior-Director--Data-Engineering---Slack_JR361288",
+          "applyUrl": "https://salesforce.wd12.myworkdayjobs.com/Slack/job/California---San-Francisco/Senior-Director--Data-Engineering---Slack_JR361288/apply",
+          "descriptionCharacters": 9766
+        },
+        {
+          "id": "db967ce816f0100a0f151a9d20c40000",
+          "title": "Senior Director, Security Engineering - Slack",
+          "url": "https://salesforce.wd12.myworkdayjobs.com/Slack/job/California---San-Francisco/Senior-Director--Security-Engineering---Slack_JR361721-1",
+          "applyUrl": "https://salesforce.wd12.myworkdayjobs.com/Slack/job/California---San-Francisco/Senior-Director--Security-Engineering---Slack_JR361721-1/apply",
+          "descriptionCharacters": 9821
+        },
+        {
+          "id": "cdcd8ff5c8c21009b6115e10dd0f0000",
+          "title": "Staff Software Engineer, Distributed Data Services - Slack",
+          "url": "https://salesforce.wd12.myworkdayjobs.com/Slack/job/California---San-Francisco/Software-Engineering-PMTS--Slack-Distributed-Data-Service_JR359018",
+          "applyUrl": "https://salesforce.wd12.myworkdayjobs.com/Slack/job/California---San-Francisco/Software-Engineering-PMTS--Slack-Distributed-Data-Service_JR359018/apply",
+          "descriptionCharacters": 7472
+        }
+      ]
+    },
+    {
+      "company": "stripe",
+      "sourceId": "stripe",
+      "provider": "greenhouse",
+      "board": "stripe",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "c18b588d7074cef5c170a8032372954ff5c8ea1a22caa2c6cbc19508585db3a7",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "c03d86bd-4896-445b-94cf-0fd9e2f60a0f",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "stripe",
+        "startedAt": "2026-09-30T21:36:52.411Z",
+        "finishedAt": "2026-09-30T21:36:52.868Z",
+        "listingCount": 714,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 714,
+      "rawEvidencePath": "backend/data/wave-b/extraction-stripe.json",
+      "rawEvidenceSha256": "34570742e49508cb55000ca86dcf0f34d5e417d14f856e3225421f379bdd1c85",
+      "samples": [
+        {
+          "id": "8172508",
+          "title": "Abuse Investigator",
+          "url": "https://stripe.com/jobs/search?gh_jid=8172508",
+          "applyUrl": "https://stripe.com/jobs/search?gh_jid=8172508",
+          "descriptionCharacters": 4597
+        },
+        {
+          "id": "8172487",
+          "title": "Abuse Investigator",
+          "url": "https://stripe.com/jobs/search?gh_jid=8172487",
+          "applyUrl": "https://stripe.com/jobs/search?gh_jid=8172487",
+          "descriptionCharacters": 4597
+        },
+        {
+          "id": "8172510",
+          "title": "Abuse Investigator",
+          "url": "https://stripe.com/jobs/search?gh_jid=8172510",
+          "applyUrl": "https://stripe.com/jobs/search?gh_jid=8172510",
+          "descriptionCharacters": 4599
+        }
+      ]
+    },
+    {
+      "company": "spotify",
+      "sourceId": "spotify",
+      "provider": "lever",
+      "board": "spotify",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "7dacf19cee75a6f9dc097056ba25c853eeb444f9285c981b62023d1a99242d40",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "df071b8c-1cfb-412a-9b4d-b32948760372",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "spotify",
+        "startedAt": "2026-09-30T21:37:04.043Z",
+        "finishedAt": "2026-09-30T21:37:04.082Z",
+        "listingCount": 80,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 80,
+      "rawEvidencePath": "backend/data/wave-b/extraction-spotify.json",
+      "rawEvidenceSha256": "4cbbcdf661187753c9c636d983b1a2426ca656249d38b299debee9cf756523c8",
+      "samples": [
+        {
+          "id": "2193db3f-77c5-43b8-b030-8f92c9882bf1",
+          "title": "Android Engineer - Experience",
+          "url": "https://jobs.lever.co/spotify/2193db3f-77c5-43b8-b030-8f92c9882bf1",
+          "applyUrl": "https://jobs.lever.co/spotify/2193db3f-77c5-43b8-b030-8f92c9882bf1/apply",
+          "descriptionCharacters": 4842
+        },
+        {
+          "id": "d87833d0-fb78-4794-b45d-3fe5c8274bc8",
+          "title": "Artist & Label Partnerships Contractor, Vietnam",
+          "url": "https://jobs.lever.co/spotify/d87833d0-fb78-4794-b45d-3fe5c8274bc8",
+          "applyUrl": "https://jobs.lever.co/spotify/d87833d0-fb78-4794-b45d-3fe5c8274bc8/apply",
+          "descriptionCharacters": 3653
+        },
+        {
+          "id": "ddb5dfa9-c5ef-4199-bd19-c179af568cc8",
+          "title": "Artist & Label Partnerships Manager, Maghreb",
+          "url": "https://jobs.lever.co/spotify/ddb5dfa9-c5ef-4199-bd19-c179af568cc8",
+          "applyUrl": "https://jobs.lever.co/spotify/ddb5dfa9-c5ef-4199-bd19-c179af568cc8/apply",
+          "descriptionCharacters": 5007
+        }
+      ]
+    },
+    {
+      "company": "mongodb",
+      "sourceId": "mongodb",
+      "provider": "greenhouse",
+      "board": "mongodb",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "5a9c46a7dede4b20e51bcc7991812bf745fd3a1b2bd6dcd1bd690468e85f2739",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "7b9bef34-f2c5-444c-8e19-0f2f77d93809",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "mongodb",
+        "startedAt": "2026-09-30T21:36:54.499Z",
+        "finishedAt": "2026-09-30T21:36:54.838Z",
+        "listingCount": 396,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 396,
+      "rawEvidencePath": "backend/data/wave-b/extraction-mongodb.json",
+      "rawEvidenceSha256": "b78fb27950c59419b0979fc81aa0179fa3646eaae4142ee0242103de20982b6e",
+      "samples": [
+        {
+          "id": "7318558",
+          "title": "Account Development Representative",
+          "url": "https://www.mongodb.com/careers/job/?gh_jid=7318558",
+          "applyUrl": "https://www.mongodb.com/careers/job/?gh_jid=7318558",
+          "descriptionCharacters": 5374
+        },
+        {
+          "id": "7310506",
+          "title": "Account Development Representative",
+          "url": "https://www.mongodb.com/careers/job/?gh_jid=7310506",
+          "applyUrl": "https://www.mongodb.com/careers/job/?gh_jid=7310506",
+          "descriptionCharacters": 6199
+        },
+        {
+          "id": "7318466",
+          "title": "Account Development Representative",
+          "url": "https://www.mongodb.com/careers/job/?gh_jid=7318466",
+          "applyUrl": "https://www.mongodb.com/careers/job/?gh_jid=7318466",
+          "descriptionCharacters": 5375
+        }
+      ]
+    },
+    {
+      "company": "okta",
+      "sourceId": "okta",
+      "provider": "greenhouse",
+      "board": "okta",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "c2634462be24e7d102a58cd917e1e20c4be1665b2553b58413e68c929af0a1fa",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "38fcc3d0-2f63-458f-ab97-5231dbd8a997",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "okta",
+        "startedAt": "2026-09-30T21:36:56.132Z",
+        "finishedAt": "2026-09-30T21:36:56.531Z",
+        "listingCount": 363,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 363,
+      "rawEvidencePath": "backend/data/wave-b/extraction-okta.json",
+      "rawEvidenceSha256": "d65a2deb2e770611afc6ba72bbd228015c9d6196bbc1cfa8c31d8f668123762b",
+      "samples": [
+        {
+          "id": "8079108",
+          "title": "Account Executive Auth0",
+          "url": "https://www.okta.com/company/careers/opportunity/8079108?gh_jid=8079108",
+          "applyUrl": "https://www.okta.com/company/careers/opportunity/8079108?gh_jid=8079108",
+          "descriptionCharacters": 5904
+        },
+        {
+          "id": "8093704",
+          "title": "Account Executive Large Enterprise Public Sector",
+          "url": "https://www.okta.com/company/careers/opportunity/8093704?gh_jid=8093704",
+          "applyUrl": "https://www.okta.com/company/careers/opportunity/8093704?gh_jid=8093704",
+          "descriptionCharacters": 5950
+        },
+        {
+          "id": "8011328",
+          "title": "AI Trainer",
+          "url": "https://www.okta.com/company/careers/opportunity/8011328?gh_jid=8011328",
+          "applyUrl": "https://www.okta.com/company/careers/opportunity/8011328?gh_jid=8011328",
+          "descriptionCharacters": 6838
+        }
+      ]
+    },
+    {
+      "company": "salesforce",
+      "sourceId": "salesforce",
+      "provider": "workday",
+      "board": "External_Career_Site",
+      "endpoint": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/External_Career_Site/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "cc827ab0a9f358c783dc6bb6d16a68ca59f6acbb318ec77ec3e79c1cbb8a45ad",
+      "validationLevel": "import_running",
+      "latestRun": {
+        "id": "d9a8d103-610b-48ae-85de-279e4dea7f8e",
+        "error": null,
+        "status": "running",
+        "sourceId": "salesforce",
+        "startedAt": "2026-09-30T21:46:34.873Z",
+        "finishedAt": null,
+        "listingCount": 0,
+        "excludedCount": 0,
+        "enumerationComplete": false,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 0,
+      "rawEvidencePath": "backend/data/wave-b/inventory-salesforce.json",
+      "rawEvidenceSha256": "d268a48c582aadf96997ef02495405b0c670c69f9b8c0d706ba3b85f9e840ee4",
+      "samples": []
+    },
+    {
+      "company": "adobe",
+      "sourceId": "adobe",
+      "provider": "workday",
+      "board": "external_experienced",
+      "endpoint": "https://adobe.wd5.myworkdayjobs.com/wday/cxs/adobe/external_experienced/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "0baa8bafc91821aebb418e15854ce4f273f76d3cf84a338f78f91f44a06ea4ed",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "a1f85c1b-f375-4fcb-8acf-065ddf317a6d",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "adobe",
+        "startedAt": "2026-09-30T21:43:01.953Z",
+        "finishedAt": "2026-09-30T21:53:01.813Z",
+        "listingCount": 541,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 541,
+      "rawEvidencePath": "backend/data/wave-b/inventory-adobe.json",
+      "rawEvidenceSha256": "8a6a90f9e714dbf183c8c7dd471c218c0925eb79aa6753b69ff7b0de9d84f3aa",
+      "samples": [
+        {
+          "id": "cf0155a2a4651001383ce8a1c0480000",
+          "title": "Enterprise Architect",
+          "url": "https://adobe.wd5.myworkdayjobs.com/external_experienced/job/Tokyo/Enterprise-Architect_R170690",
+          "applyUrl": "https://adobe.wd5.myworkdayjobs.com/external_experienced/job/Tokyo/Enterprise-Architect_R170690/apply",
+          "descriptionCharacters": 9707
+        },
+        {
+          "id": "5d8f0278e5101000c2fce85aee6c0000",
+          "title": "Staff Security Data Engineer",
+          "url": "https://adobe.wd5.myworkdayjobs.com/external_experienced/job/San-Jose/Staff-Security-Data-Engineer_R171875-1",
+          "applyUrl": "https://adobe.wd5.myworkdayjobs.com/external_experienced/job/San-Jose/Staff-Security-Data-Engineer_R171875-1/apply",
+          "descriptionCharacters": 11008
+        },
+        {
+          "id": "07a8ce9029511001ac4cd2c4ab6c0000",
+          "title": "Forward Deployed Engineer",
+          "url": "https://adobe.wd5.myworkdayjobs.com/external_experienced/job/San-Jose/Forward-Deployed-Engineer_R171447-1",
+          "applyUrl": "https://adobe.wd5.myworkdayjobs.com/external_experienced/job/San-Jose/Forward-Deployed-Engineer_R171447-1/apply",
+          "descriptionCharacters": 10018
+        }
+      ]
+    },
+    {
+      "company": "patreon",
+      "sourceId": "patreon",
+      "provider": "ashby",
+      "board": "patreon",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "11a8b7cf46ca49c770996d6a25429453ae546426070a66827eb2fa588c0b678d",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "2aeda6f5-4f0c-4934-8fb3-2591fd9ddbb4",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "patreon",
+        "startedAt": "2026-09-30T21:37:03.501Z",
+        "finishedAt": "2026-09-30T21:37:03.516Z",
+        "listingCount": 15,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 15,
+      "rawEvidencePath": "backend/data/wave-b/extraction-patreon.json",
+      "rawEvidenceSha256": "a87f95c2c21fba70ff2f3932013b9fa1135103f625867d817609ee1aa94c09bd",
+      "samples": [
+        {
+          "id": "84928a66-fe9d-435e-aced-1253f1c29ff2",
+          "title": "Porto Site Lead",
+          "url": "https://jobs.ashbyhq.com/patreon/84928a66-fe9d-435e-aced-1253f1c29ff2",
+          "applyUrl": "https://jobs.ashbyhq.com/patreon/84928a66-fe9d-435e-aced-1253f1c29ff2/application",
+          "descriptionCharacters": 6904
+        },
+        {
+          "id": "316e1383-ffe1-4397-b630-c4ac84e6d7b5",
+          "title": "Staff Product Designer, Discovery",
+          "url": "https://jobs.ashbyhq.com/patreon/316e1383-ffe1-4397-b630-c4ac84e6d7b5",
+          "applyUrl": "https://jobs.ashbyhq.com/patreon/316e1383-ffe1-4397-b630-c4ac84e6d7b5/application",
+          "descriptionCharacters": 5867
+        },
+        {
+          "id": "e8f0fe39-1a3f-4672-8857-0258800dc24f",
+          "title": "Staff Software Engineer, Data Infrastructure",
+          "url": "https://jobs.ashbyhq.com/patreon/e8f0fe39-1a3f-4672-8857-0258800dc24f",
+          "applyUrl": "https://jobs.ashbyhq.com/patreon/e8f0fe39-1a3f-4672-8857-0258800dc24f/application",
+          "descriptionCharacters": 6549
+        }
+      ]
+    },
+    {
+      "company": "cloudflare",
+      "sourceId": "cloudflare",
+      "provider": "greenhouse",
+      "board": "cloudflare",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "8c65557494f155d9d6cfbfe7b818dc47a398a9646942f7024d43e6fa7938cfa0",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "444ce002-1faa-404b-8ffd-dffdcac9ac0d",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "cloudflare",
+        "startedAt": "2026-09-30T21:36:57.770Z",
+        "finishedAt": "2026-09-30T21:36:58.328Z",
+        "listingCount": 395,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 395,
+      "rawEvidencePath": "backend/data/wave-b/extraction-cloudflare.json",
+      "rawEvidenceSha256": "ad57aba4d739e036712b5ca25dd6011f40e97d95ca5eb101eba1b66d0333c372",
+      "samples": [
+        {
+          "id": "7695702",
+          "title": "Account Executive, FedCiv",
+          "url": "https://boards.greenhouse.io/cloudflare/jobs/7695702?gh_jid=7695702",
+          "applyUrl": "https://boards.greenhouse.io/cloudflare/jobs/7695702?gh_jid=7695702",
+          "descriptionCharacters": 8039
+        },
+        {
+          "id": "8172582",
+          "title": "Account Executive, Indonesia",
+          "url": "https://boards.greenhouse.io/cloudflare/jobs/8172582?gh_jid=8172582",
+          "applyUrl": "https://boards.greenhouse.io/cloudflare/jobs/8172582?gh_jid=8172582",
+          "descriptionCharacters": 8745
+        },
+        {
+          "id": "8097321",
+          "title": "AI Security Research & Red Team Engineer",
+          "url": "https://boards.greenhouse.io/cloudflare/jobs/8097321?gh_jid=8097321",
+          "applyUrl": "https://boards.greenhouse.io/cloudflare/jobs/8097321?gh_jid=8097321",
+          "descriptionCharacters": 8965
+        }
+      ]
+    },
+    {
+      "company": "zoom",
+      "sourceId": "zoom",
+      "provider": "workday",
+      "board": "Zoom",
+      "endpoint": "https://zoom.wd5.myworkdayjobs.com/wday/cxs/zoom/Zoom/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "e4e902a5a65f63f8b7e1dd71246142e1458481161ee4b406b0c24d7c590f345d",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "b6d19020-6ac4-4ad9-91d7-d147a64ead61",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "zoom",
+        "startedAt": "2026-09-30T21:37:30.840Z",
+        "finishedAt": "2026-09-30T21:39:17.198Z",
+        "listingCount": 91,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 91,
+      "rawEvidencePath": "backend/data/wave-b/inventory-zoom.json",
+      "rawEvidenceSha256": "bb3dfd7a5c2994be0baa2b8588a353e060e3701d6c48d2a6dc8cd7254e1a6c89",
+      "samples": [
+        {
+          "id": "4dc3b895a4f210015977f68074240000",
+          "title": "Channel Account Manager, Italy",
+          "url": "https://zoom.wd5.myworkdayjobs.com/Zoom/job/Remote--ITA/Channel-Account-Manager--Italy_R19463",
+          "applyUrl": "https://zoom.wd5.myworkdayjobs.com/Zoom/job/Remote--ITA/Channel-Account-Manager--Italy_R19463/apply",
+          "descriptionCharacters": 5258
+        },
+        {
+          "id": "975a2192156110010fbadcfb90460000",
+          "title": "Global Program Manager",
+          "url": "https://zoom.wd5.myworkdayjobs.com/Zoom/job/Remote--US/Global-Program-Manager_R19705-1",
+          "applyUrl": "https://zoom.wd5.myworkdayjobs.com/Zoom/job/Remote--US/Global-Program-Manager_R19705-1/apply",
+          "descriptionCharacters": 5450
+        },
+        {
+          "id": "a76101dee82c1001aebeba8101e30000",
+          "title": "Enterprise Account Executive - Workvivo",
+          "url": "https://zoom.wd5.myworkdayjobs.com/Zoom/job/Remote--MA/Account-Executive---Workvivo_R19238",
+          "applyUrl": "https://zoom.wd5.myworkdayjobs.com/Zoom/job/Remote--MA/Account-Executive---Workvivo_R19238/apply",
+          "descriptionCharacters": 4544
+        }
+      ]
+    },
+    {
+      "company": "workday",
+      "sourceId": "workday",
+      "provider": "workday",
+      "board": "Workday",
+      "endpoint": "https://workday.wd5.myworkdayjobs.com/wday/cxs/workday/Workday/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "b4d026f3ced3b22ddd085758dbd35c612bdc63e0ae596c1180c98f6cff6cd7b0",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "2e3e08e9-9733-461e-b93d-027bab2b5bb1",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "workday",
+        "startedAt": "2026-09-30T21:43:01.954Z",
+        "finishedAt": "2026-09-30T21:50:32.452Z",
+        "listingCount": 370,
+        "excludedCount": 3,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 370,
+      "rawEvidencePath": "backend/data/wave-b/inventory-workday.json",
+      "rawEvidenceSha256": "a42be942a97409ad2ed05ff5e9902c01fb2d9e5a439a5bf33bc0f81ae75f5c62",
+      "samples": [
+        {
+          "id": "923b350927aa1000d03eff99b72f0000",
+          "title": "Principal API Architect, Product Engineering – Agent‑Ready APIs & Data",
+          "url": "https://workday.wd5.myworkdayjobs.com/Workday/job/USA-CA-Pleasanton/Principal-API-Architect--Product-Engineering---Agent-Ready-APIs---Data_JR-0108218",
+          "applyUrl": "https://workday.wd5.myworkdayjobs.com/Workday/job/USA-CA-Pleasanton/Principal-API-Architect--Product-Engineering---Agent-Ready-APIs---Data_JR-0108218/apply",
+          "descriptionCharacters": 10301
+        },
+        {
+          "id": "22c6b46c1c251000dbcc2834e5620000",
+          "title": "Sr Software Engineer – API Platform, Product Engineering (Python/Typescript)",
+          "url": "https://workday.wd5.myworkdayjobs.com/Workday/job/USA-CA-Pleasanton/Sr-Software-Development-Engineer--Product-Engineering---API-Platform---Agentic-AI_JR-0108225",
+          "applyUrl": "https://workday.wd5.myworkdayjobs.com/Workday/job/USA-CA-Pleasanton/Sr-Software-Development-Engineer--Product-Engineering---API-Platform---Agentic-AI_JR-0108225/apply",
+          "descriptionCharacters": 10377
+        },
+        {
+          "id": "834cbb0eac5010011003e8df2a110001",
+          "title": "Principal Software Engineer, Agentic UX",
+          "url": "https://workday.wd5.myworkdayjobs.com/Workday/job/USA-CA-Pleasanton/Principal-AI-UX-Lead_JR-0109765-1",
+          "applyUrl": "https://workday.wd5.myworkdayjobs.com/Workday/job/USA-CA-Pleasanton/Principal-AI-UX-Lead_JR-0109765-1/apply",
+          "descriptionCharacters": 8651
+        }
+      ]
+    },
+    {
+      "company": "github",
+      "sourceId": "github",
+      "provider": "icims",
+      "board": "githubinc",
+      "endpoint": "https://www.github.careers/api/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "a3e7f57d9525f1f528f24b6dab47ff2381f54a57c37f8efb9cebb46c2ed12a5e",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "7edfe632-1811-4d3b-a133-e0323101232a",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "github",
+        "startedAt": "2026-09-30T21:37:10.555Z",
+        "finishedAt": "2026-09-30T21:37:10.646Z",
+        "listingCount": 73,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 73,
+      "rawEvidencePath": "backend/data/wave-b/extraction-github.json",
+      "rawEvidenceSha256": "11b91f9b1c72644ad4ecc01ce31c8d7c59926c5fec10a6f9cd56771a1479509c",
+      "samples": [
+        {
+          "id": "5580",
+          "title": "Staff Software Engineer",
+          "url": "https://githubinc.jibeapply.com/jobs/5580?lang=en-us",
+          "applyUrl": "https://careers-githubinc.icims.com/jobs/5580/login",
+          "descriptionCharacters": 8137
+        },
+        {
+          "id": "5816",
+          "title": "Senior Software Engineer, Observability Delivery",
+          "url": "https://githubinc.jibeapply.com/jobs/5816?lang=en-us",
+          "applyUrl": "https://careers-githubinc.icims.com/jobs/5816/login",
+          "descriptionCharacters": 7495
+        },
+        {
+          "id": "5638",
+          "title": "Senior Systems Engineer, Database Infrastructure",
+          "url": "https://githubinc.jibeapply.com/jobs/5638?lang=en-us",
+          "applyUrl": "https://careers-githubinc.icims.com/jobs/5638/login",
+          "descriptionCharacters": 7425
+        }
+      ]
+    },
+    {
+      "company": "gitlab",
+      "sourceId": "gitlab",
+      "provider": "greenhouse",
+      "board": "gitlab",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "1e2e5812afce469e9fe81e831c58c38c3aa75f4dd292acf0e82b6d16b5122fdb",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "ea218911-fa45-4d09-aaf5-aed1664d3e4c",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "gitlab",
+        "startedAt": "2026-09-30T21:36:59.875Z",
+        "finishedAt": "2026-09-30T21:37:00.159Z",
+        "listingCount": 203,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 203,
+      "rawEvidencePath": "backend/data/wave-b/extraction-gitlab.json",
+      "rawEvidenceSha256": "6a10a43ed7aa63a7350fe8e61440a29864fc71a2895ba8aa9f9aeb669f197251",
+      "samples": [
+        {
+          "id": "8556658002",
+          "title": "AI Engineer",
+          "url": "https://job-boards.greenhouse.io/gitlab/jobs/8556658002",
+          "applyUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8556658002",
+          "descriptionCharacters": 10945
+        },
+        {
+          "id": "8638232002",
+          "title": "AI Transformation Owner, CRO",
+          "url": "https://job-boards.greenhouse.io/gitlab/jobs/8638232002",
+          "applyUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8638232002",
+          "descriptionCharacters": 8619
+        },
+        {
+          "id": "8716179002",
+          "title": "AI Transformation Owner, Product & Design",
+          "url": "https://job-boards.greenhouse.io/gitlab/jobs/8716179002",
+          "applyUrl": "https://job-boards.greenhouse.io/gitlab/jobs/8716179002",
+          "descriptionCharacters": 11628
+        }
+      ]
+    },
+    {
+      "company": "paypal",
+      "sourceId": "paypal",
+      "provider": "workday",
+      "board": "jobs",
+      "endpoint": "https://paypal.wd1.myworkdayjobs.com/wday/cxs/paypal/jobs/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "12c41283c9507730b887f478886644ae6cc9b16115162a35519228724350edc7",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "1ec2924e-68f5-42e5-af26-b6ebc5cb2f93",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "paypal",
+        "startedAt": "2026-09-30T21:46:34.872Z",
+        "finishedAt": "2026-09-30T21:51:58.015Z",
+        "listingCount": 285,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 285,
+      "rawEvidencePath": "backend/data/wave-b/inventory-paypal.json",
+      "rawEvidenceSha256": "dc19f61446f807866ee0dbe923c2e283adb42afa432889ce35fa83afebd769c2",
+      "samples": [
+        {
+          "id": "0b9f1aead6371001452cbd88f3d30000",
+          "title": "Senior Account Representative, SMB (West/Central)",
+          "url": "https://wd1.myworkdaysite.com/recruiting/paypal/jobs/job/Germany-Virtual/Senior-Account-Representative--SMB--West-Central-_R0137445",
+          "applyUrl": "https://wd1.myworkdaysite.com/recruiting/paypal/jobs/job/Germany-Virtual/Senior-Account-Representative--SMB--West-Central-_R0137445/apply",
+          "descriptionCharacters": 8385
+        },
+        {
+          "id": "0ac487cea9291001451c6ab5e0e00000",
+          "title": "Account Representative, SMB (West/Central)",
+          "url": "https://wd1.myworkdaysite.com/recruiting/paypal/jobs/job/Germany-Virtual/Account-Representative--SMB--West-Central-_R0137446",
+          "applyUrl": "https://wd1.myworkdaysite.com/recruiting/paypal/jobs/job/Germany-Virtual/Account-Representative--SMB--West-Central-_R0137446/apply",
+          "descriptionCharacters": 7487
+        },
+        {
+          "id": "43650bb0298110019f5f10d037890000",
+          "title": "Account Manager, Large Enterprise Commercial",
+          "url": "https://wd1.myworkdaysite.com/recruiting/paypal/jobs/job/London-County-London-England-United-Kingdom/Account-Manager--Large-Enterprise-Commercial_R0137546-1",
+          "applyUrl": "https://wd1.myworkdaysite.com/recruiting/paypal/jobs/job/London-County-London-England-United-Kingdom/Account-Manager--Large-Enterprise-Commercial_R0137546-1/apply",
+          "descriptionCharacters": 9403
+        }
+      ]
+    },
+    {
+      "company": "intel",
+      "sourceId": "intel",
+      "provider": "workday",
+      "board": "External",
+      "endpoint": "https://intel.wd1.myworkdayjobs.com/wday/cxs/intel/External/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "e05c8c95d19cd7f2e3d9b69b0b6bba90db40cf56744fa82da2a89ca7dc770ccf",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "d61284ce-9ae5-4393-ac84-c707ea76e80c",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "intel",
+        "startedAt": "2026-09-30T21:43:01.954Z",
+        "finishedAt": "2026-09-30T21:54:35.906Z",
+        "listingCount": 606,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 606,
+      "rawEvidencePath": "backend/data/wave-b/inventory-intel.json",
+      "rawEvidenceSha256": "0622fd760280820ddea65824cc7a458041485447489b0c3a17178719657fc10f",
+      "samples": [
+        {
+          "id": "cac4c2cf42681001e719b33364f30000",
+          "title": "Experienced Manufacturing Technician",
+          "url": "https://intel.wd1.myworkdayjobs.com/External/job/Ireland-Leixlip/Manufacturing-Technician_JR0284458",
+          "applyUrl": "https://intel.wd1.myworkdayjobs.com/External/job/Ireland-Leixlip/Manufacturing-Technician_JR0284458/apply",
+          "descriptionCharacters": 5581
+        },
+        {
+          "id": "2c7e861c27e81000b78536d1e94f0000",
+          "title": "Early Careers Manufacturing Technician",
+          "url": "https://intel.wd1.myworkdayjobs.com/External/job/Ireland-Leixlip/Manufacturing-Technician_JR0284021",
+          "applyUrl": "https://intel.wd1.myworkdayjobs.com/External/job/Ireland-Leixlip/Manufacturing-Technician_JR0284021/apply",
+          "descriptionCharacters": 4724
+        },
+        {
+          "id": "8b8d159e7ae610011f0c369270a60000",
+          "title": "Staff Chemical Mechanical Planarization (CMP) Engineer",
+          "url": "https://intel.wd1.myworkdayjobs.com/External/job/US-Oregon-Hillsboro/Staff-Chemical-Mechanical-Planarization--CMP--Engineer_JR0285228",
+          "applyUrl": "https://intel.wd1.myworkdayjobs.com/External/job/US-Oregon-Hillsboro/Staff-Chemical-Mechanical-Planarization--CMP--Engineer_JR0285228/apply",
+          "descriptionCharacters": 7724
+        }
+      ]
+    },
+    {
+      "company": "ing",
+      "sourceId": "ing",
+      "provider": "workday",
+      "board": "ICSGBLCOR",
+      "endpoint": "https://ing.wd3.myworkdayjobs.com/wday/cxs/ing/ICSGBLCOR/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "d8fb110851c32935740dcd3a4e32adfbb0deb0f2f6d491dc13b4da1e6724d999",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "563016fa-3928-4e21-81e1-5d4382743d92",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "ing",
+        "startedAt": "2026-09-30T21:43:01.954Z",
+        "finishedAt": "2026-09-30T21:56:22.656Z",
+        "listingCount": 737,
+        "excludedCount": 2,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 737,
+      "rawEvidencePath": "backend/data/wave-b/inventory-ing.json",
+      "rawEvidenceSha256": "2e29aab17f17cc1ee8a5ff29accf57978862aff10e42a7a95871a19712d75a07",
+      "samples": [
+        {
+          "id": "ab09390739a41000dbb2d4d1c9980000",
+          "title": "Compliance Manager",
+          "url": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR/job/Taipei/Compliance-Manager_REQ-10121421",
+          "applyUrl": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR/job/Taipei/Compliance-Manager_REQ-10121421/apply",
+          "descriptionCharacters": 3751
+        },
+        {
+          "id": "30bac6c2c3271001cc9e01ca52360000",
+          "title": "CPS Expense Expert",
+          "url": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR/job/Manila-One-Ayala-Tower-2/CPS-Expense-Expert_REQ-10122061",
+          "applyUrl": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR/job/Manila-One-Ayala-Tower-2/CPS-Expense-Expert_REQ-10122061/apply",
+          "descriptionCharacters": 4955
+        },
+        {
+          "id": "93ac5c443fbf100162f9ef83089e0000",
+          "title": "Test Lead - Finance, Risk, & Tax CONTRACTOR",
+          "url": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR/job/New-York/Test-Lead---Finance--Risk----Tax-CONTRACTOR_REQ-10121616",
+          "applyUrl": "https://ing.wd3.myworkdayjobs.com/ICSGBLCOR/job/New-York/Test-Lead---Finance--Risk----Tax-CONTRACTOR_REQ-10121616/apply",
+          "descriptionCharacters": 11823
+        }
+      ]
+    },
+    {
+      "company": "riot-games",
+      "sourceId": "riot-games",
+      "provider": "greenhouse",
+      "board": "riotgames",
+      "endpoint": null,
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "23943f0b14c2465dc709a11ea7351b73ee5db0f05ed16d5ea1764a5edf3b9267",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "bc6dc5db-2200-4f0d-9080-aeaadddca779",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "riot-games",
+        "startedAt": "2026-09-30T21:37:01.121Z",
+        "finishedAt": "2026-09-30T21:37:01.262Z",
+        "listingCount": 167,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 167,
+      "rawEvidencePath": "backend/data/wave-b/extraction-riot-games.json",
+      "rawEvidenceSha256": "d8764fe89e144ec1864d5c17fc592977e0b2697db44587edf8409985d8408f55",
+      "samples": [
+        {
+          "id": "7977844",
+          "title": "APAC Esports Partnership Manager",
+          "url": "https://www.riotgames.com/en/work-with-us/job/7977844?gh_jid=7977844",
+          "applyUrl": "https://www.riotgames.com/en/work-with-us/job/7977844?gh_jid=7977844",
+          "descriptionCharacters": 3355
+        },
+        {
+          "id": "8063670",
+          "title": "Art Project Manager - Unpublished R&D Product (Contract)",
+          "url": "https://www.riotgames.com/en/work-with-us/job/8063670?gh_jid=8063670",
+          "applyUrl": "https://www.riotgames.com/en/work-with-us/job/8063670?gh_jid=8063670",
+          "descriptionCharacters": 602
+        },
+        {
+          "id": "8055923",
+          "title": "Cloud Infrastructure and Security Engineer (Contract)",
+          "url": "https://www.riotgames.com/en/work-with-us/job/8055923?gh_jid=8055923",
+          "applyUrl": "https://www.riotgames.com/en/work-with-us/job/8055923?gh_jid=8055923",
+          "descriptionCharacters": 1749
+        }
+      ]
+    },
+    {
+      "company": "blizzard",
+      "sourceId": "blizzard",
+      "provider": "workday",
+      "board": "Blizzard_External_Careers",
+      "endpoint": "https://xboxgaming.wd1.myworkdayjobs.com/wday/cxs/xboxgaming/Blizzard_External_Careers/jobs",
+      "auditStatus": "candidate",
+      "scheduled": false,
+      "configurationHash": "6d4235b513de184e2518966d79173a4aa6d585dc86beb53078644b3ff639580c",
+      "validationLevel": "full_extraction_and_database_publication",
+      "latestRun": {
+        "id": "9b255e05-bde3-4717-acac-f83d36d67f35",
+        "error": null,
+        "status": "succeeded",
+        "sourceId": "blizzard",
+        "startedAt": "2026-09-30T21:37:30.840Z",
+        "finishedAt": "2026-09-30T21:38:26.105Z",
+        "listingCount": 38,
+        "excludedCount": 0,
+        "enumerationComplete": true,
+        "removalsQuarantined": false
+      },
+      "storedActivePostings": 38,
+      "rawEvidencePath": "backend/data/wave-b/inventory-blizzard.json",
+      "rawEvidenceSha256": "87b2f1d7a14898d28cb9fbc43100453d3883bc59313b5ff103fdc84f5c07ecc2",
+      "samples": [
+        {
+          "id": "f7e02fb5ed8110013b26a3e1b48c0000",
+          "title": "Content Operations Specialist",
+          "url": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers/job/Shanghai---Blizzard---Room-501/Content-Operations-Specialist_R028127",
+          "applyUrl": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers/job/Shanghai---Blizzard---Room-501/Content-Operations-Specialist_R028127/apply",
+          "descriptionCharacters": 3323
+        },
+        {
+          "id": "a2e85eeaf18d10012726a5d465f30000",
+          "title": "Paid Media Operations Manager (Contractor) | Irvine, CA or Remote (US)",
+          "url": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers/job/Irvine---Blizzard---Blizzard-Way/Paid-Media-Operations-Manager--Contractor----Irvine--CA-or-Remote--US-_R027723",
+          "applyUrl": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers/job/Irvine---Blizzard---Blizzard-Way/Paid-Media-Operations-Manager--Contractor----Irvine--CA-or-Remote--US-_R027723/apply",
+          "descriptionCharacters": 8062
+        },
+        {
+          "id": "f48cca63a1851001f937ac55fa260000",
+          "title": "Manager, Storyboard Department (SFD / Cinematics)",
+          "url": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers/job/Irvine---Blizzard---Blizzard-Way/Manager--Storyboard-Department--SFD---Cinematics-_R028200-1",
+          "applyUrl": "https://xboxgaming.wd1.myworkdayjobs.com/Blizzard_External_Careers/job/Irvine---Blizzard---Blizzard-Way/Manager--Storyboard-Department--SFD---Cinematics-_R028200-1/apply",
+          "descriptionCharacters": 8435
+        }
+      ]
+    }
+  ]
+}

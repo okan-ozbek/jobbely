@@ -1,4 +1,4 @@
-import type { JsonTransport } from '../ports/ingestion.js';
+import type { JsonSearchTransport } from '../ports/ingestion.js';
 import type { RawResponse } from '../domain/model.js';
 
 const allowedHosts = new Set([
@@ -6,6 +6,18 @@ const allowedHosts = new Set([
   'api.ashbyhq.com',
   'api.lever.co',
   'api.eu.lever.co',
+  'nvidia.wd5.myworkdayjobs.com',
+  'salesforce.wd12.myworkdayjobs.com',
+  'adobe.wd5.myworkdayjobs.com',
+  'workday.wd5.myworkdayjobs.com',
+  'paypal.wd1.myworkdayjobs.com',
+  'intel.wd1.myworkdayjobs.com',
+  'ing.wd3.myworkdayjobs.com',
+  'zoom.wd5.myworkdayjobs.com',
+  'xboxgaming.wd1.myworkdayjobs.com',
+  'careers.amd.com',
+  'jobs.booking.com',
+  'www.github.careers',
 ]);
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -19,7 +31,7 @@ export class HttpFailure extends Error {
   }
 }
 
-export class PublicJsonTransport implements JsonTransport {
+export class PublicJsonTransport implements JsonSearchTransport {
   private readonly tails = new Map<string, Promise<unknown>>();
   private readonly nextRequest = new Map<string, number>();
 
@@ -29,6 +41,14 @@ export class PublicJsonTransport implements JsonTransport {
   ) {}
 
   async get(url: string): Promise<RawResponse> {
+    return this.enqueue(url);
+  }
+
+  async post(url: string, body: unknown): Promise<RawResponse> {
+    return this.enqueue(url, JSON.stringify(body));
+  }
+
+  private async enqueue(url: string, body?: string): Promise<RawResponse> {
     const parsed = new URL(url);
 
     if (
@@ -42,14 +62,25 @@ export class PublicJsonTransport implements JsonTransport {
     }
 
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
-    const current = previous.catch(() => undefined).then(() => this.request(url, parsed.hostname));
+
+    if (
+      body !== undefined &&
+      (!parsed.hostname.endsWith('.myworkdayjobs.com') ||
+        !/^\/wday\/cxs\/[^/]+\/[^/]+\/jobs$/.test(parsed.pathname))
+    ) {
+      throw new Error('POST is restricted to read-only Workday job searches');
+    }
+
+    const current = previous
+      .catch(() => undefined)
+      .then(() => this.request(url, parsed.hostname, body));
 
     this.tails.set(parsed.hostname, current);
 
     return current;
   }
 
-  private async request(url: string, host: string): Promise<RawResponse> {
+  private async request(url: string, host: string, requestBody?: string): Promise<RawResponse> {
     for (let attempt = 0; attempt < 4; attempt++) {
       await sleep(Math.max(0, (this.nextRequest.get(host) ?? 0) - Date.now()));
       this.nextRequest.set(host, Date.now() + this.minIntervalMs);
@@ -58,8 +89,10 @@ export class PublicJsonTransport implements JsonTransport {
         const response = await this.fetcher(url, {
           redirect: 'error',
           signal: AbortSignal.timeout(30_000),
+          ...(requestBody === undefined ? {} : { method: 'POST', body: requestBody }),
           headers: {
             Accept: 'application/json',
+            ...(requestBody === undefined ? {} : { 'Content-Type': 'application/json' }),
             'User-Agent': 'Jobbely/0.1 (public employer job-board reader)',
           },
         });
@@ -126,7 +159,14 @@ export class PublicJsonTransport implements JsonTransport {
 
         const body: unknown = JSON.parse(Buffer.concat(chunks).toString('utf8'));
 
-        return { url, fetchedAt: new Date().toISOString(), body };
+        return {
+          url,
+          fetchedAt: new Date().toISOString(),
+          body,
+          ...(requestBody === undefined
+            ? {}
+            : { request: { method: 'POST' as const, body: JSON.parse(requestBody) as unknown } }),
+        };
       } catch (error) {
         if (
           error instanceof HttpFailure ||

@@ -111,6 +111,15 @@ export class PostgresJobRepository implements JobRepository {
     });
   }
 
+  async renewRun(sourceId: string, runId: string, at: string): Promise<boolean> {
+    const updated = await this.client.sourceLease.updateMany({
+      where: { sourceId, runId, expiresAt: { gt: new Date(at) } },
+      data: { expiresAt: new Date(Date.parse(at) + 30 * 60_000) },
+    });
+
+    return updated.count === 1;
+  }
+
   async commitSnapshot(commit: SnapshotCommit) {
     return this.client.$transaction(
       async (transaction) => {

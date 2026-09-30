@@ -11,6 +11,7 @@ import {
   greenhouseVariants,
   inspectOfficialPage,
   officialIdentity,
+  resolveOfficialIds,
 } from './reconcile.js';
 
 export class SourceAuditor {
@@ -259,7 +260,11 @@ export class SourceAuditor {
         result.excludedCount = extraction.excluded;
         result.enumerationComplete = extraction.enumerationComplete;
         result.feedHashes = extraction.rawResponses.map((raw) => hash(JSON.stringify(raw.body)));
-        Object.assign(result, compareIdentities(ids, officialIds));
+
+        Object.assign(
+          result,
+          compareIdentities(ids, resolveOfficialIds(source, extraction, officialIds)),
+        );
 
         if (
           source.provider === 'greenhouse' &&
@@ -326,6 +331,17 @@ export function officialHosts(company: Company, plan: AuditPlan): Set<string> {
     'docs.greenhouse.io',
     'developers.ashbyhq.com',
     'github.com',
+    'nvidia.wd5.myworkdayjobs.com',
+    'salesforce.wd12.myworkdayjobs.com',
+    'adobe.wd5.myworkdayjobs.com',
+    'workday.wd5.myworkdayjobs.com',
+    'paypal.wd1.myworkdayjobs.com',
+    'intel.wd1.myworkdayjobs.com',
+    'ing.wd3.myworkdayjobs.com',
+    'zoom.wd5.myworkdayjobs.com',
+    'xboxgaming.wd1.myworkdayjobs.com',
+    'jobs.booking.com',
+    'www.linkedin.com',
   ]);
 
   for (const url of [...plan.pages.map((page) => page.url), ...plan.access.evidenceUrls]) {

@@ -10,7 +10,8 @@ const boss = new PgBoss(config.DATABASE_URL);
 
 boss.on('error', (error) => console.error('Queue failure:', error));
 await boss.start();
-await boss.createQueue('sync-source');
+await boss.createQueue('sync-source', { expireInSeconds: 3 * 60 * 60 });
+await boss.updateQueue('sync-source', { expireInSeconds: 3 * 60 * 60 });
 
 await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, async (jobs) => {
   for (const job of jobs) {

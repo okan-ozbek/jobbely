@@ -27,9 +27,44 @@ export class SyncSource {
       throw new Error(`Source ${source.id} is already being synchronized`);
     }
 
+    let renewal: Promise<void> = Promise.resolve();
+    let renewing = false;
+    let leaseFailure: Error | undefined;
+
+    const heartbeat = setInterval(() => {
+      if (renewing || leaseFailure) {
+        return;
+      }
+
+      renewing = true;
+
+      renewal = this.repository
+        .renewRun(source.id, run.id, this.clock().toISOString())
+        .then((owned) => {
+          if (!owned) {
+            throw new Error('Source lease lost during extraction');
+          }
+        })
+        .catch((error: unknown) => {
+          leaseFailure = error instanceof Error ? error : new Error('Source lease renewal failed');
+        })
+        .finally(() => {
+          renewing = false;
+        });
+    }, 60_000);
+
+    heartbeat.unref();
+
     try {
       const extraction = await this.adapters[source.provider].extract(source);
       const auditResponses = (await this.validation?.validate(source, extraction)) ?? [];
+
+      await renewal;
+
+      if (leaseFailure) {
+        throw leaseFailure;
+      }
+
       const ids = new Set<string>();
 
       const postings: NormalizedPosting[] = extraction.postings.map((posting) => {
@@ -75,6 +110,9 @@ export class SyncSource {
       );
 
       throw error;
+    } finally {
+      clearInterval(heartbeat);
+      await renewal;
     }
   }
 }

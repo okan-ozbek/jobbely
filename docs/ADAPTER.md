@@ -4,17 +4,19 @@
 
 ## Decision and rationale
 
-Use one adapter per ATS provider, configured with an employer board identifier. Greenhouse, Ashby and Lever implement `SourceAdapter.extract(source)` and return `Extraction`: canonical postings, raw responses, exclusion count and explicit traversal completeness. Provider schemas and pagination stay inside infrastructure.
+Use one adapter per ATS provider, configured with an employer board identifier and, for enterprise boards, an explicit endpoint. Greenhouse, Ashby, Lever, Workday and iCIMS implement `SourceAdapter.extract(source)` and return `Extraction`: canonical postings, raw responses, exclusion count and explicit traversal completeness. Provider schemas and pagination stay inside infrastructure. The shared factory supplies the same implementations to bootstrap and auditing. LinkedIn has a fail-closed access gate pending an authorized feed.
 
 The Adapter pattern isolates upstream differences. Bootstrap selects the provider implementation by `source.provider`; this is the extraction Strategy. Classification and lifecycle policies operate on canonical records and do not inspect ATS payloads. Composition avoids a base scraper with provider-specific hooks.
 
 ## Current provider behavior
 
-| Provider   | Enumeration and translation                                                                                                                                            |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Greenhouse | Requests full content, compares item count with `meta.total`, excludes prospect entries with null internal job IDs and generic talent-pool titles                      |
-| Ashby      | Requires API version `1`, filters `isListed`, retains department/team and secondary locations; nullable workplace fields remain unknown                                |
-| Lever      | Traverses pages of 100 up to 100 pages, rejects repeated IDs, finishes only on a short page; assembles description, list sections, closing text and salary description |
+| Provider   | Enumeration and translation                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Greenhouse | Requests full content, compares item count with `meta.total`, excludes prospect entries with null internal job IDs and generic talent-pool titles                        |
+| Ashby      | Requires API version `1`, filters `isListed`, retains department/team and secondary locations; nullable workplace fields remain unknown                                  |
+| Lever      | Traverses pages of 100 up to 100 pages, rejects repeated IDs, finishes only on a short page; assembles description, list sections, closing text and salary description   |
+| Workday    | Exhausts CXS search and native category partitions, handles the 2,000-result cap and later-page zero-total sentinel, hydrates all descriptions and retains immutable IDs |
+| iCIMS/Jibe | Traverses `/api/jobs` pages against explicit totals, retains full descriptions and native categories, applies explicit employer membership/URL host configuration        |
 
 An adapter validates every received item with Zod before publishing a result. Missing required fields fail the run. Optional information can remain unknown; a missing remote flag does not imply on-site work. Employment labels are currently source strings, with `unknown` for absence. Ashby falls back to its job URL when the feed omits an ID.
 
@@ -30,4 +32,4 @@ For an existing provider, add a candidate entry to the registry and audit it. Fo
 - [Adapters and schemas](../backend/src/infrastructure/adapters/), [adapter behavior tests](../backend/src/infrastructure/adapters/adapters.test.ts).
 - [Source onboarding](SOURCES.md), [transport](HTTP.md), [live evidence](SOURCE_CHECKS.md).
 
-Custom enterprise boards and scraping are planned extensions. No universal scraper, browser extraction adapter or MCP dependency is implemented.
+Detailed enterprise invariants and source assignments live in [WAVE_B.md](WAVE_B.md). Other custom boards and scraping remain planned extensions. No universal scraper, browser extraction adapter or MCP dependency is implemented.

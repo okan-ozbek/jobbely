@@ -6,9 +6,7 @@ import { LabelMappingStrategy, TitleRuleStrategy } from './domain/classification
 import { loadRegistry } from './infrastructure/registry.js';
 import { PublicJsonTransport } from './infrastructure/http.js';
 import { htmlPreparation } from './infrastructure/html.js';
-import { GreenhouseAdapter } from './infrastructure/adapters/greenhouse.js';
-import { AshbyAdapter } from './infrastructure/adapters/ashby.js';
-import { LeverAdapter } from './infrastructure/adapters/lever.js';
+import { createAdapters } from './infrastructure/adapters/factory.js';
 import { MemoryJobRepository } from './infrastructure/storage/memory.js';
 import { PostgresJobRepository } from './infrastructure/storage/postgres.js';
 import { seedDemo } from './infrastructure/demo.js';
@@ -44,11 +42,7 @@ export async function bootstrap() {
 
   const http = new PublicJsonTransport();
 
-  const adapters = {
-    greenhouse: new GreenhouseAdapter(http),
-    ashby: new AshbyAdapter(http),
-    lever: new LeverAdapter(http),
-  };
+  const adapters = createAdapters(http);
 
   return {
     companies,

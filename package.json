@@ -22,7 +22,9 @@
     "sync:wave-a": "pnpm --filter @jobbely/backend run sync --wave A",
     "audit:wave-a": "pnpm --filter @jobbely/backend run audit --wave A",
     "db:generate": "pnpm --filter @jobbely/backend db:generate",
-    "db:migrate": "pnpm --filter @jobbely/backend db:migrate"
+    "db:migrate": "pnpm --filter @jobbely/backend db:migrate",
+    "sync:wave-b": "pnpm --filter @jobbely/backend run sync --wave B",
+    "audit:wave-b": "pnpm --filter @jobbely/backend run audit --wave B"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",

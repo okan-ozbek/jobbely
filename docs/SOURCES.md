@@ -41,4 +41,4 @@ Company `lastCheckedAt` is the oldest successful complete check across its confi
 
 [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [validator](../backend/src/infrastructure/registry.ts), [coverage logic](../backend/src/application/catalog.ts), [audit CLI](../backend/src/cli/audit-source.ts).
 
-Shared-parent boards, employer membership filters and regional partitions need explicit adapters/configuration. Registry changes are file-based and require restart; there is no source-management UI. See [ADAPTER.md](ADAPTER.md), [INGESTION.md](INGESTION.md), and [LIFECYCLE.md](LIFECYCLE.md).
+Workday tenants/sites, iCIMS endpoints, canonical posting host aliases and native employer membership filters use explicit validated configuration; these settings are bound into audit evidence. Wave B adds 31 candidates, including a restricted LinkedIn source. Their scope/access approvals remain pending. Registry changes are file-based and require restart; there is no source-management UI. See [WAVE_B.md](WAVE_B.md), [ADAPTER.md](ADAPTER.md), [INGESTION.md](INGESTION.md), and [LIFECYCLE.md](LIFECYCLE.md).

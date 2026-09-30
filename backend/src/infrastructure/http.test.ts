@@ -6,6 +6,46 @@ afterEach(() => vi.useRealTimers());
 const url = 'https://boards-api.greenhouse.io/v1/boards/test/jobs';
 
 describe('bounded transport', () => {
+  it('allows only read-only Workday search POSTs and preserves their JSON request', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response('{"total":0,"jobPostings":[]}', {
+        headers: { 'content-type': 'application/json' },
+      }),
+    );
+
+    const http = new PublicJsonTransport(fetcher, 0);
+
+    const search =
+      'https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs';
+
+    const result = await http.post(search, { offset: 20, limit: 20 });
+
+    expect(result.request).toEqual({ method: 'POST', body: { offset: 20, limit: 20 } });
+
+    expect(fetcher).toHaveBeenCalledWith(
+      search,
+      expect.objectContaining({
+        method: 'POST',
+        body: '{"offset":20,"limit":20}',
+        redirect: 'error',
+      }),
+    );
+
+    await expect(http.post('https://nvidia.wd5.myworkdayjobs.com/apply', {})).rejects.toThrow(
+      /read-only/,
+    );
+
+    await expect(
+      http.post('https://boards-api.greenhouse.io/wday/cxs/a/b/jobs', {}),
+    ).rejects.toThrow(/read-only/);
+
+    await expect(
+      http.post('https://untrusted.wd5.myworkdayjobs.com/wday/cxs/a/b/jobs', {}),
+    ).rejects.toThrow(/allowlist/);
+
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   it('rejects arbitrary/internal hosts before issuing a request', async () => {
     const fetcher = vi.fn<typeof fetch>();
     const http = new PublicJsonTransport(fetcher, 0);

@@ -23,7 +23,7 @@ JSON payloads preserve rich canonical records/evidence; selected typed columns e
 
 ## Transaction and lease rules
 
-`startRun` takes a source advisory lock and grants one unexpired lease across clients. The next claimant after expiry marks the abandoned running record failed and replaces its lease. There is no periodic cleanup or lease heartbeat today.
+`startRun` takes a source advisory lock and grants one unexpired lease across clients. The next claimant after expiry marks the abandoned running record failed and replaces its lease. During long imports, `renewRun` atomically extends only the same run's still-unexpired lease by 30 minutes. `SyncSource` requests renewal every minute; crashes still expire naturally, and a stale worker cannot renew an expired or replaced owner. There is no periodic cleanup daemon.
 
 `commitSnapshot` takes the shared publication lock followed by the source lock, verifies owner/expiry, applies the snapshot, and writes postings, changed versions, raw evidence, run state, dataset version and lease release in one transaction. Its transaction timeout is 60 seconds. Failed publication rolls everything back. `failRun` rechecks ownership/status under the source lock and removes only that run's lease.
 
@@ -39,4 +39,4 @@ Use versioned migrations for schema changes and preserve source identity across 
 
 [Schema](../backend/prisma/schema.prisma), [migrations](../backend/prisma/migrations/), [port](../backend/src/ports/ingestion.ts), [PostgreSQL repository](../backend/src/infrastructure/storage/postgres.ts), [snapshot transition](../backend/src/infrastructure/storage/snapshot.ts), [memory repository](../backend/src/infrastructure/storage/memory.ts).
 
-[Four integration tests](../backend/src/infrastructure/storage/postgres.test.ts) cover independent-client exclusion, duplicate rejection, stable missing/reappearing identity, and rollback after a posting write when evidence persistence fails. See [QUALITY.md](QUALITY.md).
+[Integration tests](../backend/src/infrastructure/storage/postgres.test.ts) cover independent-client exclusion, ownership/expiry-safe renewal, duplicate rejection, stable missing/reappearing identity, and rollback after a posting write when evidence persistence fails. See [QUALITY.md](QUALITY.md).

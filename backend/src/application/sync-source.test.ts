@@ -54,9 +54,13 @@ function setup(validation?: PostingValidation) {
     greenhouse: adapter,
     ashby: adapter,
     lever: adapter,
+    workday: adapter,
+    icims: adapter,
+    linkedin: adapter,
   };
 
   return {
+    adapter,
     repository,
     sync: new SyncSource(
       repository,
@@ -82,6 +86,43 @@ function setup(validation?: PostingValidation) {
 }
 
 describe('source synchronization', () => {
+  it('renews long-running ownership and refuses publication after renewal failure', async () => {
+    vi.useFakeTimers();
+
+    const test = setup();
+    const renew = vi.spyOn(test.repository, 'renewRun').mockResolvedValue(false);
+    const commit = vi.spyOn(test.repository, 'commitSnapshot');
+    let release!: () => void;
+
+    const wait = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+
+    const extract = test.adapter.extract.bind(test.adapter);
+
+    vi.spyOn(test.adapter, 'extract').mockImplementation(async (item) => {
+      await wait;
+
+      return extract(item);
+    });
+
+    const running = test.sync.execute(source);
+    const rejected = expect(running).rejects.toThrow(/lease lost/);
+
+    try {
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(renew).toHaveBeenCalledWith(source.id, expect.any(String), expect.any(String));
+      release();
+      await rejected;
+      expect(commit).not.toHaveBeenCalled();
+      expect((await test.repository.read()).runs[0]?.status).toBe('failed');
+      expect(vi.getTimerCount()).toBe(0);
+    } finally {
+      release();
+      vi.useRealTimers();
+    }
+  });
+
   it('reruns idempotently and sanitizes executable HTML', async () => {
     const test = setup();
 
