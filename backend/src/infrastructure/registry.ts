@@ -11,7 +11,7 @@ const companySchema = z.object({
     .string()
     .regex(/^\/logos\/[a-z0-9-]+\.(png|jpg|svg)$/)
     .default('/logos/default.svg'),
-  wave: z.enum(['A', 'B', 'C']),
+  wave: z.enum(['A', 'B', 'C', 'D']),
 });
 
 const sourceSchema = z

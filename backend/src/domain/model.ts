@@ -30,7 +30,7 @@ export interface Company {
   name: string;
   careersUrl: string;
   logoUrl: string;
-  wave: 'A' | 'B' | 'C';
+  wave: 'A' | 'B' | 'C' | 'D';
 }
 
 export interface ExtractedPosting {

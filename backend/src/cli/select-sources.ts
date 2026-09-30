@@ -18,11 +18,11 @@ export function selectSources(
   ].filter(Boolean).length;
 
   if (selectors !== 1) {
-    throw new Error('Specify exactly one of --company <slug>, --wave <A|B|C> or --all-enabled.');
+    throw new Error('Specify exactly one of --company <slug>, --wave <A|B|C|D> or --all-enabled.');
   }
 
-  if (selection.wave !== undefined && !['A', 'B', 'C'].includes(selection.wave)) {
-    throw new Error('Wave must be A, B or C.');
+  if (selection.wave !== undefined && !['A', 'B', 'C', 'D'].includes(selection.wave)) {
+    throw new Error('Wave must be A, B, C or D.');
   }
 
   const waveCompanies = new Set(

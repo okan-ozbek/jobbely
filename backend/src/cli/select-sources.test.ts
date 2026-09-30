@@ -70,12 +70,36 @@ describe('manual sync source selection', () => {
     ).toBe(true);
   });
 
+  it('keeps the seven deferred Wave D employers registered without configuring sources', () => {
+    const deferred = companies.filter((company) => company.wave === 'D');
+
+    expect(deferred.map((company) => company.slug)).toEqual([
+      'microsoft',
+      'oracle',
+      'x',
+      'ibm',
+      'jpmorgan',
+      'goldman-sachs',
+      'abn-amro',
+    ]);
+
+    expect(() => selectSources(companies, sources, { wave: 'D' })).toThrow(
+      'No matching sources for the requested selection.',
+    );
+  });
+
+  it('selects a Wave D source when one is onboarded', () => {
+    const candidate = { ...sources[0]!, companySlug: 'microsoft' };
+
+    expect(selectSources(companies, [candidate], { wave: 'D' })).toEqual([candidate]);
+  });
+
   it('rejects missing, conflicting, invalid and empty selections', () => {
     for (const selection of [
       {},
       { company: 'figma', wave: 'A' },
       { wave: 'A', 'all-enabled': true },
-      { wave: 'D' },
+      { wave: 'E' },
       { company: 'missing' },
       { 'all-enabled': true },
     ]) {

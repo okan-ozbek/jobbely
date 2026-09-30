@@ -26,7 +26,9 @@
     "sync:wave-b": "pnpm --filter @jobbely/backend run sync --wave B",
     "audit:wave-b": "pnpm --filter @jobbely/backend run audit --wave B",
     "sync:wave-c": "pnpm --filter @jobbely/backend run sync --wave C",
-    "audit:wave-c": "pnpm --filter @jobbely/backend run audit --wave C"
+    "audit:wave-c": "pnpm --filter @jobbely/backend run audit --wave C",
+    "sync:wave-d": "pnpm --filter @jobbely/backend run sync --wave D",
+    "audit:wave-d": "pnpm --filter @jobbely/backend run audit --wave D"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",

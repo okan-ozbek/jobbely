@@ -11,6 +11,8 @@
 
 **Quick navigation:** [MVP boundaries](#1-recommendation-and-boundaries) · [First 10 companies](#4-proposed-first-release-10-companies) · [All 60 companies](#5-full-inventory-all-60-target-companies) · [Extraction](#6-extraction-strategy-structured-sources-first) · [Architecture](#7-typescript-architecture-and-folder-separation) · [Data model](#9-data-model-and-provenance) · [Categorization](#10-categorization-without-ai) · [Release gates](#14-verification-and-acceptance-criteria) · [Delivery estimates](#15-delivery-sequence-and-effort) · [Scope decisions](#17-decisions-to-settle-when-reviewing-the-mvp)
 
+**Planning update, 1 October 2026 (Europe/Amsterdam):** Microsoft, Oracle, X (Twitter), IBM, JPMorgan Chase, Goldman Sachs and ABN AMRO move from Wave C to planned Wave D. No integrations are added by this change. Wave C now contains 12 employers (five configured priorities and seven unconfigured); Wave D contains seven unconfigured employers. See [Wave D scope](docs/WAVE_D.md).
+
 ## 1. Recommendation and boundaries
 
 Build a source-driven job aggregator. The backend periodically retrieves public vacancies from employer career sites or their applicant tracking systems (ATS), stores the original evidence, normalizes the fields, and applies deterministic category rules. The frontend searches the stored data and links users to the employer's application page.
@@ -95,7 +97,7 @@ The minimum registry therefore starts with **10 companies and at least 11 source
 
 The order below preserves the requested list. Names are normalized: ANTRHOPIC → Anthropic; HRT → Hudson River Trading; 2SIGMA → Two Sigma; HEADLANDS TECH → Headlands Technologies; TWITTER(X) → X. LinkedIn means jobs **at LinkedIn**, not every employer advertising on LinkedIn.
 
-**Waves:** A = proposed first MVP; B = investigate reusable ATS/enterprise families next; C = custom or otherwise unresolved sources. B and C can be reordered after discovery based on actual source access and user priority. Candidate ATS names are hypotheses unless supported by B evidence.
+**Waves:** A = proposed first MVP; B = investigate reusable ATS/enterprise families next; C = custom or otherwise unresolved sources; D = seven employers explicitly deferred on 1 October 2026. Expansion can be reordered after discovery based on actual source access and user priority. Candidate ATS names are hypotheses unless supported by B evidence.
 
 | # | Company | Official discovery seed / evidence | Evidence | Proposed route and main discovery issue | Wave |
 | --- | --- | --- | --- | --- | --- |
@@ -130,7 +132,7 @@ The order below preserves the requested list. Names are normalized: ANTRHOPIC �
 | 29 | Coinbase | [Positions](https://www.coinbase.com/careers/positions) | C | Greenhouse candidate; hosted board redirected/failed in research; validate feed rather than assume | B |
 | 30 | Bloomberg | [Careers seed](https://careers.bloomberg.com/) | U | Resolve current employer search platform and accessible public endpoint | C |
 | 31 | Slack | [Careers](https://slack.com/careers) | B | Careers page links to Salesforce Workday postings; explicit Slack membership rules needed | B |
-| 32 | Microsoft | [Careers](https://careers.microsoft.com/) | C | Custom/enterprise discovery; landing page points to `apply.careers.microsoft.com`; audit current platform | C |
+| 32 | Microsoft | [Careers](https://careers.microsoft.com/) | C | Custom/enterprise discovery; landing page points to `apply.careers.microsoft.com`; audit current platform | D |
 | 33 | Stripe | [Current job search](https://stripe.com/careers/search) | C | ATS/custom discovery; preserve source teams and remote-location constraints | B |
 | 34 | Tesla | [Job search](https://www.tesla.com/careers/search/) | C | Custom adapter; source content requires further discovery; worldwide scope includes manufacturing/service | C |
 | 35 | Palantir | [Careers](https://www.palantir.com/careers/) / [Lever](https://jobs.lever.co/palantir) | B | Lever `palantir`; exercise full pagination and detail assembly | A |
@@ -148,14 +150,14 @@ The order below preserves the requested list. Names are normalized: ANTRHOPIC �
 | 47 | GitLab | [Official jobs](https://about.gitlab.com/jobs/all-jobs/) / [Greenhouse](https://job-boards.greenhouse.io/gitlab) | B | Greenhouse candidate; official static page showed zero while hosted board showed listings, requiring reconciliation | B |
 | 48 | Mozilla | [Official listings](https://www.mozilla.org/en-US/careers/listings/) / [Greenhouse](https://job-boards.greenhouse.io/mozilla) | B | Greenhouse `mozilla`; determine Corporation/Foundation scope and additional boards | A |
 | 49 | PayPal | [Careers](https://careers.pypl.com/home/) | C | Workday/enterprise candidate; identify canonical global board and brand scope | B |
-| 50 | Oracle | [Careers](https://www.oracle.com/careers/) | C | Oracle Recruiting candidate; public search/detail behavior needs a dedicated adapter audit | C |
+| 50 | Oracle | [Careers](https://www.oracle.com/careers/) | C | Oracle Recruiting candidate; public search/detail behavior needs a dedicated adapter audit | D |
 | 51 | Reddit | [Careers](https://redditinc.com/careers) / [Greenhouse](https://job-boards.greenhouse.io/reddit) | B | Greenhouse `reddit`; preserve source department structure | A |
-| 52 | X (Twitter) | [Careers seed](https://careers.x.com/) | U | Seed redirected to `x.ai/careers`; resolve X-specific vacancy attribution before onboarding | C |
+| 52 | X (Twitter) | [Careers seed](https://careers.x.com/) | U | Seed redirected to `x.ai/careers`; resolve X-specific vacancy attribution before onboarding | D |
 | 53 | Intel | [Official jobs redirect](https://jobs.intel.com/) | B | Redirect observed to Intel Workday; enumerate correct tenant/site/global scope | B |
-| 54 | IBM | [Careers](https://www.ibm.com/careers) | C | Enterprise/custom discovery; inspect current job search rather than assume legacy platform | C |
-| 55 | JPMorgan Chase | [Careers](https://www.jpmorganchase.com/careers) | C | Enterprise/Oracle Recruiting candidate; audit business units, regions, and hourly/student channels | C |
-| 56 | Goldman Sachs | [Careers](https://www.goldmansachs.com/careers) | C | Enterprise/custom discovery; audit experienced/student channels | C |
-| 57 | ABN AMRO | [Vacancies](https://www.werkenbijabnamro.nl/en/vacancies) | C | Custom/ATS discovery; reconcile Dutch/English and international sources | C |
+| 54 | IBM | [Careers](https://www.ibm.com/careers) | C | Enterprise/custom discovery; inspect current job search rather than assume legacy platform | D |
+| 55 | JPMorgan Chase | [Careers](https://www.jpmorganchase.com/careers) | C | Enterprise/Oracle Recruiting candidate; audit business units, regions, and hourly/student channels | D |
+| 56 | Goldman Sachs | [Careers](https://www.goldmansachs.com/careers) | C | Enterprise/custom discovery; audit experienced/student channels | D |
+| 57 | ABN AMRO | [Vacancies](https://www.werkenbijabnamro.nl/en/vacancies) | C | Custom/ATS discovery; reconcile Dutch/English and international sources | D |
 | 58 | ING | [Careers](https://careers.ing.com/en) | C | Enterprise/Workday candidate; audit country boards and language-specific listings | B |
 | 59 | Riot Games | [Jobs](https://www.riotgames.com/en/work-with-us/jobs) | C | Greenhouse candidate; verify current feed and studio/office scope | B |
 | 60 | Blizzard Entertainment | [Careers](https://careers.blizzard.com/global/en) | C | Enterprise/Workday candidate; restrict shared-board listings to Blizzard with positive evidence | B |
@@ -568,7 +570,7 @@ Effort below is a planning estimate for one experienced full-stack developer, no
 | 4. Product UI | Search/filter/facets, detail view, source links, company coverage | Usable full extraction-to-browsing flow | 3–4 days |
 | 5. Release verification | Integration tests, held-out classification review, load check, operational docs | Release gates pass; start/finish scheduled soak | 2–3 days plus seven calendar days of observation |
 | 6. Reusable expansion | Audit and implement compatible Workday/other ATS families; onboard wave B | Per-company verified coverage, reuse evidenced by multiple real boards | Estimate after phase 0; budget an additional 2–4 weeks provisionally |
-| 7. Custom/full coverage | Dedicated adapters, regional/channel partitions, employer attribution for wave C | All 60 satisfy coverage gates, or exact remaining access gaps are declared | Estimate after discovery; provisional additional 3–6+ weeks |
+| 7. Custom/full coverage | Dedicated adapters, regional/channel partitions, employer attribution for waves C and D | All 60 satisfy coverage gates, or exact remaining access gaps are declared | Estimate after discovery; provisional additional 3–6+ weeks |
 
 The API-first MVP is approximately **16–24 working days**, plus the soak period (which can overlap independent documentation/expansion work). Full coverage is a separate multi-week adapter program, potentially longer if a company requires an authorized feed. Do not give a firm all-60 completion date before discovery.
 

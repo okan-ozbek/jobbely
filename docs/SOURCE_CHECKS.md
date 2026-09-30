@@ -200,8 +200,10 @@ scheduling, posting closure or a worldwide completeness claim.
 ## Wave C priority sources
 
 Observed 1 October 2026, approximately 00:20–01:10 Europe/Amsterdam (30 September, 22:20–23:10 UTC).
-The first Wave C batch configures Meta, Apple, Netflix, Google and Amazon. Fourteen other
-Wave C employers remain unconfigured. See [WAVE_C.md](WAVE_C.md) for implementation decisions.
+The first Wave C batch configures Meta, Apple, Netflix, Google and Amazon. At this observation,
+fourteen other Wave C employers were unconfigured. Later on 1 October 2026, seven of those
+employers were deferred to [Wave D](WAVE_D.md), without adding integrations or changing these
+live results. See [WAVE_C.md](WAVE_C.md) for implementation decisions.
 
 | Company | Live result                                                                                                                                               | Published postings |
 | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------: |

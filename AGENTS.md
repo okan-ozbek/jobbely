@@ -31,6 +31,7 @@ Jobbely collects public employer job listings and categorizes them without AI. T
 | Job-board adapters and network access            | [ADAPTER.md](docs/ADAPTER.md), [HTTP.md](docs/HTTP.md)             |
 | Enterprise integrations and Wave B limits        | [WAVE_B.md](docs/WAVE_B.md)                                        |
 | Native integrations and Wave C priority limits   | [WAVE_C.md](docs/WAVE_C.md)                                        |
+| Deferred employers and Wave D scope              | [WAVE_D.md](docs/WAVE_D.md)                                        |
 | Evidence-backed source activation                | [AUDITING.md](docs/AUDITING.md)                                    |
 | Ingestion, workers, scheduling and source audits | [INGESTION.md](docs/INGESTION.md), [SOURCES.md](docs/SOURCES.md)   |
 | Persistence, transactions and posting lifecycle  | [STORAGE.md](docs/STORAGE.md), [LIFECYCLE.md](docs/LIFECYCLE.md)   |

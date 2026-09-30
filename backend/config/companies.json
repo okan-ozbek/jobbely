@@ -220,7 +220,7 @@
     "slug": "microsoft",
     "name": "Microsoft",
     "careersUrl": "https://careers.microsoft.com/",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/microsoft.png"
   },
   {
@@ -346,7 +346,7 @@
     "slug": "oracle",
     "name": "Oracle",
     "careersUrl": "https://www.oracle.com/careers/",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/oracle.png"
   },
   {
@@ -360,7 +360,7 @@
     "slug": "x",
     "name": "X (Twitter)",
     "careersUrl": "https://careers.x.com/",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/x.png"
   },
   {
@@ -374,28 +374,28 @@
     "slug": "ibm",
     "name": "IBM",
     "careersUrl": "https://www.ibm.com/careers",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/ibm.png"
   },
   {
     "slug": "jpmorgan",
     "name": "JPMorgan Chase",
     "careersUrl": "https://www.jpmorganchase.com/careers",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/jpmorgan.jpg"
   },
   {
     "slug": "goldman-sachs",
     "name": "Goldman Sachs",
     "careersUrl": "https://www.goldmansachs.com/careers",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/goldman-sachs.png"
   },
   {
     "slug": "abn-amro",
     "name": "ABN AMRO",
     "careersUrl": "https://www.werkenbijabnamro.nl/en/vacancies",
-    "wave": "C",
+    "wave": "D",
     "logoUrl": "/logos/abn-amro.png"
   },
   {

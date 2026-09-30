@@ -4,7 +4,7 @@
 
 ## Scope and rationale
 
-Start with Meta, Apple, Netflix, Google and Amazon. The remaining Wave C companies are outside this first batch. Preserve the existing extraction port, native identifiers, classification strategies and atomic publication workflow. Native differences stay in infrastructure adapters; no AI, browser execution, credentials or application submission is required.
+Start with Meta, Apple, Netflix, Google and Amazon. Seven other Wave C companies remain outside this first batch. On 1 October 2026, Microsoft, Oracle, X (Twitter), IBM, JPMorgan Chase, Goldman Sachs and ABN AMRO were deferred to [Wave D](WAVE_D.md); none had configured sources. Preserve the existing extraction port, native identifiers, classification strategies and atomic publication workflow. Native differences stay in infrastructure adapters; no AI, browser execution, credentials or application submission is required.
 
 | Company | Integration            | Boundary                                                                        |
 | ------- | ---------------------- | ------------------------------------------------------------------------------- |

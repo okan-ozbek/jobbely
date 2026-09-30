@@ -84,7 +84,7 @@ Use `Ctrl+C` to stop the servers. Environment variables override `backend/.env`;
    pnpm dev
    ```
 
-For the five configured Wave C priorities, run `pnpm sync:wave-c`. Netflix and Amazon use public JSON feeds; Apple reads its public search/detail pages. Apple's full initial detail import can take over 100 minutes at default pacing and fails if traversal changes or a required detail becomes unavailable. Meta and Google report access blockers, so the wave command returns a nonzero exit code while continuing other sources. See [WAVE_C.md](docs/WAVE_C.md) for exact limits and [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md) for which full imports have actually passed. Fourteen other Wave C companies remain unconfigured.
+For the five configured Wave C priorities, run `pnpm sync:wave-c`. Netflix and Amazon use public JSON feeds; Apple reads its public search/detail pages. Apple's full initial detail import can take over 100 minutes at default pacing and fails if traversal changes or a required detail becomes unavailable. Meta and Google report access blockers, so the wave command returns a nonzero exit code while continuing other sources. See [WAVE_C.md](docs/WAVE_C.md) for exact limits and [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md) for which full imports have actually passed. Seven other Wave C companies remain unconfigured. Microsoft, Oracle, X (Twitter), IBM, JPMorgan Chase, Goldman Sachs and ABN AMRO are deferred to [Wave D](docs/WAVE_D.md). No integrations have been added for that cohort. The `sync:wave-d` and `audit:wave-d` aliases currently exit with "No matching sources for the requested selection." until sources are configured.
 
 For independent development, use separate terminals:
 
@@ -130,7 +130,7 @@ pnpm --filter @jobbely/backend run sync --company openai
 Refresh the entire first-release cohort with `pnpm sync:wave-a`, equivalent to
 `pnpm --filter @jobbely/backend run sync --wave A`. Wave selection uses the company registry
 and includes every configured board for those companies, even when scheduling is disabled.
-Choose exactly one selector: `--company <slug>`, `--wave <A|B|C>`, or `--all-enabled`
+Choose exactly one selector: `--company <slug>`, `--wave <A|B|C|D>`, or `--all-enabled`
 (scheduled sources only). A failed source is reported without preventing the remaining sources
 from running; any failure gives the command a nonzero exit code. Manual ingestion does not
 verify employer scope or enable scheduling.
