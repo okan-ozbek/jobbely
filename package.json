@@ -1,0 +1,26 @@
+{
+  "name": "jobbely",
+  "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @jobbely/backend --filter @jobbely/frontend dev",
+    "build": "pnpm --filter @jobbely/backend build && pnpm contracts && pnpm --filter @jobbely/frontend build",
+    "contracts": "pnpm --filter @jobbely/backend export:openapi && pnpm --filter @jobbely/frontend generate:api",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm --filter @jobbely/backend test",
+    "check": "node scripts/check-boundaries.mjs && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "lint": "eslint backend/src frontend/src scripts --max-warnings 0",
+    "format": "prettier --write backend/src frontend/src scripts docs *.json *.yaml README.md",
+    "sync": "pnpm --filter @jobbely/backend sync",
+    "db:generate": "pnpm --filter @jobbely/backend db:generate",
+    "db:migrate": "pnpm --filter @jobbely/backend db:migrate"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.0",
+    "typescript-eslint": "^8.46.0",
+    "prettier": "^3.6.2"
+  }
+}

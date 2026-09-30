@@ -1,0 +1,94 @@
+import { Type } from "@sinclair/typebox";
+const nullableString = Type.Union([Type.String(), Type.Null()]);
+export const classificationSchema = Type.Object({
+  category: Type.String(),
+  method: Type.String(),
+  rule: Type.String(),
+  evidence: Type.String(),
+  version: Type.String(),
+});
+export const jobSchema = Type.Object({
+  id: Type.String(),
+  sourceId: Type.String(),
+  companySlug: Type.String(),
+  sourcePostingId: Type.String(),
+  title: Type.String(),
+  url: Type.String(),
+  applyUrl: Type.String(),
+  descriptionHtml: Type.String(),
+  descriptionText: Type.String(),
+  departments: Type.Array(Type.String()),
+  locations: Type.Array(Type.String()),
+  workplace: Type.Union([
+    Type.Literal("remote"),
+    Type.Literal("hybrid"),
+    Type.Literal("onsite"),
+    Type.Literal("unknown"),
+  ]),
+  employment: Type.String(),
+  publishedAt: nullableString,
+  classification: classificationSchema,
+  status: Type.Union([Type.Literal("active"), Type.Literal("closed")]),
+  firstSeenAt: Type.String(),
+  lastSeenAt: Type.String(),
+  missingSince: nullableString,
+});
+export const companySchema = Type.Object({
+  slug: Type.String(),
+  name: Type.String(),
+  careersUrl: Type.String(),
+  wave: Type.String(),
+  status: Type.Union(
+    ["not_onboarded", "partial", "stale", "blocked", "healthy", "demo"].map(
+      (value) => Type.Literal(value),
+    ),
+  ),
+  jobs: Type.Integer(),
+  lastCheckedAt: nullableString,
+  sources: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      provider: Type.String(),
+      auditStatus: Type.String(),
+      scheduled: Type.Boolean(),
+      lastRunStatus: nullableString,
+    }),
+  ),
+});
+export const filterSchema = Type.Object(
+  {
+    q: Type.Optional(Type.String({ maxLength: 200 })),
+    company: Type.Optional(Type.String({ maxLength: 500 })),
+    category: Type.Optional(Type.String({ maxLength: 500 })),
+    workplace: Type.Optional(
+      Type.String({
+        pattern:
+          "^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$",
+      }),
+    ),
+    limit: Type.Optional(
+      Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
+    ),
+    cursor: Type.Optional(Type.String({ maxLength: 1000 })),
+  },
+  { additionalProperties: false },
+);
+export const errorSchema = Type.Object({
+  code: Type.String(),
+  message: Type.String(),
+});
+export const listSchema = Type.Object({
+  items: Type.Array(jobSchema),
+  total: Type.Integer(),
+  nextCursor: nullableString,
+  datasetVersion: Type.Integer(),
+  mode: Type.Union([Type.Literal("demo"), Type.Literal("postgres")]),
+});
+const facet = Type.Array(
+  Type.Object({ value: Type.String(), count: Type.Integer() }),
+);
+export const facetsSchema = Type.Object({
+  companies: facet,
+  categories: facet,
+  workplaces: facet,
+});

@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+model DatasetVersion {
+  id Int @id
+  version Int @default(0)
+}
+model SourceLease {
+  sourceId String @id
+  runId String
+  expiresAt DateTime
+}
+model Run {
+  id String @id
+  sourceId String
+  status String
+  payload Json
+  @@index([sourceId, status])
+}
+model Posting {
+  id String @id
+  sourceId String
+  sourcePostingId String
+  companySlug String
+  category String
+  status String
+  title String
+  contentHash String
+  payload Json
+  versions PostingVersion[]
+  @@unique([sourceId, sourcePostingId])
+  @@index([companySlug, category, status])
+}
+model PostingVersion {
+  id String @id @default(uuid())
+  postingId String
+  posting Posting @relation(fields: [postingId], references: [id])
+  observedAt DateTime
+  contentHash String
+  payload Json
+  @@index([postingId, observedAt])
+}
+model Snapshot {
+  id String @id @default(uuid())
+  runId String
+  sourceId String
+  url String
+  fetchedAt DateTime
+  payload Json
+  @@index([sourceId, fetchedAt])
+}

@@ -1,0 +1,982 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Jobbely API",
+    "version": "0.1.0"
+  },
+  "components": {
+    "schemas": {}
+  },
+  "paths": {
+    "/api/v1/jobs": {
+      "get": {
+        "operationId": "listJobs",
+        "parameters": [
+          {
+            "schema": {
+              "maxLength": 200,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "company",
+            "required": false
+          },
+          {
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "category",
+            "required": false
+          },
+          {
+            "schema": {
+              "pattern": "^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "workplace",
+            "required": false
+          },
+          {
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          },
+          {
+            "schema": {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items",
+                    "total",
+                    "nextCursor",
+                    "datasetVersion",
+                    "mode"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "sourceId",
+                          "companySlug",
+                          "sourcePostingId",
+                          "title",
+                          "url",
+                          "applyUrl",
+                          "descriptionHtml",
+                          "descriptionText",
+                          "departments",
+                          "locations",
+                          "workplace",
+                          "employment",
+                          "publishedAt",
+                          "classification",
+                          "status",
+                          "firstSeenAt",
+                          "lastSeenAt",
+                          "missingSince"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "sourceId": {
+                            "type": "string"
+                          },
+                          "companySlug": {
+                            "type": "string"
+                          },
+                          "sourcePostingId": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "applyUrl": {
+                            "type": "string"
+                          },
+                          "descriptionHtml": {
+                            "type": "string"
+                          },
+                          "descriptionText": {
+                            "type": "string"
+                          },
+                          "departments": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "locations": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "workplace": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "remote"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "hybrid"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "onsite"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unknown"
+                                ]
+                              }
+                            ]
+                          },
+                          "employment": {
+                            "type": "string"
+                          },
+                          "publishedAt": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "classification": {
+                            "type": "object",
+                            "required": [
+                              "category",
+                              "method",
+                              "rule",
+                              "evidence",
+                              "version"
+                            ],
+                            "properties": {
+                              "category": {
+                                "type": "string"
+                              },
+                              "method": {
+                                "type": "string"
+                              },
+                              "rule": {
+                                "type": "string"
+                              },
+                              "evidence": {
+                                "type": "string"
+                              },
+                              "version": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "active"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "closed"
+                                ]
+                              }
+                            ]
+                          },
+                          "firstSeenAt": {
+                            "type": "string"
+                          },
+                          "lastSeenAt": {
+                            "type": "string"
+                          },
+                          "missingSince": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "nextCursor": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "datasetVersion": {
+                      "type": "integer"
+                    },
+                    "mode": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "demo"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "postgres"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobs/facets": {
+      "get": {
+        "operationId": "jobFacets",
+        "parameters": [
+          {
+            "schema": {
+              "maxLength": 200,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "q",
+            "required": false
+          },
+          {
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "company",
+            "required": false
+          },
+          {
+            "schema": {
+              "maxLength": 500,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "category",
+            "required": false
+          },
+          {
+            "schema": {
+              "pattern": "^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "workplace",
+            "required": false
+          },
+          {
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "limit",
+            "required": false
+          },
+          {
+            "schema": {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "cursor",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "companies",
+                    "categories",
+                    "workplaces"
+                  ],
+                  "properties": {
+                    "companies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value",
+                          "count"
+                        ],
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value",
+                          "count"
+                        ],
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "workplaces": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value",
+                          "count"
+                        ],
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobs/{id}": {
+      "get": {
+        "operationId": "getJob",
+        "parameters": [
+          {
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "sourceId",
+                    "companySlug",
+                    "sourcePostingId",
+                    "title",
+                    "url",
+                    "applyUrl",
+                    "descriptionHtml",
+                    "descriptionText",
+                    "departments",
+                    "locations",
+                    "workplace",
+                    "employment",
+                    "publishedAt",
+                    "classification",
+                    "status",
+                    "firstSeenAt",
+                    "lastSeenAt",
+                    "missingSince"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "sourceId": {
+                      "type": "string"
+                    },
+                    "companySlug": {
+                      "type": "string"
+                    },
+                    "sourcePostingId": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "applyUrl": {
+                      "type": "string"
+                    },
+                    "descriptionHtml": {
+                      "type": "string"
+                    },
+                    "descriptionText": {
+                      "type": "string"
+                    },
+                    "departments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "locations": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "workplace": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "remote"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "hybrid"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "onsite"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unknown"
+                          ]
+                        }
+                      ]
+                    },
+                    "employment": {
+                      "type": "string"
+                    },
+                    "publishedAt": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "classification": {
+                      "type": "object",
+                      "required": [
+                        "category",
+                        "method",
+                        "rule",
+                        "evidence",
+                        "version"
+                      ],
+                      "properties": {
+                        "category": {
+                          "type": "string"
+                        },
+                        "method": {
+                          "type": "string"
+                        },
+                        "rule": {
+                          "type": "string"
+                        },
+                        "evidence": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "active"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "closed"
+                          ]
+                        }
+                      ]
+                    },
+                    "firstSeenAt": {
+                      "type": "string"
+                    },
+                    "lastSeenAt": {
+                      "type": "string"
+                    },
+                    "missingSince": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies": {
+      "get": {
+        "operationId": "listCompanies",
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "slug",
+                      "name",
+                      "careersUrl",
+                      "wave",
+                      "status",
+                      "jobs",
+                      "lastCheckedAt",
+                      "sources"
+                    ],
+                    "properties": {
+                      "slug": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "careersUrl": {
+                        "type": "string"
+                      },
+                      "wave": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "not_onboarded"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "partial"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "stale"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "blocked"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "healthy"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "demo"
+                            ]
+                          }
+                        ]
+                      },
+                      "jobs": {
+                        "type": "integer"
+                      },
+                      "lastCheckedAt": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "sources": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "provider",
+                            "auditStatus",
+                            "scheduled",
+                            "lastRunStatus"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "provider": {
+                              "type": "string"
+                            },
+                            "auditStatus": {
+                              "type": "string"
+                            },
+                            "scheduled": {
+                              "type": "boolean"
+                            },
+                            "lastRunStatus": {
+                              "type": "string",
+                              "nullable": true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/companies/{slug}": {
+      "get": {
+        "operationId": "getCompany",
+        "parameters": [
+          {
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            },
+            "in": "path",
+            "name": "slug",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "slug",
+                    "name",
+                    "careersUrl",
+                    "wave",
+                    "status",
+                    "jobs",
+                    "lastCheckedAt",
+                    "sources"
+                  ],
+                  "properties": {
+                    "slug": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "careersUrl": {
+                      "type": "string"
+                    },
+                    "wave": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "not_onboarded"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "partial"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "stale"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "blocked"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "healthy"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "demo"
+                          ]
+                        }
+                      ]
+                    },
+                    "jobs": {
+                      "type": "integer"
+                    },
+                    "lastCheckedAt": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "provider",
+                          "auditStatus",
+                          "scheduled",
+                          "lastRunStatus"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "provider": {
+                            "type": "string"
+                          },
+                          "auditStatus": {
+                            "type": "string"
+                          },
+                          "scheduled": {
+                            "type": "boolean"
+                          },
+                          "lastRunStatus": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "operationId": "listCategories",
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "slug",
+                      "name"
+                    ],
+                    "properties": {
+                      "slug": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "id": "openai",
+    "companySlug": "openai",
+    "provider": "ashby",
+    "board": "openai",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "anthropic",
+    "companySlug": "anthropic",
+    "provider": "greenhouse",
+    "board": "anthropic",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "figma",
+    "companySlug": "figma",
+    "provider": "greenhouse",
+    "board": "figma",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "discord",
+    "companySlug": "discord",
+    "provider": "greenhouse",
+    "board": "discord",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "reddit",
+    "companySlug": "reddit",
+    "provider": "greenhouse",
+    "board": "reddit",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "palantir",
+    "companySlug": "palantir",
+    "provider": "lever",
+    "board": "palantir",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "fiveringsllc",
+    "companySlug": "five-rings",
+    "provider": "greenhouse",
+    "board": "fiveringsllc",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "radixuniversity",
+    "companySlug": "radix-trading",
+    "provider": "greenhouse",
+    "board": "radixuniversity",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "radixexperienced",
+    "companySlug": "radix-trading",
+    "provider": "greenhouse",
+    "board": "radixexperienced",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "headlandstechnologiesllc",
+    "companySlug": "headlands",
+    "provider": "greenhouse",
+    "board": "headlandstechnologiesllc",
+    "auditStatus": "candidate",
+    "scheduled": false
+  },
+  {
+    "id": "mozilla",
+    "companySlug": "mozilla",
+    "provider": "greenhouse",
+    "board": "mozilla",
+    "auditStatus": "candidate",
+    "scheduled": false
+  }
+]
