@@ -52,8 +52,10 @@ export function App() {
   const { params, update } = useLocationQuery();
   const view = params.get('view') === 'companies' ? 'companies' : 'jobs';
   const selectedId = params.get('job');
+
   const [queryInput, setQueryInput] = useState(params.get('q') ?? '');
   const [companySearch, setCompanySearch] = useState('');
+
   const q = params.get('q');
   const companyFilter = params.get('company');
   const categoryFilter = params.get('category');

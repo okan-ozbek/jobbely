@@ -154,7 +154,7 @@ ESLint (`typescript-eslint`) and Prettier cover both `/backend` and `/frontend`.
 ```powershell
 pnpm lint             # ESLint, zero warnings allowed
 pnpm lint:fix         # ESLint with autofix
-pnpm format           # Prettier, rewrites files in place
+pnpm format           # ESLint fixes/spacing, then Prettier; rewrites files
 pnpm format:check     # Prettier in check mode, no writes (use in CI)
 ```
 
@@ -167,7 +167,7 @@ pnpm --filter @jobbely/frontend run lint
 pnpm --filter @jobbely/frontend run format
 ```
 
-`pnpm check` runs `format:check` and `lint` without modifying files. To apply fixes, run `pnpm lint:fix` followed by `pnpm format`. The shared style uses two spaces, 100-column wrapping, single quotes, semicolons and explicit control-flow braces. It covers TypeScript configuration files as well as source code. See [FORMATTING.md](docs/FORMATTING.md) for the complete style and exclusions.
+`pnpm check` runs `format:check` and `lint` without modifying files. Use `pnpm format` to apply ESLint's spacing/fixes followed by Prettier in one command. The shared style uses two spaces, 100-column wrapping, single quotes, semicolons, explicit control-flow braces and blank lines between declarations, methods and logical groups. It covers TypeScript configuration files as well as source code. See [FORMATTING.md](docs/FORMATTING.md) for the complete style and exclusions.
 
 | Symptom                               | Check                                                                                       |
 | ------------------------------------- | ------------------------------------------------------------------------------------------- |

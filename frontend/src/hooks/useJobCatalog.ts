@@ -5,13 +5,17 @@ import type { Company, Job, JobsQuery } from '../api/client.js';
 export function useJobCatalog(query: JobsQuery) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [categories, setCategories] = useState<{ slug: string; name: string }[]>([]);
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [total, setTotal] = useState(0);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
+
   const [mode, setMode] = useState<'demo' | 'postgres' | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const [retry, setRetry] = useState(0);
   const sequence = useRef(0);
 
@@ -38,6 +42,7 @@ export function useJobCatalog(query: JobsQuery) {
           setTotal(list.total);
           setNextCursor(list.nextCursor);
           setMode(list.mode);
+
           setCompanies(companyList);
           setCategories(categoryList);
         })
