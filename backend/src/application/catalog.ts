@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
 import type { Company, Dataset, Job, Source } from "../domain/model.js";
 import type { JobRepository } from "../ports/ingestion.js";
-export interface JobQuery {
+
+/**
+ * This interface defines the structure of a job query used to filter and paginate job listings.
+ */
+export interface JobQuery 
+{
   q?: string;
   company?: string;
   category?: string;
@@ -9,27 +14,64 @@ export interface JobQuery {
   cursor?: string;
   limit?: number;
 }
-export class QueryError extends Error {
+
+/**
+ * This class represents an error that occurs during job query processing.
+ * 
+ * @class QueryError
+ * @classdesc Represents an error that occurs during job query processing.
+ * @extends Error The base class for all errors in JavaScript.
+ */
+export class QueryError extends Error 
+{
   constructor(
     public readonly code: "invalid_cursor" | "cursor_stale",
     message: string,
-  ) {
+  ) 
+  {
     super(message);
   }
 }
+
+/**
+ * Checks if a job matches the given query.
+ * 
+ * @param job The job to check.
+ * @param query The query to match against.
+ * @returns True if the job matches the query, false otherwise.
+ */
 const matches = (job: Job, query: JobQuery) =>
   job.status === "active" &&
-  (!query.q ||
+  (
+    !query.q ||
     `${job.title} ${job.descriptionText} ${job.departments.join(" ")} ${job.locations.join(" ")}`
       .toLowerCase()
-      .includes(query.q.toLowerCase())) &&
+      .includes(query.q.toLowerCase())
+  ) &&
   (!query.company || query.company.split(",").includes(job.companySlug)) &&
-  (!query.category ||
-    query.category.split(",").includes(job.classification.category)) &&
+  (
+    !query.category ||
+    query.category.split(",").includes(job.classification.category)
+  ) &&
   (!query.workplace || query.workplace.split(",").includes(job.workplace));
-const order = (a: Job, b: Job) =>
-  b.lastSeenAt.localeCompare(a.lastSeenAt) || a.id.localeCompare(b.id);
-export class JobCatalog {
+
+/**
+ * Compares two jobs for ordering based on their last seen date and ID.
+ * 
+ * @param a The first job to compare.
+ * @param b The second job to compare.
+ * @returns A negative number if a should come before b, a positive number if a should come after b, or 0 if they are equal.
+ */
+const order = (a: Job, b: Job) => b.lastSeenAt.localeCompare(a.lastSeenAt) || a.id.localeCompare(b.id);
+
+/**
+ * Represents a catalog of jobs that can be queried and paginated.
+ * 
+ * @class JobCatalog
+ * @classdesc Represents a catalog of jobs that can be queried and paginated. 
+ */
+export class JobCatalog 
+{
   constructor(
     private readonly repository: JobRepository,
     private readonly companies: Company[],
@@ -37,8 +79,11 @@ export class JobCatalog {
     private readonly mode: "demo" | "postgres",
     private readonly clock: () => Date = () => new Date(),
   ) {}
-  async jobs(query: JobQuery) {
+
+  async jobs(query: JobQuery) 
+  {
     const dataset = await this.repository.read();
+
     const fingerprint = createHash("sha256")
       .update(
         JSON.stringify([
@@ -49,16 +94,21 @@ export class JobCatalog {
         ]),
       )
       .digest("hex");
+
     const filtered = dataset.jobs
       .filter((job) => matches(job, query))
       .sort(order);
+
     let start = 0;
+
     if (query.cursor) {
       let cursor: { version: number; fingerprint: string; id: string };
+
       try {
         const value: unknown = JSON.parse(
           Buffer.from(query.cursor, "base64url").toString("utf8"),
         );
+
         if (
           !value ||
           typeof value !== "object" ||
@@ -68,28 +118,38 @@ export class JobCatalog {
           typeof value.version !== "number" ||
           typeof value.fingerprint !== "string" ||
           typeof value.id !== "string"
-        )
+        ) {
           throw new Error();
+        }
+          
         cursor = value as typeof cursor;
-      } catch {
+      } 
+      catch {
         throw new QueryError("invalid_cursor", "Invalid pagination cursor");
       }
-      if (cursor.fingerprint !== fingerprint)
+
+      if (cursor.fingerprint !== fingerprint) {
         throw new QueryError(
           "invalid_cursor",
           "Cursor belongs to different filters",
         );
-      if (cursor.version !== dataset.version)
+      }
+
+      if (cursor.version !== dataset.version) {
         throw new QueryError(
           "cursor_stale",
           "Listings changed; restart pagination",
         );
+      }
+
       start = filtered.findIndex((job) => job.id === cursor.id) + 1;
-      if (!start)
+
+      if (!start) {
         throw new QueryError(
           "invalid_cursor",
           "Cursor posting is not in this result",
         );
+      }
     }
     const items = filtered.slice(start, start + (query.limit ?? 20));
     const last = items.at(-1);
@@ -111,7 +171,9 @@ export class JobCatalog {
       mode: this.mode,
     };
   }
-  async job(id: string) {
+
+  async job(id: string) 
+  {
     return (await this.repository.read()).jobs.find((job) => job.id === id);
   }
   async facets(query: JobQuery) {

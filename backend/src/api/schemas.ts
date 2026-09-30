@@ -1,5 +1,13 @@
 import { Type } from "@sinclair/typebox";
+
+/**
+ * SUMMARY: This file contains the TypeBox schemas used for validating and typing the API requests and responses.
+ * DESCRIPTION: Each schema defines the structure and constraints for the corresponding API entity or request parameter.
+ * USAGE: Import the required schemas from this file to validate and type your API requests and responses.
+ */
+
 const nullableString = Type.Union([Type.String(), Type.Null()]);
+
 export const classificationSchema = Type.Object({
   category: Type.String(),
   method: Type.String(),
@@ -7,6 +15,7 @@ export const classificationSchema = Type.Object({
   evidence: Type.String(),
   version: Type.String(),
 });
+
 export const jobSchema = Type.Object({
   id: Type.String(),
   sourceId: Type.String(),
@@ -33,6 +42,7 @@ export const jobSchema = Type.Object({
   lastSeenAt: Type.String(),
   missingSince: nullableString,
 });
+
 export const companySchema = Type.Object({
   slug: Type.String(),
   name: Type.String(),
@@ -55,6 +65,7 @@ export const companySchema = Type.Object({
     }),
   ),
 });
+
 export const filterSchema = Type.Object(
   {
     q: Type.Optional(Type.String({ maxLength: 200 })),
@@ -73,10 +84,12 @@ export const filterSchema = Type.Object(
   },
   { additionalProperties: false },
 );
+
 export const errorSchema = Type.Object({
   code: Type.String(),
   message: Type.String(),
 });
+
 export const listSchema = Type.Object({
   items: Type.Array(jobSchema),
   total: Type.Integer(),
@@ -84,9 +97,11 @@ export const listSchema = Type.Object({
   datasetVersion: Type.Integer(),
   mode: Type.Union([Type.Literal("demo"), Type.Literal("postgres")]),
 });
+
 const facet = Type.Array(
   Type.Object({ value: Type.String(), count: Type.Integer() }),
 );
+
 export const facetsSchema = Type.Object({
   companies: facet,
   categories: facet,
