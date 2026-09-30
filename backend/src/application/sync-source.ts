@@ -16,32 +16,41 @@ export class SyncSource {
   async execute(source: Source) {
     const startedAt = this.clock().toISOString();
     const run = await this.repository.startRun(source, startedAt);
+
     if (!run) {
       throw new Error(`Source ${source.id} is already being synchronized`);
     }
+
     try {
       const extraction = await this.adapters[source.provider].extract(source);
       const ids = new Set<string>();
+
       const postings: NormalizedPosting[] = extraction.postings.map((posting) => {
         if (ids.has(posting.sourcePostingId)) {
           throw new Error(`Duplicate posting ID: ${posting.sourcePostingId}`);
         }
+
         ids.add(posting.sourcePostingId);
+
         const prepared = this.html.prepare(posting.descriptionHtml);
+
         if (!prepared.text.trim()) {
           throw new Error(`Empty description: ${posting.sourcePostingId}`);
         }
+
         const normalized = {
           ...posting,
           descriptionHtml: prepared.html,
           descriptionText: prepared.text,
           classification: classify(posting, source.companySlug, this.strategies),
         };
+
         return {
           ...normalized,
           contentHash: createHash('sha256').update(JSON.stringify(normalized)).digest('hex'),
         };
       });
+
       return await this.repository.commitSnapshot({
         source,
         runId: run.id,
@@ -57,6 +66,7 @@ export class SyncSource {
         this.clock().toISOString(),
         error instanceof Error ? error.message : 'Unknown ingestion failure',
       );
+
       throw error;
     }
   }

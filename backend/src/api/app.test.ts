@@ -5,55 +5,75 @@ import { MemoryJobRepository } from '../infrastructure/storage/memory.js';
 import { loadRegistry } from '../infrastructure/registry.js';
 import { seedDemo } from '../infrastructure/demo.js';
 import type { FastifyInstance } from 'fastify';
+
 const apps: FastifyInstance[] = [];
+
 afterEach(async () => {
   await Promise.all(apps.splice(0).map((app) => app.close()));
 });
+
 async function setup() {
   const repository = new MemoryJobRepository();
   const { companies, sources } = loadRegistry();
+
   await seedDemo(repository, sources);
+
   const app = await createApp({
     repository,
     catalog: new JobCatalog(repository, companies, sources, 'demo'),
   });
+
   apps.push(app);
+
   return { app, repository, sources };
 }
+
 describe('read API and contract', () => {
   it('lists all 60 companies and explicitly labels demo data', async () => {
     const { app } = await setup();
+
     expect((await app.inject('/api/v1/companies')).json()).toHaveLength(60);
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,
     });
   });
+
   it('combines filters and exposes sanitized full details without internal hashes', async () => {
     const { app } = await setup();
     const list = (await app.inject('/api/v1/jobs?company=openai&category=product')).json();
+
     expect(list.total).toBe(1);
     expect(list.items[0]).not.toHaveProperty('contentHash');
+
     const detail = (await app.inject(`/api/v1/jobs/${list.items[0].id}`)).json();
+
     expect(detail.descriptionHtml).toContain('Synthetic');
   });
+
   it('validates page sizes and unsupported query parameters', async () => {
     const { app } = await setup();
+
     expect((await app.inject('/api/v1/jobs?limit=1000')).statusCode).toBe(400);
     expect((await app.inject('/api/v1/jobs?arbitrary=true')).statusCode).toBe(400);
     expect((await app.inject('/api/v1/jobs?workplace=spaceship')).statusCode).toBe(400);
   });
+
   it('paginates without overlaps and rejects cursors after publication', async () => {
     const { app, repository, sources } = await setup();
     const first = (await app.inject('/api/v1/jobs?limit=2')).json();
     const second = (await app.inject(`/api/v1/jobs?limit=2&cursor=${first.nextCursor}`)).json();
+
     expect(
       second.items.every(
         (job: { id: string }) => !first.items.some((other: { id: string }) => other.id === job.id),
       ),
     ).toBe(true);
+
     const source = sources[0]!;
     const run = await repository.startRun(source, new Date().toISOString());
+
     await repository.commitSnapshot({
       source,
       runId: run!.id,
@@ -63,12 +83,15 @@ describe('read API and contract', () => {
       excluded: 0,
       enumerationComplete: false,
     });
+
     expect((await app.inject(`/api/v1/jobs?limit=2&cursor=${first.nextCursor}`)).statusCode).toBe(
       409,
     );
   });
+
   it('returns a 404 for missing records and does not expose crawl endpoints', async () => {
     const { app } = await setup();
+
     expect((await app.inject('/api/v1/jobs/missing')).statusCode).toBe(404);
     expect((await app.inject({ method: 'POST', url: '/api/v1/sync' })).statusCode).toBe(404);
   });

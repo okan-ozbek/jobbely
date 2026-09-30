@@ -3,7 +3,9 @@ import type { Classification, ExtractedPosting } from './model.js';
 export interface ClassificationStrategy {
   classify(posting: ExtractedPosting, companySlug: string): Classification | null;
 }
+
 const version = '1';
+
 const decision = (
   category: string,
   method: Classification['method'],
@@ -54,24 +56,32 @@ const labelMap: Record<string, string> = {
 
 export class LabelMappingStrategy implements ClassificationStrategy {
   constructor(private readonly companyMappings: Record<string, Record<string, string>> = {}) {}
+
   classify(posting: ExtractedPosting, companySlug: string): Classification | null {
     const labels = posting.departments.map((label) => label.trim().toLowerCase());
     const companyMap = this.companyMappings[companySlug];
+
     for (const label of labels.toReversed()) {
       const category = companyMap?.[label];
+
       if (category) {
         return decision(category, 'source_mapping', `company:${companySlug}:${label}`, label);
       }
     }
+
     const matches = labels
       .map((label) => ({ label, category: labelMap[label] }))
       .filter((match) => match.category);
+
     const unique = new Set(matches.map((match) => match.category));
+
     // Distinct department assignments have no universal hierarchy. Defer conflicting labels to title rules.
     if (unique.size !== 1) {
       return null;
     }
+
     const match = matches.at(-1);
+
     return match?.category
       ? decision(match.category, 'source_mapping', `label:${match.label}`, match.label)
       : null;
@@ -102,17 +112,22 @@ const titleRules: [string, RegExp][] = [
     /\b(software engineer|software developer|backend engineer|frontend engineer|full.stack engineer|site reliability engineer|hardware engineer)\b/i,
   ],
 ];
+
 export class TitleRuleStrategy implements ClassificationStrategy {
   classify(posting: ExtractedPosting): Classification | null {
     const matches = titleRules.filter(([, pattern]) => pattern.test(posting.title));
+
     // A title that explicitly contains two different functions stays ambiguous.
     if (new Set(matches.map(([category]) => category)).size !== 1) {
       return null;
     }
+
     const match = matches[0];
+
     return match ? decision(match[0], 'title_rule', `title:${match[0]}`, posting.title) : null;
   }
 }
+
 export function classify(
   posting: ExtractedPosting,
   companySlug: string,
@@ -120,10 +135,12 @@ export function classify(
 ): Classification {
   for (const strategy of strategies) {
     const result = strategy.classify(posting, companySlug);
+
     if (result) {
       return result;
     }
   }
+
   return decision(
     'unclassified',
     'unclassified',

@@ -25,16 +25,21 @@ export async function seedDemo(repository: JobRepository, sources: Source[]) {
     ['discord', 'People Partner', 'People', 'San Francisco, CA', 'hybrid'],
     ['palantir', 'Software Engineer, Infrastructure', 'Engineering', 'New York, NY', 'onsite'],
   ];
+
   for (const source of sources) {
     const samples = examples.filter(([company]) => company === source.companySlug);
+
     if (!samples.length) {
       continue;
     }
+
     const at = new Date().toISOString();
     const run = await repository.startRun(source, at);
+
     if (!run) {
       continue;
     }
+
     const postings = samples.map(([, title, department, location, workplace], index) => {
       const posting: ExtractedPosting = {
         sourcePostingId: `demo-${index}`,
@@ -48,7 +53,9 @@ export async function seedDemo(repository: JobRepository, sources: Source[]) {
         applyUrl: `https://example.com/demo/${source.id}/${index}`,
         descriptionHtml: `<h2>Synthetic demonstration listing</h2><p>This is sample data used to preview Jobbely. It is not a real vacancy and cannot be applied to.</p><h3>The role</h3><p>The ${title} works with a collaborative team to solve meaningful problems and develop thoughtful products.</p><h3>What you will do</h3><ul><li>Partner with your team on projects from discovery to delivery.</li><li>Bring care, clear thinking, and craftsmanship to your work.</li><li>Help improve the systems and practices around you.</li></ul>`,
       };
+
       const prepared = htmlPreparation.prepare(posting.descriptionHtml);
+
       const normalized = {
         ...posting,
         descriptionHtml: prepared.html,
@@ -58,11 +65,13 @@ export async function seedDemo(repository: JobRepository, sources: Source[]) {
           new TitleRuleStrategy(),
         ]),
       };
+
       return {
         ...normalized,
         contentHash: createHash('sha256').update(JSON.stringify(normalized)).digest('hex'),
       };
     });
+
     await repository.commitSnapshot({
       source,
       runId: run.id,

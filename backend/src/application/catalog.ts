@@ -128,8 +128,10 @@ export class JobCatalog {
         throw new QueryError('invalid_cursor', 'Cursor posting is not in this result');
       }
     }
+
     const items = filtered.slice(start, start + (query.limit ?? 20));
     const last = items.at(-1);
+
     const nextCursor =
       last && start + items.length < filtered.length
         ? Buffer.from(
@@ -140,6 +142,7 @@ export class JobCatalog {
             }),
           ).toString('base64url')
         : null;
+
     return {
       items,
       total: filtered.length,
@@ -152,31 +155,39 @@ export class JobCatalog {
   async job(id: string) {
     return (await this.repository.read()).jobs.find((job) => job.id === id);
   }
+
   async facets(query: JobQuery) {
     const jobs = (await this.repository.read()).jobs.filter((job) => matches(job, query));
+
     const count = (values: string[]) =>
       [...new Set(values)].map((value) => ({
         value,
         count: values.filter((item) => item === value).length,
       }));
+
     return {
       companies: count(jobs.map((job) => job.companySlug)),
       categories: count(jobs.map((job) => job.classification.category)),
       workplaces: count(jobs.map((job) => job.workplace)),
     };
   }
+
   async coverage() {
     const dataset = await this.repository.read();
+
     return this.companies.map((company) => this.companyCoverage(company, dataset));
   }
+
   private companyCoverage(company: Company, dataset: Dataset) {
     const sources = this.sources.filter((source) => source.companySlug === company.slug);
+
     const latestRuns = sources.map(
       (source) =>
         dataset.runs
           .filter((run) => run.sourceId === source.id)
           .sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0],
     );
+
     const lastSuccess = sources.map(
       (source) =>
         dataset.runs
@@ -186,10 +197,13 @@ export class JobCatalog {
           )
           .sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0]?.finishedAt ?? null,
     );
+
     let status: 'not_onboarded' | 'partial' | 'stale' | 'blocked' | 'healthy' | 'demo' =
       'not_onboarded';
+
     if (sources.length) {
       status = 'partial';
+
       if (latestRuns.some((run) => run?.status === 'failed')) {
         status = 'blocked';
       } else if (
@@ -208,9 +222,11 @@ export class JobCatalog {
         status = 'healthy';
       }
     }
+
     if (this.mode === 'demo' && sources.length) {
       status = 'demo';
     }
+
     return {
       ...company,
       status,

@@ -6,15 +6,19 @@ import type {
   Source,
   SourceRun,
 } from '../domain/model.js';
+
 export interface JsonTransport {
   get(url: string): Promise<RawResponse>;
 }
+
 export interface SourceAdapter {
   extract(source: Source): Promise<Extraction>;
 }
+
 export interface HtmlPreparation {
   prepare(html: string): { html: string; text: string };
 }
+
 export interface SnapshotCommit {
   source: Source;
   runId: string;
@@ -24,6 +28,7 @@ export interface SnapshotCommit {
   excluded: number;
   enumerationComplete: boolean;
 }
+
 export interface JobRepository {
   read(): Promise<Dataset>;
   startRun(source: Source, at: string): Promise<SourceRun | null>;

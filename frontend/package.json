@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src vite.config.ts --max-warnings 0",
     "lint:fix": "eslint src vite.config.ts --fix",
-    "format": "prettier --write .",
+    "format": "pnpm lint:fix && prettier --write .",
     "format:check": "prettier --check .",
     "generate:api": "openapi-typescript ../contracts/openapi.json -o src/api/generated/schema.ts"
   },

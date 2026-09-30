@@ -14,15 +14,16 @@
     "check": "pnpm format:check && node scripts/check-boundaries.mjs && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "lint": "eslint backend/src backend/prisma.config.ts frontend/src frontend/vite.config.ts scripts eslint.config.mjs --max-warnings 0",
     "lint:fix": "eslint backend/src backend/prisma.config.ts frontend/src frontend/vite.config.ts scripts eslint.config.mjs --fix",
-    "format": "prettier --write .",
+    "format": "pnpm lint:fix && prettier --write .",
     "format:check": "prettier --check .",
     "sync": "pnpm --filter @jobbely/backend sync",
     "db:generate": "pnpm --filter @jobbely/backend db:generate",
     "db:migrate": "pnpm --filter @jobbely/backend db:migrate"
   },
   "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.10.0",
     "eslint": "^9.39.0",
-    "typescript-eslint": "^8.46.0",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.46.0"
   }
 }

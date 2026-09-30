@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Source } from '../../domain/model.js';
 import type { JsonTransport, SourceAdapter } from '../../ports/ingestion.js';
 import { decode, httpsUrl, text, vacancyExcluded, workplace } from './schemas.js';
+
 const responseSchema = z.object({
   apiVersion: z.string(),
   jobs: z.array(
@@ -23,17 +24,23 @@ const responseSchema = z.object({
     }),
   ),
 });
+
 export class AshbyAdapter implements SourceAdapter {
   constructor(private readonly http: JsonTransport) {}
+
   async extract(source: Source) {
     const raw = await this.http.get(
       `https://api.ashbyhq.com/posting-api/job-board/${encodeURIComponent(source.board)}?includeCompensation=true`,
     );
+
     const response = decode(responseSchema, raw.body);
+
     if (response.apiVersion !== '1') {
       throw new Error(`Unsupported Ashby API version: ${response.apiVersion}`);
     }
+
     const vacancies = response.jobs.filter((job) => job.isListed && !vacancyExcluded(job.title));
+
     return {
       rawResponses: [raw],
       excluded: response.jobs.length - vacancies.length,

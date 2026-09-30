@@ -9,7 +9,7 @@
     "typecheck": "prisma generate && tsc --noEmit",
     "lint": "eslint src prisma.config.ts --max-warnings 0",
     "lint:fix": "eslint src prisma.config.ts --fix",
-    "format": "prettier --write .",
+    "format": "pnpm lint:fix && prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
     "export:openapi": "tsx src/cli/export-openapi.ts",

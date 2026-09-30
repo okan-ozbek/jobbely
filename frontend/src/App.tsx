@@ -25,16 +25,20 @@ function initials(name: string) {
     .map((word) => word[0])
     .join('');
 }
+
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
+
   return hours < 1 ? 'just now' : hours < 24 ? `${hours}h ago` : `${Math.floor(hours / 24)}d ago`;
 }
+
 const workplaceNames = {
   remote: 'Remote',
   hybrid: 'Hybrid',
   onsite: 'On-site',
   unknown: 'Not specified',
 };
+
 const coverageNames = {
   not_onboarded: 'Not connected',
   partial: 'Awaiting source audit',
@@ -54,26 +58,34 @@ export function App() {
   const companyFilter = params.get('company');
   const categoryFilter = params.get('category');
   const workplaceFilter = params.get('workplace');
+
   const query: JobsQuery = useMemo(() => {
     const result: JobsQuery = { limit: 20 };
+
     if (q) {
       result.q = q;
     }
+
     if (companyFilter) {
       result.company = companyFilter;
     }
+
     if (categoryFilter) {
       result.category = categoryFilter;
     }
+
     if (workplaceFilter) {
       result.workplace = workplaceFilter;
     }
+
     return result;
     // Only filters affect the request, not navigation between a listing and its details.
   }, [q, companyFilter, categoryFilter, workplaceFilter]);
+
   useEffect(() => {
     setQueryInput(params.get('q') ?? '');
   }, [params]);
+
   const {
     companies,
     categories,
@@ -87,13 +99,19 @@ export function App() {
     loadMore,
     refresh,
   } = useJobCatalog(query);
+
   const { selected, detailError } = useJobDetail(selectedId);
+
   const nameOf = (slug: string) => companies.find((company) => company.slug === slug)?.name ?? slug;
+
   const categoryOf = (slug: string) =>
     categories.find((category) => category.slug === slug)?.name ?? slug;
+
   const connected = companies.filter((company) => company.sources.length).length;
+
   const clear = () => {
     setQueryInput('');
+
     update({
       q: null,
       company: null,

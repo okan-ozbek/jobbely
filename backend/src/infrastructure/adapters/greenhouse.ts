@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Source } from '../../domain/model.js';
 import type { JsonTransport, SourceAdapter } from '../../ports/ingestion.js';
 import { decode, httpsUrl, identifier, text, vacancyExcluded } from './schemas.js';
+
 const responseSchema = z.object({
   jobs: z.array(
     z.object({
@@ -17,19 +18,25 @@ const responseSchema = z.object({
   ),
   meta: z.object({ total: z.number().int().nonnegative() }),
 });
+
 export class GreenhouseAdapter implements SourceAdapter {
   constructor(private readonly http: JsonTransport) {}
+
   async extract(source: Source) {
     const raw = await this.http.get(
       `https://boards-api.greenhouse.io/v1/boards/${encodeURIComponent(source.board)}/jobs?content=true`,
     );
+
     const response = decode(responseSchema, raw.body);
+
     if (response.jobs.length !== response.meta.total) {
       throw new Error('Greenhouse count does not match advertised total');
     }
+
     const vacancies = response.jobs.filter(
       (job) => job.internal_job_id !== null && !vacancyExcluded(job.title),
     );
+
     return {
       rawResponses: [raw],
       excluded: response.jobs.length - vacancies.length,

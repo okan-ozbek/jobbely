@@ -1,13 +1,16 @@
 import { load } from 'cheerio';
 import sanitizeHtml from 'sanitize-html';
 import type { HtmlPreparation } from '../ports/ingestion.js';
+
 export const htmlPreparation: HtmlPreparation = {
   prepare(input) {
     // Greenhouse can encode its HTML once. Decode text entities before applying the sanitizer.
     let decoded = input;
+
     if (!/<\/?[a-z][^>]*>/i.test(input) && /&(?:lt|#0*60|#x0*3c);/i.test(input)) {
       decoded = load(`<div>${input}</div>`)('div').text();
     }
+
     const html = sanitizeHtml(decoded, {
       allowedTags: [
         'p',
@@ -37,9 +40,12 @@ export const htmlPreparation: HtmlPreparation = {
         }),
       },
     });
+
     const document = load(html);
+
     document('br').replaceWith('\n');
     document('p, div, li, h2, h3, h4').append('\n');
+
     return {
       html,
       text: document
