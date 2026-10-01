@@ -2,6 +2,7 @@ import { readResumeText } from '../../domain/resume/document.js';
 import {
   detectEmployment,
   detectLocation,
+  hasEmploymentDates,
   recognizeEmployer,
 } from '../../domain/resume/employment.js';
 import { dateBounds, summarizeExperience } from '../../domain/resume/experience.js';
@@ -162,6 +163,16 @@ export class AnalyzeResume {
 
     const warnings: string[] = [];
 
+    const unmatchedDateLines = document.lines.filter(
+      (line) => hasEmploymentDates(line) && !employmentHeaderLines.has(line.id),
+    );
+
+    if (unmatchedDateLines.length) {
+      warnings.push(
+        `${unmatchedDateLines.length} dated experience line(s) could not be associated with a role. Review the reading preview and add missing roles; the experience total may be incomplete.`,
+      );
+    }
+
     if (!document.lines.some((line) => line.heading)) {
       warnings.push(
         'No standard section headings found. Add Experience and Skills headings, or enter missing roles manually.',
@@ -170,7 +181,7 @@ export class AnalyzeResume {
 
     if (!employment.length) {
       warnings.push(
-        'No employment blocks recognized. Use “Role | Employer” followed by a date range, or add a role below.',
+        'No employment blocks recognized. Use “Role | Employer” or “Employer – Role” with a date range, or add a role below.',
       );
     }
 
@@ -194,7 +205,7 @@ export class AnalyzeResume {
     }
 
     return {
-      version: 'text-1',
+      version: 'text-2',
       vocabularyVersion,
       analysisDate,
       document,

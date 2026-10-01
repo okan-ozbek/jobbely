@@ -323,3 +323,109 @@
     flex-wrap: wrap;
   }
 }
+.resume-file-input {
+  margin: 1.5rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.resume-file-input label {
+  display: grid;
+  gap: 0.75rem;
+}
+.resume-file-input input {
+  max-width: 100%;
+}
+.document-preview {
+  margin-top: 1rem;
+}
+.document-preview .resume-lines {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.resume-workbench .resume-checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+.resume-workbench .resume-checkbox input {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  accent-color: var(--signal);
+  flex-shrink: 0;
+}
+.match-controls {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.match-controls > label:not(.resume-checkbox) {
+  display: grid;
+  gap: 0.5rem;
+}
+.match-controls select {
+  padding: 0.65rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 4px;
+}
+.match-list {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.match-card {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.match-card h3 {
+  margin: 0.5rem 0;
+}
+.match-company {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  min-width: 0;
+}
+.match-company .company-icon {
+  flex-shrink: 0;
+}
+.match-card ul,
+.requirements-panel ul {
+  padding-left: 1.25rem;
+}
+.match-card li,
+.requirements-panel li {
+  margin: 0.7rem 0;
+}
+.match-card summary,
+.requirements-panel summary,
+.document-preview summary {
+  cursor: pointer;
+}
+.requirements-panel {
+  margin-bottom: 2rem;
+  overflow-wrap: anywhere;
+}
+.requirements-panel h3 {
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  margin-top: 1.5rem;
+}
+@media (max-width: 600px) {
+  .match-card {
+    padding: 1rem;
+  }
+  .match-card .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

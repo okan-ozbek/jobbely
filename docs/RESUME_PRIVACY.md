@@ -1,66 +1,50 @@
-# Proposal: private resume processing and upload isolation
+# Decision: transient profiles and local document isolation
 
-**Status:** Transient pasted-text analysis implemented; document upload/isolation controls remain proposed and required before public upload release. Recorded 1 October 2026, Europe/Amsterdam. Feature scope: [RESUME_PLAN.md](../RESUME_PLAN.md).
+**Status:** Text analysis, stateless matching and local PDF/DOCX extraction implemented. Recorded 1 October 2026, Europe/Amsterdam. This supersedes the proposed server-upload/subprocess design; server document uploads remain unsupported.
 
-## Current pasted-text boundary
+## Boundary and rationale
 
-Only bounded JSON text is accepted; no file upload, external fetch, parser subprocess, candidate database table or durable queue exists. Input is capped at 100,000 characters, 2,000 lines and 2,000 characters per line. The route caps encoded request bodies at 768 KiB and correction arrays at 100 entries. Analysis is synchronous, deterministic and side-effect free.
+Original file bytes remain on the candidate's device. A dedicated browser worker extracts bounded text and reading blocks; after reviewing that text the candidate explicitly requests temporary backend analysis. This avoids exposing the API's filesystem, environment and database credentials to a document parser. Matching accepts only a small structured profile, never the full document or contact fields.
 
-[The route](../backend/src/api/resume-routes.ts) returns `Cache-Control: no-store` on successes/errors, rejects unexpected browser origins, accepts at most 60 requests per minute per actual connection IP, caps tracked windows at 1,000 and avoids logging private exception details. The text/review budget supports debounced edits and is separate from the proposed ten-per-minute expensive-upload budget below. Fastify's untrusted-proxy default prevents spoofed forwarded IPs bypassing the limiter; shared proxy deployments need explicit edge limits/identity configuration.
+React memory holds input, original reading blocks, corrections and results. No candidate database table, disk file, browser storage, service-worker cache, object store or candidate queue is created. Full reload/closing the tab clears state; SPA navigation retains review. Clear, replacement, cancellation and unmount abort work and release references. This does not promise physical erasure from browser memory, OS swap, crash dumps or client diagnostics.
 
-[Browser state](../frontend/src/features/resume/useResumeAnalysis.ts) is React memory only, preserved during SPA navigation in this tab and cleared on Clear/full reload. Clear/input replacement immediately aborts requests; superseded responses cannot restore a cleared review. No localStorage, analytics or candidate persistence is introduced. Proxy/APM body recording, OS memory/swap and crash diagnostics remain deployment responsibilities; these checks cannot prove physical erasure.
+## Enforced limits
 
-The sections below describe future file handling. Pasted text has no document code-execution boundary and does not claim future upload safeguards exist. See [RESUME_TESTING](RESUME_TESTING.md).
+| Boundary          | Limit                                                                                                          |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| File              | One active worker per workbench; 5 MiB compressed input                                                        |
+| PDF               | 20 pages; no OCR, password input or rendering; 10,000 text items/page                                          |
+| DOCX              | 1,000 entries, 25 MiB declared expansion, 5 MiB/entry; bounded streaming inflation and CRC validation          |
+| Reading output    | 100,000 characters, 2,000 blocks, 2,000 characters/block                                                       |
+| Document duration | 30 seconds, including isolation verification and file reading; terminate worker on timeout/cancel              |
+| Analysis          | 768 KiB JSON, 100,000 characters, 2,000 lines, 2,000 characters/line; correction arrays at most 100            |
+| Matching          | 256 KiB strict JSON, 200 skill claims, 100 roles; bounded feature scan as described in [MATCHING](MATCHING.md) |
 
-## Decision and rationale
+Signatures and ZIP structure are checked rather than trusting extensions or MIME. DOCX rejects unsafe paths, symlinks, duplicates, encryption, unsupported compression, macros/embedded executables, malformed XML, DTD/entities and external relationships (including encoded values). Nothing is unpacked to a filesystem or fetched from document references. XML yields plain text only; no DOCX HTML is rendered. PDF scripting/XFA, image rendering, external font/wasm loading and OCR are unused/disabled.
 
-MVP analyses are transient: raw documents are processed in bounded memory, results remain in the current browser tab, and matching requests are stateless. Persist public job features only. Accounts, saved resumes, private object storage and durable candidate queues are deferred. This avoids introducing anonymous permanent personal-data records while the product has no authentication or deletion infrastructure.
+Browser memory remains managed by the browser. **There is no enforced 512 MiB per-document OS/process ceiling.** Input/output/archive/complexity bounds and worker termination reduce resource risk, but compressed PDFs can allocate internally before post-parse bounds apply. A hardened server/container parser with enforced memory and egress limits remains a separate future decision if server parsing is introduced. Do not claim an ordinary Node subprocess provides that sandbox.
 
-This is a new trust boundary beyond today's [read-only API](API.md) and [provider-content rules](SECURITY.md). Uploading privately chosen documents authorizes parsing for this feature, not analytics reuse, model training, employer contact, profile enrichment or sharing with third parties.
+## Worker CSP and hosting
 
-## Data lifecycle
+The production parser is one bundled `assets/document-parser-*.js` asset. Its response must include:
 
-| Data                                   | Proposed handling                                                                                         |
-| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Original bytes/filename                | Bounded parse request/subprocess memory only; do not save to disk or log the supplied filename            |
-| Extracted text/contact details         | Return to the requesting tab; keep only while viewing/reviewing; display-only contact fields              |
-| Corrected profile/preferences          | React tab memory; send only allowlisted matching fields, not contact details/full document                |
-| Candidate evidence excerpts in results | Private response/tab memory, never observability payloads                                                 |
-| Job features                           | PostgreSQL projection of already stored employer descriptions; follows public job lifecycle/versioning    |
-| Operational metrics                    | Format, coarse size band, duration, capacity/error code and counts only; no content or identifying labels |
+```text
+Content-Security-Policy: default-src 'none'; script-src 'none'; connect-src 'none'; worker-src 'none'
+Cache-Control: no-store
+```
 
-Do not store candidates in PostgreSQL, object storage, pg-boss, browser localStorage/sessionStorage/IndexedDB or service-worker caches. Closing/reloading the tab loses the analysis. Clear/cancel releases browser references and terminates active parser work; it cannot promise cryptographic erasure of OS memory, swap or crash dumps. Harden hosting to disable body capture and diagnostic dumps containing private buffers; avoid swap or encrypt it where appropriate.
+The worker cannot fetch, connect, load further scripts, evaluate script strings or create workers under that policy. It has no DOM or Node APIs. The browser's renderer sandbox supplies the local execution boundary; this is not a claim of a separate OS process per document. The main app performs an anonymous HEAD request to verify the worker policy **before reading private bytes** and refuses files if it is absent/relaxed. Configure matching headers on HEAD and GET at the host.
 
-Do not record private body values, multipart payloads, candidate hashes or evidence excerpts in logs, APM traces, analytics, error-reporting attachments or network-debug artifacts. Request/profile fingerprints are transient pagination state, not telemetry identifiers. Generic errors must not quote resume text. Set private endpoint responses to `Cache-Control: no-store`; exclude these endpoints from proxy/CDN/body caches and recorders.
+[Vite](../frontend/vite.config.ts) sets the strict policy for production preview. Development workers need `script-src 'self'` for Vite's module imports, while `connect-src` and `worker-src` remain `'none'`; this development exception is rejected in production. [The static `_headers` file](../frontend/public/_headers) supports hosts that understand that format; other hosts must configure it explicitly. See [DEPLOYMENT](DEPLOYMENT.md).
 
-## Upload boundary and limits
+## API and observability
 
-Provisional limits to confirm in the spike:
+Both private POST routes return `Cache-Control: no-store`, reject unexpected browser origins, use generic non-reflecting errors and bypass private exception logging. Admission is 60/minute for review analysis and 15/minute for matching, using actual connection IP with at most 1,000 windows per route. Untrusted forwarded IPs cannot bypass the limit; a shared reverse proxy needs explicit edge enforcement. Origin/CORS are not authentication.
 
-- One PDF or DOCX per request, maximum 5 MiB compressed input and 20 PDF pages; pasted text at most 100,000 characters.
-- DOCX archive validation before conversion: maximum 25 MiB expanded bytes and 1,000 entries, bounded per-entry size, no traversal/symlink/external-file extraction and no macros or embedded executables. Reject inconsistent type/signature/package structure.
-- Maximum extracted text 100,000 characters, bounded spans/employment/skill records, and strict profile/matching payload schemas. Explicitly reject oversize rather than silently truncate evidence used for matching.
-- Hard parse wall-clock timeout 30 seconds, process memory target 512 MiB, initial two concurrent parsers per instance and a bounded admission queue; cancel/terminate on timeout/disconnect. Process/container limits must enforce memory, not rely only on JavaScript heap settings.
-- Proposed per-client admission budget ten analysis requests per minute, plus a global capacity cap; tune on measured hardware. Matching also has request/CPU/rate limits. Identify clients through deployment-controlled trusted proxy settings, not spoofable forwarded headers.
+Do not enable proxy/CDN caching, request-body recording, APM payloads, candidate fingerprints or document/resume attachments in diagnostics. Backend access logs contain route/status/timing, not submitted bodies. Use HTTPS in production. Input may contain private text intentionally chosen for analysis; it must not enter fixtures, committed files or operational logs. Employer labels/location remain private structured input even though contact fields are excluded.
 
-Browser extension and multipart MIME values are hints, not validation. Validate signatures and DOCX package structure with bounded decompression. Reject encrypted PDFs, image-only documents, unsupported archives and unreadable files with a recoverable text-paste option. Never fetch a resume URL supplied by a user. Do not execute embedded scripts/macros, follow document links, load remote resources or enable external file access.
+## Verification
 
-[OWASP's upload guidance](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html) supports layered type/size validation and isolation; it is not satisfied by checking a filename extension. The library spike must prove that archive limits apply before an unbounded parser expansion can happen.
+[Document adapters/session](DOCUMENTS.md), [API guard](../backend/src/api/private-resume-route.ts), [review state](../frontend/src/features/resume/useResumeAnalysis.ts), [matching UI state](../frontend/src/features/resume/ResumeMatches.tsx), [test guide](RESUME_TESTING.md).
 
-## Parser execution and rendering
-
-Run Node parsing in a separate constrained process under a low-privilege identity with no network egress and no accessible secrets/application data; an ordinary subprocess alone does not establish filesystem isolation. Infrastructure/bootstrap owns the runner. Container/OS policy must enforce the boundary on the deployment platform. Do not pass the API process's credential-bearing environment through to the parser. Bounded IPC carries input/output; private bytes are not worker-queue messages.
-
-If portable public-hosting isolation cannot be demonstrated, restrict uploads to local development and ship pasted-text matching first until the boundary is ready. This is a release gate, not a requirement to ask for approval before building the local feature.
-
-Use text nodes for resume evidence; do not mount document HTML or third-party converted markup into the app. [Mammoth's security documentation](https://github.com/mwilliamson/mammoth.js) warns about unsafe links, external references and resource exhaustion. Its external file access must remain disabled. A future PDF visual preview needs its own resource/network policy; do not automatically render arbitrary files in an iframe in this MVP.
-
-Private POST endpoints require HTTPS in hosted mode, restricted configured browser origin, strict content types/body limits, origin checks and correct proxy configuration. CORS is not authentication or rate limiting. Since no account/profile is persisted, there is no public profile-ID lookup route; matching responses go only to the initiating request. Future saved profiles require authenticated ownership checks, explicit retention/deletion behavior, encrypted storage/backups and a separate documented privacy review before shipping.
-
-## Verification and implementation links
-
-Current integration points are [API](../backend/src/api/app.ts), [bootstrap](../backend/src/bootstrap.ts), [frontend hooks](../frontend/src/hooks/) and [deployment](DEPLOYMENT.md). The runner/upload endpoints are proposed additions in [the plan](../RESUME_PLAN.md), not current safeguards.
-
-Before public release, verify resource enforcement, archive bombs, parser crashes, disconnected requests, bounded queues, external resource denial, file traversal, error/body-log leakage, browser clearing and reverse-proxy cache/body capture configuration. Use controlled synthetic attack fixtures. Assert that no candidate content enters database/queue/storage. Measure retained memory after cancellation under load; memory-reference release does not imply physical erasure.
-
-Documentation and automated tests must state the actual retention/isolation behavior. Avoid promises such as "never leaves your device" because parsing uses the backend. The UI should say the document is sent to Jobbely for temporary processing and is not saved as a resume/profile by this feature.
+Synthetic tests cover no-store/origin/rate/schema rejection, unchanged candidate-free repository state, archive bounds, encoded external relationships, encrypted/image-only PDF rejection, matching invalidation, isolation preflight, cancellation before/during reading, ignored late/readiness messages and timeout termination. Browser verification must also exercise production worker headers and real adapters; unit fakes alone do not establish deployed CSP enforcement.

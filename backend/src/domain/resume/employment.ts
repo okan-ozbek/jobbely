@@ -15,7 +15,30 @@ const dateRange = new RegExp(
 );
 
 const titlePattern =
-  /\b(?:engineer|developer|scientist|researcher|manager|designer|analyst|recruiter|consultant|intern|director|specialist|architect|coordinator|associate|executive|officer|lead|trader)\b/i;
+  /\b(?:engineer|developer|scientist|researcher|manager|designer|analyst|recruiter|consultant|intern|director|specialist|architect|coordinator|associate|executive|officer|lead|trader|(?:co[ -]?)?founder|SWE|SDE|CTO)\b/i;
+
+function headerText(value: string) {
+  const text = value.trim();
+
+  return (
+    text.length > 0 &&
+    text.length <= 140 &&
+    text.split(/\s+/).length <= 16 &&
+    !/[.!?]$/.test(text) &&
+    !/^\s*[-*•]/.test(text) &&
+    !/^(?:built|led|managed|mentored|implemented|improved|improving|developed|designed|delivered|refactored|architected|contributed|co-founded|drove|owned|created|worked|supported|presented|established|responsible)\b/i.test(
+      text,
+    )
+  );
+}
+
+function roleTitle(value: string) {
+  return headerText(value) && titlePattern.test(value);
+}
+
+export function hasEmploymentDates(line: ResumeLine) {
+  return line.section === 'experience' && !line.heading && dateRange.test(line.text);
+}
 
 const employerAliases: Record<string, string[]> = {
   meta: ['Meta Platforms', 'Facebook'],
@@ -52,7 +75,10 @@ export function roleCategory(title: string) {
   const rules: [RegExp, ResumeCategory][] = [
     [/\b(?:data scientist|machine learning|data engineer|analytics engineer)\b/i, 'data-ai'],
     [/\b(?:security|cybersecurity|IT support)\b/i, 'security-it'],
-    [/\b(?:engineer|developer|architect)\b/i, 'engineering'],
+    [
+      /\b(?:engineer|developer|architect|SWE|SDE|CTO|technical (?:co[ -]?)?founder|chief technology officer)\b/i,
+      'engineering',
+    ],
     [/\b(?:product manager|product owner)\b/i, 'product'],
     [/\b(?:recruiter|recruiting|talent|human resources|HR|people)\b/i, 'people'],
     [/\b(?:sales|account executive|business development)\b/i, 'sales'],
@@ -69,15 +95,18 @@ export function roleCategory(title: string) {
 function parseHeader(header: string, employers: EmployerIdentity[]) {
   const parts = header
     .replace(/^(?:[-*•]\s*)/, '')
-    .split(/\s*[|]\s*|\s+at\s+|\s+@\s+/i)
+    .split(/\s*[|]\s*|\s+at\s+|\s+@\s+|\s+[-–—]\s+/i)
+    .map((part) => part.trim())
     .filter(Boolean);
 
   if (parts.length >= 2) {
-    const firstIsRole = titlePattern.test(parts[0]!) && !recognizeEmployer(parts[0]!, employers);
+    const firstIsRole =
+      roleTitle(parts[0]!) && !roleTitle(parts[1]!) && !recognizeEmployer(parts[0]!, employers);
+
     const employer = firstIsRole ? parts[1]! : parts[0]!;
     const title = firstIsRole ? parts[0]! : parts[1]!;
 
-    return { employer: employer.trim(), title: title.trim() };
+    return headerText(employer) && roleTitle(title) ? { employer, title } : null;
   }
 
   return null;
@@ -112,8 +141,9 @@ export function detectEmployment(
 
     let header = parseHeader(inline, employers);
     let headerLine = line;
+    let evidenceLines = [line];
 
-    if (range && !header) {
+    if (range && !header && (!inline || roleTitle(inline))) {
       const previous = lines
         .slice(Math.max(0, index - 3), index)
         .filter(
@@ -121,7 +151,7 @@ export function detectEmployment(
             candidate.section === line.section &&
             !candidate.heading &&
             candidate.text.trim() &&
-            !/^\s*[-*•]/.test(candidate.text) &&
+            headerText(candidate.text) &&
             !dateRange.test(candidate.text),
         );
 
@@ -130,35 +160,45 @@ export function detectEmployment(
       if (last) {
         header = parseHeader(last.text, employers);
         headerLine = last;
+        evidenceLines = [last, line];
+
+        if (!header && roleTitle(inline) && !roleTitle(last.text)) {
+          header = { employer: last.text.trim(), title: inline };
+        }
 
         if (!header && previous.length >= 2) {
           const first = previous.at(-2)!;
 
           const firstIsRole =
-            titlePattern.test(first.text) && !recognizeEmployer(first.text, employers);
+            roleTitle(first.text) &&
+            !roleTitle(last.text) &&
+            !recognizeEmployer(first.text, employers);
 
-          if (titlePattern.test(first.text) || titlePattern.test(last.text)) {
+          if (roleTitle(first.text) || roleTitle(last.text)) {
             header = {
               employer: (firstIsRole ? last : first).text.trim(),
               title: (firstIsRole ? first : last).text.trim(),
             };
 
             headerLine = first;
+            evidenceLines = [first, last, line];
           }
         }
       }
     }
 
-    if (!header || !titlePattern.test(header.title)) {
+    if (!header || !roleTitle(header.title)) {
       continue;
     }
 
     // A header followed by a date is handled together on the date iteration.
     if (
       !range &&
-      lines
-        .slice(index + 1, index + 3)
-        .some((next) => next.section === line.section && dateRange.test(next.text))
+      lines.slice(index + 1, index + 3).some((next) => {
+        const nextRange = dateRange.exec(next.text);
+
+        return next.section === line.section && nextRange?.index === 0;
+      })
     ) {
       continue;
     }
@@ -186,7 +226,7 @@ export function detectEmployment(
       start: range?.[1] ?? '',
       end: range?.[2] ?? '',
       status: range ? 'extracted' : 'uncertain',
-      evidence: [...new Set([headerLine, line])].map((entry) => ({
+      evidence: [...new Set(evidenceLines)].map((entry) => ({
         lineId: entry.id,
         excerpt: entry.text.trim(),
         rule: 'employment:header-and-dates',

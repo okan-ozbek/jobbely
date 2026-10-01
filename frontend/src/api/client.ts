@@ -19,6 +19,15 @@ export type ResumeCorrections = NonNullable<ResumeInput['corrections']>;
 
 export type EmploymentCorrection = NonNullable<ResumeCorrections['employment']>[number];
 
+export type JobRequirements =
+  paths['/api/v1/jobs/{id}/requirements']['get']['responses'][200]['content']['application/json'];
+
+export type MatchInput =
+  paths['/api/v1/resume-matches']['post']['requestBody']['content']['application/json'];
+
+export type MatchResponse =
+  paths['/api/v1/resume-matches']['post']['responses'][200]['content']['application/json'];
+
 const client = createClient<paths>({
   baseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
 });
@@ -88,6 +97,36 @@ export async function analyzeResume(body: ResumeInput, signal?: AbortSignal) {
   if (!result.data) {
     throw new ApiError(
       result.error?.message ?? 'Could not analyze this resume.',
+      result.error?.code,
+    );
+  }
+
+  return result.data;
+}
+
+export async function getRequirements(id: string, signal?: AbortSignal) {
+  const result = await client.GET('/api/v1/jobs/{id}/requirements', {
+    params: { path: { id } },
+    ...(signal ? { signal } : {}),
+  });
+
+  if (!result.data) {
+    throw new ApiError('Could not load job requirements.');
+  }
+
+  return result.data;
+}
+
+export async function matchResume(body: MatchInput, signal?: AbortSignal) {
+  const result = await client.POST('/api/v1/resume-matches', {
+    body,
+    ...(signal ? { signal } : {}),
+    cache: 'no-store',
+  });
+
+  if (!result.data) {
+    throw new ApiError(
+      result.error?.message ?? 'Could not match this profile.',
       result.error?.code,
     );
   }

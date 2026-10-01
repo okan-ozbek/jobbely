@@ -4,6 +4,8 @@
 
 ## Decision and rationale
 
+Public job requirement enrichment is a separate replayable workflow after publication. Operator sync backfills after imports; the worker backfills after a successful sync and schedules a public-feature backfill every 15 minutes. Missing/stale features remain visibly unenriched and do not block or falsify a successful source run. No candidate data enters these queues. See [JOB_FEATURES](JOB_FEATURES.md).
+
 `SyncSource` owns a source refresh. API requests read previously stored jobs; refreshes run through an operator CLI or a separate worker process. This keeps upstream latency and failures outside interactive requests and makes failure behavior reusable across entry points.
 
 ```mermaid

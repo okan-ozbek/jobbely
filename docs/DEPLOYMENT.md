@@ -178,11 +178,35 @@ The Vite development proxy is not included in static build output. A static-only
 
 ## Release verification and upgrades
 
+### Resume matching and local documents
+
+Apply `pnpm db:migrate` and run `pnpm features:backfill` before a release with new requirement/vocabulary versions. Operator sync and the worker maintain features afterward; API startup does not backfill. Only public job features are persisted. Backfill does not establish source freshness. See [JOB_FEATURES](JOB_FEATURES.md).
+
+Set `MATCH_CURSOR_SECRET` to the same random 32+ character secret across API replicas for pagination across restarts/load balancing. Keep it outside source control. Without it each process uses an ephemeral key. Add edge admission limits for shared deployments; private routes use actual connection IP and do not automatically trust forwarded headers.
+
+Production static hosting must set the parser asset's CSP on **HEAD and GET**. `_headers` hosts can use [the provided file](../frontend/public/_headers); for Nginx, add this location before the normal asset handler:
+
+```nginx
+location ~ ^/assets/document-parser-[^/]+\.js$ {
+  root /srv/jobbely/frontend/dist;
+  add_header Content-Security-Policy "default-src 'none'; script-src 'none'; connect-src 'none'; worker-src 'none'" always;
+  add_header Cache-Control "no-store" always;
+  add_header X-Content-Type-Options "nosniff" always;
+  try_files $uri =404;
+}
+```
+
+Adjust the root to the deployed frontend directory. The self-contained worker bundle's strict policy denies connections, additional scripts/evaluation and nested workers. A parent-page CSP must allow same-origin workers. Do not apply this worker-only policy to the main page.
+
+File reading fails closed to pasted text if these headers are absent or relaxed. Vite production preview sets the same headers. Development permits same-origin module imports inside the worker; that exception is rejected in production. There is no document-upload API or enforceable 512 MiB browser-worker ceiling. See [DOCUMENTS](DOCUMENTS.md) and [RESUME_PRIVACY](RESUME_PRIVACY.md).
+
+Disable body capture/APM payloads and caching for both private POST routes. Verify synthetic PDF/DOCX reading order, corrected-profile matching, cursor invalidation and Clear under the actual deployed HTTPS/headers. Builds and unit tests do not verify hosting configuration.
+
 Confirm private API readiness, public frontend assets, `/api/v1/jobs` JSON routing, a detail/application link, and company coverage. Check a successful import's run record and counts. `demo` or `partial` is not evidence of live complete coverage. Review database backups, log capture and resource limits for the target environment.
 
 For updates, build a new release, review/apply compatible migrations once, replace static assets and restart API/worker processes. Preserve PostgreSQL and the stable source registry IDs. Keep the previous release for application rollback; a database migration may require a separate recovery plan. Do not reset schemas or delete database volumes as a deployment step.
 
-Current limits include application-memory catalog queries, global publication serialization, no raw-data retention cleanup, no application-level API rate limiter, and incomplete worker/source audits. Hosting instructions do not remove those limits. See [STORAGE.md](STORAGE.md), [INGESTION.md](INGESTION.md), [SECURITY.md](SECURITY.md), and [QUALITY.md](QUALITY.md).
+Current limits include application-memory catalog queries, global publication serialization, no raw-data retention cleanup, no general public-job API rate limiter, and incomplete worker/source audits. Hosting instructions do not remove those limits. See [STORAGE.md](STORAGE.md), [INGESTION.md](INGESTION.md), [SECURITY.md](SECURITY.md), and [QUALITY.md](QUALITY.md).
 
 ## Implementation references
 

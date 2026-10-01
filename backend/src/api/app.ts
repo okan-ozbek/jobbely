@@ -9,6 +9,8 @@ import { categories } from '../domain/taxonomy.js';
 import type { JobRepository } from '../ports/ingestion.js';
 import type { AnalyzeResume } from '../application/resume/analyze-resume.js';
 import { registerResumeRoutes } from './resume-routes.js';
+import type { MatchJobs } from '../application/resume/match-jobs.js';
+import { registerMatchingRoutes } from './matching-routes.js';
 import {
   companySchema,
   errorSchema,
@@ -24,6 +26,8 @@ export async function createApp(dependencies: {
   origin?: string;
   logger?: boolean;
   resume?: AnalyzeResume;
+  matcher?: MatchJobs;
+  closeFeatures?: () => Promise<void>;
 }) {
   /**
    * Creates and configures the Fastify application instance with all routes, hooks, and error handling.
@@ -55,7 +59,10 @@ export async function createApp(dependencies: {
    *
    * @param dependencies - The dependencies required to create the app, including the job catalog, repository, origin, and logger.
    */
-  app.addHook('onClose', () => dependencies.repository.close());
+  app.addHook('onClose', async () => {
+    await dependencies.repository.close();
+    await dependencies.closeFeatures?.();
+  });
 
   /**
    * Register the global error handler for the Fastify application.
@@ -244,6 +251,15 @@ export async function createApp(dependencies: {
 
   if (dependencies.resume) {
     registerResumeRoutes(app, dependencies.resume, dependencies.origin ?? 'http://127.0.0.1:5173');
+  }
+
+  if (dependencies.matcher) {
+    registerMatchingRoutes(
+      app,
+      dependencies.catalog,
+      dependencies.matcher,
+      dependencies.origin ?? 'http://127.0.0.1:5173',
+    );
   }
 
   await app.ready();

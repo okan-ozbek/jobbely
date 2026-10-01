@@ -27,7 +27,9 @@ Company responses include `logoUrl`, a local asset path served by the frontend o
 
 ## Transient resume analysis
 
-`POST /api/v1/resume-analysis` accepts strict JSON `text`, an optional valid fixed `analysisDate` no later than today, and optional skill/competency/location/employment corrections. The generated response includes reading lines, evidence, reviewed fields, month-duration bounds, warnings and parser/vocabulary versions. No GET/profile-ID retrieval route or matching endpoint exists yet.
+`POST /api/v1/resume-analysis` accepts strict JSON `text`, an optional valid fixed `analysisDate` no later than today, and optional corrections. The response includes reading lines, evidence, reviewed fields, duration bounds, warnings and versions. No GET/profile-ID retrieval route exists. PDF/DOCX bytes are read locally and are not accepted by the API.
+
+`GET /api/v1/jobs/:id/requirements` returns bounded requirement evidence beside the original job. `POST /api/v1/resume-matches` accepts only the reviewed claim/date/location allowlist, function choices, optional employer context, limit and signed cursor. It returns explained results, coverage/freshness, eligible/evaluated/unenriched counts and versions. Its 256 KiB body, 15/minute connection-IP admission and bounded scans have generic private errors; stale pagination returns 409 and exhausted capacity 503. See [MATCHING](MATCHING.md) and [JOB_FEATURES](JOB_FEATURES.md).
 
 Requests are capped at 768 KiB, text at 100,000 characters/2,000 lines/2,000 characters per line, and corrections at 100 items per array. Errors use generic messages and `no-store` headers; unexpected origins return 403, oversized/unsupported inputs 413/415, and per-IP admission overflow 429. The 60-per-minute budget supports debounced edits. See [RESUME_PRIVACY](RESUME_PRIVACY.md) and [RESUME_TESTING](RESUME_TESTING.md).
 

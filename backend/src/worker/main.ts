@@ -12,6 +12,13 @@ boss.on('error', (error) => console.error('Queue failure:', error));
 await boss.start();
 await boss.createQueue('sync-source', { expireInSeconds: 3 * 60 * 60 });
 await boss.updateQueue('sync-source', { expireInSeconds: 3 * 60 * 60 });
+await boss.createQueue('backfill-job-features', { expireInSeconds: 30 * 60 });
+
+await boss.work('backfill-job-features', { localConcurrency: 1 }, async () => {
+  await dependencies.backfill.execute();
+});
+
+await boss.schedule('backfill-job-features', '*/15 * * * *');
 
 await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, async (jobs) => {
   for (const job of jobs) {
@@ -24,6 +31,7 @@ await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, as
     }
 
     await dependencies.sync.execute(source);
+    await dependencies.backfill.execute();
   }
 });
 
@@ -48,6 +56,7 @@ for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.once(signal, () => {
     void boss
       .stop()
+      .then(() => dependencies.closeFeatures())
       .then(() => dependencies.repository.close())
       .then(() => process.exit(0));
   });

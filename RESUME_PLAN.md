@@ -1,6 +1,8 @@
 # Resume analysis and job matching plan
 
-**Status:** Pasted-text increment implemented for steps 1–4: synthetic evaluation corpus, reading preview, skill/competency review, employment/location and overlap-safe experience. PDF/DOCX, job enrichment and matching remain proposed. Recorded 1 October 2026, Europe/Amsterdam. Start with [the increment testing guide](docs/RESUME_TESTING.md).
+**Status:** Initial end-to-end flow implemented: text/local PDF/DOCX → reviewed profile → explained recommendations, public job requirements, capped optional same-employer context, five supported functions, indexed features/backfill and signed pagination. Recorded 1 October 2026, Europe/Amsterdam. Start with [the testing guide](docs/RESUME_TESTING.md).
+
+This document preserves the original broader proposal. Current implementation decisions supersede proposed server uploads/isolation and broad employer prestige weighting: see [RESUME](docs/RESUME.md), [DOCUMENTS](docs/DOCUMENTS.md), [MATCHING](docs/MATCHING.md), [JOB_FEATURES](docs/JOB_FEATURES.md) and [RESUME_PRIVACY](docs/RESUME_PRIVACY.md). Structured qualification/authorization preferences, OCR/multilingual coverage, held-out calibration and production load/security checks remain follow-ups. Browser parsing has no enforced 512 MiB OS memory ceiling.
 
 ## 1. Product goal
 
@@ -123,7 +125,7 @@ Build a separate `JobFeatureProjection` keyed by `(postingId, contentHash, requi
 
 Distinguish "we use Python" from "must have Python", "3 years with Python" from "5 years overall", and "Java or Kotlin" from requiring both. Unclassified requirements stay unknown. A degree with an experience-equivalence clause must not become an unconditional degree requirement.
 
-The proposed scoring policy, examples, unknown handling, freshness rules and employer weights are specified in [MATCHING](docs/MATCHING.md). Baseline dimensions are skills 50%, experience 20%, role/function 15%, location 10% and explicit qualifications 5%. These are starting product weights to calibrate, not empirically validated hiring predictors.
+The implemented initial scoring policy, examples, unknown handling, freshness rules and narrow employer continuity adjustment are specified in [MATCHING](docs/MATCHING.md). Baseline dimensions are skills 50%, experience 20%, role/function 15%, location 10% and explicit qualifications 5%. These are starting product weights to calibrate, not empirically validated hiring predictors. Qualification evidence remains unassessed in the current reviewed-profile schema.
 
 Default recommendations use stored active postings from a source with a successful complete observation within the existing 36-hour freshness window. Candidate feeds remain labeled partial and availability unconfirmed. Latest failed, stale or removal-quarantined sources are excluded from default ranking but can be viewed separately with a freshness notice. Closed jobs and synthetic records never enter real recommendations. Recheck status when a detail opens; a match never guarantees availability or sponsorship.
 

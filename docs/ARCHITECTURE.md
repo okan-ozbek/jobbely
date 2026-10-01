@@ -56,6 +56,8 @@ Consolidation is a shared normalization function plus explicit provider translat
 
 ## Quality gates
 
+Resume matching follows the same layers: pure requirements/scoring, an application-owned bounded scan, a `JobFeatureRepository` port and PostgreSQL/memory implementations. Local document parsing lives in a frontend worker behind a small session capability boundary, feeding the public text-analysis contract. See [RESUME](RESUME.md), [DOCUMENTS](DOCUMENTS.md), [MATCHING](MATCHING.md) and [JOB_FEATURES](JOB_FEATURES.md).
+
 - Strict TypeScript, unchecked-index checking, exact optional properties, no explicit `any`, and no unused variables.
 - ESLint and formatting, reproducible lockfile, independent package builds, generated contract, deterministic fixtures.
 - Architecture test prevents domain/application from importing infrastructure/frameworks.

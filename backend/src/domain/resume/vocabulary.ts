@@ -1,12 +1,13 @@
 import type { ResumeLine, ResumeSignal } from './model.js';
 
-export const vocabularyVersion = 'starter-1';
+export const vocabularyVersion = 'functions-3';
 
 // Deliberately reviewed starter coverage, not a claim of universal skill recognition.
 const definitions: [string, string, string[]][] = [
   ['typescript', 'TypeScript', ['TypeScript']],
   ['javascript', 'JavaScript', ['JavaScript', 'ECMAScript']],
   ['java', 'Java', ['Java']],
+  ['kotlin', 'Kotlin', ['Kotlin']],
   ['python', 'Python', ['Python']],
   ['golang', 'Go', ['Golang', 'Go']],
   ['rust', 'Rust', ['Rust']],
@@ -38,7 +39,7 @@ const definitions: [string, string, string[]][] = [
   ['pytorch', 'PyTorch', ['PyTorch']],
   ['tensorflow', 'TensorFlow', ['TensorFlow']],
   ['pandas', 'pandas', ['pandas']],
-  ['spark', 'Apache Spark', ['Apache Spark', 'PySpark']],
+  ['spark', 'Apache Spark', ['Apache Spark', 'PySpark', 'Spark']],
   ['excel', 'Excel', ['Excel']],
   ['tableau', 'Tableau', ['Tableau']],
   ['power-bi', 'Power BI', ['Power BI']],
@@ -55,6 +56,13 @@ const definitions: [string, string, string[]][] = [
   ['talent-acquisition', 'Talent acquisition', ['talent acquisition']],
   ['payroll', 'Payroll', ['payroll']],
   ['financial-modeling', 'Financial modeling', ['financial modeling', 'financial modelling']],
+  ['dbt', 'dbt', ['dbt']],
+  ['statistics', 'Statistics', ['statistics', 'statistical analysis']],
+  ['sales-prospecting', 'Sales prospecting', ['prospecting', 'lead generation']],
+  ['negotiation', 'Negotiation', ['negotiation', 'negotiating']],
+  ['hris', 'HRIS', ['HRIS']],
+  ['employee-relations', 'Employee relations', ['employee relations']],
+  ['product-strategy', 'Product strategy', ['product strategy']],
 ];
 
 export const supportedSkills = definitions.map(([id, name]) => ({ id, name }));
@@ -81,6 +89,41 @@ const patterns = definitions.map(([id, name, aliases]) => ({
     'iu',
   ),
 }));
+
+export function skillsInText(text: string) {
+  return patterns
+    .flatMap((skill) => {
+      const match = skill.pattern.exec(text);
+
+      if (
+        ['golang', 'react', 'rust', 'spark'].includes(skill.id) &&
+        match &&
+        /^(?:Go|React|Rust|Spark)$/i.test(match[2]!) &&
+        !/\b(?:built|developed|implemented|using|uses?|used|programming|language|framework|backend|frontend|services?|proficien(?:t|cy)|knowledge|experience)\b/i.test(
+          text,
+        ) &&
+        !/^\s*(?:Go|React|Rust|Spark)(?:\s+(?:required|preferred))?\.?\s*$/i.test(text) &&
+        !patterns.some(
+          (other) =>
+            !['golang', 'react', 'rust', 'spark'].includes(other.id) && other.pattern.test(text),
+        )
+      ) {
+        return [];
+      }
+
+      return match
+        ? [
+            {
+              id: skill.id,
+              name: skill.name,
+              position: match.index + (match[1]?.length ?? 0),
+              length: match[2]!.length,
+            },
+          ]
+        : [];
+    })
+    .sort((a, b) => a.position - b.position);
+}
 
 function claimStatus(line: ResumeLine, position: number): ResumeSignal['status'] {
   const prefix = line.text.slice(Math.max(0, position - 70), position).toLowerCase();
@@ -121,7 +164,7 @@ export function detectSkills(lines: ResumeLine[]): ResumeSignal[] {
 
       // Ordinary verbs must not become languages/frameworks outside explicit tech context.
       if (
-        ['golang', 'react', 'rust'].includes(skill.id) &&
+        ['golang', 'react', 'rust', 'spark'].includes(skill.id) &&
         line.section !== 'skills' &&
         !/\b(?:built|developed|implemented|using|used|programming|language|framework|backend|frontend|services?)\b/i.test(
           line.text,

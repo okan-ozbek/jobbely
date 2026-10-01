@@ -6,6 +6,7 @@ import { useJobCatalog } from './hooks/useJobCatalog.js';
 import { useJobDetail } from './hooks/useJobDetail.js';
 import { CompanyLogo } from './components/CompanyLogo.js';
 import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
+import { RequirementsPanel } from './features/resume/RequirementsPanel.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -197,7 +198,7 @@ export function App() {
           </div>
         )}
         <div hidden={view !== 'resume'}>
-          <ResumeWorkbench />
+          <ResumeWorkbench openJob={(id) => update({ view: null, job: id })} />
         </div>
         {view === 'resume' ? null : selectedId ? (
           <section className="detail-section">
@@ -251,6 +252,7 @@ export function App() {
                     }}
                   />
                   <aside className="detail-sidebar">
+                    <RequirementsPanel jobId={selected.id} />
                     <h2 className="sidebar-heading">The details</h2>
                     <dl>
                       <dt>Function</dt>
@@ -266,10 +268,14 @@ export function App() {
                       <dt>Last checked</dt>
                       <dd>{relativeDate(selected.lastSeenAt)}</dd>
                     </dl>
-                    {mode !== 'postgres' ? (
+                    {mode === 'demo' ? (
                       <p className="small-note">
                         This example is not an active vacancy. Visit the company’s careers page to
                         explore real opportunities.
+                      </p>
+                    ) : mode !== 'postgres' ? (
+                      <p className="small-note">
+                        Availability could not be confirmed. Check the original posting.
                       </p>
                     ) : selected.status === 'closed' ? (
                       <p className="small-note">

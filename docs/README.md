@@ -11,9 +11,11 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [WAVE_B.md](WAVE_B.md)                 | Enterprise ATS integration, capped search traversal, employer filters and restricted-source limits  |
 | [WAVE_C.md](WAVE_C.md)                 | Priority native boards, structured HTML, Amazon partitions and access gates                         |
 | [WAVE_D.md](WAVE_D.md)                 | Seven deferred employers, planning membership and future onboarding boundaries                      |
-| [RESUME.md](RESUME.md)                 | Pasted-text analysis, evidence, editable profiles and proposed document adapters                    |
-| [MATCHING.md](MATCHING.md)             | Proposed requirement projection, explained scoring, freshness and optional employer context         |
-| [RESUME_PRIVACY.md](RESUME_PRIVACY.md) | Transient text analysis and proposed upload isolation/release gates                                 |
+| [RESUME.md](RESUME.md)                 | Deterministic text analysis, evidence, editable profiles and complete initial matching flow         |
+| [DOCUMENTS.md](DOCUMENTS.md)           | Local PDF/DOCX adapters, reading order, parser boundaries and format regression checks              |
+| [MATCHING.md](MATCHING.md)             | Requirement evidence, explained scoring, freshness, pagination and optional employer context        |
+| [JOB_FEATURES.md](JOB_FEATURES.md)     | Indexed public features, hash/version invalidation, replayable backfill and publication races       |
+| [RESUME_PRIVACY.md](RESUME_PRIVACY.md) | Transient profiles, local worker CSP, resource bounds and private API handling                      |
 | [INGESTION.md](INGESTION.md)           | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling  |
 | [STORAGE.md](STORAGE.md)               | PostgreSQL/Prisma, repository and unit of work, leases, JSON evidence and version history           |
 | [CLASSIFICATION.md](CLASSIFICATION.md) | Taxonomy, ordered strategies, company overrides, ambiguity and explainable decisions                |
@@ -33,7 +35,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## How future agents should use these references
 
-Resume steps 1–4 now have a working pasted-text increment. See [RESUME_TESTING.md](RESUME_TESTING.md) for the public synthetic corpus, implementation links and manual checkpoints. Job matching and file-upload controls remain proposed.
+The initial resume flow now supports pasted text and local PDF/DOCX extraction, corrections, review confirmation and explained matching for five functions. See [RESUME_TESTING.md](RESUME_TESTING.md) for synthetic regression and manual checks. Browser memory is bounded by inputs/output and termination rather than a per-document OS memory ceiling; deployed CSP, held-out calibration and production load testing remain separate gates.
 
 Read the root [AGENTS.md](../AGENTS.md) first. It defines repository-wide guidance and requires a successful root lint check after the final code edit.
 

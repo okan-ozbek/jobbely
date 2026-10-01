@@ -4,7 +4,7 @@
 
 ## Decision and rationale
 
-Treat provider responses as external content. Validate structured fields at the adapter boundary, prepare HTML before publication, and expose a constrained read-only API. Extraction targets come from operator-controlled source configuration and a fixed transport allowlist.
+Treat provider responses as external content. Validate structured fields at the adapter boundary, prepare HTML before publication, and expose constrained public job reads and stateless private resume POST routes. Extraction targets come from operator-controlled source configuration and a fixed transport allowlist.
 
 ## HTML and data boundaries
 
@@ -18,11 +18,11 @@ Raw payloads remain server-side evidence. Public job response schemas omit inter
 
 Database credentials are server-only configuration. `.env` files, generated database clients, raw audit artifacts and database files are ignored by version control. Never put credentials in `VITE_*`: those variables are embedded into the public frontend build. Maintain HTTPS and private database connectivity when hosting.
 
-CORS allows one configured browser origin; it is not authentication or protection against non-browser callers. The current API has no accounts, authenticated admin routes or ingestion write endpoint. API rate limiting, edge traffic controls, CSP/security headers and retention policy are deployment/MVP follow-ups. Public job content may still contain ordinary external links and organization-supplied text; validation does not certify that content.
+CORS allows one configured browser origin; it is not authentication or protection against non-browser callers. The current API has no accounts, authenticated admin routes or ingestion write endpoint. Private resume routes implement admission limits; general public-job rate limiting and edge traffic controls remain deployment follow-ups. Document-worker CSP headers are required deployment configuration, described below. Public job content may still contain ordinary external links and organization-supplied text; validation does not certify that content.
 
 ## Transient resume input
 
-Resume analysis accepts bounded JSON text through a separate stateless POST route with strict nested schemas, origin/admission limits, `no-store` headers and a private error handler that does not log input-bearing exceptions. Evidence is rendered as React text, not HTML. No candidate storage or document upload is implemented. See [RESUME_PRIVACY](RESUME_PRIVACY.md) for current controls and future file-isolation requirements, and [RESUME_TESTING](RESUME_TESTING.md) for tests.
+Resume analysis and matching accept bounded JSON through stateless POST routes with strict nested schemas, origin/admission limits, `no-store` headers and a private error handler that does not log input-bearing exceptions. Evidence is rendered as React text, not HTML. No candidate storage or server document upload is implemented. PDF/DOCX files are extracted locally in a bounded browser worker whose CSP blocks network access; hosting must supply the documented headers. See [RESUME_PRIVACY](RESUME_PRIVACY.md) and [DOCUMENTS](DOCUMENTS.md) for current isolation controls and limits, and [RESUME_TESTING](RESUME_TESTING.md) for tests. Updated 1 October 2026.
 
 ## Implementation and verification
 

@@ -10,6 +10,7 @@ datasource db {
 model DatasetVersion {
   id Int @id
   version Int @default(0)
+  featureGeneration Int @default(0)
 }
 
 model SourceLease {
@@ -37,8 +38,21 @@ model Posting {
   contentHash String
   payload Json
   versions PostingVersion[]
+  features JobFeature?
   @@unique([sourceId, sourcePostingId])
   @@index([companySlug, category, status])
+  @@index([status, category, sourceId, id])
+}
+
+model JobFeature {
+  postingId String @id
+  posting Posting @relation(fields: [postingId], references: [id], onDelete: Cascade)
+  contentHash String
+  version String
+  category String
+  skillIds String[]
+  payload Json
+  @@index([version, category, postingId])
 }
 
 model PostingVersion {

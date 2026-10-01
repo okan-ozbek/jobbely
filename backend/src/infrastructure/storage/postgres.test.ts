@@ -3,6 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import pg from 'pg';
 import { PostgresJobRepository } from './postgres.js';
+import { PostgresJobFeatures } from './feature-postgres.js';
+import { extractRequirements } from '../../domain/matching/requirements.js';
 import type { NormalizedPosting, Source } from '../../domain/model.js';
 
 const connectionString = process.env['TEST_DATABASE_URL'];
@@ -11,6 +13,7 @@ const integration = connectionString ? describe : describe.skip;
 integration('PostgreSQL transactions (isolated test database)', () => {
   let repository: PostgresJobRepository;
   let secondRepository: PostgresJobRepository;
+  let features: PostgresJobFeatures;
 
   beforeAll(async () => {
     if (
@@ -35,14 +38,30 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       );
     }
 
+    const featureTable = await client.query(`SELECT to_regclass('"JobFeature"') AS table`);
+
+    if (!featureTable.rows[0]?.table) {
+      await client.query(
+        await readFile(
+          new URL(
+            '../../../prisma/migrations/202610010001_job_features/migration.sql',
+            import.meta.url,
+          ),
+          'utf8',
+        ),
+      );
+    }
+
     await client.end();
     repository = new PostgresJobRepository(connectionString);
     secondRepository = new PostgresJobRepository(connectionString);
+    features = new PostgresJobFeatures(connectionString);
   });
 
   afterAll(async () => {
     await repository?.close();
     await secondRepository?.close();
+    await features?.close();
   });
 
   const source = (): Source => ({
@@ -87,6 +106,127 @@ integration('PostgreSQL transactions (isolated test database)', () => {
 
     expect(claims.filter(Boolean)).toHaveLength(1);
     await repository.failRun(claims.find(Boolean)!.id, at, 'test cleanup');
+  });
+
+  it('publishes projections once across concurrent writers and invalidates changed content', async () => {
+    const item = source();
+    const at = new Date().toISOString();
+    const first = await repository.startRun(item, at);
+    const records = [posting('projected')];
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: first!.id,
+      observedAt: at,
+      postings: records,
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const job = (await repository.read()).jobs.find((entry) => entry.sourceId === item.id)!;
+    const feature = { postingId: job.id, requirements: extractRequirements(job) };
+
+    const filter = {
+      sourceIds: [item.id],
+      cutoff: '1900-01-01T00:00:00.000Z',
+      categories: ['engineering'],
+    };
+
+    const before = await features.featureSnapshot(filter);
+
+    const writes = await Promise.all([
+      features.saveFeatures([feature]),
+      features.saveFeatures([feature]),
+    ]);
+
+    expect(writes.sort()).toEqual([0, 1]);
+
+    const enriched = await features.featureSnapshot(filter);
+
+    expect(enriched).toMatchObject({
+      eligible: 1,
+      unenriched: 0,
+      generation: before.generation + 1,
+    });
+
+    expect((await features.featureJobs(filter, '', 10))[0]!.id).toBe(job.id);
+
+    const second = await repository.startRun(item, at);
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: second!.id,
+      observedAt: at,
+      postings: [
+        {
+          ...records[0]!,
+          contentHash: 'changed-for-feature',
+          descriptionText: 'Requirements\nPython required.',
+        },
+      ],
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    expect((await features.featureSnapshot(filter)).unenriched).toBe(1);
+    expect(await features.featureJobs(filter, '', 10)).toEqual([]);
+    expect(await features.saveFeatures([feature])).toBe(0);
+
+    const changed = (await repository.read()).jobs.find((entry) => entry.id === job.id)!;
+
+    expect(
+      await features.saveFeatures([
+        { postingId: job.id, requirements: extractRequirements(changed) },
+      ]),
+    ).toBe(1);
+
+    expect(
+      (await features.featureJobs(filter, '', 10))[0]!.requirements.skills[0]!.alternatives[0]!.id,
+    ).toBe('python');
+  });
+
+  it('serializes projection publication with ingestion without exposing stale hashes', async () => {
+    const item = source();
+    const at = new Date().toISOString();
+    const initial = await repository.startRun(item, at);
+    const record = posting('race');
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: initial!.id,
+      observedAt: at,
+      postings: [record],
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const job = (await repository.read()).jobs.find((entry) => entry.sourceId === item.id)!;
+    const next = await repository.startRun(item, at);
+
+    await Promise.all([
+      features.saveFeatures([{ postingId: job.id, requirements: extractRequirements(job) }]),
+      repository.commitSnapshot({
+        source: item,
+        runId: next!.id,
+        observedAt: at,
+        postings: [{ ...record, contentHash: 'race-new' }],
+        rawResponses: [],
+        excluded: 0,
+        enumerationComplete: true,
+      }),
+    ]);
+
+    const filter = {
+      sourceIds: [item.id],
+      cutoff: '1900-01-01T00:00:00.000Z',
+      categories: ['engineering'],
+    };
+
+    expect(await features.featureJobs(filter, '', 10)).toEqual([]);
+    expect((await features.featureSnapshot(filter)).unenriched).toBe(1);
   });
 
   it('renews only the current unexpired owner during long imports', async () => {

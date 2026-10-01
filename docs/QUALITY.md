@@ -64,6 +64,10 @@ Wave C adds literal HTML parsing, native location-posting identities, category p
 
 ## Change procedure
 
+On 1 October 2026 (Europe/Amsterdam), the resume/matching increment passed root `pnpm check`: formatting, dependency boundaries, logos, zero-warning lint, strict types, contracts, both builds, 165 backend tests and 16 frontend document tests. Its default run skipped nine PostgreSQL tests; a separate final run against the dedicated `jobbely_test_*` database passed all **174 backend tests**, including those nine. Migration and versioned backfill completed against the local public-job database, inspecting/updating 13,162 postings.
+
+Manual browser checks verified DOCX extraction → profile analysis → fresh recommendations, explanation expansion, pagination, profile-edit invalidation and description/requirement navigation. PDF extraction also passed in the production preview with strict worker CSP. The requested 375px viewport override did not change the in-app browser's observed 1280px width, so mobile visual verification remains pending. Synthetic 25,000-feature tests establish a bounded regression check, not production load or held-out ranking quality. See [RESUME_TESTING](RESUME_TESTING.md), [DOCUMENTS](DOCUMENTS.md) and [MATCHING](MATCHING.md).
+
 Agents must follow [AGENTS.md](../AGENTS.md): after writing or modifying code, run the root `pnpm lint` against the final code and require zero warnings before reporting completion. Rerun after any further code edits. A successful `pnpm check` includes this lint gate; formatting/autofix alone does not replace it. Report failures or blockers accurately.
 
 Run checks appropriate to the affected behavior, and run `pnpm check` before a release. Regenerate contracts for public-schema changes. Add PostgreSQL verification for transaction/concurrency changes and representative live audits for provider changes. Documentation-only updates require formatting, link/command validation and review against code, without claiming deployment tests.

@@ -1,12 +1,12 @@
-# Resume increment 1: testing guide
+# Resume analysis, documents and matching: testing guide
 
-**Status:** Pasted-text analysis implemented for steps 1–4. Recorded 1 October 2026, Europe/Amsterdam. PDF/DOCX, requirement enrichment, ranking and employer bonuses remain deferred.
+**Status:** Initial complete flow implemented, recorded 1 October 2026, Europe/Amsterdam. Text review, local documents, job features and explained matching are covered below. Production hosting/load and held-out calibration remain pending.
 
 ## Run and inspect
 
 Run the app using the existing [local setup](../README.md), then open the **Resume** navigation item or `http://127.0.0.1:5173/?view=resume`. Both demo and PostgreSQL modes support analysis; it does not read or write candidate records in either mode. Use synthetic examples before private resumes.
 
-Choose an example, click **Analyze text**, and inspect the line-numbered reading preview, skill evidence, competencies, current location and employment records. The selector loads [the public synthetic corpus](../frontend/public/resume-evaluation.json): ten fictional resumes and three job descriptions reserved for future matching tests. They are never imported as real vacancies. Automated evaluation fixes the analysis date to 1 October 2026; the browser uses the server's current date.
+Choose an example, click **Analyze text**, and inspect the line-numbered reading preview, skill evidence, competencies, current location and employment records. The selector loads [the public synthetic corpus](../frontend/public/resume-evaluation.json): ten fictional resumes and three annotated job descriptions used by regression/review checks. They are never imported as real vacancies. Automated evaluation fixes the analysis date to 1 October 2026; the browser uses the server's current date.
 
 ## Manual checkpoints
 
@@ -29,7 +29,9 @@ Choose an example, click **Analyze text**, and inspect the line-numbered reading
 | Navigation/reload        | Visit Jobs then Resume, then reload                                     | Review survives SPA navigation in this tab; a full reload starts empty                                  |
 | Unsupported input        | Submit whitespace, very long lines or malformed corrections through API | A bounded, generic error is returned; no resume body is logged/cached                                   |
 
-The starter vocabulary has **51 skill concepts and four competency rules**. Unknown terms can be added manually. This is an initial reproducible evaluation set, not a held-out performance benchmark or complete resume parser. Evidence samples are capped at five excerpts per signal; there is no skill-specific tenure or employer weighting in this increment.
+The vocabulary has **59 skill concepts and four competency rules**. Unknown terms can be added manually. This is a reproducible regression set, not a held-out performance benchmark or complete parser. Evidence samples are capped at five per signal. Skill-specific tenure remains unknown; optional reviewed same-employer/function context is explained separately and cannot change fit bands or override gaps.
+
+[Employment header regression tests](../backend/src/domain/resume/employment.test.ts) add a fictional six-role timeline with concurrent freelance/founder work, inline dates, a company name containing “Engineer” and page-continuation-style text. All six engineering roles must be detected, overlaps unioned, and responsibility prose rejected as headers. Tests cover separators, SWE/SDE titles, multiline evidence, missing-date preservation and incomplete-extraction warnings. The PDF adapter suite separately verifies right-aligned dates remain beside company/title text across pages. These fixtures contain no real candidate content.
 
 ## API and automated checks
 
@@ -40,9 +42,26 @@ pnpm --filter @jobbely/backend exec vitest run src/domain/resume/evaluation.test
 pnpm check
 ```
 
-Behavior tests check every corpus expectation, date precision/overlap, alias collisions, manual corrections, provenance, input limits and bounded evidence. API tests check schemas, no-store headers, origin/rate/format limits, absence of profile retrieval and unchanged repository state. No PostgreSQL schema changes are required; the broader suite's database tests still require a separate test database.
+Behavior tests check corpus expectations, date precision/overlap, alias collisions, corrections, provenance, limits and evidence. API tests check schemas, no-store/origin/rate limits and unchanged candidate-free repository state. Matching requires the additive JobFeature migration and backfill. PostgreSQL tests require a separate `jobbely_test_*` database; skipped tests are not database verification.
 
-Browser verification covers sample analysis, corrections, skill addition/removal, clear/reload, ordinary Jobs navigation and a mobile viewport. Browser checks are currently manual rather than a committed automated frontend suite. Before file uploads, verify the isolation boundary in [RESUME_PRIVACY](RESUME_PRIVACY.md).
+Browser UI checks remain manual. Frontend document and session tests are automated; the isolation boundary is documented in [RESUME_PRIVACY](RESUME_PRIVACY.md).
+
+## Complete-flow checkpoints
+
+1. Apply migrations/backfill in PostgreSQL mode. Analyze a fictional engineering profile, correct a skill/date/location, confirm review and request recommendations. Expand explanations and open the job's original description/requirements. Verify required/preferred/contextual evidence, alternative groups, unknown specialist statements, experience bounds and freshness/coverage.
+2. Edit the profile or preferences after matching. Results and review confirmation clear immediately; obsolete cursors return 409. Load another page and verify stable ordering without duplicates. Close/demo/stale/failed/incomplete/quarantined/missing cases are synthetic automated tests, not real source mutations.
+3. Read equivalent synthetic PDF/DOCX files. Inspect reading-order metadata before Analyze, then compare text, detected claims and duration. Test a two-column PDF, DOCX tables/headers, broken words, damaged/image-only/encrypted PDFs and unsafe archives. Cancel while loading, Clear and reload; late work cannot restore cleared state.
+4. Toggle employer context. Only reviewed direct experience in the same target employer/function can add 3 points, separately explained. Required gaps and fit bands remain unchanged; unknown employers have no penalty. Evaluate each supported function separately.
+5. Verify the production preview or deployed host supplies strict parser CSP on HEAD/GET. Without it, file reading must refuse before accessing private bytes. Inspect mobile reading/review/explanation layout and keyboard controls. Confirm private fields never enter storage, URLs, fixtures, logs or caches.
+
+```powershell
+pnpm features:backfill
+pnpm --filter @jobbely/frontend test
+pnpm --filter @jobbely/backend exec vitest run src/domain/matching src/application/resume/match-jobs.test.ts src/api/matching.test.ts
+pnpm check
+```
+
+The matching suite replays the original annotated engineering/data job descriptions and independently labeled cases for all five functions. A 25,000-feature synthetic scan checks bounded ranking responsiveness. PostgreSQL tests cover idempotence, concurrent writers, changed content and ingestion/projection races. These establish regression behavior, not held-out ranking quality, deployed isolation or production p95 under concurrent load. The current browser parser has no hard 512 MiB OS memory ceiling.
 
 ## Implementation references
 

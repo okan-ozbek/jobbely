@@ -4,7 +4,7 @@ Jobbely collects public employer job listings, categorizes them without AI, and 
 
 Agents should start with [AGENTS.md](AGENTS.md) for repository boundaries, documentation references and required completion checks.
 
-The **Resume** page now supports pasted-text analysis: a reading preview, editable skills/competencies, employment and location, and overlap-safe experience totals. Try the synthetic examples and follow [RESUME_TESTING](docs/RESUME_TESTING.md). PDF/DOCX and job matching remain planned; see [RESUME_PLAN.md](RESUME_PLAN.md) for the full scope.
+The **Resume** page reads text or a local PDF/DOCX, shows reading order and claims, and lets you correct the profile before requesting explained job recommendations. It covers engineering, data/AI, product, sales and people, with explicit gaps, uncertainty and freshness. Candidate data stays transient; only public job features are persisted. Try the synthetic examples in [RESUME_TESTING](docs/RESUME_TESTING.md); see [RESUME_PLAN](RESUME_PLAN.md) for broader follow-ups.
 
 TypeScript lives in separate `/frontend` and `/backend` packages. Integrations support Greenhouse, Ashby, Lever, Workday, iCIMS/Jibe and the first native Wave C boards. All 60 employers are registered, with sources for all 10 Wave A and 31 Wave B companies plus Meta, Apple, Netflix, Google and Amazon. Wave B full imports succeeded for 29 companies; NVIDIA has a malformed feed and LinkedIn requires an authorized feed. Meta and Google also have explicit access blockers. Full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md), [Wave B](docs/WAVE_B.md), [Wave C](docs/WAVE_C.md) and [dated source checks](docs/SOURCE_CHECKS.md).
 
@@ -98,6 +98,8 @@ pnpm --filter @jobbely/frontend run dev
 The frontend development server proxies `/api` to port 3001. No frontend `.env` is needed with the default ports. Stop the servers with `Ctrl+C`; stop the Compose database with `docker compose stop`. Stopping it preserves the database volume.
 
 ## Host the application
+
+For an existing PostgreSQL installation, apply `pnpm db:migrate`, then `pnpm features:backfill` before matching. Demo listings are excluded. Production PDF/DOCX reading requires the worker CSP headers in [DEPLOYMENT](docs/DEPLOYMENT.md); missing headers preserve pasted-text fallback.
 
 Host the built frontend as static files, run the backend as a persistent Node process, and provide PostgreSQL. Use a reverse proxy to serve the frontend and route `/api/` to the backend under the same HTTPS origin.
 
@@ -199,10 +201,12 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 
 - [ARCHITECTURE](docs/ARCHITECTURE.md): layers, dependency direction and composition.
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
-- [RESUME](docs/RESUME.md): pasted-text analysis and proposed document adapters.
+- [RESUME](docs/RESUME.md): deterministic analysis, review and the initial complete matching flow.
+- [DOCUMENTS](docs/DOCUMENTS.md): local PDF/DOCX adapters, reading order, limits and isolation.
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
-- [MATCHING](docs/MATCHING.md): proposed job requirements, fit scoring and employer-context weighting.
-- [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): proposed transient processing and upload isolation.
+- [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.
+- [JOB_FEATURES](docs/JOB_FEATURES.md): indexed projection, backfill and hash/version invalidation.
+- [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): transient processing, worker CSP and private API boundaries.
 - [INGESTION](docs/INGESTION.md): refresh workflow, worker and failure handling.
 - [STORAGE](docs/STORAGE.md): persistence, leases, transactions and history.
 - [CLASSIFICATION](docs/CLASSIFICATION.md): taxonomy, strategies and evidence.

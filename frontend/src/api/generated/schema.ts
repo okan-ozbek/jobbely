@@ -182,6 +182,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/jobs/{id}/requirements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getJobRequirements"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/resume-matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["matchResume"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -678,6 +710,338 @@ export interface operations {
             };
             /** @description Default Response */
             500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    getJobRequirements: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        version: string;
+                        contentHash: string;
+                        category: string;
+                        skills: {
+                            alternatives: {
+                                id: string;
+                                name: string;
+                            }[];
+                            importance: "required" | "preferred" | "contextual";
+                            evidence: {
+                                excerpt: string;
+                                line: number;
+                                rule: string;
+                            };
+                        }[];
+                        experience: {
+                            minimumMonths: number;
+                            scope: "professional" | "function" | "skill";
+                            skillId: string | null;
+                            importance: "required" | "preferred" | "contextual";
+                            evidence: {
+                                excerpt: string;
+                                line: number;
+                                rule: string;
+                            };
+                        }[];
+                        constraints: {
+                            kind: "location" | "authorization" | "qualification" | "language";
+                            importance: "required" | "preferred" | "contextual";
+                            evidence: {
+                                excerpt: string;
+                                line: number;
+                                rule: string;
+                            };
+                        }[];
+                        unparsed: {
+                            importance: "required" | "preferred" | "contextual";
+                            evidence: {
+                                excerpt: string;
+                                line: number;
+                                rule: string;
+                            };
+                        }[];
+                        locations: string[];
+                        workplace: "remote" | "hybrid" | "onsite" | "unknown";
+                        warnings: string[];
+                        truncated: boolean;
+                    };
+                };
+            };
+            /** @description Default Response */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    matchResume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    profile: {
+                        analysisDate: string;
+                        skills: {
+                            id: string;
+                            status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
+                        }[];
+                        employment: {
+                            employer: string;
+                            category: "engineering" | "data-ai" | "research" | "quant-trading" | "product" | "design" | "sales" | "marketing" | "customer-success" | "people" | "finance" | "legal" | "security-it" | "operations" | "manufacturing" | "retail" | "creative" | "unclassified";
+                            kind: "employment" | "internship" | "project" | "volunteering";
+                            relationship: "direct" | "client" | "unknown";
+                            start: string;
+                            end: string;
+                        }[];
+                        location: {
+                            value: string;
+                            status: "extracted" | "uncertain" | "unknown" | "user_confirmed";
+                        };
+                    };
+                    categories: ("engineering" | "data-ai" | "product" | "sales" | "people")[];
+                    employerContext: boolean;
+                    limit: number;
+                    cursor?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: {
+                            job: {
+                                id: string;
+                                sourceId: string;
+                                companySlug: string;
+                                title: string;
+                                url: string;
+                                applyUrl: string;
+                                lastSeenAt: string;
+                                requirements: {
+                                    version: string;
+                                    contentHash: string;
+                                    category: string;
+                                    skills: {
+                                        alternatives: {
+                                            id: string;
+                                            name: string;
+                                        }[];
+                                        importance: "required" | "preferred" | "contextual";
+                                        evidence: {
+                                            excerpt: string;
+                                            line: number;
+                                            rule: string;
+                                        };
+                                    }[];
+                                    experience: {
+                                        minimumMonths: number;
+                                        scope: "professional" | "function" | "skill";
+                                        skillId: string | null;
+                                        importance: "required" | "preferred" | "contextual";
+                                        evidence: {
+                                            excerpt: string;
+                                            line: number;
+                                            rule: string;
+                                        };
+                                    }[];
+                                    constraints: {
+                                        kind: "location" | "authorization" | "qualification" | "language";
+                                        importance: "required" | "preferred" | "contextual";
+                                        evidence: {
+                                            excerpt: string;
+                                            line: number;
+                                            rule: string;
+                                        };
+                                    }[];
+                                    unparsed: {
+                                        importance: "required" | "preferred" | "contextual";
+                                        evidence: {
+                                            excerpt: string;
+                                            line: number;
+                                            rule: string;
+                                        };
+                                    }[];
+                                    locations: string[];
+                                    workplace: "remote" | "hybrid" | "onsite" | "unknown";
+                                    warnings: string[];
+                                    truncated: boolean;
+                                };
+                            };
+                            baseScore: number;
+                            completeness: number;
+                            band: "strong" | "possible" | "exploratory" | "review";
+                            requiredGaps: number;
+                            skills: {
+                                names: string[];
+                                importance: string;
+                                status: "matched" | "claim_only" | "not_evidenced";
+                                matchedId: string | null;
+                                excerpt: string;
+                            }[];
+                            experience: {
+                                minimumMonths: number;
+                                candidateMinimumMonths: number;
+                                importance: string;
+                                candidateMaximumMonths: number;
+                                status: "met" | "below" | "uncertain";
+                                scope: string;
+                                excerpt: string;
+                            }[];
+                            uncertainties: string[];
+                            location: string;
+                            coverage: string;
+                            companyName: string;
+                            logoUrl: string | null;
+                            employerAdjustment: {
+                                points: number;
+                                reasons: string[];
+                                version: string;
+                            };
+                        }[];
+                        nextCursor: string | null;
+                        evaluated: number;
+                        eligible: number;
+                        unenriched: number;
+                        datasetVersion: number;
+                        featureGeneration: number;
+                        asOf: string;
+                        freshnessHours: number;
+                        excludedSources: number;
+                        mode: string;
+                        versions: {
+                            features: string;
+                            scoring: string;
+                            employerContext: string;
+                        };
+                    };
+                };
+            };
+            /** @description Default Response */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

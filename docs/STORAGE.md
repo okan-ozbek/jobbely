@@ -12,6 +12,8 @@ Wave C replaces sequential row writes with bounded batches: 250 postings per par
 
 ## Records and evidence
 
+Resume matching adds a public `JobFeature` projection and feature-generation counter. Hash/version joins invalidate changed postings immediately; bounded backfill publishes under the shared ingestion lock. Candidate profiles are never stored. Indexes, transaction/race rules and commands are documented in [JOB_FEATURES](JOB_FEATURES.md).
+
 | Record           | Purpose                                                                          |
 | ---------------- | -------------------------------------------------------------------------------- |
 | `Posting`        | Current normalized job plus query metadata; unique `(sourceId, sourcePostingId)` |

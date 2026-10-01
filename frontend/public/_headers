@@ -1,0 +1,4 @@
+/assets/document-parser-*.js
+  Content-Security-Policy: default-src 'none'; script-src 'none'; connect-src 'none'; worker-src 'none'
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff

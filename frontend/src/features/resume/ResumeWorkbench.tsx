@@ -4,6 +4,8 @@ import type { ResumeAnalysis } from '../../api/client.js';
 import { EmploymentReview } from './EmploymentReview.js';
 import { SignalReview } from './SignalReview.js';
 import { useResumeAnalysis } from './useResumeAnalysis.js';
+import { useDocumentInput } from './documents/useDocumentInput.js';
+import { ResumeMatches } from './ResumeMatches.js';
 import './resume.css';
 
 interface Example {
@@ -24,8 +26,9 @@ function formatDuration(duration: ResumeAnalysis['experience']['professional']) 
     : `${label(duration.minimumMonths)} – ${label(duration.maximumMonths)}`;
 }
 
-export function ResumeWorkbench() {
+export function ResumeWorkbench({ openJob }: { openJob: (id: string) => void }) {
   const state = useResumeAnalysis();
+  const documentInput = useDocumentInput(state.setText);
   const [examples, setExamples] = useState<Example[]>([]);
   const [exampleId, setExampleId] = useState('');
 
@@ -76,13 +79,70 @@ export function ResumeWorkbench() {
           <h2 id="resume-input-heading">
             <FileText size={21} /> Resume analysis
           </h2>
-          <span className="resume-status">Pasted text · English</span>
+          <span className="resume-status">Text · PDF · DOCX · English</span>
         </div>
         <p className="small-note">
           Your text is sent to Jobbely for temporary analysis. It is not saved as a resume or
-          profile. Corrections stay in this tab; reloading clears them. PDF/DOCX uploads and job
-          matching are coming in later steps.
+          profile. Corrections stay in this tab; reloading clears them. Files are read locally in a
+          separate browser worker; only text you choose to analyze is sent to Jobbely.
         </p>
+        <div className="resume-file-input">
+          <label>
+            <span>Read a PDF or DOCX · maximum 5 MiB / 20 PDF pages</span>
+            <input
+              type="file"
+              accept=".pdf,.docx"
+              disabled={documentInput.loading}
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+
+                setExampleId('');
+
+                if (file) {
+                  void documentInput.select(file);
+                }
+
+                event.target.value = '';
+              }}
+            />
+          </label>
+          {documentInput.loading && (
+            <button
+              type="button"
+              className="resume-secondary-button"
+              onClick={documentInput.cancel}
+            >
+              Cancel document reading
+            </button>
+          )}
+          {documentInput.loading && <p role="status">Reading locally…</p>}
+          {documentInput.error && <p role="alert">{documentInput.error}</p>}
+          {documentInput.document && (
+            <details className="document-preview">
+              <summary>
+                Document reading order · {documentInput.document.format.toUpperCase()} ·{' '}
+                {documentInput.document.blocks.length} blocks
+              </summary>
+              <p className="small-note">
+                Review this order and edit the text below before analysis.{' '}
+                {documentInput.document.warnings.join(' ')}
+              </p>
+              <ol className="resume-lines">
+                {documentInput.document.blocks.map((block) => (
+                  <li key={block.order}>
+                    <span className="resume-line-number">{block.order}</span>
+                    <div>
+                      <span className="resume-section-label">
+                        {block.page ? `Page ${block.page}` : block.kind}
+                      </span>
+                      <span className="resume-line-text">{block.text}</span>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )}
+        </div>
         {examples.length > 0 && (
           <div className="resume-example-row">
             <label>
@@ -95,6 +155,7 @@ export function ResumeWorkbench() {
                   const example = examples.find((item) => item.id === event.target.value);
 
                   if (example) {
+                    documentInput.clear();
                     state.setText(example.text);
                   }
                 }}
@@ -138,7 +199,7 @@ export function ResumeWorkbench() {
             <button
               className="primary-button"
               type="submit"
-              disabled={!state.text.trim() || state.loading}
+              disabled={!state.text.trim() || state.loading || documentInput.loading}
             >
               Analyze text <ArrowUpRight size={16} />
             </button>
@@ -147,6 +208,7 @@ export function ResumeWorkbench() {
               type="button"
               onClick={() => {
                 state.clear();
+                documentInput.clear();
                 setExampleId('');
               }}
             >
@@ -309,6 +371,11 @@ export function ResumeWorkbench() {
               </p>
             </section>
           )}
+          <ResumeMatches
+            analysis={analysis}
+            pending={state.loading || !!state.error}
+            openJob={openJob}
+          />
         </>
       )}
     </div>

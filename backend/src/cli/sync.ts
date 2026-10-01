@@ -35,6 +35,9 @@ try {
   if (failed) {
     process.exitCode = 1;
   }
+
+  console.log('Requirement backfill:', JSON.stringify(await dependencies.backfill.execute()));
 } finally {
+  await dependencies.closeFeatures();
   await dependencies.repository.close();
 }

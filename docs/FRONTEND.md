@@ -31,10 +31,10 @@ Development proxies `/api` to the local backend. Production uses a same-origin r
 
 ## Resume workbench
 
-The [Resume feature](../frontend/src/features/resume/ResumeWorkbench.tsx) is mounted independently of catalog rendering and remains in tab memory across SPA navigation. Its hook submits bounded text through the generated POST contract, debounces corrections by 350 ms, immediately aborts on Clear/input replacement and ignores aborted responses. Manual role/signal/location edits retain the original text preview. Full reload clears input and corrections; browser storage and URL parameters contain no candidate data. Reading errors are independent of job-catalog errors. File input and matching are deferred. See [RESUME_TESTING](RESUME_TESTING.md).
+The [Resume feature](../frontend/src/features/resume/ResumeWorkbench.tsx) remains in tab memory across SPA navigation. Analysis debounces corrections by 350 ms and aborts replaced requests. Local PDF/DOCX workers supply editable text and ordered previews, with CSP preflight and cancellation. The reviewed allowlist drives matching; edits/preferences/pending analysis invalidate results, review confirmation and pagination. Full reload/Clear loses private state; storage and URL parameters contain no candidate fields. Job details display requirements beside the original description. See [RESUME_TESTING](RESUME_TESTING.md), [DOCUMENTS](DOCUMENTS.md) and [MATCHING](MATCHING.md).
 
 ## Implementation, limits and verification
 
 [App](../frontend/src/App.tsx), [request/navigation hooks](../frontend/src/hooks/), [client](../frontend/src/api/client.ts), [Vite config](../frontend/vite.config.ts), [styles](../frontend/src/styles.css).
 
-Browser checks covered live search/filter/detail/pagination/coverage and a mobile detail viewport in the initial slice. There is no automated frontend/browser test suite yet. Larger UI work should extract feature components from `App`, add metadata caching where justified, and test user behavior without introducing provider logic into rendering.
+Document adapters and cancellation/isolation sessions now have automated frontend tests. Browser UI checks remain manual. General catalog queries and metadata caching remain separate follow-ups; rendering must not introduce provider logic.

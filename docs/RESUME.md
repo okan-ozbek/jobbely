@@ -1,70 +1,35 @@
-# Decision: resume extraction and evidence
+# Decision: deterministic resume analysis and review
 
-**Status:** Pasted-text starter implemented; PDF/DOCX and broader vocabularies remain proposed. Recorded 1 October 2026, Europe/Amsterdam. Product scope and delivery gates: [RESUME_PLAN.md](../RESUME_PLAN.md). Current checks: [RESUME_TESTING](RESUME_TESTING.md).
+**Status:** Pasted text, local PDF/DOCX extraction, profile correction and initial explained matching implemented. Recorded 1 October 2026, Europe/Amsterdam. Product history: [RESUME_PLAN](../RESUME_PLAN.md); checks: [RESUME_TESTING](RESUME_TESTING.md).
 
-## Implemented first increment
+## Pipeline and layers
 
-The pure [text reader](../backend/src/domain/resume/document.ts) preserves line order and provides offsets into the returned CRLF-normalized text. Recognized English section headings control interpretation. [Analysis](../backend/src/application/resume/analyze-resume.ts) combines 51 skill concepts, four explicit competency rules, conservative employment headers and header-only location detection. Unknown fields remain editable; unsupported role formats need manual entry. No candidate data is persisted, no AI is called and no company bonus is applied.
+PDF and DOCX are separate [local document adapters](DOCUMENTS.md). They produce text, ordered reading blocks and warnings in an isolated browser worker. Candidates inspect/edit the result and submit the same bounded text-analysis contract used by pasted resumes. Backend domain policies remain pure; `AnalyzeResume` orchestrates extraction/corrections without IO or persistence. The frontend consumes generated API types and never imports backend internals.
 
-[Experience](../backend/src/domain/resume/experience.ts) unions month intervals, clips ongoing roles to the fixed analysis month, returns bounds for year-only dates, excludes missing/reversed/future dates and separates internships/projects/education. Complete elapsed months are reported: the current month is not counted as a completed month. Exact day-level duration and FTE adjustment are not implemented. Function totals use reviewed role categories, not inferred tenure of individual skills.
+The [text reader](../backend/src/domain/resume/document.ts) preserves line order and offsets into CRLF-normalized text. English headings inform section detection. [The vocabulary](../backend/src/domain/resume/vocabulary.ts) now contains 59 skill concepts and four explicit competency rules, covering an initial engineering/data/product/sales/people set. Named aliases, contextual collision guards, negation and learning states retain evidence; unknown skills can be added manually. This is a reviewed starter set, not universal skill coverage.
 
-[The UI](../frontend/src/features/resume/ResumeWorkbench.tsx) displays evidence and sends debounced manual signal/role/location corrections to the stateless API. Corrections preserve original excerpts and text, and update recognition/duration. Fields are not externally verified. Evidence samples are bounded to five excerpts per signal, retaining supporting evidence for the selected claim status.
+The preview shows Jobbely's interpretation, not an exact simulation of a vendor ATS or an employability verdict. Work-evidenced and user-confirmed claims do not verify proficiency. Contact text may remain visible in the reading preview but is not a matching field.
 
-The remaining sections describe the intended full architecture. Format adapters and an extraction port will be introduced when PDF/DOCX creates that actual boundary; the plain-text reader needs no interface or subprocess.
+## Records and corrections
 
-## Decision and rationale
+The [domain model](../backend/src/domain/resume/model.ts) separates document lines, skills/competencies, employment entries, current location, duration bounds, warnings and versions. Evidence references retain line IDs/excerpts/rules. Original employer/date headers are excluded from skill extraction: employment at Figma or Salesforce does not itself establish tool proficiency.
 
-Translate PDF, DOCX and pasted text through format adapters into one evidence-bearing document. Interpret that document with deterministic section, skill, employer and date policies. Keep an editable candidate profile separate from the initial extraction. This reuses the existing [layer rules](ARCHITECTURE.md) and preserves the project's preference for no AI.
+Corrections replay with the original text and fixed analysis date. They can add/remove/confirm skills and competencies, edit location and employment, or add manual roles. Original evidence remains available; confirmation has its own status. Employer recognition is restricted to employment fields and the configured company registry; title-only familiarity is not employment. Direct/client relationships remain unknown until reviewed.
 
-The preview demonstrates Jobbely's reading order and extraction, not a vendor-equivalent ATS verdict. Complex layouts can cause partial interpretation; the candidate should see and correct that failure. [Greenhouse's parsing guidance](https://support.greenhouse.io/hc/en-us/articles/200989175-Unsuccessful-resume-parse) documents several such layout limitations.
+Dates support month/year, ISO month, numeric month/year, year-only ranges and Present. Experience unions overlaps rather than adding promotions/parallel roles twice. Professional employment, internships and other activity remain separate. Relevant duration uses reviewed functions; missing/reversed/future intervals remain uncertain. No skill-specific years are inferred from total career tenure.
 
-## Patterns and boundaries
+The `text-2` employment policy accepts company/title headers separated by `|`, `at`, `@` or spaced hyphen/en/em dashes, with dates on the same or following line. It recognizes SWE/SDE/CTO and founder titles; explicitly technical founders map to engineering while generic founders remain unclassified. Company names containing a role word do not automatically become the title. Multiline headers retain all contributing evidence lines. Bounded header checks reject bullet/responsibility prose as a date's employer/title, and unassociated dated experience produces an incomplete-total warning. These English heuristics still require candidate review; education years never establish employment. Updated 1 October 2026.
 
-| Pattern            | Proposed responsibility                                                                  |
-| ------------------ | ---------------------------------------------------------------------------------------- |
-| Adapter            | PDF/DOCX/text extraction into canonical text spans, section hints and warnings           |
-| Strategy           | Contextual skill detection, employer resolution and date parsing policies                |
-| Pipeline           | Format validation → extraction → structure → profile → candidate review                  |
-| Ports and adapters | Isolated document runner behind an extraction port; fake documents for application tests |
-| Composition root   | Explicit adapter/policy/clock wiring in backend bootstrap                                |
+Location extraction uses the header, not former work locations. Ambiguous/missing locations stay uncertain; authorization, relocation, language and qualifications are not inferred. Structured review of those eligibility claims, multilingual parsing, OCR and richer employer-domain weighting remain follow-ups.
 
-Use simple pure functions for internal policies. Do not implement a broad parser superclass or make every helper an interface. Adapters may expose unavailable layout metadata explicitly; PDF page coordinates and DOCX paragraphs are not equivalent evidence.
+## Matching and state
 
-## Proposed canonical records
+The candidate explicitly confirms review before matching. [Matching](MATCHING.md) sends only allowlisted claims/dates/location, recomputes tenure and returns requirement evidence, gaps, comparisons, uncertainty, source coverage and freshness. Optional same-employer/function continuity is capped and cannot override gaps. Closed/demo/stale/missing/failed-source jobs are excluded.
 
-| Record                 | Fields and purpose                                                                                                      |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `ResumeDocument`       | Format, normalized text, spans, page/paragraph references, warnings, extraction version                                 |
-| `EvidenceReference`    | Text excerpt, stable span ID/offsets, source kind, rule/version, extraction status                                      |
-| `CandidateProfile`     | Employment, skills, competencies, education, qualifications, current location; separate display-only contact fields     |
-| `EmploymentEntry`      | Original/canonical employer, title, role function, work location, direct/client relationship, dates/precision, evidence |
-| `SkillEvidence`        | Canonical concept, original alias, section/context, mentioned/learning/negated/work-evidenced/user-confirmed status     |
-| `CompetencyEvidence`   | Explicit action/achievement supporting a competency; no personality or title-based inference                            |
-| `ExperienceSummary`    | Analysis date, interval union, total and relevant months/ranges, internship subtotal, unknown intervals                 |
-| `CandidatePreferences` | Desired functions, destinations, workplace modes, relocation and optional employer-context switch                       |
+State lives only in the current tab. Analysis corrections debounce by 350 ms and abort superseded requests. Editing the profile/preferences invalidates recommendations, review confirmation and pagination; pending/error analysis cannot be matched. Clear cancels document and network work. See [privacy](RESUME_PRIVACY.md).
 
-Evidence certainty is a rule label such as `explicit`, `ambiguous` or `user_confirmed`; it is not an uncalibrated percentage. The original excerpt remains accessible. User corrections produce a new in-tab profile revision with their own provenance; they cannot silently rewrite source evidence.
+## Implementation and verification
 
-Normalize Unicode and whitespace conservatively with an offset mapping. Deduplicate canonical skill mentions while preserving distinct supporting examples. Preserve unfamiliar values instead of forcing an incorrect taxonomy match. Parse contact details only for the preview; do not send them to matching.
+[Analysis workflow](../backend/src/application/resume/analyze-resume.ts), [text API](../backend/src/api/resume-routes.ts), [workbench](../frontend/src/features/resume/ResumeWorkbench.tsx), [editing hook](../frontend/src/features/resume/useResumeAnalysis.ts), [employment editor](../frontend/src/features/resume/EmploymentReview.tsx), [signal editor](../frontend/src/features/resume/SignalReview.tsx).
 
-## Chronology invariants
-
-Compute elapsed professional experience from the union of dated employment intervals. Keep projects, education, volunteering and internships distinct. Internal promotions and concurrent contracts cannot inflate total calendar time. Role-relevant experience also uses a union of supported intervals, not a sum.
-
-Use a supplied fixed analysis date for `Present`. Preserve date precision: year-only dates yield bounded durations; missing dates yield unknowns. Adopt half-open month intervals, with the displayed end month included by converting it to the next exclusive month, and document the UI convention. Exact month/day input must not drift through timezone conversion. Do not equate a duration claim with independently calculated work chronology.
-
-A skill in a role does not prove it was used for that role's entire duration. Skill-specific tenure needs dated evidence or user confirmation. Gaps, part-time status and unknown employers do not incur penalties; part-time duration is calendar time unless explicit workload data supports a separate FTE metric.
-
-## Recognition and location
-
-Employer aliases are resolved inside employment sections only. Recognize direct employment separately from client assignments; ambiguous aliases remain unresolved. Keep company recognition separate from competency evidence and from the optional ranking policy in [MATCHING](MATCHING.md).
-
-Current candidate location requires header evidence or confirmation. Employment cities and educational locations do not substitute for it. Preserve ambiguous cities, remote-country restrictions and willingness to relocate separately. No live geocoding requests or external profile lookup are needed in MVP.
-
-## Dependencies and verification
-
-Evaluate [PDF.js](https://mozilla.github.io/pdf.js/getting_started/) and [Mammoth](https://github.com/mwilliamson/mammoth.js) in the spike, pin versions after validation, and retain format regression fixtures. Mammoth's unsanitized output must never be directly rendered; use bounded text/structure extraction with external file access disabled. Resource isolation and private-state rules belong in [RESUME_PRIVACY](RESUME_PRIVACY.md).
-
-Implemented modules and tests are linked in [the testing guide](RESUME_TESTING.md). Future document adapters belong in the paths listed in [the plan](../RESUME_PLAN.md). Integration points are [bootstrap](../backend/src/bootstrap.ts), [resume schemas](../backend/src/api/resume-schemas.ts) and [frontend](../frontend/src/App.tsx). Retain generated-contract and dependency-boundary checks.
-
-Verification requires representative text PDF/DOCX fixtures, column/table/header failures, alias collisions, date precision/overlap cases, negated/learning skills and candidate correction provenance. Report extraction precision/recall by supported function; do not claim complete skill coverage from a few successful sample documents.
+Synthetic evaluation covers skill aliases/collisions, employer distinctions, status/provenance, overlap/date bounds, input limits and corrections. Format tests compare equivalent PDF/DOCX output. Matching tests separately exercise each supported function. The current corpus is a reproducible regression set, not a held-out precision/recall benchmark; unsupported layouts/requirements need explicit review rather than a fabricated accuracy claim.
