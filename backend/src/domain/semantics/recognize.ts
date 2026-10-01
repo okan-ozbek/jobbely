@@ -1,0 +1,129 @@
+import { concepts, conceptsById } from './concepts.js';
+import { facetInText, interpretationFor, normalizeText, phraseRules } from './clauses.js';
+import type { ConceptMention } from './model.js';
+
+const escapePattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const patterns = concepts.map((concept) => ({
+  concept,
+  aliases: concept.aliases.map((alias) => normalizeText(alias).toLowerCase()),
+  pattern: new RegExp(
+    `(^|[^\\p{L}\\p{N}_])(${concept.aliases.map((alias) => escapePattern(normalizeText(alias))).join('|')})(?=$|[^\\p{L}\\p{N}_])`,
+    'giu',
+  ),
+}));
+
+function allowed(id: string, alias: string, text: string, technicalList: boolean) {
+  if (
+    id === 'low-level' &&
+    !/\b(?:programming|systems?|memory|threading|software|engineering)\b|C\+\+/i.test(text)
+  ) {
+    return false;
+  }
+
+  if (
+    ['golang', 'react', 'rust', 'spark'].includes(id) &&
+    /^(?:Go|React|Rust|Spark)$/i.test(alias)
+  ) {
+    return (
+      technicalList ||
+      /\b(?:built|developed|implemented|using|uses?|used|programming|language|framework|backend|frontend|services?|proficien(?:t|cy)|knowledge|experience|skills|studying|learning|exploring)\b/i.test(
+        text,
+      ) ||
+      /^\s*(?:Go|React|Rust|Spark)(?:\s+(?:required|preferred))?\.?\s*$/i.test(text) ||
+      /\b(?:Java|Python|TypeScript|SQL|Docker|Kubernetes)\b/i.test(text)
+    );
+  }
+
+  return true;
+}
+
+export function recognizeConcepts(text: string, technicalList = false): ConceptMention[] {
+  const normalized = normalizeText(text);
+  const mentions: ConceptMention[] = [];
+  const lowerText = normalized.toLowerCase();
+
+  for (const { concept, aliases, pattern } of patterns) {
+    if (!aliases.some((alias) => lowerText.includes(alias))) {
+      continue;
+    }
+
+    for (const match of normalized.matchAll(pattern)) {
+      if (!allowed(concept.id, match[2]!, normalized, technicalList)) {
+        continue;
+      }
+
+      const position = match.index + match[1]!.length;
+
+      mentions.push({
+        id: concept.id,
+        name: concept.name,
+        position,
+        length: match[2]!.length,
+        facet: facetInText(concept.id, text, position),
+        interpretation: interpretationFor(text, position, 'explicit'),
+        rule: `alias:${concept.id}`,
+      });
+
+      if (mentions.length >= 2_000) {
+        return mentions.sort((a, b) => a.position - b.position || b.length - a.length);
+      }
+    }
+  }
+
+  for (const rule of phraseRules) {
+    for (const match of normalized.matchAll(rule.pattern)) {
+      for (const output of rule.concepts) {
+        const concept = conceptsById.get(output.id)!;
+
+        mentions.push({
+          id: output.id,
+          name: concept.name,
+          position: match.index,
+          length: match[0].length,
+          facet: output.facet ?? facetInText(output.id, text, match.index),
+          interpretation: interpretationFor(text, match.index, 'interpreted'),
+          rule: `clause:${rule.id}`,
+        });
+      }
+
+      if (mentions.length >= 2_000) {
+        break;
+      }
+    }
+
+    if (mentions.length >= 2_000) {
+      break;
+    }
+  }
+
+  return mentions
+    .filter(
+      (item) =>
+        !item.rule.startsWith('alias:') ||
+        !mentions.some(
+          (other) =>
+            other.rule.startsWith('alias:') &&
+            other.length > item.length &&
+            other.position <= item.position &&
+            other.position + other.length >= item.position + item.length,
+        ),
+    )
+    .sort((a, b) => a.position - b.position || b.length - a.length || a.id.localeCompare(b.id));
+}
+
+export function conceptsInText(text: string) {
+  const seen = new Set<string>();
+
+  return recognizeConcepts(text).filter((mention) => {
+    const key = `${mention.id}:${mention.facet}`;
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+
+    return true;
+  });
+}

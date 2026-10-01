@@ -1,3 +1,4 @@
+import { conceptsById } from '../../domain/semantics/concepts.js';
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { Company, Source, Job } from '../../domain/model.js';
 import {
@@ -97,6 +98,15 @@ export class MatchJobs {
       new Date(profile.analysisDate).toISOString().slice(0, 10) !== profile.analysisDate ||
       profile.analysisDate > this.clock().toISOString().slice(0, 10) ||
       profile.analysisDate < '1900-01-01' ||
+      [...profile.skills, ...(profile.competencies ?? [])].some((signal) => {
+        const allowed = conceptsById.get(signal.id)?.facets ?? ['general'];
+
+        return [
+          ...(signal.facets ?? []),
+          ...(signal.deniedFacets ?? []),
+          ...(signal.uncertainFacets ?? []),
+        ].some((facet) => !allowed.includes(facet));
+      }) ||
       new Set([...profile.skills, ...(profile.competencies ?? [])].map((item) => item.id)).size !==
         profile.skills.length + (profile.competencies?.length ?? 0)
     ) {
@@ -138,7 +148,7 @@ export class MatchJobs {
       descriptionText: job.descriptionText,
       skills: skillMentions(job.descriptionText).map((mention) => ({
         ...mention,
-        ...skillMatch(prepared.matches, mention.id),
+        ...skillMatch(prepared.matches, mention.id, mention.facet, mention.interpretation),
       })),
       comparison,
       recommendationEligible: !!recommendationEligible,

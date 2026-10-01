@@ -38,3 +38,5 @@ The [Resume feature](../frontend/src/features/resume/ResumeWorkbench.tsx) remain
 [App](../frontend/src/App.tsx), [request/navigation hooks](../frontend/src/hooks/), [client](../frontend/src/api/client.ts), [Vite config](../frontend/vite.config.ts), [styles](../frontend/src/styles.css).
 
 Document adapters and cancellation/isolation sessions now have automated frontend tests. Browser UI checks remain manual. General catalog queries and metadata caching remain separate follow-ups; rendering must not introduce provider logic.
+
+Engineering semantic matching now distinguishes full (green), partial (yellow), suggested (purple, zero credit) and absent/denied (red) coverage. Scoped tool-usage/development answers stay transient and invalidate profile review and pagination. Matching accepts bounded semantic metadata, never resume excerpts. See [SEMANTICS.md](SEMANTICS.md) for the implemented registry, context guards, confirmation flow and limits.

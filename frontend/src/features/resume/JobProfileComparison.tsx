@@ -1,6 +1,8 @@
+import { coverageLabel, reviewQuestions } from './semantic-review.js';
+import { SkillQuestions } from './SkillQuestions.js';
 import { useEffect, useState } from 'react';
 import { compareJobResume } from '../../api/client.js';
-import type { Job, JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
+import type { ConceptReview, Job, JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
 import { highlightSegments } from './highlights.js';
@@ -9,10 +11,12 @@ export function JobProfileComparison({
   job,
   analysis,
   reviewResume,
+  reviewSignal,
 }: {
   job: Job;
   analysis: ResumeAnalysis | null;
   reviewResume: () => void;
+  reviewSignal: (review: ConceptReview) => void;
 }) {
   const [response, setResponse] = useState<{
     jobId: string;
@@ -84,13 +88,17 @@ export function JobProfileComparison({
                   in company context are highlighted too; they do not automatically count as
                   requirements.
                 </p>
+                <SkillQuestions
+                  questions={reviewQuestions(data.comparison.skills)}
+                  answer={reviewSignal}
+                />
                 <label className="resume-checkbox">
                   <input
                     type="checkbox"
                     checked={highlight}
                     onChange={(event) => setHighlight(event.target.checked)}
                   />
-                  Highlight recognized keywords
+                  Highlight recognized skills and activities
                 </label>
                 <details>
                   <summary>
@@ -113,19 +121,10 @@ export function JobProfileComparison({
               <mark
                 key={index}
                 className={`keyword-${segment.span.confidence}`}
-                title={`${segment.span.name}: ${segment.span.reason}${segment.span.path.length ? ` ${segment.span.sourceName} → ${segment.span.path.map((edge) => edge.to).join(' → ')} (${Math.round(segment.span.credit * 100)}% evidence weight)` : ''}`}
+                title={`${segment.span.name}: ${segment.span.reason}${segment.span.path.length && segment.span.decision !== 'suggested' ? ` ${segment.span.sourceName} → ${segment.span.path.map((edge) => edge.to).join(' → ')} (${Math.round(segment.span.credit * 100)}% evidence weight)` : ''}`}
               >
                 {segment.text}
-                <span className="sr-only">
-                  {' '}
-                  (
-                  {segment.span.confidence === 'green'
-                    ? 'direct match'
-                    : segment.span.confidence === 'orange'
-                      ? 'uncertain or related'
-                      : 'no match'}
-                  )
-                </span>
+                <span className="sr-only"> ({coverageLabel(segment.span.decision)})</span>
               </mark>
             ) : (
               segment.text

@@ -1013,6 +1013,70 @@
                     "additionalProperties": false,
                     "type": "object",
                     "properties": {
+                      "signalReviews": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "facet",
+                            "answer"
+                          ],
+                          "properties": {
+                            "id": {
+                              "minLength": 1,
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "facet": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            },
+                            "answer": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "confirmed"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "denied"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unsure"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
                       "addSkills": {
                         "maxItems": 100,
                         "uniqueItems": true,
@@ -1403,6 +1467,115 @@
                           "evidence"
                         ],
                         "properties": {
+                          "facets": {
+                            "maxItems": 3,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "deniedFacets": {
+                            "maxItems": 3,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "uncertainFacets": {
+                            "maxItems": 3,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "interpretation": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "explicit"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "interpreted"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ambiguous"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contextual"
+                                ]
+                              }
+                            ]
+                          },
                           "id": {
                             "type": "string"
                           },
@@ -1461,6 +1634,12 @@
                                 },
                                 "rule": {
                                   "type": "string"
+                                },
+                                "start": {
+                                  "type": "integer"
+                                },
+                                "end": {
+                                  "type": "integer"
                                 }
                               }
                             }
@@ -1479,6 +1658,115 @@
                           "evidence"
                         ],
                         "properties": {
+                          "facets": {
+                            "maxItems": 3,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "deniedFacets": {
+                            "maxItems": 3,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "uncertainFacets": {
+                            "maxItems": 3,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "general"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "usage"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "development"
+                                  ]
+                                }
+                              ]
+                            }
+                          },
+                          "interpretation": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "explicit"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "interpreted"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ambiguous"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contextual"
+                                ]
+                              }
+                            ]
+                          },
                           "id": {
                             "type": "string"
                           },
@@ -1537,6 +1825,12 @@
                                 },
                                 "rule": {
                                   "type": "string"
+                                },
+                                "start": {
+                                  "type": "integer"
+                                },
+                                "end": {
+                                  "type": "integer"
                                 }
                               }
                             }
@@ -1783,6 +2077,12 @@
                                 },
                                 "rule": {
                                   "type": "string"
+                                },
+                                "start": {
+                                  "type": "integer"
+                                },
+                                "end": {
+                                  "type": "integer"
                                 }
                               }
                             }
@@ -1847,6 +2147,12 @@
                               },
                               "rule": {
                                 "type": "string"
+                              },
+                              "start": {
+                                "type": "integer"
+                              },
+                              "end": {
+                                "type": "integer"
                               }
                             }
                           }
@@ -2138,6 +2444,115 @@
                             "status"
                           ],
                           "properties": {
+                            "facets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "deniedFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "uncertainFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "interpretation": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "explicit"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "interpreted"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "ambiguous"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "contextual"
+                                  ]
+                                }
+                              ]
+                            },
                             "id": {
                               "maxLength": 200,
                               "minLength": 1,
@@ -2191,6 +2606,115 @@
                             "status"
                           ],
                           "properties": {
+                            "facets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "deniedFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "uncertainFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "interpretation": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "explicit"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "interpreted"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "ambiguous"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "contextual"
+                                  ]
+                                }
+                              ]
+                            },
                             "id": {
                               "maxLength": 200,
                               "minLength": 1,
@@ -2510,6 +3034,10 @@
                       "items": {
                         "type": "object",
                         "required": [
+                          "decision",
+                          "targetId",
+                          "facet",
+                          "suggestion",
                           "confidence",
                           "credit",
                           "sourceId",
@@ -2518,10 +3046,108 @@
                           "reason",
                           "id",
                           "name",
+                          "interpretation",
+                          "rule",
                           "position",
                           "length"
                         ],
                         "properties": {
+                          "decision": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "full"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "partial"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "suggested"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "none"
+                                ]
+                              }
+                            ]
+                          },
+                          "targetId": {
+                            "type": "string"
+                          },
+                          "facet": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "general"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "usage"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "development"
+                                ]
+                              }
+                            ]
+                          },
+                          "suggestion": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "name",
+                              "facet",
+                              "question"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "facet": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "question": {
+                                "type": "string"
+                              }
+                            },
+                            "nullable": true
+                          },
                           "confidence": {
                             "anyOf": [
                               {
@@ -2533,7 +3159,13 @@
                               {
                                 "type": "string",
                                 "enum": [
-                                  "orange"
+                                  "yellow"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "purple"
                                 ]
                               },
                               {
@@ -2560,12 +3192,58 @@
                             "items": {
                               "type": "object",
                               "required": [
+                                "kind",
+                                "mode",
                                 "from",
                                 "to",
                                 "weight",
                                 "reason"
                               ],
                               "properties": {
+                                "kind": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "transferable"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "specialization"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "possible-tool"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "ecosystem"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "mode": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "partial"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "suggestion"
+                                      ]
+                                    }
+                                  ]
+                                },
                                 "from": {
                                   "type": "string"
                                 },
@@ -2588,6 +3266,37 @@
                             "type": "string"
                           },
                           "name": {
+                            "type": "string"
+                          },
+                          "interpretation": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "explicit"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "interpreted"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ambiguous"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contextual"
+                                ]
+                              }
+                            ]
+                          },
+                          "rule": {
                             "type": "string"
                           },
                           "position": {
@@ -2620,6 +3329,10 @@
                           "items": {
                             "type": "object",
                             "required": [
+                              "decision",
+                              "targetId",
+                              "facet",
+                              "suggestion",
                               "confidence",
                               "credit",
                               "sourceId",
@@ -2633,6 +3346,102 @@
                               "excerpt"
                             ],
                             "properties": {
+                              "decision": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "full"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "partial"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "suggested"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "none"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "targetId": {
+                                "type": "string"
+                              },
+                              "facet": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "suggestion": {
+                                "type": "object",
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "facet",
+                                  "question"
+                                ],
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "facet": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "general"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "usage"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "development"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "question": {
+                                    "type": "string"
+                                  }
+                                },
+                                "nullable": true
+                              },
                               "confidence": {
                                 "anyOf": [
                                   {
@@ -2644,7 +3453,13 @@
                                   {
                                     "type": "string",
                                     "enum": [
-                                      "orange"
+                                      "yellow"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "purple"
                                     ]
                                   },
                                   {
@@ -2671,12 +3486,58 @@
                                 "items": {
                                   "type": "object",
                                   "required": [
+                                    "kind",
+                                    "mode",
                                     "from",
                                     "to",
                                     "weight",
                                     "reason"
                                   ],
                                   "properties": {
+                                    "kind": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "transferable"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "specialization"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "possible-tool"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "ecosystem"
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "mode": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "partial"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "suggestion"
+                                          ]
+                                        }
+                                      ]
+                                    },
                                     "from": {
                                       "type": "string"
                                     },
@@ -3027,6 +3888,56 @@
                                 },
                                 "name": {
                                   "type": "string"
+                                },
+                                "facet": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "general"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "usage"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "development"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "interpretation": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "explicit"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "interpreted"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "ambiguous"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "contextual"
+                                      ]
+                                    }
+                                  ]
                                 }
                               }
                             }
@@ -3061,6 +3972,12 @@
                               "rule"
                             ],
                             "properties": {
+                              "start": {
+                                "type": "integer"
+                              },
+                              "end": {
+                                "type": "integer"
+                              },
                               "excerpt": {
                                 "type": "string"
                               },
@@ -3146,6 +4063,12 @@
                               "rule"
                             ],
                             "properties": {
+                              "start": {
+                                "type": "integer"
+                              },
+                              "end": {
+                                "type": "integer"
+                              },
                               "excerpt": {
                                 "type": "string"
                               },
@@ -3228,6 +4151,12 @@
                               "rule"
                             ],
                             "properties": {
+                              "start": {
+                                "type": "integer"
+                              },
+                              "end": {
+                                "type": "integer"
+                              },
                               "excerpt": {
                                 "type": "string"
                               },
@@ -3281,6 +4210,12 @@
                               "rule"
                             ],
                             "properties": {
+                              "start": {
+                                "type": "integer"
+                              },
+                              "end": {
+                                "type": "integer"
+                              },
                               "excerpt": {
                                 "type": "string"
                               },
@@ -3410,6 +4345,115 @@
                             "status"
                           ],
                           "properties": {
+                            "facets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "deniedFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "uncertainFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "interpretation": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "explicit"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "interpreted"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "ambiguous"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "contextual"
+                                  ]
+                                }
+                              ]
+                            },
                             "id": {
                               "maxLength": 200,
                               "minLength": 1,
@@ -3463,6 +4507,115 @@
                             "status"
                           ],
                           "properties": {
+                            "facets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "deniedFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "uncertainFacets": {
+                              "maxItems": 3,
+                              "uniqueItems": true,
+                              "type": "array",
+                              "items": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              }
+                            },
+                            "interpretation": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "explicit"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "interpreted"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "ambiguous"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "contextual"
+                                  ]
+                                }
+                              ]
+                            },
                             "id": {
                               "maxLength": 200,
                               "minLength": 1,
@@ -3923,6 +5076,56 @@
                                               },
                                               "name": {
                                                 "type": "string"
+                                              },
+                                              "facet": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "general"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "usage"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "development"
+                                                    ]
+                                                  }
+                                                ]
+                                              },
+                                              "interpretation": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "explicit"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "interpreted"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "ambiguous"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "contextual"
+                                                    ]
+                                                  }
+                                                ]
                                               }
                                             }
                                           }
@@ -3957,6 +5160,12 @@
                                             "rule"
                                           ],
                                           "properties": {
+                                            "start": {
+                                              "type": "integer"
+                                            },
+                                            "end": {
+                                              "type": "integer"
+                                            },
                                             "excerpt": {
                                               "type": "string"
                                             },
@@ -4042,6 +5251,12 @@
                                             "rule"
                                           ],
                                           "properties": {
+                                            "start": {
+                                              "type": "integer"
+                                            },
+                                            "end": {
+                                              "type": "integer"
+                                            },
                                             "excerpt": {
                                               "type": "string"
                                             },
@@ -4124,6 +5339,12 @@
                                             "rule"
                                           ],
                                           "properties": {
+                                            "start": {
+                                              "type": "integer"
+                                            },
+                                            "end": {
+                                              "type": "integer"
+                                            },
                                             "excerpt": {
                                               "type": "string"
                                             },
@@ -4177,6 +5398,12 @@
                                             "rule"
                                           ],
                                           "properties": {
+                                            "start": {
+                                              "type": "integer"
+                                            },
+                                            "end": {
+                                              "type": "integer"
+                                            },
                                             "excerpt": {
                                               "type": "string"
                                             },
@@ -4280,6 +5507,10 @@
                             "items": {
                               "type": "object",
                               "required": [
+                                "decision",
+                                "targetId",
+                                "facet",
+                                "suggestion",
                                 "confidence",
                                 "credit",
                                 "sourceId",
@@ -4293,6 +5524,102 @@
                                 "excerpt"
                               ],
                               "properties": {
+                                "decision": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "full"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "partial"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "suggested"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "none"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "targetId": {
+                                  "type": "string"
+                                },
+                                "facet": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "general"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "usage"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "development"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "suggestion": {
+                                  "type": "object",
+                                  "required": [
+                                    "id",
+                                    "name",
+                                    "facet",
+                                    "question"
+                                  ],
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "facet": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "general"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "usage"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "development"
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "question": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "nullable": true
+                                },
                                 "confidence": {
                                   "anyOf": [
                                     {
@@ -4304,7 +5631,13 @@
                                     {
                                       "type": "string",
                                       "enum": [
-                                        "orange"
+                                        "yellow"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "purple"
                                       ]
                                     },
                                     {
@@ -4331,12 +5664,58 @@
                                   "items": {
                                     "type": "object",
                                     "required": [
+                                      "kind",
+                                      "mode",
                                       "from",
                                       "to",
                                       "weight",
                                       "reason"
                                     ],
                                     "properties": {
+                                      "kind": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "transferable"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "specialization"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "possible-tool"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "ecosystem"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "mode": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "partial"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "suggestion"
+                                            ]
+                                          }
+                                        ]
+                                      },
                                       "from": {
                                         "type": "string"
                                       },

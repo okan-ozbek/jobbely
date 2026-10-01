@@ -1,3 +1,4 @@
+import type { SignalReview, SignalSemantics } from '../semantics/model.js';
 import type { categories } from '../taxonomy.js';
 
 export type ResumeCategory = (typeof categories)[number]['slug'];
@@ -23,12 +24,14 @@ export interface ResumeLine {
 }
 
 export interface ResumeEvidence {
+  start?: number;
+  end?: number;
   lineId: string;
   excerpt: string;
   rule: string;
 }
 
-export interface ResumeSignal {
+export interface ResumeSignal extends SignalSemantics {
   id: string;
   name: string;
   status: 'mentioned' | 'work_evidenced' | 'learning' | 'negated' | 'user_confirmed';
@@ -92,6 +95,7 @@ export interface EmploymentCorrection {
 }
 
 export interface ResumeCorrections {
+  signalReviews?: SignalReview[];
   addSkills?: string[];
   removeSkills?: string[];
   addCompetencies?: string[];

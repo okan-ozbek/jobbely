@@ -338,6 +338,7 @@ export function ResumeWorkbench({
                 </p>
               </section>
               <SignalReview
+                review={state.reviewSignal}
                 title="Skills"
                 signals={analysis.skills}
                 suggestions={analysis.supportedSkills}
@@ -345,6 +346,7 @@ export function ResumeWorkbench({
                 remove={(signal) => state.removeSignal('skills', signal)}
               />
               <SignalReview
+                review={state.reviewSignal}
                 title="Competencies"
                 signals={analysis.competencies}
                 add={(name) => state.addSignal('competencies', name)}

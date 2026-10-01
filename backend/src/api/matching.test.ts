@@ -16,7 +16,7 @@ afterEach(async () => {
   await Promise.all(apps.splice(0).map((app) => app.close()));
 });
 
-async function setup() {
+async function setup(description?: string) {
   const repository = new MemoryJobRepository();
 
   const source: Source = {
@@ -34,7 +34,7 @@ async function setup() {
     source,
     runId: run!.id,
     observedAt: '2026-10-01T00:00:00.000Z',
-    postings: [storedJob('1'), storedJob('2')],
+    postings: [storedJob('1', description), storedJob('2', description)],
     rawResponses: [],
     excluded: 0,
     enumerationComplete: true,
@@ -97,7 +97,7 @@ describe('private matching API and public requirements', () => {
       skills: [{ id: 'typescript', status: 'learning' }],
     });
 
-    expect(learning.json().skills[0].confidence).toBe('orange');
+    expect(learning.json().skills[0].confidence).toBe('yellow');
     expect(learning.json().comparison.requiredGaps).toBeGreaterThan(0);
     expect(await repository.read()).toEqual(before);
 
@@ -110,6 +110,100 @@ describe('private matching API and public requirements', () => {
         })
       ).statusCode,
     ).toBe(404);
+  });
+
+  it('serializes purple zero-credit suggestions and scoped reviews, without changing storage', async () => {
+    const { app, repository, input } = await setup(
+      'Requirements\nClang required.\nClang frontend development required.',
+    );
+
+    const before = await repository.read();
+    const job = before.jobs[0]!;
+    const text = 'Experience\nBuilt C++ services.';
+
+    for (const answer of [null, 'confirmed', 'denied', 'unsure'] as const) {
+      const analyzed = await app.inject({
+        method: 'POST',
+        url: '/api/v1/resume-analysis',
+        payload: {
+          text,
+          analysisDate: '2026-10-01',
+          ...(answer
+            ? { corrections: { signalReviews: [{ id: 'clang', facet: 'usage', answer }] } }
+            : {}),
+        },
+      });
+
+      expect(analyzed.statusCode).toBe(200);
+
+      const profile = { ...input.profile, skills: analyzed.json().skills, competencies: [] };
+
+      // Only structured claims cross the private matching boundary.
+      profile.skills = profile.skills.map(
+        ({ id, status, facets, deniedFacets, uncertainFacets, interpretation }) => ({
+          id,
+          status,
+          facets,
+          deniedFacets,
+          uncertainFacets,
+          interpretation,
+        }),
+      );
+
+      const compared = await app.inject({
+        method: 'POST',
+        url: `/api/v1/jobs/${job.id}/resume-match`,
+        payload: { profile },
+      });
+
+      expect(compared.statusCode).toBe(200);
+      expect(compared.headers['cache-control']).toBe('no-store');
+
+      const usage = compared
+        .json()
+        .comparison.skills.find(
+          (item: { targetId: string; facet: string }) =>
+            item.targetId === 'clang' && item.facet === 'usage',
+        );
+
+      expect(usage.decision).toBe(
+        answer === null
+          ? 'suggested'
+          : answer === 'confirmed'
+            ? 'full'
+            : answer === 'denied'
+              ? 'none'
+              : 'partial',
+      );
+
+      expect(usage.credit).toBe(answer === 'confirmed' ? 1 : 0);
+
+      const development = compared
+        .json()
+        .comparison.skills.find(
+          (item: { targetId: string; facet: string }) =>
+            item.targetId === 'clang' && item.facet === 'development',
+        );
+
+      expect(development.credit).toBeLessThan(1);
+      expect(compared.body).not.toContain('Built C++ services');
+    }
+
+    expect(await repository.read()).toEqual(before);
+
+    const invalid = await app.inject({
+      method: 'POST',
+      url: '/api/v1/resume-matches',
+      payload: {
+        ...input,
+        profile: {
+          ...input.profile,
+          skills: [{ id: 'java', status: 'user_confirmed', facets: ['development'] }],
+        },
+      },
+    });
+
+    expect(invalid.statusCode).toBe(400);
   });
 
   it('uses strict private errors, origin and body limits for description comparisons', async () => {

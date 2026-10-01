@@ -1,6 +1,8 @@
+import { mergeReview } from './semantic-review.js';
 import { useEffect, useRef, useState } from 'react';
 import { analyzeResume } from '../../api/client.js';
 import type {
+  ConceptReview,
   EmploymentCorrection,
   ResumeAnalysis,
   ResumeCorrections,
@@ -93,6 +95,12 @@ export function useResumeAnalysis() {
     }));
   };
 
+  const reviewSignal = (review: ConceptReview) => {
+    const reviews = submission?.corrections?.signalReviews ?? [];
+
+    correct({ signalReviews: mergeReview(reviews, review) });
+  };
+
   const editEmployment = (id: string, changes: Omit<EmploymentCorrection, 'id'>) => {
     const entries = submission?.corrections?.employment ?? [];
     const previous = entries.find((entry) => entry.id === id);
@@ -128,6 +136,9 @@ export function useResumeAnalysis() {
     const remove = kind === 'skills' ? 'removeSkills' : 'removeCompetencies';
 
     correct({
+      signalReviews: (submission?.corrections?.signalReviews ?? []).filter(
+        (review) => review.id !== signal.id,
+      ),
       [add]: (submission?.corrections?.[add] ?? []).filter(
         (name) => name.toLowerCase() !== signal.name.toLowerCase(),
       ),
@@ -149,5 +160,6 @@ export function useResumeAnalysis() {
     addEmployment,
     addSignal,
     removeSignal,
+    reviewSignal,
   };
 }

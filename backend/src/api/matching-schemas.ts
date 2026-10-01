@@ -1,3 +1,4 @@
+import { signalSemantics, facetSchema, interpretationSchema } from './semantic-schemas.js';
 import { Type } from '@sinclair/typebox';
 import { categories } from '../domain/taxonomy.js';
 import { supportedFunctions } from '../domain/matching/requirements.js';
@@ -9,7 +10,13 @@ const importance = Type.Union(
   ['required', 'preferred', 'contextual'].map((value) => Type.Literal(value)),
 );
 
-const evidence = Type.Object({ excerpt: Type.String(), line: Type.Integer(), rule: Type.String() });
+const evidence = Type.Object({
+  start: Type.Optional(Type.Integer()),
+  end: Type.Optional(Type.Integer()),
+  excerpt: Type.String(),
+  line: Type.Integer(),
+  rule: Type.String(),
+});
 
 export const requirementsSchema = Type.Object({
   version: Type.String(),
@@ -17,7 +24,14 @@ export const requirementsSchema = Type.Object({
   category: Type.String(),
   skills: Type.Array(
     Type.Object({
-      alternatives: Type.Array(Type.Object({ id: Type.String(), name: Type.String() })),
+      alternatives: Type.Array(
+        Type.Object({
+          id: Type.String(),
+          name: Type.String(),
+          facet: Type.Optional(facetSchema),
+          interpretation: Type.Optional(interpretationSchema),
+        }),
+      ),
       importance,
       evidence,
     }),
@@ -57,6 +71,7 @@ export const matchProfileSchema = Type.Object(
     skills: Type.Array(
       Type.Object(
         {
+          ...signalSemantics,
           id: Type.String({ maxLength: 200, minLength: 1 }),
           status: Type.Union(
             (['mentioned', 'work_evidenced', 'learning', 'negated', 'user_confirmed'] as const).map(
@@ -72,6 +87,7 @@ export const matchProfileSchema = Type.Object(
       Type.Array(
         Type.Object(
           {
+            ...signalSemantics,
             id: Type.String({ maxLength: 200, minLength: 1 }),
             status: Type.Union(
               (
@@ -135,12 +151,32 @@ export const matchInputSchema = Type.Object(
 );
 
 export const skillMatchSchema = Type.Object({
-  confidence: Type.Union(['green', 'orange', 'red'].map((value) => Type.Literal(value))),
+  decision: Type.Union(
+    ['full', 'partial', 'suggested', 'none'].map((value) => Type.Literal(value)),
+  ),
+  targetId: Type.String(),
+  facet: facetSchema,
+  suggestion: Type.Union([
+    Type.Object({
+      id: Type.String(),
+      name: Type.String(),
+      facet: facetSchema,
+      question: Type.String(),
+    }),
+    Type.Null(),
+  ]),
+  confidence: Type.Union(['green', 'yellow', 'purple', 'red'].map((value) => Type.Literal(value))),
   credit: Type.Number(),
   sourceId: Type.Union([Type.String(), Type.Null()]),
   sourceName: Type.Union([Type.String(), Type.Null()]),
   path: Type.Array(
     Type.Object({
+      kind: Type.Union(
+        ['transferable', 'specialization', 'possible-tool', 'ecosystem'].map((value) =>
+          Type.Literal(value),
+        ),
+      ),
+      mode: Type.Union([Type.Literal('partial'), Type.Literal('suggestion')]),
       from: Type.String(),
       to: Type.String(),
       weight: Type.Number(),
@@ -159,6 +195,8 @@ export const jobMatchResponseSchema = Type.Object({
       ...skillMatchSchema.properties,
       id: Type.String(),
       name: Type.String(),
+      interpretation: interpretationSchema,
+      rule: Type.String(),
       position: Type.Integer(),
       length: Type.Integer(),
     }),

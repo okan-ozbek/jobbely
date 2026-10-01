@@ -31,8 +31,8 @@ export function RequirementsPanel({ jobId }: { jobId: string }) {
     <section className="requirements-panel">
       <h2 className="sidebar-heading">Requirements reading</h2>
       <p className="small-note">
-        Explicit statements, interpreted without AI. The original description remains the source of
-        truth.
+        Skills and reviewed activities, interpreted without AI. The original description remains the
+        source of truth.
       </p>
       {error ? (
         <p role="alert">{error}</p>
@@ -56,7 +56,12 @@ export function RequirementsPanel({ jobId }: { jobId: string }) {
                     .map((group, index) => (
                       <li key={index}>
                         <strong>
-                          {group.alternatives.map((skill) => skill.name).join(' or ')}
+                          {group.alternatives
+                            .map(
+                              (skill) =>
+                                `${skill.name}${skill.facet === 'development' ? ' (developing internals)' : ''}`,
+                            )
+                            .join(' or ')}
                         </strong>
                         <details>
                           <summary>Evidence · line {group.evidence.line}</summary>

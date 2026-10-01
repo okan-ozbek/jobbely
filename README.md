@@ -206,6 +206,8 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.
 - [SKILL_RELATIONS](docs/SKILL_RELATIONS.md): weighted evidence graph, confidence colors and description highlighting.
+- [SEMANTICS](docs/SEMANTICS.md): implemented engineering concepts, clause interpretation and scoped skill questions.
+- [SEMANTIC_MATCHING_PLAN](docs/SEMANTIC_MATCHING_PLAN.md): remaining evaluation and function-expansion roadmap.
 - [JOB_FEATURES](docs/JOB_FEATURES.md): indexed projection, backfill and hash/version invalidation.
 - [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): transient processing, worker CSP and private API boundaries.
 - [INGESTION](docs/INGESTION.md): refresh workflow, worker and failure handling.
@@ -225,3 +227,5 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.
 
 Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts, in-app job applications, paid data providers and AI classification are outside the initial scope.
+
+Resume matching interprets reviewed engineering activities through a 215-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.

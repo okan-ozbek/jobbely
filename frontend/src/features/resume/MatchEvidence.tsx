@@ -1,3 +1,4 @@
+import { coverageLabel } from './semantic-review.js';
 import type { JobMatchResponse } from '../../api/client.js';
 
 type Comparison = JobMatchResponse['comparison'];
@@ -5,8 +6,9 @@ type Comparison = JobMatchResponse['comparison'];
 export function ConfidenceLegend() {
   return (
     <p className="confidence-legend">
-      <span className="confidence-green">Green · direct match</span>
-      <span className="confidence-orange">Orange · uncertain or related</span>
+      <span className="confidence-green">Green · full match</span>
+      <span className="confidence-yellow">Yellow · partial or uncertain</span>
+      <span className="confidence-purple">Purple · possible unmentioned skill</span>
       <span className="confidence-red">Red · no evidence</span>
     </p>
   );
@@ -19,16 +21,11 @@ export function MatchEvidence({ comparison }: { comparison: Comparison }) {
         {comparison.skills.map((skill, index) => (
           <li key={index}>
             <strong className={`confidence-${skill.confidence}`}>
-              {skill.names.join(' or ')} ·{' '}
-              {skill.confidence === 'green'
-                ? 'Direct match'
-                : skill.confidence === 'orange'
-                  ? 'Uncertain'
-                  : 'No match'}
+              {skill.names.join(' or ')} · {coverageLabel(skill.decision)}
             </strong>{' '}
             · {skill.importance}
             <p className="small-note">{skill.reason}</p>
-            {skill.path.length > 0 && (
+            {skill.path.length > 0 && skill.decision !== 'suggested' && (
               <details className="relation-path">
                 <summary>
                   {skill.sourceName} → {skill.names.join(' or ')} · {Math.round(skill.credit * 100)}
@@ -53,7 +50,7 @@ export function MatchEvidence({ comparison }: { comparison: Comparison }) {
       {comparison.experience.map((entry, index) => (
         <p key={index}>
           <strong
-            className={`confidence-${entry.status === 'met' ? 'green' : entry.status === 'below' ? 'red' : 'orange'}`}
+            className={`confidence-${entry.status === 'met' ? 'green' : entry.status === 'below' ? 'red' : 'yellow'}`}
           >
             {entry.minimumMonths / 12}+ years{' '}
             {entry.scope === 'skill' ? 'in this specific skill or leadership role' : entry.scope} ·{' '}

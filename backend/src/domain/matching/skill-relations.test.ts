@@ -10,7 +10,7 @@ import { featureJob, candidate } from '../../test-fixtures/resume-matching.js';
 import { scoreJob } from './score.js';
 
 describe('weighted skill evidence', () => {
-  it('keeps direct evidence green and a distant Redis/cloud/AWS inference weak and orange', () => {
+  it('keeps direct evidence green and a distant Redis/cloud/AWS inference weak and yellow', () => {
     const matches = projectSkills([{ id: 'redis', status: 'work_evidenced' }]);
 
     expect(skillMatch(matches, 'redis')).toMatchObject({
@@ -20,7 +20,7 @@ describe('weighted skill evidence', () => {
     });
 
     expect(skillMatch(matches, 'aws')).toMatchObject({
-      confidence: 'orange',
+      confidence: 'yellow',
       credit: 0.03,
       sourceId: 'redis',
       path: [
@@ -30,7 +30,7 @@ describe('weighted skill evidence', () => {
     });
 
     expect(skillMatch(matches, 'distributed-systems')).toMatchObject({
-      confidence: 'orange',
+      confidence: 'yellow',
       credit: 0.25,
     });
 
@@ -41,7 +41,7 @@ describe('weighted skill evidence', () => {
         projectSkills([{ id: 'distributed-systems', status: 'work_evidenced' }]),
         'fault-tolerance',
       ),
-    ).toMatchObject({ confidence: 'orange', credit: 0.35 });
+    ).toMatchObject({ confidence: 'yellow', credit: 0.35 });
   });
 
   it('never lets relations override direct evidence, negation or learning, or satisfy mandatory gaps', () => {
@@ -62,7 +62,7 @@ describe('weighted skill evidence', () => {
 
     expect(result.skills.map((item) => [item.confidence, item.credit])).toEqual([
       ['red', 0],
-      ['orange', 0],
+      ['yellow', 0],
       ['green', 1],
     ]);
 
@@ -72,7 +72,7 @@ describe('weighted skill evidence', () => {
 
     expect(scoreJob(featureJob('Requirements\nAWS required.'), profile, [], false)).toMatchObject({
       requiredGaps: 1,
-      skills: [{ confidence: 'orange', credit: 0.03 }],
+      skills: [{ confidence: 'yellow', credit: 0.03 }],
     });
   });
 
@@ -110,7 +110,7 @@ describe('weighted skill evidence', () => {
     for (const edge of skillRelations) {
       expect(ids.has(edge.from) && ids.has(edge.to)).toBe(true);
       expect(edge.from).not.toBe(edge.to);
-      expect(edge.weight).toBeGreaterThan(0);
+      expect(edge.weight).toBeGreaterThanOrEqual(edge.mode === 'suggestion' ? 0 : 0.025);
       expect(edge.weight).toBeLessThan(1);
       expect(pairs.has(`${edge.from}:${edge.to}`)).toBe(false);
       pairs.add(`${edge.from}:${edge.to}`);

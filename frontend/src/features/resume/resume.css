@@ -5,7 +5,7 @@
 .confidence-green {
   color: #176237;
 }
-.confidence-orange {
+.confidence-yellow {
   color: #854600;
 }
 .confidence-red {
@@ -25,7 +25,7 @@
   background: #dceede;
   color: #174d2c;
 }
-.keyword-orange {
+.keyword-yellow {
   background: #ffebc4;
   color: #753c00;
 }
@@ -512,4 +512,30 @@
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+
+.confidence-purple {
+  color: #63379a;
+}
+.keyword-purple {
+  color: #48236f;
+  background: #eee1ff;
+}
+.skill-questions {
+  margin-block: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #d7c3ed;
+  border-radius: 12px;
+}
+.skill-questions ul {
+  list-style: none;
+  padding: 0;
+}
+.skill-questions li + li {
+  margin-top: 1rem;
+}
+.skill-question-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

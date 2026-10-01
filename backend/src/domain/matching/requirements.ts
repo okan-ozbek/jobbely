@@ -1,7 +1,8 @@
+import type { Interpretation, SkillFacet } from '../semantics/model.js';
 import type { Job } from '../model.js';
 import { skillsInText, vocabularyVersion } from '../resume/vocabulary.js';
 
-export const requirementsVersion = 'requirements-8';
+export const requirementsVersion = 'requirements-10';
 
 export const featureVersion = `${requirementsVersion}:${vocabularyVersion}`;
 
@@ -10,13 +11,15 @@ export const supportedFunctions = ['engineering', 'data-ai', 'product', 'sales',
 export type Importance = 'required' | 'preferred' | 'contextual';
 
 export interface RequirementEvidence {
+  start?: number;
+  end?: number;
   excerpt: string;
   line: number;
   rule: string;
 }
 
 export interface SkillRequirement {
-  alternatives: { id: string; name: string }[];
+  alternatives: { id: string; name: string; facet?: SkillFacet; interpretation?: Interpretation }[];
   importance: Importance;
   evidence: RequirementEvidence;
 }
@@ -63,7 +66,7 @@ function heading(text: string): Importance | null {
   }
 
   if (
-    /^(?:minimum qualifications|basic qualifications|required qualifications|key qualifications|requirements|what you bring|what you(?:'|’)ll need|what we need to see|what we(?:'|’)re looking for|about you|qualifications|required skills|experience|education and training)\s*[:：]?$/i.test(
+    /^(?:minimum requirements|minimum qualifications|basic qualifications|required qualifications|key qualifications|requirements|what you bring|what you(?:'|’)ll need|what we need to see|what we(?:'|’)re looking for|about you|qualifications|required skills|experience|education and training)\s*[:：]?$/i.test(
       text,
     )
   ) {
@@ -71,7 +74,7 @@ function heading(text: string): Importance | null {
   }
 
   if (
-    /^(?:responsibilities|role details|about (?:us|the role)|what you(?:'|’)ll do|our (?:team|stack)|benefits|the role)\s*[:：]?$/i.test(
+    /^(?:key responsibilities|responsibilities|job details|job description|role overview|job type|shift|primary location|additional locations|posting statement|position of trust|work model for this role|additional information|role details|about (?:us|the role)|what you(?:'|’)ll do|our (?:team|stack)|benefits|the role)\s*[:：]?$/i.test(
       text,
     )
   ) {
@@ -83,7 +86,7 @@ function heading(text: string): Importance | null {
 
 function importance(text: string, section: Importance): Importance {
   if (
-    /\b(?:we offer|offers?[^.!?]{0,80}\bbenefits|benefits include|(?:health|dental|vision) insurance|paid (?:time off|leave)|(?:salary|compensation) range)\b/i.test(
+    /\b(?:equal opportunity|equal employment|all qualified applicants|ethical hiring|recruitment fees|(?:we|employers?) (?:do not|never) charge|salary range|we offer|offers?[^.!?]{0,80}\bbenefits|benefits include|(?:health|dental|vision) insurance|paid (?:time off|leave)|(?:salary|compensation) range)\b/i.test(
       text,
     )
   ) {
@@ -95,7 +98,9 @@ function importance(text: string, section: Importance): Importance {
   }
 
   if (
-    /\b(?:we (?:use|work with)|our (?:stack|team)|you will|you'll|responsibilities)\b/i.test(text)
+    /\b(?:we (?:use|work with)|(?:our|the) (?:platform|company|product|team) (?:uses?|runs?|supports?|provides?|implements?|keeps?)|our (?:stack|team)|you will|you'll|responsibilities)\b/i.test(
+      text,
+    )
   ) {
     return 'contextual';
   }
@@ -174,7 +179,13 @@ export function extractRequirements(
 
   const lines = job.descriptionText.split(/\r?\n/);
 
+  let offset = 0;
+
   for (const [index, raw] of lines.entries()) {
+    const lineStart = offset;
+
+    offset += raw.length + (job.descriptionText[offset + raw.length] === '\r' ? 2 : 1);
+
     const text = raw.replace(/^\s*[•*\-]\s*/, '').trim();
     const nextSection = heading(text);
 
@@ -183,17 +194,40 @@ export function extractRequirements(
       continue;
     }
 
+    let sentenceSearch = 0;
+
     // Sentence boundaries prevent contextual stack statements inheriting later requirements.
     for (const sentence of text.split(/(?<=[.!?])\s+(?=[A-Z])/)) {
+      const sentencePosition = text.indexOf(sentence, sentenceSearch);
+
+      sentenceSearch = sentencePosition + sentence.length;
+
+      const sentenceStart = lineStart + Math.max(0, raw.indexOf(text)) + sentencePosition;
       const level = importance(sentence, section);
 
       const evidence = {
         excerpt: sentence.slice(0, 2_000),
         line: index + 1,
         rule: `requirements:${level}`,
+        start: sentenceStart,
+        end: sentenceStart + sentence.length,
       };
 
-      const skills = skillsInText(sentence);
+      const recognized = skillsInText(sentence);
+
+      // One interpreted activity contributes once, even when the recognizer emits related concepts.
+      const skills = recognized.filter(
+        (item, position) =>
+          !recognized
+            .slice(0, position)
+            .some(
+              (previous) =>
+                previous.position <= item.position &&
+                previous.position + previous.length >= item.position + item.length &&
+                previous.rule.startsWith('clause:'),
+            ),
+      );
+
       const groups: SkillRequirement[] = [];
 
       for (const [position, skill] of skills.entries()) {
@@ -206,7 +240,12 @@ export function extractRequirements(
         const alternative = previous && /^\s*(?:,?\s*or|\/)\s*$/i.test(connector);
 
         if (alternative) {
-          groups.at(-1)!.alternatives.push({ id: skill.id, name: skill.name });
+          groups.at(-1)!.alternatives.push({
+            id: skill.id,
+            name: skill.name,
+            facet: skill.facet,
+            interpretation: skill.interpretation,
+          });
 
           let preceding = position - 1;
 
@@ -227,35 +266,85 @@ export function extractRequirements(
           }
         } else {
           groups.push({
-            alternatives: [{ id: skill.id, name: skill.name }],
+            alternatives: [
+              {
+                id: skill.id,
+                name: skill.name,
+                facet: skill.facet,
+                interpretation: skill.interpretation,
+              },
+            ],
             importance: level,
-            evidence,
+            evidence: {
+              ...evidence,
+              rule: `requirements:${level}:${skill.rule}`,
+              start: sentenceStart + skill.position,
+              end: sentenceStart + skill.position + skill.length,
+            },
           });
         }
       }
 
       result.skills.push(...groups);
 
-      const tenure =
-        /(\d{1,2})(?:\s*(?:[-–]|to)\s*\d{1,2})?\s*\+?\s*years?\s+(?:of\s+)?(?:[\w /-]{0,50}?)experience\b/i.exec(
-          sentence,
-        ) ??
-        /\b(?:at least|minimum(?: of)?)\s+(\d{1,2})\s*\+?\s*years?\s+(?:of\s+)?(?:[\w /-]{0,40})(?:engineering|development|sales|recruiting|product management)\b/i.exec(
-          sentence,
+      const tenures = [
+        ...sentence.matchAll(
+          /(\d{1,2})(?:\s*(?:[-–]|to)\s*\d{1,2})?\s*\+?\s*years?\s+(?:of\s+)?/gi,
+        ),
+      ];
+
+      let hasTenure = false;
+
+      const alternativeTenure =
+        tenures.length > 1 &&
+        tenures.some((tenure, index) =>
+          /\bor\b/i.test(
+            sentence.slice(
+              tenure.index + tenure[0].length,
+              tenures[index + 1]?.index ?? sentence.length,
+            ),
+          ),
         );
 
-      if (tenure && level !== 'contextual') {
+      if (alternativeTenure && level !== 'contextual') {
+        result.unparsed.push({
+          importance: level,
+          evidence: { ...evidence, rule: 'requirements:alternative-tenure' },
+        });
+      }
+
+      for (const [tenureIndex, tenure] of tenures.entries()) {
+        const activity = sentence.slice(
+          tenure.index + tenure[0].length,
+          tenures[tenureIndex + 1]?.index ?? sentence.length,
+        );
+
+        if (
+          !/\b(?:experience|engineering|development|sales|recruiting|product management|building|designing|supporting|managing|leading|supervising|mentoring)\b/i.test(
+            activity,
+          )
+        ) {
+          continue;
+        }
+
+        hasTenure = true;
+
+        if (level === 'contextual' || alternativeTenure) {
+          continue;
+        }
+
         const leadershipTenure =
           /\b(?:(?:managing|leading|supervising|mentoring) (?:a group of |a team of |a |the )?(?:teams?|people|(?:junior and senior )?engineers|others)|people management|team leadership)\b/i.test(
-            sentence,
+            activity,
           );
+
+        const localSkills = skillsInText(activity);
 
         const scope = leadershipTenure
           ? 'skill'
-          : /\b(?:professional|total|overall|industry)\b/i.test(tenure[0])
+          : /\b(?:professional|total|overall|industry)\b/i.test(activity)
             ? 'professional'
-            : /\b(?:with|using|in)\b/i.test(sentence.slice(tenure.index + tenure[0].length)) &&
-                skills.length > 0
+            : /\b(?:with|using|in)\b/i.test(activity) && localSkills.length > 0
               ? 'skill'
               : 'function';
 
@@ -264,11 +353,11 @@ export function extractRequirements(
           scope,
           skillId: leadershipTenure
             ? 'leadership'
-            : scope === 'skill' && skills.length === 1
-              ? skills[0]!.id
+            : scope === 'skill' && localSkills.length === 1
+              ? localSkills[0]!.id
               : null,
           importance: level,
-          evidence,
+          evidence: { ...evidence, excerpt: `${tenure[0]}${activity}`.slice(0, 2_000) },
         });
       }
 
@@ -305,7 +394,7 @@ export function extractRequirements(
       if (
         sentence.length > 8 &&
         level !== 'contextual' &&
-        !tenure &&
+        !hasTenure &&
         !constraint &&
         (!skills.length || remainingSkillStatement(sentence, skills))
       ) {
@@ -324,11 +413,11 @@ export function extractRequirements(
         (item) =>
           item.importance === group.importance &&
           item.alternatives
-            .map((skill) => skill.id)
+            .map((skill) => `${skill.id}:${skill.facet ?? 'general'}`)
             .sort()
             .join('|') ===
             group.alternatives
-              .map((skill) => skill.id)
+              .map((skill) => `${skill.id}:${skill.facet ?? 'general'}`)
               .sort()
               .join('|'),
       ) === index,
@@ -350,7 +439,7 @@ export function extractRequirements(
   result.unparsed = result.unparsed.slice(0, 40);
 
   result.warnings.push(
-    'Rules cover explicit English statements. Unrecognized or ambiguous requirements remain in the original description.',
+    'Rules cover reviewed English keywords and activities. Unrecognized or ambiguous requirements remain in the original description.',
   );
 
   return result;

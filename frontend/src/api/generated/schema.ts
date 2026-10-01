@@ -547,6 +547,11 @@ export interface operations {
                     text: string;
                     analysisDate?: string;
                     corrections?: {
+                        signalReviews?: {
+                            id: string;
+                            facet: "general" | "usage" | "development";
+                            answer: "confirmed" | "denied" | "unsure";
+                        }[];
                         addSkills?: string[];
                         removeSkills?: string[];
                         addCompetencies?: string[];
@@ -591,6 +596,10 @@ export interface operations {
                             }[];
                         };
                         skills: {
+                            facets?: ("general" | "usage" | "development")[];
+                            deniedFacets?: ("general" | "usage" | "development")[];
+                            uncertainFacets?: ("general" | "usage" | "development")[];
+                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             id: string;
                             name: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
@@ -598,9 +607,15 @@ export interface operations {
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
+                                start?: number;
+                                end?: number;
                             }[];
                         }[];
                         competencies: {
+                            facets?: ("general" | "usage" | "development")[];
+                            deniedFacets?: ("general" | "usage" | "development")[];
+                            uncertainFacets?: ("general" | "usage" | "development")[];
+                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             id: string;
                             name: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
@@ -608,6 +623,8 @@ export interface operations {
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
+                                start?: number;
+                                end?: number;
                             }[];
                         }[];
                         employment: {
@@ -625,6 +642,8 @@ export interface operations {
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
+                                start?: number;
+                                end?: number;
                             }[];
                         }[];
                         location: {
@@ -634,6 +653,8 @@ export interface operations {
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
+                                start?: number;
+                                end?: number;
                             }[];
                         };
                         experience: {
@@ -753,10 +774,18 @@ export interface operations {
                     profile: {
                         analysisDate: string;
                         skills: {
+                            facets?: ("general" | "usage" | "development")[];
+                            deniedFacets?: ("general" | "usage" | "development")[];
+                            uncertainFacets?: ("general" | "usage" | "development")[];
+                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             id: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
                         competencies?: {
+                            facets?: ("general" | "usage" | "development")[];
+                            deniedFacets?: ("general" | "usage" | "development")[];
+                            uncertainFacets?: ("general" | "usage" | "development")[];
+                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             id: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
@@ -786,11 +815,22 @@ export interface operations {
                     "application/json": {
                         descriptionText: string;
                         skills: {
-                            confidence: "green" | "orange" | "red";
+                            decision: "full" | "partial" | "suggested" | "none";
+                            targetId: string;
+                            facet: "general" | "usage" | "development";
+                            suggestion: {
+                                id: string;
+                                name: string;
+                                facet: "general" | "usage" | "development";
+                                question: string;
+                            } | null;
+                            confidence: "green" | "yellow" | "purple" | "red";
                             credit: number;
                             sourceId: string | null;
                             sourceName: string | null;
                             path: {
+                                kind: "transferable" | "specialization" | "possible-tool" | "ecosystem";
+                                mode: "partial" | "suggestion";
                                 from: string;
                                 to: string;
                                 weight: number;
@@ -799,6 +839,8 @@ export interface operations {
                             reason: string;
                             id: string;
                             name: string;
+                            interpretation: "explicit" | "interpreted" | "ambiguous" | "contextual";
+                            rule: string;
                             position: number;
                             length: number;
                         }[];
@@ -806,11 +848,22 @@ export interface operations {
                             baseScore: number;
                             requiredGaps: number;
                             skills: {
-                                confidence: "green" | "orange" | "red";
+                                decision: "full" | "partial" | "suggested" | "none";
+                                targetId: string;
+                                facet: "general" | "usage" | "development";
+                                suggestion: {
+                                    id: string;
+                                    name: string;
+                                    facet: "general" | "usage" | "development";
+                                    question: string;
+                                } | null;
+                                confidence: "green" | "yellow" | "purple" | "red";
                                 credit: number;
                                 sourceId: string | null;
                                 sourceName: string | null;
                                 path: {
+                                    kind: "transferable" | "specialization" | "possible-tool" | "ecosystem";
+                                    mode: "partial" | "suggestion";
                                     from: string;
                                     to: string;
                                     weight: number;
@@ -964,9 +1017,13 @@ export interface operations {
                             alternatives: {
                                 id: string;
                                 name: string;
+                                facet?: "general" | "usage" | "development";
+                                interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             }[];
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                start?: number;
+                                end?: number;
                                 excerpt: string;
                                 line: number;
                                 rule: string;
@@ -978,6 +1035,8 @@ export interface operations {
                             skillId: string | null;
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                start?: number;
+                                end?: number;
                                 excerpt: string;
                                 line: number;
                                 rule: string;
@@ -987,6 +1046,8 @@ export interface operations {
                             kind: "location" | "authorization" | "qualification" | "language";
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                start?: number;
+                                end?: number;
                                 excerpt: string;
                                 line: number;
                                 rule: string;
@@ -995,6 +1056,8 @@ export interface operations {
                         unparsed: {
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                start?: number;
+                                end?: number;
                                 excerpt: string;
                                 line: number;
                                 rule: string;
@@ -1034,10 +1097,18 @@ export interface operations {
                     profile: {
                         analysisDate: string;
                         skills: {
+                            facets?: ("general" | "usage" | "development")[];
+                            deniedFacets?: ("general" | "usage" | "development")[];
+                            uncertainFacets?: ("general" | "usage" | "development")[];
+                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             id: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
                         competencies?: {
+                            facets?: ("general" | "usage" | "development")[];
+                            deniedFacets?: ("general" | "usage" | "development")[];
+                            uncertainFacets?: ("general" | "usage" | "development")[];
+                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                             id: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
@@ -1086,9 +1157,13 @@ export interface operations {
                                         alternatives: {
                                             id: string;
                                             name: string;
+                                            facet?: "general" | "usage" | "development";
+                                            interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
                                         }[];
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            start?: number;
+                                            end?: number;
                                             excerpt: string;
                                             line: number;
                                             rule: string;
@@ -1100,6 +1175,8 @@ export interface operations {
                                         skillId: string | null;
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            start?: number;
+                                            end?: number;
                                             excerpt: string;
                                             line: number;
                                             rule: string;
@@ -1109,6 +1186,8 @@ export interface operations {
                                         kind: "location" | "authorization" | "qualification" | "language";
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            start?: number;
+                                            end?: number;
                                             excerpt: string;
                                             line: number;
                                             rule: string;
@@ -1117,6 +1196,8 @@ export interface operations {
                                     unparsed: {
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            start?: number;
+                                            end?: number;
                                             excerpt: string;
                                             line: number;
                                             rule: string;
@@ -1133,11 +1214,22 @@ export interface operations {
                             band: "strong" | "possible" | "exploratory" | "review";
                             requiredGaps: number;
                             skills: {
-                                confidence: "green" | "orange" | "red";
+                                decision: "full" | "partial" | "suggested" | "none";
+                                targetId: string;
+                                facet: "general" | "usage" | "development";
+                                suggestion: {
+                                    id: string;
+                                    name: string;
+                                    facet: "general" | "usage" | "development";
+                                    question: string;
+                                } | null;
+                                confidence: "green" | "yellow" | "purple" | "red";
                                 credit: number;
                                 sourceId: string | null;
                                 sourceName: string | null;
                                 path: {
+                                    kind: "transferable" | "specialization" | "possible-tool" | "ecosystem";
+                                    mode: "partial" | "suggestion";
                                     from: string;
                                     to: string;
                                     weight: number;

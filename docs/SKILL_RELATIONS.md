@@ -1,19 +1,20 @@
 # Decision: weighted, directed skill relations
 
-**Status:** Implemented initial heuristic graph, 1 October 2026. Weights are reviewed starter policies, not calibrated probabilities. Held-out candidate/job evaluation remains pending.
+**Status:** Implemented typed partial/suggestion graph, updated 2 October 2026. Weights are reviewed starter policies, not calibrated probabilities. Held-out candidate/job evaluation remains pending.
 
 ## Decision and rationale
 
-Use a TypeScript adjacency list, with canonical vocabulary IDs as nodes and directed edges containing a weight and reason. A graph database adds no useful capability to this bounded, versioned policy. Language, infrastructure, systems concepts and cross-team competencies can offer partial evidence for another requirement without rewriting the candidate's claimed skills.
+Use a TypeScript adjacency list, with canonical vocabulary IDs as nodes and directed edges containing kind, permitted mode, weight and reason. A graph database adds no useful capability to this bounded, versioned policy. Language, infrastructure, systems concepts and cross-team competencies can offer partial evidence for another requirement without rewriting the candidate's claimed skills.
 
 Each original work-evidenced/user-confirmed claim starts with credit 1; a listed mention starts with 0.6. Learning and negated claims start no traversal. Multiply edge weights along paths of at most two edges, discard credit below 0.025, and cap inferred credit at 0.8 at each step. Choose the strongest path, with deterministic source/edge ordering; never sum paths, inflate confidence through cycles, or start traversal from inferred profile claims. Explicit learning/negation blocks inference into or through that node.
 
-For example, Redis → cloud infrastructure (0.25) → AWS (0.12) produces 0.03 credit. AWS remains orange and its required gap remains visible. C++ offers stronger evidence for systems programming, and weaker evidence for threading. Cloud usage, latency, benchmarks, fault tolerance and availability provide different degrees of related systems evidence. A large team alone does not establish distributed systems expertise. Some vocabulary nodes remain intentionally disconnected until a justified relation is reviewed.
+For example, Redis → cloud infrastructure (0.25) → AWS (0.12) produces 0.03 credit. AWS remains yellow and its required gap remains visible. C++ offers stronger evidence for systems programming, and weaker evidence for threading. Cloud usage, latency, benchmarks, fault tolerance and availability provide different degrees of related systems evidence. A large team alone does not establish distributed systems expertise. Some vocabulary nodes remain intentionally disconnected until a justified relation is reviewed.
 
 ## Invariants
 
-- Green means a direct work-evidenced or user-confirmed keyword claim, not independently verified proficiency.
-- Orange means listed/learning or related evidence. The UI labels paths and their evidence weight; this percentage is not a confidence probability.
+- Green means supported work/activity or user-confirmed coverage of the required facet, not independently verified proficiency.
+- Yellow means listed/learning, ambiguous or related evidence. The UI labels paths and their evidence weight; this percentage is not a confidence probability.
+- Purple means a possible unmentioned skill: a relevant one-edge question with zero credit.
 - Red means absent/explicitly negated evidence, not proof that a candidate lacks ability.
 - Exact supported evidence wins. Relations never override negation/learning, satisfy a required gap at partial credit, add years, or unlock employer context despite gaps.
 - An alternative requirement contributes its strongest alternative once. Description highlighting evaluates each individual occurrence, so matching C++ does not turn an absent Java alternative green.
@@ -23,7 +24,7 @@ For example, Redis → cloud infrastructure (0.25) → AWS (0.12) produces 0.03 
 
 ## Description comparison and privacy
 
-`POST /api/v1/jobs/:id/resume-match` accepts the same strict profile allowlist as ranking, including optional competency IDs/statuses. It performs transient comparison of a stored public description, with no private persistence and `no-store` responses. Its body limit is 256 KiB, with same-origin validation, generic private errors and 15 requests/minute per connection IP. Retained closed/stale/demo descriptions can be inspected, but the response explicitly labels whether the job passes recommendation availability checks.
+`POST /api/v1/jobs/:id/resume-match` accepts the same strict profile allowlist as ranking, including optional competency IDs/statuses, supported/denied/uncertain facets and interpretation. It performs transient comparison of a stored public description, with no private persistence and `no-store` responses. Its body limit is 256 KiB, with same-origin validation, generic private errors and 15 requests/minute per connection IP. Retained closed/stale/demo descriptions can be inspected, but the response explicitly labels whether the job passes recommendation availability checks.
 
 Annotation offsets cover repeated recognized aliases in descriptions of at most 200,000 characters, capped at 2,000 occurrences. The UI renders full text as React text and semantic `mark` elements; it never injects candidate data into HTML. Overlaps use the earlier/longest occurrence. Unknown text remains readable. A toggle restores the sanitized employer HTML. Color labels and screen-reader text convey status without relying solely on color. Editing or clearing the profile immediately makes the previous comparison unusable; superseded requests abort.
 
@@ -34,5 +35,7 @@ Annotation offsets cover repeated recognized aliases in descriptions of at most 
 Synthetic tests cover edge validity, strongest paths, cycles/hop bounds, direct/negative/learning precedence, weak Redis/AWS evidence, preserved mandatory gaps, competencies, repeated offsets, alternatives and the independent 7-year industry / 2-year leadership thresholds. API tests cover privacy/validation and unchanged storage; application tests cover comparison availability and the existing bounded 25,000-feature scan. Frontend segmentation tests preserve literal markup/Unicode and reject invalid spans. Add new examples to the synthetic corpus, never real resumes. See [RESUME_TESTING](RESUME_TESTING.md) and [MATCHING](MATCHING.md).
 
 ## Limits and extension
+
+[SEMANTICS.md](SEMANTICS.md) owns the implemented engineering registry, clause rules, scope distinction and green/yellow/purple/red review flow. [SEMANTIC_MATCHING_PLAN.md](SEMANTIC_MATCHING_PLAN.md) retains the remaining evaluation and role-expansion roadmap.
 
 Relations are manually reviewed heuristics; tool familiarity does not prove systems-design competency. Ambiguous generic terms such as “performance” are not automatically classified as technical proficiency. Leadership-year thresholds remain uncertain until the profile supports reviewed activity intervals. Multi-language extraction, calibrated weights and richer temporal competency evidence require separate decisions and evaluation.

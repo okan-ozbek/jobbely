@@ -17,6 +17,8 @@ export type ResumeInput =
 
 export type ResumeCorrections = NonNullable<ResumeInput['corrections']>;
 
+export type ConceptReview = NonNullable<ResumeCorrections['signalReviews']>[number];
+
 export type EmploymentCorrection = NonNullable<ResumeCorrections['employment']>[number];
 
 export type JobRequirements =

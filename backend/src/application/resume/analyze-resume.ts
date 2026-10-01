@@ -1,3 +1,5 @@
+import { conceptsById, defaultFacet } from '../../domain/semantics/concepts.js';
+import type { SignalReview } from '../../domain/semantics/model.js';
 import { readResumeText } from '../../domain/resume/document.js';
 import {
   detectEmployment,
@@ -45,14 +47,77 @@ function correctedSignals(
 
     if (existing) {
       existing.status = 'user_confirmed';
+      existing.facets = existing.facets?.length ? existing.facets : [defaultFacet(existing.id)];
+      existing.deniedFacets = [];
+      existing.uncertainFacets = [];
+      existing.interpretation = 'explicit';
     } else {
       result.push({
         id: known?.id ?? `custom:${trimmed.toLowerCase()}`,
         name: known?.name ?? trimmed,
         status: 'user_confirmed',
+        facets: [defaultFacet(known?.id ?? '')],
+        interpretation: 'explicit',
         evidence: [],
       });
     }
+  }
+
+  return result;
+}
+
+function reviewedSignals(signals: ResumeSignal[], reviews: SignalReview[], competency: boolean) {
+  const result = [...signals];
+
+  for (const review of reviews) {
+    const concept = conceptsById.get(review.id);
+
+    if (!concept || !concept.facets.includes(review.facet)) {
+      throw new ResumeInputError('Review a supported concept and facet.');
+    }
+
+    if ((concept.kind === 'competency') !== competency) {
+      continue;
+    }
+
+    let signal = result.find((item) => item.id === review.id);
+
+    if (!signal) {
+      signal = {
+        id: concept.id,
+        name: concept.name,
+        status: 'mentioned',
+        facets: [],
+        evidence: [],
+      };
+
+      result.push(signal);
+    }
+
+    signal.facets = (signal.facets ?? []).filter((item) => item !== review.facet);
+    signal.deniedFacets = (signal.deniedFacets ?? []).filter((item) => item !== review.facet);
+    signal.uncertainFacets = (signal.uncertainFacets ?? []).filter((item) => item !== review.facet);
+
+    if (review.answer === 'confirmed') {
+      signal.facets.push(review.facet);
+    }
+
+    if (review.answer === 'denied') {
+      signal.deniedFacets.push(review.facet);
+    }
+
+    if (review.answer === 'unsure') {
+      signal.uncertainFacets.push(review.facet);
+    }
+
+    signal.status = signal.facets.length
+      ? 'user_confirmed'
+      : review.answer === 'denied'
+        ? 'negated'
+        : 'mentioned';
+
+    signal.interpretation =
+      review.answer === 'unsure' && !signal.facets.length ? 'ambiguous' : 'explicit';
   }
 
   return result;
@@ -108,6 +173,15 @@ export class AnalyzeResume {
     }
 
     const corrections = input.corrections ?? {};
+    const reviews = corrections.signalReviews ?? [];
+
+    if (
+      reviews.length > 100 ||
+      new Set(reviews.map((item) => `${item.id}:${item.facet}`)).size !== reviews.length
+    ) {
+      throw new ResumeInputError('Use at most 100 unique concept/facet reviews.');
+    }
+
     const seen = new Set<string>();
 
     for (const correction of corrections.employment ?? []) {
@@ -209,15 +283,19 @@ export class AnalyzeResume {
       vocabularyVersion,
       analysisDate,
       document,
-      skills: correctedSignals(
-        detectSkills(skillLines),
-        corrections.addSkills,
-        corrections.removeSkills,
+      skills: reviewedSignals(
+        correctedSignals(detectSkills(skillLines), corrections.addSkills, corrections.removeSkills),
+        reviews,
+        false,
       ),
-      competencies: correctedSignals(
-        detectCompetencies(document.lines),
-        corrections.addCompetencies,
-        corrections.removeCompetencies,
+      competencies: reviewedSignals(
+        correctedSignals(
+          detectCompetencies(document.lines),
+          corrections.addCompetencies,
+          corrections.removeCompetencies,
+        ),
+        reviews,
+        true,
       ),
       employment,
       location,

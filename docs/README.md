@@ -6,6 +6,10 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 [SKILL_RELATIONS.md](SKILL_RELATIONS.md) defines directed evidence relations, confidence colors, description annotations and their privacy/version invariants.
 
+[SEMANTICS.md](SEMANTICS.md) describes the implemented engineering registry, clause interpretation, four coverage states and scoped confirmation flow. [SEMANTIC_MATCHING_PLAN.md](SEMANTIC_MATCHING_PLAN.md) retains the remaining evaluation and expansion roadmap.
+
+[LLM_MATCHING.md](LLM_MATCHING.md) records reproduced structure/context failures and proposes three qualification groups, structured sentence evidence and a gated optional local-model experiment. It is a proposal, not implemented AI behavior.
+
 | Reference                              | Decisions and responsibilities                                                                      |
 | -------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | [ARCHITECTURE.md](ARCHITECTURE.md)     | Modular monolith, separate packages/processes, dependency direction, ports and composition root     |
@@ -15,6 +19,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [WAVE_D.md](WAVE_D.md)                 | Seven deferred employers, planning membership and future onboarding boundaries                      |
 | [RESUME.md](RESUME.md)                 | Deterministic text analysis, evidence, editable profiles and complete initial matching flow         |
 | [DOCUMENTS.md](DOCUMENTS.md)           | Local PDF/DOCX adapters, reading order, parser boundaries and format regression checks              |
+| [SEMANTICS.md](SEMANTICS.md)           | Engineering concept packs, clause evidence, tool scopes and transient skill-discovery review        |
 | [MATCHING.md](MATCHING.md)             | Requirement evidence, explained scoring, freshness, pagination and optional employer context        |
 | [JOB_FEATURES.md](JOB_FEATURES.md)     | Indexed public features, hash/version invalidation, replayable backfill and publication races       |
 | [RESUME_PRIVACY.md](RESUME_PRIVACY.md) | Transient profiles, local worker CSP, resource bounds and private API handling                      |

@@ -48,3 +48,5 @@ Run `pnpm contracts` after route/schema changes, then type-check frontend consum
 Catalog search/facets/pagination currently operate in memory over a consistent repository snapshot. Move execution into indexed database queries while preserving contract semantics before broad ingestion. Public authentication/rate limiting and projection of smaller listing summaries are future work.
 
 [Routes](../backend/src/api/app.ts), [schemas](../backend/src/api/schemas.ts), [catalog](../backend/src/application/catalog.ts), [API tests](../backend/src/api/app.test.ts), [contract exporter](../backend/src/cli/export-openapi.ts). See [STORAGE.md](STORAGE.md) and [FRONTEND.md](FRONTEND.md).
+
+Engineering semantic matching now distinguishes full (green), partial (yellow), suggested (purple, zero credit) and absent/denied (red) coverage. Scoped tool-usage/development answers stay transient and invalidate profile review and pagination. Matching accepts bounded semantic metadata, never resume excerpts. See [SEMANTICS.md](SEMANTICS.md) for the implemented registry, context guards, confirmation flow and limits.

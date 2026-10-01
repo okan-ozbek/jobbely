@@ -6,7 +6,7 @@
 
 Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → explicit review confirmation → recommendations → original description/application.
 
-The strict request contains only skill and optional competency IDs/statuses, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
+The strict request contains only skill and optional competency IDs/statuses/facets/interpretation, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
 
 ## Requirements
 
@@ -30,7 +30,7 @@ Extraction rejects interpretation of descriptions over 200,000 characters, and b
 
 Work-evidenced and user-confirmed skill claims receive credit 1, listed mentions 0.6, learning/negated/absent claims 0. They remain claims rather than verified proficiency. Missing evidence does not establish lack of ability. A mandatory group below full credit is a required gap.
 
-[Weighted relations](SKILL_RELATIONS.md) can provide capped partial credit from related claims. Green direct matches, orange uncertain/related evidence and red missing evidence appear in recommendation explanations and an optional keyword overlay on the full description. Each inferred result exposes its source, path, edge reasons and evidence weight. Relations never establish experience duration or satisfy a mandatory skill at partial credit. “Our ideal … will have” sections are required; industry and group-leadership thresholds remain independent, including a 7-year industry / 2-year leadership statement.
+[Weighted relations](SKILL_RELATIONS.md) can provide capped partial credit from related claims. Green direct matches, yellow partial/uncertain evidence, purple zero-credit skill questions and red missing evidence appear in recommendation explanations and an optional keyword overlay on the full description. Each inferred result exposes its source, path, edge reasons and evidence weight. Relations never establish experience duration or satisfy a mandatory skill at partial credit. “Our ideal … will have” sections are required; industry and group-leadership thresholds remain independent, including a 7-year industry / 2-year leadership statement.
 
 Experience uses overlap-aware bounds. A minimum bound above the requirement is met; a maximum below it with no unknown intervals is below; other cases are uncertain. Internships, projects and volunteering do not become professional tenure. No overqualification penalty applies.
 
@@ -57,3 +57,5 @@ Signed cursors are submitted in the POST body and bind profile/preferences, data
 [Feature storage/backfill](JOB_FEATURES.md), [privacy](RESUME_PRIVACY.md), [API schemas](../backend/src/api/matching-schemas.ts), [routes](../backend/src/api/matching-routes.ts), [UI](../frontend/src/features/resume/ResumeMatches.tsx), [testing guide](RESUME_TESTING.md).
 
 Tests cover alternative groups, contextual mentions, unsupported requirements, each supported function, date uncertainty, optional context, availability, signed pagination and concurrent changes. A 25,000-row synthetic feature scan exercises bounded retrieval and ranking; it is not a production concurrency benchmark. Catalog search still uses its existing full-snapshot path; indexing this matching path does not migrate the general catalog.
+
+The implemented engineering clause and scoped-review policy is documented in [SEMANTICS.md](SEMANTICS.md). Test C++ → Clang/LLVM questions, usage versus development, confirmation/denial/unsure, five-question bounds and updated-profile review before reranking. The new synthetic corpus is regression evidence; independent held-out precision/recall remains pending.

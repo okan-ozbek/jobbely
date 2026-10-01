@@ -5,8 +5,14 @@ import type { SkillMatch } from './skill-relations.js';
 
 export interface MatchProfile {
   analysisDate: string;
-  skills: Pick<ResumeSignal, 'id' | 'status'>[];
-  competencies?: Pick<ResumeSignal, 'id' | 'status'>[];
+  skills: Pick<
+    ResumeSignal,
+    'id' | 'status' | 'facets' | 'deniedFacets' | 'uncertainFacets' | 'interpretation'
+  >[];
+  competencies?: Pick<
+    ResumeSignal,
+    'id' | 'status' | 'facets' | 'deniedFacets' | 'uncertainFacets' | 'interpretation'
+  >[];
   employment: Pick<
     ResumeEmployment,
     'employer' | 'category' | 'kind' | 'relationship' | 'start' | 'end'

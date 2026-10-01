@@ -4,7 +4,7 @@ import { summarizeExperience } from '../resume/experience.js';
 import type { FeatureJob, MatchExplanation, MatchProfile } from './model.js';
 import { projectSkills, skillMatch, relationsVersion } from './skill-relations.js';
 
-export const scoringVersion = `score-2:${relationsVersion}`;
+export const scoringVersion = `score-3:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -87,11 +87,15 @@ export function scoreJob(
     const weight = group.importance === 'required' ? 3 : 1;
 
     const alternatives = group.alternatives
-      .map((alternative) => ({ id: alternative.id, ...skillMatch(matches, alternative.id) }))
+      .map((alternative) => ({
+        id: alternative.id,
+        ...skillMatch(matches, alternative.id, alternative.facet, alternative.interpretation),
+      }))
       .sort(
         (a, b) =>
           b.credit - a.credit ||
-          Number(b.confidence === 'orange') - Number(a.confidence === 'orange') ||
+          Number(b.decision === 'partial') - Number(a.decision === 'partial') ||
+          Number(b.decision === 'suggested') - Number(a.decision === 'suggested') ||
           a.id.localeCompare(b.id),
       );
 
@@ -101,7 +105,7 @@ export function scoreJob(
     skillCredit += weight * best.credit;
 
     result.skills.push({
-      confidence: best.confidence,
+      ...best,
       credit: best.credit,
       sourceId: best.sourceId,
       sourceName: best.sourceName,

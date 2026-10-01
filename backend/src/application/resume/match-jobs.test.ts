@@ -1,3 +1,4 @@
+import { concepts, defaultFacet } from '../../domain/semantics/concepts.js';
 import { describe, expect, it } from 'vitest';
 import { MatchJobs } from './match-jobs.js';
 import { BackfillJobFeatures } from './job-features.js';
@@ -201,7 +202,14 @@ describe('stateless full matching flow', () => {
 
   it('scans 25,000 eligible features in bounded chunks and returns the best page', async () => {
     const total = 25_000;
-    const template = featureJob();
+
+    const template = featureJob(
+      `Requirements\n${concepts
+        .filter((item) => item.kind !== 'competency')
+        .slice(0, 40)
+        .map((item) => `${item.name} required.`)
+        .join('\n')}\n2 years professional experience.`,
+    );
 
     const repository: JobFeatureRepository = {
       pendingFeatures: async () => [],
@@ -247,7 +255,17 @@ describe('stateless full matching flow', () => {
     const start = performance.now();
 
     const result = await matcher.execute({
-      profile: candidate(),
+      profile: {
+        ...candidate(),
+        skills: concepts
+          .filter((item) => item.kind !== 'competency')
+          .slice(0, 200)
+          .map((item) => ({
+            id: item.id,
+            status: 'user_confirmed' as const,
+            facets: [defaultFacet(item.id)],
+          })),
+      },
       categories: ['engineering'],
       employerContext: false,
       limit: 20,

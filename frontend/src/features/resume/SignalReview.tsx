@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ResumeAnalysis } from '../../api/client.js';
+import type { ConceptReview, ResumeAnalysis } from '../../api/client.js';
 
 const labels = {
   mentioned: 'Listed claim',
@@ -15,11 +15,13 @@ export function SignalReview({
   suggestions = [],
   add,
   remove,
+  review,
 }: {
   title: string;
   signals: ResumeAnalysis['skills'];
   suggestions?: ResumeAnalysis['supportedSkills'];
   add: (name: string) => void;
+  review: (review: ConceptReview) => void;
   remove: (signal: ResumeAnalysis['skills'][number]) => void;
 }) {
   const [name, setName] = useState('');
@@ -55,6 +57,31 @@ export function SignalReview({
             <span className={`resume-status resume-status-${signal.status}`}>
               {labels[signal.status]}
             </span>
+            <p className="small-note">
+              {signal.interpretation === 'interpreted'
+                ? 'Interpreted activity'
+                : signal.interpretation === 'contextual'
+                  ? 'Company context'
+                  : signal.interpretation === 'ambiguous'
+                    ? 'Uncertain interpretation'
+                    : 'Explicit claim'}
+              {signal.facets?.length ? ` · ${signal.facets.join(', ')}` : ''}
+            </p>
+            {[...(signal.deniedFacets ?? []), ...(signal.uncertainFacets ?? [])].map((facet) => (
+              <p
+                className="small-note"
+                key={facet}
+              >
+                {facet} · {signal.deniedFacets?.includes(facet) ? 'Denied' : 'Uncertain'}{' '}
+                <button
+                  type="button"
+                  className="resume-text-button"
+                  onClick={() => review({ id: signal.id, facet, answer: 'confirmed' })}
+                >
+                  Confirm {signal.name} {facet}
+                </button>
+              </p>
+            ))}
             {signal.evidence.length > 0 && (
               <details>
                 <summary>View evidence</summary>
@@ -66,15 +93,17 @@ export function SignalReview({
                 ))}
               </details>
             )}
-            {signal.status !== 'user_confirmed' && (
-              <button
-                type="button"
-                className="resume-text-button"
-                onClick={() => add(signal.name)}
-              >
-                Confirm this claim
-              </button>
-            )}
+            {signal.status !== 'user_confirmed' &&
+              !signal.deniedFacets?.length &&
+              !signal.uncertainFacets?.length && (
+                <button
+                  type="button"
+                  className="resume-text-button"
+                  onClick={() => add(signal.name)}
+                >
+                  Confirm this claim
+                </button>
+              )}
           </article>
         ))}
         {signals.length === 0 && (

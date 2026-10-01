@@ -1,9 +1,13 @@
+import { conceptsById, defaultFacet } from '../semantics/concepts.js';
+import type { Interpretation, SkillFacet } from '../semantics/model.js';
 import type { ResumeSignal } from '../resume/model.js';
 import { supportedConcepts } from '../resume/vocabulary.js';
 
-export const relationsVersion = 'relations-2';
+export const relationsVersion = 'relations-3';
 
 export interface Relation {
+  kind: 'transferable' | 'specialization' | 'possible-tool' | 'ecosystem';
+  mode: 'partial' | 'suggestion';
   from: string;
   to: string;
   weight: number;
@@ -11,7 +15,11 @@ export interface Relation {
 }
 
 export interface SkillMatch {
-  confidence: 'green' | 'orange' | 'red';
+  decision: 'full' | 'partial' | 'suggested' | 'none';
+  confidence: 'green' | 'yellow' | 'purple' | 'red';
+  targetId: string;
+  facet: SkillFacet;
+  suggestion: { id: string; name: string; facet: SkillFacet; question: string } | null;
   credit: number;
   sourceId: string | null;
   sourceName: string | null;
@@ -218,13 +226,79 @@ for (const language of ['html', 'css']) {
   edges.push([language, 'javascript', 0.15, 'Adjacent web skill, weak language evidence']);
 }
 
-// A concept need not have neighbors; add edges only with a reviewed reason.
-export const skillRelations: readonly Relation[] = edges.map(([from, to, weight, reason]) => ({
-  from,
-  to,
-  weight,
-  reason,
-}));
+// Specific activities provide partial broader evidence; tool discovery uses a separate policy.
+const specialized: [string, string, number, string][] = [
+  ['failover', 'fault-tolerance', 0.8, 'Failover is a failure recovery mechanism'],
+  ['replication', 'distributed-systems', 0.55, 'Replication is one distributed design concern'],
+  ['sharding', 'distributed-systems', 0.6, 'Partitioned storage is partial architecture evidence'],
+  ['consensus', 'distributed-systems', 0.7, 'Agreement across nodes is a distributed concern'],
+  ['circuit-breakers', 'fault-tolerance', 0.6, 'Failure isolation is one reliability mechanism'],
+  ['aws-ec2', 'aws', 0.75, 'Specific AWS service usage'],
+  ['aws-s3', 'aws', 0.65, 'Specific AWS storage service'],
+  ['aws-lambda', 'aws', 0.7, 'Specific AWS compute service'],
+  ['gcp-gke', 'gcp', 0.7, 'Google Cloud orchestration service'],
+  ['gcp-bigquery', 'gcp', 0.65, 'Google Cloud data service'],
+  ['azure-aks', 'azure', 0.7, 'Azure orchestration service'],
+  [
+    'profiling',
+    'performance-optimization',
+    0.55,
+    'Measurement does not prove a resulting optimization',
+  ],
+  [
+    'atomic-operations',
+    'synchronization',
+    0.65,
+    'Atomic operations are one synchronization mechanism',
+  ],
+  [
+    'cross-functional-delivery',
+    'cross-functional-leadership',
+    0.4,
+    'Delivery across teams does not establish authority',
+  ],
+  [
+    'technical-direction',
+    'cross-functional-leadership',
+    0.4,
+    'Technical direction may concern only one team',
+  ],
+];
+
+export const skillRelations: readonly Relation[] = [
+  ...edges.map(([from, to, weight, reason]): Relation => ({
+    from,
+    to,
+    weight,
+    reason,
+    kind: 'transferable',
+    mode: 'partial',
+  })),
+  ...specialized.map(([from, to, weight, reason]): Relation => ({
+    from,
+    to,
+    weight,
+    reason,
+    kind: 'specialization',
+    mode: 'partial',
+  })),
+  ...['clang', 'llvm', 'cmake', 'gdb', 'lldb'].map((to): Relation => ({
+    from: 'cpp',
+    to,
+    weight: 0,
+    reason: 'C++ development may involve this tool; experience must be confirmed.',
+    kind: 'possible-tool',
+    mode: 'suggestion',
+  })),
+  {
+    from: 'clang',
+    to: 'llvm',
+    weight: 0,
+    reason: 'Related toolchain ecosystem; LLVM expertise is not established.',
+    kind: 'ecosystem',
+    mode: 'suggestion',
+  },
+];
 
 const names = new Map(supportedConcepts.map((item) => [item.id, item.name]));
 const adjacency = new Map<string, Relation[]>();
@@ -233,43 +307,149 @@ for (const edge of skillRelations) {
   adjacency.set(edge.from, [...(adjacency.get(edge.from) ?? []), edge]);
 }
 
-type Claim = Pick<ResumeSignal, 'id' | 'status'>;
+type Claim = Pick<
+  ResumeSignal,
+  'id' | 'status' | 'facets' | 'deniedFacets' | 'uncertainFacets' | 'interpretation'
+>;
 
-export function projectSkills(signals: Claim[]): Map<string, SkillMatch> {
-  const claims = new Map(signals.map((item) => [item.id, item.status]));
-  const matches = new Map<string, SkillMatch>();
+const keyFor = (id: string, facet: SkillFacet) => `${id}@${facet}`;
 
-  for (const [id, status] of claims) {
-    const credit = ['work_evidenced', 'user_confirmed'].includes(status)
-      ? 1
-      : status === 'mentioned'
-        ? 0.6
-        : 0;
-
-    matches.set(id, {
-      confidence: credit === 1 ? 'green' : status === 'negated' ? 'red' : 'orange',
-      credit,
-      sourceId: id,
-      sourceName: names.get(id) ?? id,
-      path: [],
-      reason:
-        status === 'negated'
-          ? 'Resume explicitly denies this skill.'
-          : status === 'learning'
-            ? 'Learning; proficiency is not established.'
-            : credit === 1
-              ? 'Direct work evidence or user confirmation.'
-              : 'Listed in the resume; work evidence is not established.',
-    });
+function directCredit(signal: Claim) {
+  if (['contextual', 'ambiguous'].includes(signal.interpretation ?? '')) {
+    return 0;
   }
 
+  return ['work_evidenced', 'user_confirmed'].includes(signal.status)
+    ? 1
+    : signal.status === 'mentioned'
+      ? 0.6
+      : 0;
+}
+
+function absent(id: string, facet: SkillFacet): SkillMatch {
+  return {
+    targetId: id,
+    facet,
+    decision: 'none',
+    confidence: 'red',
+    credit: 0,
+    sourceId: null,
+    sourceName: null,
+    path: [],
+    suggestion: null,
+    reason: 'No matching evidence in the reviewed profile.',
+  };
+}
+
+function suggestion(id: string, facet: SkillFacet, source: Claim, path: Relation[]): SkillMatch {
+  const name = names.get(id) ?? id;
+
+  const scope =
+    facet === 'development' ? `developed ${name} internals (not just used it)` : `used ${name}`;
+
+  return {
+    ...absent(id, facet),
+    decision: 'suggested',
+    confidence: 'purple',
+    sourceId: source.id,
+    sourceName: names.get(source.id) ?? source.id,
+    path,
+    reason:
+      'Possible unmentioned skill. This adds no evidence credit until you answer and review your profile.',
+    suggestion: {
+      id,
+      name,
+      facet,
+      question: `Your ${names.get(source.id) ?? source.id} work may be related. Have you ${scope}?`,
+    },
+  };
+}
+
+export function projectSkills(signals: Claim[]): Map<string, SkillMatch> {
+  const claims = new Map(signals.map((item) => [item.id, item]));
+  const matches = new Map<string, SkillMatch>();
+
+  for (const signal of signals) {
+    const defaultScope = defaultFacet(signal.id);
+    const supported = signal.facets ?? [defaultScope];
+
+    for (const facet of conceptsById.get(signal.id)?.facets ?? ['general' as const]) {
+      const denied =
+        (signal.deniedFacets ?? []).includes(facet) ||
+        (signal.status === 'negated' && !signal.deniedFacets?.length);
+
+      const uncertain =
+        (signal.uncertainFacets ?? []).includes(facet) ||
+        (facet === 'usage' &&
+          !supported.includes('usage') &&
+          !supported.includes('development') &&
+          (signal.uncertainFacets ?? []).includes('development'));
+
+      const credit = denied
+        ? 0
+        : uncertain
+          ? signal.status === 'mentioned' && signal.interpretation === 'explicit'
+            ? 0.6
+            : 0
+          : supported.includes(facet) || (facet === 'usage' && supported.includes('development'))
+            ? directCredit(signal)
+            : facet === 'development' && supported.includes('usage')
+              ? Math.min(0.4, directCredit(signal))
+              : 0;
+
+      const partial = !denied && (credit > 0 || uncertain || signal.status === 'learning');
+
+      const result: SkillMatch = {
+        ...absent(signal.id, facet),
+        credit,
+        decision: credit === 1 ? 'full' : partial ? 'partial' : 'none',
+        confidence: credit === 1 ? 'green' : partial ? 'yellow' : 'red',
+        sourceId: signal.id,
+        sourceName: names.get(signal.id) ?? signal.id,
+        reason: denied
+          ? 'This skill or scope was explicitly denied.'
+          : uncertain || ['contextual', 'ambiguous'].includes(signal.interpretation ?? '')
+            ? 'Uncertain or contextual evidence; the skill is not established.'
+            : facet === 'development' &&
+                supported.includes('usage') &&
+                !supported.includes('development')
+              ? 'Tool usage is partial evidence; developing its internals is not established.'
+              : credit === 1
+                ? 'Direct work evidence, an equivalent activity, or user confirmation.'
+                : signal.status === 'learning'
+                  ? 'Learning; proficiency is not established.'
+                  : 'Listed or related evidence; full coverage is not established.',
+      };
+
+      if (
+        facet === 'development' &&
+        supported.includes('usage') &&
+        !supported.includes('development') &&
+        !denied &&
+        !uncertain
+      ) {
+        result.suggestion = {
+          id: signal.id,
+          name: names.get(signal.id) ?? signal.id,
+          facet,
+          question: `Have you developed ${names.get(signal.id) ?? signal.id} internals, beyond using the tool?`,
+        };
+      }
+
+      matches.set(keyFor(signal.id, facet), result);
+
+      if (facet === defaultScope) {
+        matches.set(signal.id, result);
+      }
+    }
+  }
+
+  const originalCredits = new Map(
+    signals.map((signal) => [signal.id, matches.get(signal.id)?.credit ?? 0]),
+  );
+
   for (const signal of [...signals].sort((a, b) => a.id.localeCompare(b.id))) {
-    // A source's original claim only: inferred nodes never become new starting claims.
-    const sourceCredit = ['work_evidenced', 'user_confirmed'].includes(signal.status)
-      ? 1
-      : signal.status === 'mentioned'
-        ? 0.6
-        : 0;
+    const sourceCredit = originalCredits.get(signal.id) ?? 0;
 
     if (!sourceCredit || !names.has(signal.id)) {
       continue;
@@ -285,7 +465,55 @@ export function projectSkills(signals: Claim[]): Map<string, SkillMatch> {
           continue;
         }
 
-        if (['negated', 'learning'].includes(claims.get(edge.to) ?? '')) {
+        const target = claims.get(edge.to);
+
+        if (edge.mode === 'suggestion') {
+          // Only original full evidence can ask a one-edge, unanswered scope question.
+          if (path.length || sourceCredit !== 1) {
+            continue;
+          }
+
+          for (const facet of conceptsById.get(edge.to)?.facets ?? ['general' as const]) {
+            const reviewed =
+              target &&
+              ((target.facets === undefined &&
+                target.deniedFacets === undefined &&
+                target.uncertainFacets === undefined) ||
+                [
+                  ...(target.facets ?? []),
+                  ...(target.deniedFacets ?? []),
+                  ...(target.uncertainFacets ?? []),
+                ].includes(facet) ||
+                (facet === 'usage' && (target.facets ?? []).includes('development')));
+
+            if (reviewed) {
+              continue;
+            }
+
+            const previous = matches.get(keyFor(edge.to, facet));
+
+            if (previous && previous.decision !== 'none') {
+              continue;
+            }
+
+            const result = suggestion(edge.to, facet, signal, [edge]);
+
+            matches.set(keyFor(edge.to, facet), result);
+
+            if (facet === defaultFacet(edge.to)) {
+              matches.set(edge.to, result);
+            }
+          }
+
+          continue;
+        }
+
+        if (
+          target &&
+          ((['negated', 'learning'].includes(target.status) && target.deniedFacets === undefined) ||
+            (target.deniedFacets ?? []).includes(defaultFacet(edge.to)) ||
+            (target.uncertainFacets ?? []).includes(defaultFacet(edge.to)))
+        ) {
           continue;
         }
 
@@ -299,14 +527,21 @@ export function projectSkills(signals: Claim[]): Map<string, SkillMatch> {
         const previous = matches.get(edge.to);
 
         if (nextCredit > (previous?.credit ?? 0)) {
-          matches.set(edge.to, {
-            confidence: 'orange',
+          const facet = defaultFacet(edge.to);
+
+          const result: SkillMatch = {
+            ...absent(edge.to, facet),
+            decision: 'partial',
+            confidence: 'yellow',
             credit: nextCredit,
             sourceId: signal.id,
             sourceName: names.get(signal.id) ?? signal.id,
             path: nextPath,
             reason: 'Related evidence; confirm this skill before treating the requirement as met.',
-          });
+          };
+
+          matches.set(edge.to, result);
+          matches.set(keyFor(edge.to, facet), result);
         }
 
         visit(edge.to, nextPath, nextCredit);
@@ -319,15 +554,24 @@ export function projectSkills(signals: Claim[]): Map<string, SkillMatch> {
   return matches;
 }
 
-export function skillMatch(matches: Map<string, SkillMatch>, id: string): SkillMatch {
-  return (
-    matches.get(id) ?? {
-      confidence: 'red',
-      credit: 0,
-      sourceId: null,
-      sourceName: null,
-      path: [],
-      reason: 'No matching evidence in the reviewed profile.',
-    }
-  );
+export function skillMatch(
+  matches: Map<string, SkillMatch>,
+  id: string,
+  facet = defaultFacet(id),
+  interpretation: Interpretation = 'explicit',
+): SkillMatch {
+  const match =
+    matches.get(keyFor(id, facet)) ??
+    (facet === defaultFacet(id) ? matches.get(id) : undefined) ??
+    absent(id, facet);
+
+  return match.credit === 1 && ['ambiguous', 'contextual'].includes(interpretation)
+    ? {
+        ...match,
+        credit: 0.6,
+        decision: 'partial',
+        confidence: 'yellow',
+        reason: 'The job statement has an uncertain scope. Review the original clause.',
+      }
+    : match;
 }

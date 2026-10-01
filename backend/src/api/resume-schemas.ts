@@ -1,3 +1,4 @@
+import { signalSemantics, signalReviewSchema } from './semantic-schemas.js';
 import { Type } from '@sinclair/typebox';
 import { categories } from '../domain/taxonomy.js';
 
@@ -27,6 +28,7 @@ export const resumeInputSchema = Type.Object(
     corrections: Type.Optional(
       Type.Object(
         {
+          signalReviews: Type.Optional(Type.Array(signalReviewSchema, { maxItems: 100 })),
           addSkills: Type.Optional(names),
           removeSkills: Type.Optional(names),
           addCompetencies: Type.Optional(names),
@@ -60,10 +62,17 @@ export const resumeInputSchema = Type.Object(
 );
 
 const evidence = Type.Array(
-  Type.Object({ lineId: Type.String(), excerpt: Type.String(), rule: Type.String() }),
+  Type.Object({
+    lineId: Type.String(),
+    excerpt: Type.String(),
+    rule: Type.String(),
+    start: Type.Optional(Type.Integer()),
+    end: Type.Optional(Type.Integer()),
+  }),
 );
 
 const signal = Type.Object({
+  ...signalSemantics,
   id: Type.String(),
   name: Type.String(),
   status: Type.Union(

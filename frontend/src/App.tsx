@@ -207,6 +207,15 @@ export function App() {
           </div>
         )}
         <div hidden={view !== 'resume'}>
+          {params.get('job') && (
+            <button
+              className="back-button"
+              disabled={!comparisonAnalysis}
+              onClick={() => update({ view: null })}
+            >
+              Return to this job
+            </button>
+          )}
           <ResumeWorkbench
             state={resumeState}
             onReviewed={setReviewedAnalysis}
@@ -261,7 +270,8 @@ export function App() {
                   <JobProfileComparison
                     job={selected}
                     analysis={comparisonAnalysis}
-                    reviewResume={() => update({ view: 'resume', job: null })}
+                    reviewResume={() => update({ view: 'resume' })}
+                    reviewSignal={resumeState.reviewSignal}
                   />
                   <aside className="detail-sidebar">
                     <RequirementsPanel jobId={selected.id} />
