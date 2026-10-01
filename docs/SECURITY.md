@@ -20,6 +20,10 @@ Database credentials are server-only configuration. `.env` files, generated data
 
 CORS allows one configured browser origin; it is not authentication or protection against non-browser callers. The current API has no accounts, authenticated admin routes or ingestion write endpoint. API rate limiting, edge traffic controls, CSP/security headers and retention policy are deployment/MVP follow-ups. Public job content may still contain ordinary external links and organization-supplied text; validation does not certify that content.
 
+## Transient resume input
+
+Resume analysis accepts bounded JSON text through a separate stateless POST route with strict nested schemas, origin/admission limits, `no-store` headers and a private error handler that does not log input-bearing exceptions. Evidence is rendered as React text, not HTML. No candidate storage or document upload is implemented. See [RESUME_PRIVACY](RESUME_PRIVACY.md) for current controls and future file-isolation requirements, and [RESUME_TESTING](RESUME_TESTING.md) for tests.
+
 ## Implementation and verification
 
 [HTML preparation](../backend/src/infrastructure/html.ts), [URL/schema checks](../backend/src/infrastructure/adapters/schemas.ts), [HTTP allowlist](../backend/src/infrastructure/http.ts), [API response schemas](../backend/src/api/schemas.ts), [HTML regression coverage](../backend/src/application/sync-source.test.ts), [frontend](../frontend/src/App.tsx).

@@ -1,6 +1,6 @@
 # Resume analysis and job matching plan
 
-**Status:** Proposed next product component; no parser, uploads or matching functionality implemented by this plan. Recorded 1 October 2026, Europe/Amsterdam.
+**Status:** Pasted-text increment implemented for steps 1–4: synthetic evaluation corpus, reading preview, skill/competency review, employment/location and overlap-safe experience. PDF/DOCX, job enrichment and matching remain proposed. Recorded 1 October 2026, Europe/Amsterdam. Start with [the increment testing guide](docs/RESUME_TESTING.md).
 
 ## 1. Product goal
 

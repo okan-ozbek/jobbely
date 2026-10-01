@@ -6,7 +6,7 @@
 
 Use Fastify with TypeBox route schemas for public validation/serialization and generate OpenAPI from those routes. The frontend consumes generated types through `openapi-fetch`, without importing backend models. Provider Zod schemas remain internal and independent of the public contract.
 
-The API delegates to `JobCatalog`; it contains no crawling or SQL queries. Its public operations read stored information. Operator CLI/worker entry points handle ingestion.
+Catalog routes delegate to `JobCatalog`, read stored information and contain no crawling or SQL queries. A stateless resume-analysis POST delegates to `AnalyzeResume`, processes bounded text in memory and does not persist candidates. Operator CLI/worker entry points handle ingestion.
 
 ## Routes
 
@@ -25,7 +25,13 @@ Listing filters are `q`, `company`, `category`, `workplace`, `limit` and `cursor
 
 Company responses include `logoUrl`, a local asset path served by the frontend origin. See [LOGOS.md](LOGOS.md) for ownership, sources and fallback behavior.
 
-## Pagination and errors
+## Transient resume analysis
+
+`POST /api/v1/resume-analysis` accepts strict JSON `text`, an optional valid fixed `analysisDate` no later than today, and optional skill/competency/location/employment corrections. The generated response includes reading lines, evidence, reviewed fields, month-duration bounds, warnings and parser/vocabulary versions. No GET/profile-ID retrieval route or matching endpoint exists yet.
+
+Requests are capped at 768 KiB, text at 100,000 characters/2,000 lines/2,000 characters per line, and corrections at 100 items per array. Errors use generic messages and `no-store` headers; unexpected origins return 403, oversized/unsupported inputs 413/415, and per-IP admission overflow 429. The 60-per-minute budget supports debounced edits. See [RESUME_PRIVACY](RESUME_PRIVACY.md) and [RESUME_TESTING](RESUME_TESTING.md).
+
+## Catalog pagination and errors
 
 A cursor carries dataset version, filter fingerprint and last ID. Invalid/different-filter cursors return 400. A newly published dataset makes prior cursors stale and returns 409, requiring pagination restart. This prevents merging pages from different observations. Cursors are pagination state, not authorization tokens.
 

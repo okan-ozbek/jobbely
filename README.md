@@ -4,7 +4,7 @@ Jobbely collects public employer job listings, categorizes them without AI, and 
 
 Agents should start with [AGENTS.md](AGENTS.md) for repository boundaries, documentation references and required completion checks.
 
-The proposed next component is resume analysis with an editable ATS-style reading preview and explained job matching. It is planned, not implemented: see [RESUME_PLAN.md](RESUME_PLAN.md) for MVP scope, architecture, scoring, privacy and delivery gates.
+The **Resume** page now supports pasted-text analysis: a reading preview, editable skills/competencies, employment and location, and overlap-safe experience totals. Try the synthetic examples and follow [RESUME_TESTING](docs/RESUME_TESTING.md). PDF/DOCX and job matching remain planned; see [RESUME_PLAN.md](RESUME_PLAN.md) for the full scope.
 
 TypeScript lives in separate `/frontend` and `/backend` packages. Integrations support Greenhouse, Ashby, Lever, Workday, iCIMS/Jibe and the first native Wave C boards. All 60 employers are registered, with sources for all 10 Wave A and 31 Wave B companies plus Meta, Apple, Netflix, Google and Amazon. Wave B full imports succeeded for 29 companies; NVIDIA has a malformed feed and LinkedIn requires an authorized feed. Meta and Google also have explicit access blockers. Full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md), [Wave B](docs/WAVE_B.md), [Wave C](docs/WAVE_C.md) and [dated source checks](docs/SOURCE_CHECKS.md).
 
@@ -199,7 +199,8 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 
 - [ARCHITECTURE](docs/ARCHITECTURE.md): layers, dependency direction and composition.
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
-- [RESUME](docs/RESUME.md): proposed document parsing, skills, competencies and experience evidence.
+- [RESUME](docs/RESUME.md): pasted-text analysis and proposed document adapters.
+- [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): proposed job requirements, fit scoring and employer-context weighting.
 - [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): proposed transient processing and upload isolation.
 - [INGESTION](docs/INGESTION.md): refresh workflow, worker and failure handling.

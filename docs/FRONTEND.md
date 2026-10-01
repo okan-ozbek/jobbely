@@ -29,6 +29,10 @@ Job rows and pagination are disabled while their current query is refreshing. Sa
 
 Development proxies `/api` to the local backend. Production uses a same-origin reverse proxy by default, or `VITE_API_BASE_URL` for a separate public API origin. That variable is a build input; rebuilding is required when changing it. Serve the built static files and support SPA fallback. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
+## Resume workbench
+
+The [Resume feature](../frontend/src/features/resume/ResumeWorkbench.tsx) is mounted independently of catalog rendering and remains in tab memory across SPA navigation. Its hook submits bounded text through the generated POST contract, debounces corrections by 350 ms, immediately aborts on Clear/input replacement and ignores aborted responses. Manual role/signal/location edits retain the original text preview. Full reload clears input and corrections; browser storage and URL parameters contain no candidate data. Reading errors are independent of job-catalog errors. File input and matching are deferred. See [RESUME_TESTING](RESUME_TESTING.md).
+
 ## Implementation, limits and verification
 
 [App](../frontend/src/App.tsx), [request/navigation hooks](../frontend/src/hooks/), [client](../frontend/src/api/client.ts), [Vite config](../frontend/vite.config.ts), [styles](../frontend/src/styles.css).

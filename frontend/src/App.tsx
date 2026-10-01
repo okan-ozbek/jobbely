@@ -5,6 +5,7 @@ import { useLocationQuery } from './hooks/useLocationQuery.js';
 import { useJobCatalog } from './hooks/useJobCatalog.js';
 import { useJobDetail } from './hooks/useJobDetail.js';
 import { CompanyLogo } from './components/CompanyLogo.js';
+import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -30,8 +31,15 @@ const coverageNames = {
 
 export function App() {
   const { params, update } = useLocationQuery();
-  const view = params.get('view') === 'companies' ? 'companies' : 'jobs';
-  const selectedId = params.get('job');
+
+  const view =
+    params.get('view') === 'resume'
+      ? 'resume'
+      : params.get('view') === 'companies'
+        ? 'companies'
+        : 'jobs';
+
+  const selectedId = view === 'resume' ? null : params.get('job');
 
   const [queryInput, setQueryInput] = useState(params.get('q') ?? '');
   const [companySearch, setCompanySearch] = useState('');
@@ -134,19 +142,26 @@ export function App() {
           >
             Companies
           </button>
+          <button
+            className={view === 'resume' ? 'nav-link active' : 'nav-link'}
+            aria-current={view === 'resume' ? 'page' : undefined}
+            onClick={() => update({ view: 'resume', job: null })}
+          >
+            Resume
+          </button>
         </nav>
       </header>
       <main
         id="main-content"
         tabIndex={-1}
       >
-        {mode === 'demo' && (
+        {mode === 'demo' && view !== 'resume' && (
           <div className="demo-banner">
             <CircleHelp size={15} />
             <span>Preview mode. These are sample listings, not active vacancies.</span>
           </div>
         )}
-        {!selectedId && (
+        {!selectedId && view !== 'resume' && (
           <section className="hero">
             <div className="hero-title">
               <h1>
@@ -172,7 +187,7 @@ export function App() {
             </p>
           </section>
         )}
-        {error && (
+        {error && view !== 'resume' && (
           <div
             className="error-state"
             role="alert"
@@ -181,7 +196,10 @@ export function App() {
             <button onClick={refresh}>Try again</button>
           </div>
         )}
-        {selectedId ? (
+        <div hidden={view !== 'resume'}>
+          <ResumeWorkbench />
+        </div>
+        {view === 'resume' ? null : selectedId ? (
           <section className="detail-section">
             <button
               className="back-button"

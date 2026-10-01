@@ -1,6 +1,16 @@
-# Proposal: resume extraction and evidence
+# Decision: resume extraction and evidence
 
-**Status:** Proposed; not implemented. Recorded 1 October 2026, Europe/Amsterdam. Product scope and delivery gates: [RESUME_PLAN.md](../RESUME_PLAN.md).
+**Status:** Pasted-text starter implemented; PDF/DOCX and broader vocabularies remain proposed. Recorded 1 October 2026, Europe/Amsterdam. Product scope and delivery gates: [RESUME_PLAN.md](../RESUME_PLAN.md). Current checks: [RESUME_TESTING](RESUME_TESTING.md).
+
+## Implemented first increment
+
+The pure [text reader](../backend/src/domain/resume/document.ts) preserves line order and provides offsets into the returned CRLF-normalized text. Recognized English section headings control interpretation. [Analysis](../backend/src/application/resume/analyze-resume.ts) combines 51 skill concepts, four explicit competency rules, conservative employment headers and header-only location detection. Unknown fields remain editable; unsupported role formats need manual entry. No candidate data is persisted, no AI is called and no company bonus is applied.
+
+[Experience](../backend/src/domain/resume/experience.ts) unions month intervals, clips ongoing roles to the fixed analysis month, returns bounds for year-only dates, excludes missing/reversed/future dates and separates internships/projects/education. Complete elapsed months are reported: the current month is not counted as a completed month. Exact day-level duration and FTE adjustment are not implemented. Function totals use reviewed role categories, not inferred tenure of individual skills.
+
+[The UI](../frontend/src/features/resume/ResumeWorkbench.tsx) displays evidence and sends debounced manual signal/role/location corrections to the stateless API. Corrections preserve original excerpts and text, and update recognition/duration. Fields are not externally verified. Evidence samples are bounded to five excerpts per signal, retaining supporting evidence for the selected claim status.
+
+The remaining sections describe the intended full architecture. Format adapters and an extraction port will be introduced when PDF/DOCX creates that actual boundary; the plain-text reader needs no interface or subprocess.
 
 ## Decision and rationale
 
@@ -55,6 +65,6 @@ Current candidate location requires header evidence or confirmation. Employment 
 
 Evaluate [PDF.js](https://mozilla.github.io/pdf.js/getting_started/) and [Mammoth](https://github.com/mwilliamson/mammoth.js) in the spike, pin versions after validation, and retain format regression fixtures. Mammoth's unsanitized output must never be directly rendered; use bounded text/structure extraction with external file access disabled. Resource isolation and private-state rules belong in [RESUME_PRIVACY](RESUME_PRIVACY.md).
 
-No corresponding resume modules exist yet. Future implementation belongs in the domain/application/ports/infrastructure paths listed in [the plan](../RESUME_PLAN.md). Existing integration points are [bootstrap](../backend/src/bootstrap.ts), [API schemas](../backend/src/api/schemas.ts) and [frontend](../frontend/src/App.tsx). Changes must retain generated-contract and dependency-boundary checks.
+Implemented modules and tests are linked in [the testing guide](RESUME_TESTING.md). Future document adapters belong in the paths listed in [the plan](../RESUME_PLAN.md). Integration points are [bootstrap](../backend/src/bootstrap.ts), [resume schemas](../backend/src/api/resume-schemas.ts) and [frontend](../frontend/src/App.tsx). Retain generated-contract and dependency-boundary checks.
 
 Verification requires representative text PDF/DOCX fixtures, column/table/header failures, alias collisions, date precision/overlap cases, negated/learning skills and candidate correction provenance. Report extraction precision/recall by supported function; do not claim complete skill coverage from a few successful sample documents.

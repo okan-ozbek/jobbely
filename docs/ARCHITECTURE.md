@@ -52,7 +52,7 @@ Consolidation is a shared normalization function plus explicit provider translat
 7. A large count collapse quarantines removal reconciliation. It must be investigated or explicitly confirmed, not repeatedly accepted as proof of mass closure.
 8. HTTP transport enforces timeouts, retries, host concurrency/pacing, allowed destinations and response-size bounds. Retry behavior is transport policy, not duplicated in every adapter.
 9. Raw provider HTML is never a public response. HTML sanitization and readable text extraction happen before persistence/display.
-10. Public API requests read stored data. Operator CLI/worker actions perform ingestion. Demo mode contains explicitly labeled synthetic examples and never claims live source health.
+10. Catalog API requests read stored data. The separate resume-analysis POST is stateless bounded text processing; it neither crawls nor persists candidate data. Operator CLI/worker actions perform ingestion. Demo mode contains explicitly labeled synthetic examples and never claims live source health. See [RESUME](RESUME.md).
 
 ## Quality gates
 

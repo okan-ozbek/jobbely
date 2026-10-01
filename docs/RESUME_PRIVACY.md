@@ -1,6 +1,16 @@
 # Proposal: private resume processing and upload isolation
 
-**Status:** Proposed; required before public upload release. Recorded 1 October 2026, Europe/Amsterdam. Feature scope: [RESUME_PLAN.md](../RESUME_PLAN.md).
+**Status:** Transient pasted-text analysis implemented; document upload/isolation controls remain proposed and required before public upload release. Recorded 1 October 2026, Europe/Amsterdam. Feature scope: [RESUME_PLAN.md](../RESUME_PLAN.md).
+
+## Current pasted-text boundary
+
+Only bounded JSON text is accepted; no file upload, external fetch, parser subprocess, candidate database table or durable queue exists. Input is capped at 100,000 characters, 2,000 lines and 2,000 characters per line. The route caps encoded request bodies at 768 KiB and correction arrays at 100 entries. Analysis is synchronous, deterministic and side-effect free.
+
+[The route](../backend/src/api/resume-routes.ts) returns `Cache-Control: no-store` on successes/errors, rejects unexpected browser origins, accepts at most 60 requests per minute per actual connection IP, caps tracked windows at 1,000 and avoids logging private exception details. The text/review budget supports debounced edits and is separate from the proposed ten-per-minute expensive-upload budget below. Fastify's untrusted-proxy default prevents spoofed forwarded IPs bypassing the limiter; shared proxy deployments need explicit edge limits/identity configuration.
+
+[Browser state](../frontend/src/features/resume/useResumeAnalysis.ts) is React memory only, preserved during SPA navigation in this tab and cleared on Clear/full reload. Clear/input replacement immediately aborts requests; superseded responses cannot restore a cleared review. No localStorage, analytics or candidate persistence is introduced. Proxy/APM body recording, OS memory/swap and crash diagnostics remain deployment responsibilities; these checks cannot prove physical erasure.
+
+The sections below describe future file handling. Pasted text has no document code-execution boundary and does not claim future upload safeguards exist. See [RESUME_TESTING](RESUME_TESTING.md).
 
 ## Decision and rationale
 

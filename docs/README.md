@@ -11,9 +11,9 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [WAVE_B.md](WAVE_B.md)                 | Enterprise ATS integration, capped search traversal, employer filters and restricted-source limits  |
 | [WAVE_C.md](WAVE_C.md)                 | Priority native boards, structured HTML, Amazon partitions and access gates                         |
 | [WAVE_D.md](WAVE_D.md)                 | Seven deferred employers, planning membership and future onboarding boundaries                      |
-| [RESUME.md](RESUME.md)                 | Proposed document adapters, evidence, editable profiles and overlap-safe experience                 |
+| [RESUME.md](RESUME.md)                 | Pasted-text analysis, evidence, editable profiles and proposed document adapters                    |
 | [MATCHING.md](MATCHING.md)             | Proposed requirement projection, explained scoring, freshness and optional employer context         |
-| [RESUME_PRIVACY.md](RESUME_PRIVACY.md) | Proposed transient candidate data, upload validation, parser isolation and release gates            |
+| [RESUME_PRIVACY.md](RESUME_PRIVACY.md) | Transient text analysis and proposed upload isolation/release gates                                 |
 | [INGESTION.md](INGESTION.md)           | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling  |
 | [STORAGE.md](STORAGE.md)               | PostgreSQL/Prisma, repository and unit of work, leases, JSON evidence and version history           |
 | [CLASSIFICATION.md](CLASSIFICATION.md) | Taxonomy, ordered strategies, company overrides, ambiguity and explainable decisions                |
@@ -32,6 +32,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [SOURCE_CHECKS.md](SOURCE_CHECKS.md)   | Dated Wave A feed and official-site checks; not a permanent architecture decision                   |
 
 ## How future agents should use these references
+
+Resume steps 1–4 now have a working pasted-text increment. See [RESUME_TESTING.md](RESUME_TESTING.md) for the public synthetic corpus, implementation links and manual checkpoints. Job matching and file-upload controls remain proposed.
 
 Read the root [AGENTS.md](../AGENTS.md) first. It defines repository-wide guidance and requires a successful root lint check after the final code edit.
 

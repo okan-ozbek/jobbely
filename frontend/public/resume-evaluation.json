@@ -1,0 +1,186 @@
+{
+  "version": "starter-1",
+  "analysisDate": "2026-10-01",
+  "notice": "Synthetic evaluation examples. No real candidate data or live vacancies.",
+  "resumes": [
+    {
+      "id": "overlapping-engineering",
+      "name": "Overlapping engineering roles",
+      "text": "Alex Example\nLocation: Amsterdam, Netherlands\nSummary\nBackend engineer building reliable services.\nExperience\nSoftware Engineer | Meta\nJan 2020 - Dec 2022\nBuilt APIs using TypeScript and PostgreSQL.\nManaged a team of six engineers.\nSoftware Engineer | Northstar Labs\nJan 2022 - Dec 2023\nDelivered a platform migration using Python.\nSkills\nTypeScript, PostgreSQL, Python, Docker\nEducation\nBSc Computer Science, 2015 - 2019",
+      "expected": {
+        "skills": ["typescript", "postgresql", "python", "docker"],
+        "competencies": ["leadership", "delivery-ownership"],
+        "employers": ["Meta", "Northstar Labs"],
+        "recognized": ["meta", null],
+        "location": "Amsterdam, Netherlands",
+        "professional": [48, 48],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "negated-learning",
+      "name": "Learning and negative claims",
+      "text": "Casey Example\nLocation: Cambridge\nSkills\nJavaScript, React\nCurrently learning Python\nNo experience with Java\nJavaScript, JavaScript\nSummary\nI react to feedback and go to conferences.",
+      "expected": {
+        "skills": ["javascript", "react", "python", "java"],
+        "skillStatuses": { "python": "learning", "java": "negated" },
+        "absentSkills": ["golang", "rust"],
+        "competencies": [],
+        "employers": [],
+        "recognized": [],
+        "location": "Cambridge",
+        "professional": [0, 0],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "year-only",
+      "name": "Year-only dates",
+      "text": "Jordan Example\nExperience\nProduct Manager | Figma\n2020 - 2022\nOwned a product release.\nSkills\nProduct discovery, roadmapping, Figma",
+      "expected": {
+        "skills": ["product-discovery", "roadmapping", "figma"],
+        "competencies": ["delivery-ownership"],
+        "employers": ["Figma"],
+        "recognized": ["figma"],
+        "location": "",
+        "professional": [14, 36],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "internship-education",
+      "name": "Internship and education separation",
+      "text": "Riley Example\nExperience\nSoftware Engineer Intern | Microsoft\nJun 2021 - Aug 2021\nDeveloped services using C# and Azure.\nEducation\nBSc Software Engineering\n2018 - 2022\nProjects\nDeveloper | Personal project\nJan 2022 - Dec 2022\nBuilt an application using React and Node.js.",
+      "expected": {
+        "skills": ["csharp", "azure", "react", "nodejs"],
+        "competencies": [],
+        "employers": ["Microsoft", "Personal project"],
+        "recognized": ["microsoft", null],
+        "location": "",
+        "professional": [0, 0],
+        "internships": [3, 3]
+      }
+    },
+    {
+      "id": "unknown-dates",
+      "name": "Missing and reversed dates",
+      "text": "Sam Example\nExperience\nData Engineer | Unknown Studio\nBuilt pipelines using Python and Apache Spark.\nData Scientist | Google\nJan 2024 - Dec 2022\nImplemented machine learning models.",
+      "expected": {
+        "skills": ["python", "spark", "machine-learning"],
+        "competencies": [],
+        "employers": ["Unknown Studio", "Google"],
+        "recognized": [null, "google"],
+        "location": "",
+        "professional": [0, 0],
+        "internships": [0, 0],
+        "unknownEntries": 2
+      }
+    },
+    {
+      "id": "present-multiline",
+      "name": "Multiline employment and Present",
+      "text": "Taylor Example\nBerlin, Germany\nProfessional Experience\nGoogle\nSoftware Engineer\nJan 2024 - Present\nDeveloped services using Golang and Kubernetes.\nMentored junior engineers.\nSkills\nGo, Kubernetes",
+      "expected": {
+        "skills": ["golang", "kubernetes"],
+        "competencies": ["mentoring"],
+        "employers": ["Google"],
+        "recognized": ["google"],
+        "location": "Berlin, Germany",
+        "professional": [33, 33],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "work-location-not-home",
+      "name": "Work location is not current location",
+      "text": "Avery Example\nExperience\nAccount Executive | Salesforce | London, United Kingdom\nJan 2021 - Dec 2023\nCollaborated with client stakeholders.\nSkills\nSalesforce, account management, HubSpot",
+      "expected": {
+        "skills": ["salesforce", "account-management", "hubspot"],
+        "competencies": ["stakeholder-communication"],
+        "employers": ["Salesforce"],
+        "recognized": ["salesforce"],
+        "location": "",
+        "professional": [36, 36],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "employer-skill-collision",
+      "name": "Cloud tools are not employment",
+      "text": "Morgan Example\nLocation: Utrecht, Netherlands\nExperience\nSoftware Engineer | Local Tools Ltd\n2023-01 - 2023-12\nBuilt services using Amazon Web Services, Azure and Google Cloud.\nSkills\nAWS, Azure, Google Cloud",
+      "expected": {
+        "skills": ["aws", "azure", "gcp"],
+        "competencies": [],
+        "employers": ["Local Tools Ltd"],
+        "recognized": [null],
+        "location": "Utrecht, Netherlands",
+        "professional": [12, 12],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "people",
+      "name": "Recruiting and team evidence",
+      "text": "Jamie Example\nBased in: Rotterdam, Netherlands\nExperience\nRecruiter | Booking.com\n01/2022 - 12/2023\nLed a team of recruiters.\nCoordinated hiring with stakeholders.\nSkills\nRecruiting, talent acquisition, payroll",
+      "expected": {
+        "skills": ["recruiting", "talent-acquisition", "payroll"],
+        "competencies": ["leadership", "stakeholder-communication"],
+        "employers": ["Booking.com"],
+        "recognized": ["booking"],
+        "location": "Rotterdam, Netherlands",
+        "professional": [24, 24],
+        "internships": [0, 0]
+      }
+    },
+    {
+      "id": "promotion-overlap",
+      "name": "Promotions without double-counting",
+      "text": "Drew Example\nExperience\nSoftware Engineer | Apple\nJan 2020 - Dec 2021\nDeveloped services using Java.\nSenior Software Engineer | Apple\nJun 2021 - Dec 2023\nDeveloped backend services using Java.\nSkills\nJava, SQL",
+      "expected": {
+        "skills": ["java", "sql"],
+        "competencies": [],
+        "employers": ["Apple", "Apple"],
+        "recognized": ["apple", "apple"],
+        "location": "",
+        "professional": [48, 48],
+        "internships": [0, 0]
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "id": "fixture-backend-amsterdam",
+      "title": "Backend Engineer",
+      "status": "active",
+      "synthetic": true,
+      "description": "Required: TypeScript and either PostgreSQL or MySQL. At least 2 years of backend engineering. Onsite in Amsterdam, Netherlands. Python is preferred.",
+      "expected": {
+        "requiredAlternatives": [["typescript"], ["postgresql", "mysql"]],
+        "preferred": ["python"],
+        "minimumRelevantYears": 2,
+        "location": "Amsterdam, Netherlands"
+      }
+    },
+    {
+      "id": "fixture-data-germany",
+      "title": "Data Engineer",
+      "status": "active",
+      "synthetic": true,
+      "description": "Required: Python and Apache Spark. At least 4 years of data engineering. Remote within Germany only. Our website uses React.",
+      "expected": {
+        "requiredAlternatives": [["python"], ["spark"]],
+        "contextual": ["react"],
+        "minimumRelevantYears": 4,
+        "remoteCountry": "Germany"
+      }
+    },
+    {
+      "id": "fixture-closed",
+      "title": "Software Engineer",
+      "status": "closed",
+      "synthetic": true,
+      "description": "TypeScript and PostgreSQL. Amsterdam.",
+      "expected": { "excludedFromMatching": true }
+    }
+  ]
+}

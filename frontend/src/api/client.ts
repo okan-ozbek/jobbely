@@ -9,6 +9,16 @@ export type Company =
 
 export type JobsQuery = NonNullable<paths['/api/v1/jobs']['get']['parameters']['query']>;
 
+export type ResumeAnalysis =
+  paths['/api/v1/resume-analysis']['post']['responses'][200]['content']['application/json'];
+
+export type ResumeInput =
+  paths['/api/v1/resume-analysis']['post']['requestBody']['content']['application/json'];
+
+export type ResumeCorrections = NonNullable<ResumeInput['corrections']>;
+
+export type EmploymentCorrection = NonNullable<ResumeCorrections['employment']>[number];
+
 const client = createClient<paths>({
   baseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
 });
@@ -63,6 +73,23 @@ export async function getJob(id: string, signal?: AbortSignal) {
 
   if (!result.data) {
     throw new ApiError(result.error?.message ?? 'Could not load this listing.');
+  }
+
+  return result.data;
+}
+
+export async function analyzeResume(body: ResumeInput, signal?: AbortSignal) {
+  const result = await client.POST('/api/v1/resume-analysis', {
+    body,
+    ...(signal ? { signal } : {}),
+    cache: 'no-store',
+  });
+
+  if (!result.data) {
+    throw new ApiError(
+      result.error?.message ?? 'Could not analyze this resume.',
+      result.error?.code,
+    );
   }
 
   return result.data;

@@ -32,8 +32,8 @@ Jobbely collects public employer job listings and categorizes them without AI. T
 | Enterprise integrations and Wave B limits        | [WAVE_B.md](docs/WAVE_B.md)                                                                    |
 | Native integrations and Wave C priority limits   | [WAVE_C.md](docs/WAVE_C.md)                                                                    |
 | Deferred employers and Wave D scope              | [WAVE_D.md](docs/WAVE_D.md)                                                                    |
-| Proposed resume analysis and matching            | [RESUME_PLAN.md](RESUME_PLAN.md), [RESUME.md](docs/RESUME.md), [MATCHING.md](docs/MATCHING.md) |
-| Proposed private uploads and parser isolation    | [RESUME_PRIVACY.md](docs/RESUME_PRIVACY.md)                                                    |
+| Resume analysis and planned matching             | [RESUME_PLAN.md](RESUME_PLAN.md), [RESUME.md](docs/RESUME.md), [MATCHING.md](docs/MATCHING.md) |
+| Resume privacy and planned file isolation        | [RESUME_PRIVACY.md](docs/RESUME_PRIVACY.md)                                                    |
 | Evidence-backed source activation                | [AUDITING.md](docs/AUDITING.md)                                                                |
 | Ingestion, workers, scheduling and source audits | [INGESTION.md](docs/INGESTION.md), [SOURCES.md](docs/SOURCES.md)                               |
 | Persistence, transactions and posting lifecycle  | [STORAGE.md](docs/STORAGE.md), [LIFECYCLE.md](docs/LIFECYCLE.md)                               |
@@ -48,6 +48,8 @@ Jobbely collects public employer job listings and categorizes them without AI. T
 When changing an architecture decision, update its document and the reference index. For a new decision, add an uppercase concern filename in `/docs` with status/date, rationale, invariants, implementation links and verification. Distinguish proposed work from implemented behavior; dated evidence is not a permanent guarantee.
 
 ## Required completion checks
+
+For resume changes, distinguish the implemented pasted-text increment from proposed matching/file-upload work. Use [RESUME_TESTING.md](docs/RESUME_TESTING.md) for its synthetic evaluation corpus and review checks; never add real candidate data to fixtures or logs.
 
 **After writing or modifying code, always run the root linter against the final code before reporting completion:**
 

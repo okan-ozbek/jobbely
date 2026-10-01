@@ -985,6 +985,1119 @@
           }
         }
       }
+    },
+    "/api/v1/resume-analysis": {
+      "post": {
+        "operationId": "analyzeResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "minLength": 1,
+                    "maxLength": 100000,
+                    "type": "string"
+                  },
+                  "analysisDate": {
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                    "type": "string"
+                  },
+                  "corrections": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "properties": {
+                      "addSkills": {
+                        "maxItems": 100,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minLength": 1,
+                          "maxLength": 100,
+                          "type": "string"
+                        }
+                      },
+                      "removeSkills": {
+                        "maxItems": 100,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minLength": 1,
+                          "maxLength": 100,
+                          "type": "string"
+                        }
+                      },
+                      "addCompetencies": {
+                        "maxItems": 100,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minLength": 1,
+                          "maxLength": 100,
+                          "type": "string"
+                        }
+                      },
+                      "removeCompetencies": {
+                        "maxItems": 100,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minLength": 1,
+                          "maxLength": 100,
+                          "type": "string"
+                        }
+                      },
+                      "location": {
+                        "maxLength": 200,
+                        "type": "string"
+                      },
+                      "employment": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "id"
+                          ],
+                          "properties": {
+                            "id": {
+                              "minLength": 1,
+                              "maxLength": 100,
+                              "type": "string"
+                            },
+                            "removed": {
+                              "type": "boolean"
+                            },
+                            "employer": {
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "title": {
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "category": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "engineering"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "data-ai"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "research"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "quant-trading"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "product"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "design"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "sales"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "marketing"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "customer-success"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "people"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "finance"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "legal"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "security-it"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "operations"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "manufacturing"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "retail"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "creative"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unclassified"
+                                  ]
+                                }
+                              ]
+                            },
+                            "kind": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "employment"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "internship"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "project"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "volunteering"
+                                  ]
+                                }
+                              ]
+                            },
+                            "relationship": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "direct"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "client"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            },
+                            "start": {
+                              "maxLength": 40,
+                              "type": "string"
+                            },
+                            "end": {
+                              "maxLength": 40,
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "vocabularyVersion",
+                    "analysisDate",
+                    "document",
+                    "skills",
+                    "competencies",
+                    "employment",
+                    "location",
+                    "experience",
+                    "warnings",
+                    "supportedSkills"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    },
+                    "vocabularyVersion": {
+                      "type": "string"
+                    },
+                    "analysisDate": {
+                      "type": "string"
+                    },
+                    "document": {
+                      "type": "object",
+                      "required": [
+                        "text",
+                        "lines"
+                      ],
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "lines": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "number",
+                              "start",
+                              "end",
+                              "text",
+                              "section",
+                              "heading"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "number": {
+                                "type": "integer"
+                              },
+                              "start": {
+                                "type": "integer"
+                              },
+                              "end": {
+                                "type": "integer"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "section": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "header"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "summary"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "experience"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "skills"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "education"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "projects"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "volunteering"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "other"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "heading": {
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "skills": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "status",
+                          "evidence"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "mentioned"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "work_evidenced"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "learning"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "negated"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "user_confirmed"
+                                ]
+                              }
+                            ]
+                          },
+                          "evidence": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "lineId",
+                                "excerpt",
+                                "rule"
+                              ],
+                              "properties": {
+                                "lineId": {
+                                  "type": "string"
+                                },
+                                "excerpt": {
+                                  "type": "string"
+                                },
+                                "rule": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "competencies": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name",
+                          "status",
+                          "evidence"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "mentioned"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "work_evidenced"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "learning"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "negated"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "user_confirmed"
+                                ]
+                              }
+                            ]
+                          },
+                          "evidence": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "lineId",
+                                "excerpt",
+                                "rule"
+                              ],
+                              "properties": {
+                                "lineId": {
+                                  "type": "string"
+                                },
+                                "excerpt": {
+                                  "type": "string"
+                                },
+                                "rule": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "employment": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "employer",
+                          "recognizedCompany",
+                          "title",
+                          "category",
+                          "kind",
+                          "relationship",
+                          "start",
+                          "end",
+                          "status",
+                          "evidence"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "employer": {
+                            "type": "string"
+                          },
+                          "recognizedCompany": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "category": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "engineering"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "data-ai"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "research"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "quant-trading"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "product"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "design"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "sales"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "marketing"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "customer-success"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "people"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "finance"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "legal"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "security-it"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "operations"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "manufacturing"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "retail"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "creative"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unclassified"
+                                ]
+                              }
+                            ]
+                          },
+                          "kind": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "employment"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "internship"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "project"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "volunteering"
+                                ]
+                              }
+                            ]
+                          },
+                          "relationship": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "direct"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "client"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unknown"
+                                ]
+                              }
+                            ]
+                          },
+                          "start": {
+                            "type": "string"
+                          },
+                          "end": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "extracted"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "uncertain"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "user_confirmed"
+                                ]
+                              }
+                            ]
+                          },
+                          "evidence": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "lineId",
+                                "excerpt",
+                                "rule"
+                              ],
+                              "properties": {
+                                "lineId": {
+                                  "type": "string"
+                                },
+                                "excerpt": {
+                                  "type": "string"
+                                },
+                                "rule": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "location": {
+                      "type": "object",
+                      "required": [
+                        "value",
+                        "status",
+                        "evidence"
+                      ],
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "extracted"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "uncertain"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "unknown"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "user_confirmed"
+                              ]
+                            }
+                          ]
+                        },
+                        "evidence": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "lineId",
+                              "excerpt",
+                              "rule"
+                            ],
+                            "properties": {
+                              "lineId": {
+                                "type": "string"
+                              },
+                              "excerpt": {
+                                "type": "string"
+                              },
+                              "rule": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "experience": {
+                      "type": "object",
+                      "required": [
+                        "professional",
+                        "internships",
+                        "relevant"
+                      ],
+                      "properties": {
+                        "professional": {
+                          "type": "object",
+                          "required": [
+                            "minimumMonths",
+                            "maximumMonths",
+                            "unknownEntries"
+                          ],
+                          "properties": {
+                            "minimumMonths": {
+                              "type": "integer"
+                            },
+                            "maximumMonths": {
+                              "type": "integer"
+                            },
+                            "unknownEntries": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "internships": {
+                          "type": "object",
+                          "required": [
+                            "minimumMonths",
+                            "maximumMonths",
+                            "unknownEntries"
+                          ],
+                          "properties": {
+                            "minimumMonths": {
+                              "type": "integer"
+                            },
+                            "maximumMonths": {
+                              "type": "integer"
+                            },
+                            "unknownEntries": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        "relevant": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "category",
+                              "duration"
+                            ],
+                            "properties": {
+                              "category": {
+                                "type": "string"
+                              },
+                              "duration": {
+                                "type": "object",
+                                "required": [
+                                  "minimumMonths",
+                                  "maximumMonths",
+                                  "unknownEntries"
+                                ],
+                                "properties": {
+                                  "minimumMonths": {
+                                    "type": "integer"
+                                  },
+                                  "maximumMonths": {
+                                    "type": "integer"
+                                  },
+                                  "unknownEntries": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "warnings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "supportedSkills": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "name"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -7,6 +7,8 @@ import type { JobCatalog } from '../application/catalog.js';
 import { QueryError } from '../application/catalog.js';
 import { categories } from '../domain/taxonomy.js';
 import type { JobRepository } from '../ports/ingestion.js';
+import type { AnalyzeResume } from '../application/resume/analyze-resume.js';
+import { registerResumeRoutes } from './resume-routes.js';
 import {
   companySchema,
   errorSchema,
@@ -21,6 +23,7 @@ export async function createApp(dependencies: {
   repository: JobRepository;
   origin?: string;
   logger?: boolean;
+  resume?: AnalyzeResume;
 }) {
   /**
    * Creates and configures the Fastify application instance with all routes, hooks, and error handling.
@@ -238,6 +241,10 @@ export async function createApp(dependencies: {
       return reply.code(503).send({ status: 'unavailable' });
     }
   });
+
+  if (dependencies.resume) {
+    registerResumeRoutes(app, dependencies.resume, dependencies.origin ?? 'http://127.0.0.1:5173');
+  }
 
   await app.ready();
 

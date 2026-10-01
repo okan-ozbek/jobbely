@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { z } from 'zod';
 import { JobCatalog } from './application/catalog.js';
+import { AnalyzeResume } from './application/resume/analyze-resume.js';
 import { SyncSource } from './application/sync-source.js';
 import { LabelMappingStrategy, TitleRuleStrategy } from './domain/classification.js';
 import { loadRegistry } from './infrastructure/registry.js';
@@ -50,6 +51,7 @@ export async function bootstrap() {
     repository,
     adapters,
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE),
+    resume: new AnalyzeResume(companies),
     sync: new SyncSource(
       repository,
       adapters,
