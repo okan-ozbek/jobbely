@@ -5,7 +5,13 @@ import type { MatchJobs } from '../application/resume/match-jobs.js';
 import type { JobCatalog } from '../application/catalog.js';
 import { extractRequirements } from '../domain/matching/requirements.js';
 import { errorSchema } from './schemas.js';
-import { requirementsSchema, matchInputSchema, matchResponseSchema } from './matching-schemas.js';
+import {
+  requirementsSchema,
+  matchInputSchema,
+  matchResponseSchema,
+  jobMatchInputSchema,
+  jobMatchResponseSchema,
+} from './matching-schemas.js';
 import { privateResumeRoute } from './private-resume-route.js';
 
 export function registerMatchingRoutes(
@@ -15,6 +21,37 @@ export function registerMatchingRoutes(
   origin: string,
 ) {
   const app = server.withTypeProvider<TypeBoxTypeProvider>();
+
+  app.post(
+    '/api/v1/jobs/:id/resume-match',
+    {
+      ...privateResumeRoute(origin, 15),
+      bodyLimit: 256 * 1024,
+      schema: {
+        operationId: 'compareJobResume',
+        params: Type.Object({ id: Type.String({ maxLength: 100 }) }),
+        body: jobMatchInputSchema,
+        response: {
+          200: jobMatchResponseSchema,
+          400: errorSchema,
+          403: errorSchema,
+          404: errorSchema,
+          413: errorSchema,
+          415: errorSchema,
+          429: errorSchema,
+          500: errorSchema,
+          503: errorSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const job = await catalog.job(request.params.id);
+
+      return job
+        ? matcher.explain(job, request.body.profile)
+        : reply.code(404).send({ code: 'not_found', message: 'This listing could not be found.' });
+    },
+  );
 
   app.get(
     '/api/v1/jobs/:id/requirements',

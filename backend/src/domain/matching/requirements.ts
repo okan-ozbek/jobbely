@@ -1,7 +1,7 @@
 import type { Job } from '../model.js';
 import { skillsInText, vocabularyVersion } from '../resume/vocabulary.js';
 
-export const requirementsVersion = 'requirements-7';
+export const requirementsVersion = 'requirements-8';
 
 export const featureVersion = `${requirementsVersion}:${vocabularyVersion}`;
 
@@ -46,6 +46,14 @@ export interface JobRequirements {
 }
 
 function heading(text: string): Importance | null {
+  if (/^our ideal .{1,100} will have\s*[:：]?$/i.test(text)) {
+    return 'required';
+  }
+
+  if (/^(?:as (?:a|an) .{1,100} you will|why join .{1,100})\s*[:：?]?$/i.test(text)) {
+    return 'contextual';
+  }
+
   if (
     /^(?:preferred qualifications|preferred experience|nice to haves?|bonus(?: points)?|desirable|preferred skills)\s*[:：]?$/i.test(
       text,
@@ -238,13 +246,13 @@ export function extractRequirements(
 
       if (tenure && level !== 'contextual') {
         const leadershipTenure =
-          /\b(?:(?:managing|leading|supervising|mentoring) (?:teams|people|engineers|others)|people management|team leadership)\b/i.test(
+          /\b(?:(?:managing|leading|supervising|mentoring) (?:a group of |a team of |a |the )?(?:teams?|people|(?:junior and senior )?engineers|others)|people management|team leadership)\b/i.test(
             sentence,
           );
 
         const scope = leadershipTenure
           ? 'skill'
-          : /\b(?:professional|total|overall)\b/i.test(tenure[0])
+          : /\b(?:professional|total|overall|industry)\b/i.test(tenure[0])
             ? 'professional'
             : /\b(?:with|using|in)\b/i.test(sentence.slice(tenure.index + tenure[0].length)) &&
                 skills.length > 0
@@ -254,8 +262,11 @@ export function extractRequirements(
         result.experience.push({
           minimumMonths: Number(tenure[1]) * 12,
           scope,
-          skillId:
-            scope === 'skill' && !leadershipTenure && skills.length === 1 ? skills[0]!.id : null,
+          skillId: leadershipTenure
+            ? 'leadership'
+            : scope === 'skill' && skills.length === 1
+              ? skills[0]!.id
+              : null,
           importance: level,
           evidence,
         });

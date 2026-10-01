@@ -1,6 +1,12 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
-import type { Company, Source } from '../../domain/model.js';
-import { featureVersion, supportedFunctions } from '../../domain/matching/requirements.js';
+import type { Company, Source, Job } from '../../domain/model.js';
+import {
+  extractRequirements,
+  featureVersion,
+  supportedFunctions,
+} from '../../domain/matching/requirements.js';
+import { skillMentions } from '../../domain/resume/vocabulary.js';
+import { skillMatch, relationsVersion } from '../../domain/matching/skill-relations.js';
 import {
   compareMatches,
   scoreJob,
@@ -8,7 +14,7 @@ import {
   contextVersion,
   prepareCandidate,
 } from '../../domain/matching/score.js';
-import type { MatchExplanation, MatchInput } from '../../domain/matching/model.js';
+import type { MatchExplanation, MatchInput, MatchProfile } from '../../domain/matching/model.js';
 import type { JobFeatureRepository } from '../../ports/job-features.js';
 
 export class MatchError extends Error {
@@ -84,23 +90,73 @@ export class MatchJobs {
     }
   }
 
+  private validateProfile(profile: MatchProfile) {
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(profile.analysisDate) ||
+      !Number.isFinite(Date.parse(profile.analysisDate)) ||
+      new Date(profile.analysisDate).toISOString().slice(0, 10) !== profile.analysisDate ||
+      profile.analysisDate > this.clock().toISOString().slice(0, 10) ||
+      profile.analysisDate < '1900-01-01' ||
+      new Set([...profile.skills, ...(profile.competencies ?? [])].map((item) => item.id)).size !==
+        profile.skills.length + (profile.competencies?.length ?? 0)
+    ) {
+      throw new MatchError('invalid_profile', 'Review the profile date and skill claims.');
+    }
+  }
+
+  async explain(job: Job, profile: MatchProfile) {
+    this.validateProfile(profile);
+
+    const prepared = prepareCandidate(profile, this.companies);
+
+    const comparison = scoreJob(
+      { ...job, requirements: extractRequirements(job) },
+      profile,
+      this.companies,
+      false,
+      prepared,
+    );
+
+    const now = this.clock().toISOString();
+    const cutoff = new Date(Date.parse(now) - 36 * 60 * 60_000).toISOString();
+    const run = (await this.repository.latestRuns()).find((item) => item.sourceId === job.sourceId);
+
+    const recommendationEligible =
+      this.mode !== 'demo' &&
+      job.status === 'active' &&
+      !job.missingSince &&
+      job.lastSeenAt >= cutoff &&
+      this.sources.some((source) => source.id === job.sourceId) &&
+      run?.status === 'succeeded' &&
+      run.enumerationComplete &&
+      !run.removalsQuarantined &&
+      !!run.finishedAt &&
+      run.finishedAt >= cutoff &&
+      run.finishedAt <= now;
+
+    return {
+      descriptionText: job.descriptionText,
+      skills: skillMentions(job.descriptionText).map((mention) => ({
+        ...mention,
+        ...skillMatch(prepared.matches, mention.id),
+      })),
+      comparison,
+      recommendationEligible: !!recommendationEligible,
+      availability: recommendationEligible
+        ? 'Eligible under the current 36-hour availability checks.'
+        : 'Description comparison only: this listing does not pass current recommendation availability checks.',
+      lastSeenAt: job.lastSeenAt,
+      relationsVersion,
+    };
+  }
+
   private async match(input: MatchInput) {
     const now = this.clock();
 
-    if (
-      !/^\d{4}-\d{2}-\d{2}$/.test(input.profile.analysisDate) ||
-      !Number.isFinite(Date.parse(input.profile.analysisDate)) ||
-      new Date(input.profile.analysisDate).toISOString().slice(0, 10) !==
-        input.profile.analysisDate ||
-      input.profile.analysisDate > now.toISOString().slice(0, 10) ||
-      input.profile.analysisDate < '1900-01-01' ||
-      input.categories.some((category) => !supportedFunctions.includes(category)) ||
-      new Set(input.profile.skills.map((skill) => skill.id)).size !== input.profile.skills.length
-    ) {
-      throw new MatchError(
-        'invalid_profile',
-        'Review the profile date, functions and skill claims.',
-      );
+    this.validateProfile(input.profile);
+
+    if (input.categories.some((category) => !supportedFunctions.includes(category))) {
+      throw new MatchError('invalid_profile', 'Review the selected functions.');
     }
 
     const fingerprint = hash([

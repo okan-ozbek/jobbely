@@ -71,6 +71,30 @@ async function setup(mode: 'demo' | 'postgres' = 'postgres') {
 }
 
 describe('stateless full matching flow', () => {
+  it('allows retained description comparison while clearly excluding stale, closed, missing and demo jobs from recommendations', async () => {
+    const { matcher, input, dataset } = await setup();
+
+    const results = await Promise.all(
+      dataset.jobs.map((job) => matcher.explain(job, input.profile)),
+    );
+
+    expect(results.map((item) => item.recommendationEligible)).toEqual([
+      true,
+      true,
+      false,
+      false,
+      false,
+    ]);
+
+    expect(results.every((item) => item.skills.length > 0)).toBe(true);
+
+    const demo = await setup('demo');
+
+    expect(
+      (await demo.matcher.explain(demo.dataset.jobs[0]!, input.profile)).recommendationEligible,
+    ).toBe(false);
+  });
+
   it('excludes closed, missing, stale and demo postings; candidate scope stays visible', async () => {
     const { matcher, input } = await setup();
     const result = await matcher.execute(input);

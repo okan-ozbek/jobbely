@@ -4,6 +4,8 @@
 
 ## Run and inspect
 
+For weighted matching, use a synthetic profile with a dated role describing Redis, C++ and a led cross-functional initiative. Review it, open a job description, and inspect the green/orange/red legend and keyword tooltips. Redis → cloud → AWS must stay weak/orange and retain a required gap; unrelated skills must remain red. Open the requirement explanation to inspect paths and independent industry/leadership thresholds. Toggle highlighting off to restore employer HTML. Edit or clear the resume and verify that prior highlights disappear until the new profile is reviewed. Check keyboard navigation, wrapped legend/path text and small screens. Use synthetic data only. [SKILL_RELATIONS](SKILL_RELATIONS.md) owns the versioned policy and automated cases.
+
 Run the app using the existing [local setup](../README.md), then open the **Resume** navigation item or `http://127.0.0.1:5173/?view=resume`. Both demo and PostgreSQL modes support analysis; it does not read or write candidate records in either mode. Use synthetic examples before private resumes.
 
 Choose an example, click **Analyze text**, and inspect the line-numbered reading preview, skill evidence, competencies, current location and employment records. The selector loads [the public synthetic corpus](../frontend/public/resume-evaluation.json): ten fictional resumes and three annotated job descriptions used by regression/review checks. They are never imported as real vacancies. Automated evaluation fixes the analysis date to 1 October 2026; the browser uses the server's current date.

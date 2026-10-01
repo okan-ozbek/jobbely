@@ -67,6 +67,80 @@ async function setup() {
 }
 
 describe('private matching API and public requirements', () => {
+  it('compares description keywords privately and updates colors after profile changes', async () => {
+    const { app, repository, input } = await setup();
+    const before = await repository.read();
+    const job = before.jobs[0]!;
+    const url = `/api/v1/jobs/${job.id}/resume-match`;
+
+    const request = (profile: typeof input.profile) =>
+      app.inject({ method: 'POST', url, payload: { profile } });
+
+    const response = await request(input.profile);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers['cache-control']).toBe('no-store');
+
+    expect(response.json()).toMatchObject({
+      recommendationEligible: true,
+      skills: [{ id: 'typescript', confidence: 'green' }],
+    });
+
+    expect(response.json().descriptionText).toBe(job.descriptionText);
+
+    const missing = await request({ ...input.profile, skills: [] });
+
+    expect(missing.json().skills[0].confidence).toBe('red');
+
+    const learning = await request({
+      ...input.profile,
+      skills: [{ id: 'typescript', status: 'learning' }],
+    });
+
+    expect(learning.json().skills[0].confidence).toBe('orange');
+    expect(learning.json().comparison.requiredGaps).toBeGreaterThan(0);
+    expect(await repository.read()).toEqual(before);
+
+    expect(
+      (
+        await app.inject({
+          method: 'POST',
+          url: '/api/v1/jobs/absent/resume-match',
+          payload: { profile: input.profile },
+        })
+      ).statusCode,
+    ).toBe(404);
+  });
+
+  it('uses strict private errors, origin and body limits for description comparisons', async () => {
+    const { app, repository, input } = await setup();
+    const job = (await repository.read()).jobs[0]!;
+    const url = `/api/v1/jobs/${job.id}/resume-match`;
+    const secret = 'PRIVATE_DESCRIPTION_SENTINEL';
+
+    for (const request of [
+      { payload: { profile: { ...input.profile, contact: secret } }, status: 400 },
+      {
+        payload: { profile: input.profile },
+        headers: { origin: 'https://unexpected.invalid' },
+        status: 403,
+      },
+      { payload: { profile: { ...input.profile, analysisDate: '2026-02-30' } }, status: 400 },
+      { payload: { text: secret.repeat(20_000) }, status: 413 },
+    ]) {
+      const response = await app.inject({
+        method: 'POST',
+        url,
+        payload: request.payload,
+        ...('headers' in request ? { headers: request.headers } : {}),
+      });
+
+      expect(response.statusCode).toBe(request.status);
+      expect(response.headers['cache-control']).toBe('no-store');
+      expect(response.body).not.toContain(secret);
+    }
+  });
+
   it('returns explained recommendations and original description requirements without candidate persistence', async () => {
     const { app, repository, input } = await setup();
     const before = await repository.read();

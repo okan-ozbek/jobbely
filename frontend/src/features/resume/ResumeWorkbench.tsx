@@ -3,7 +3,7 @@ import { ArrowUpRight, FileText } from 'lucide-react';
 import type { ResumeAnalysis } from '../../api/client.js';
 import { EmploymentReview } from './EmploymentReview.js';
 import { SignalReview } from './SignalReview.js';
-import { useResumeAnalysis } from './useResumeAnalysis.js';
+import type { useResumeAnalysis } from './useResumeAnalysis.js';
 import { useDocumentInput } from './documents/useDocumentInput.js';
 import { ResumeMatches } from './ResumeMatches.js';
 import './resume.css';
@@ -26,8 +26,15 @@ function formatDuration(duration: ResumeAnalysis['experience']['professional']) 
     : `${label(duration.minimumMonths)} – ${label(duration.maximumMonths)}`;
 }
 
-export function ResumeWorkbench({ openJob }: { openJob: (id: string) => void }) {
-  const state = useResumeAnalysis();
+export function ResumeWorkbench({
+  openJob,
+  state,
+  onReviewed,
+}: {
+  openJob: (id: string) => void;
+  state: ReturnType<typeof useResumeAnalysis>;
+  onReviewed: (analysis: ResumeAnalysis | null) => void;
+}) {
   const documentInput = useDocumentInput(state.setText);
   const [examples, setExamples] = useState<Example[]>([]);
   const [exampleId, setExampleId] = useState('');
@@ -375,6 +382,7 @@ export function ResumeWorkbench({ openJob }: { openJob: (id: string) => void }) 
             analysis={analysis}
             pending={state.loading || !!state.error}
             openJob={openJob}
+            onReviewed={onReviewed}
           />
         </>
       )}

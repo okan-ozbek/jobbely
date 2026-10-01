@@ -2099,6 +2099,866 @@
         }
       }
     },
+    "/api/v1/jobs/{id}/resume-match": {
+      "post": {
+        "operationId": "compareJobResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "profile"
+                ],
+                "properties": {
+                  "profile": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "analysisDate",
+                      "skills",
+                      "employment",
+                      "location"
+                    ],
+                    "properties": {
+                      "analysisDate": {
+                        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                        "type": "string"
+                      },
+                      "skills": {
+                        "maxItems": 200,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "status"
+                          ],
+                          "properties": {
+                            "id": {
+                              "maxLength": 200,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "status": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "mentioned"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "work_evidenced"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "learning"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "negated"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "user_confirmed"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "competencies": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "status"
+                          ],
+                          "properties": {
+                            "id": {
+                              "maxLength": 200,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "status": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "mentioned"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "work_evidenced"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "learning"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "negated"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "user_confirmed"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "employment": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "employer",
+                            "category",
+                            "kind",
+                            "relationship",
+                            "start",
+                            "end"
+                          ],
+                          "properties": {
+                            "employer": {
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "category": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "engineering"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "data-ai"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "research"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "quant-trading"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "product"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "design"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "sales"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "marketing"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "customer-success"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "people"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "finance"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "legal"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "security-it"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "operations"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "manufacturing"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "retail"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "creative"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unclassified"
+                                  ]
+                                }
+                              ]
+                            },
+                            "kind": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "employment"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "internship"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "project"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "volunteering"
+                                  ]
+                                }
+                              ]
+                            },
+                            "relationship": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "direct"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "client"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            },
+                            "start": {
+                              "maxLength": 40,
+                              "type": "string"
+                            },
+                            "end": {
+                              "maxLength": 40,
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "location": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "value",
+                          "status"
+                        ],
+                        "properties": {
+                          "value": {
+                            "maxLength": 200,
+                            "type": "string"
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "extracted"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "uncertain"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unknown"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "user_confirmed"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "descriptionText",
+                    "skills",
+                    "comparison",
+                    "recommendationEligible",
+                    "availability",
+                    "lastSeenAt",
+                    "relationsVersion"
+                  ],
+                  "properties": {
+                    "descriptionText": {
+                      "type": "string"
+                    },
+                    "skills": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "confidence",
+                          "credit",
+                          "sourceId",
+                          "sourceName",
+                          "path",
+                          "reason",
+                          "id",
+                          "name",
+                          "position",
+                          "length"
+                        ],
+                        "properties": {
+                          "confidence": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "green"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "orange"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "red"
+                                ]
+                              }
+                            ]
+                          },
+                          "credit": {
+                            "type": "number"
+                          },
+                          "sourceId": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "sourceName": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "path": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "from",
+                                "to",
+                                "weight",
+                                "reason"
+                              ],
+                              "properties": {
+                                "from": {
+                                  "type": "string"
+                                },
+                                "to": {
+                                  "type": "string"
+                                },
+                                "weight": {
+                                  "type": "number"
+                                },
+                                "reason": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "reason": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "integer"
+                          },
+                          "length": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "comparison": {
+                      "type": "object",
+                      "required": [
+                        "baseScore",
+                        "requiredGaps",
+                        "skills",
+                        "experience",
+                        "uncertainties"
+                      ],
+                      "properties": {
+                        "baseScore": {
+                          "type": "integer"
+                        },
+                        "requiredGaps": {
+                          "type": "integer"
+                        },
+                        "skills": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "confidence",
+                              "credit",
+                              "sourceId",
+                              "sourceName",
+                              "path",
+                              "reason",
+                              "names",
+                              "importance",
+                              "status",
+                              "matchedId",
+                              "excerpt"
+                            ],
+                            "properties": {
+                              "confidence": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "green"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "orange"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "red"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "credit": {
+                                "type": "number"
+                              },
+                              "sourceId": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "sourceName": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "path": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "required": [
+                                    "from",
+                                    "to",
+                                    "weight",
+                                    "reason"
+                                  ],
+                                  "properties": {
+                                    "from": {
+                                      "type": "string"
+                                    },
+                                    "to": {
+                                      "type": "string"
+                                    },
+                                    "weight": {
+                                      "type": "number"
+                                    },
+                                    "reason": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "names": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              "importance": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "matchedId": {
+                                "type": "string",
+                                "nullable": true
+                              },
+                              "excerpt": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "experience": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "minimumMonths",
+                              "importance",
+                              "candidateMinimumMonths",
+                              "candidateMaximumMonths",
+                              "status",
+                              "scope",
+                              "excerpt"
+                            ],
+                            "properties": {
+                              "minimumMonths": {
+                                "type": "integer"
+                              },
+                              "importance": {
+                                "type": "string"
+                              },
+                              "candidateMinimumMonths": {
+                                "type": "integer"
+                              },
+                              "candidateMaximumMonths": {
+                                "type": "integer"
+                              },
+                              "status": {
+                                "type": "string"
+                              },
+                              "scope": {
+                                "type": "string"
+                              },
+                              "excerpt": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "uncertainties": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "recommendationEligible": {
+                      "type": "boolean"
+                    },
+                    "availability": {
+                      "type": "string"
+                    },
+                    "lastSeenAt": {
+                      "type": "string"
+                    },
+                    "relationsVersion": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/jobs/{id}/requirements": {
       "get": {
         "operationId": "getJobRequirements",
@@ -2541,6 +3401,59 @@
                       },
                       "skills": {
                         "maxItems": 200,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "id",
+                            "status"
+                          ],
+                          "properties": {
+                            "id": {
+                              "maxLength": 200,
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "status": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "mentioned"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "work_evidenced"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "learning"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "negated"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "user_confirmed"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "competencies": {
+                        "maxItems": 100,
                         "type": "array",
                         "items": {
                           "additionalProperties": false,
@@ -3367,6 +4280,12 @@
                             "items": {
                               "type": "object",
                               "required": [
+                                "confidence",
+                                "credit",
+                                "sourceId",
+                                "sourceName",
+                                "path",
+                                "reason",
                                 "names",
                                 "importance",
                                 "status",
@@ -3374,6 +4293,68 @@
                                 "excerpt"
                               ],
                               "properties": {
+                                "confidence": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "green"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "orange"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "red"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "credit": {
+                                  "type": "number"
+                                },
+                                "sourceId": {
+                                  "type": "string",
+                                  "nullable": true
+                                },
+                                "sourceName": {
+                                  "type": "string",
+                                  "nullable": true
+                                },
+                                "path": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "required": [
+                                      "from",
+                                      "to",
+                                      "weight",
+                                      "reason"
+                                    ],
+                                    "properties": {
+                                      "from": {
+                                        "type": "string"
+                                      },
+                                      "to": {
+                                        "type": "string"
+                                      },
+                                      "weight": {
+                                        "type": "number"
+                                      },
+                                      "reason": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "reason": {
+                                  "type": "string"
+                                },
                                 "names": {
                                   "type": "array",
                                   "items": {

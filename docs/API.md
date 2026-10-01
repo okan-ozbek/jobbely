@@ -27,6 +27,8 @@ Company responses include `logoUrl`, a local asset path served by the frontend o
 
 ## Transient resume analysis
 
+`POST /api/v1/jobs/:id/resume-match` compares an allowlisted reviewed profile against one stored description, returning individual keyword offsets/colors, requirement evidence and explicit recommendation availability. Closed/stale/demo descriptions can be inspected without becoming eligible recommendations. It uses a 256 KiB body limit, `no-store`, allowed-origin validation, generic private errors and 15 requests/minute per connection IP. See [SKILL_RELATIONS](SKILL_RELATIONS.md). Both matching routes accept optional competency IDs/statuses; full resume/contact fields remain rejected.
+
 `POST /api/v1/resume-analysis` accepts strict JSON `text`, an optional valid fixed `analysisDate` no later than today, and optional corrections. The response includes reading lines, evidence, reviewed fields, duration bounds, warnings and versions. No GET/profile-ID retrieval route exists. PDF/DOCX bytes are read locally and are not accepted by the API.
 
 `GET /api/v1/jobs/:id/requirements` returns bounded requirement evidence beside the original job. `POST /api/v1/resume-matches` accepts only the reviewed claim/date/location allowlist, function choices, optional employer context, limit and signed cursor. It returns explained results, coverage/freshness, eligible/evaluated/unenriched counts and versions. Its 256 KiB body, 15/minute connection-IP admission and bounded scans have generic private errors; stale pagination returns 409 and exhausted capacity 503. See [MATCHING](MATCHING.md) and [JOB_FEATURES](JOB_FEATURES.md).

@@ -28,6 +28,28 @@ export type MatchInput =
 export type MatchResponse =
   paths['/api/v1/resume-matches']['post']['responses'][200]['content']['application/json'];
 
+export type JobMatchResponse =
+  paths['/api/v1/jobs/{id}/resume-match']['post']['responses'][200]['content']['application/json'];
+
+export async function compareJobResume(
+  id: string,
+  profile: MatchInput['profile'],
+  signal: AbortSignal,
+) {
+  const result = await client.POST('/api/v1/jobs/{id}/resume-match', {
+    params: { path: { id } },
+    body: { profile },
+    signal,
+    cache: 'no-store',
+  });
+
+  if (!result.data) {
+    throw new ApiError(result.error?.message ?? 'Could not compare this job.');
+  }
+
+  return result.data;
+}
+
 const client = createClient<paths>({
   baseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
 });

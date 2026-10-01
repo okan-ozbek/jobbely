@@ -49,6 +49,8 @@ When changing an architecture decision, update its document and the reference in
 
 ## Required completion checks
 
+For skill inference, evidence colors and description comparison, read [docs/SKILL_RELATIONS.md](docs/SKILL_RELATIONS.md). Inferred skills must remain distinguishable from direct claims and must never establish activity-specific tenure.
+
 For resume changes, distinguish the implemented text/local-document/review/matching flow from proposed OCR, structured eligibility and production calibration work. Read [DOCUMENTS.md](docs/DOCUMENTS.md) for local worker isolation and [JOB_FEATURES.md](docs/JOB_FEATURES.md) for projection/backfill races. Use [RESUME_TESTING.md](docs/RESUME_TESTING.md) for synthetic evaluation and review checks; never add real candidate data to fixtures or logs.
 
 **After writing or modifying code, always run the root linter against the final code before reporting completion:**

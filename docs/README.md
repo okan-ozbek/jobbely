@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[SKILL_RELATIONS.md](SKILL_RELATIONS.md) defines directed evidence relations, confidence colors, description annotations and their privacy/version invariants.
+
 | Reference                              | Decisions and responsibilities                                                                      |
 | -------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | [ARCHITECTURE.md](ARCHITECTURE.md)     | Modular monolith, separate packages/processes, dependency direction, ports and composition root     |

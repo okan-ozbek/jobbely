@@ -1,6 +1,6 @@
 import type { ResumeLine, ResumeSignal } from './model.js';
 
-export const vocabularyVersion = 'functions-3';
+export const vocabularyVersion = 'functions-5';
 
 // Deliberately reviewed starter coverage, not a claim of universal skill recognition.
 const definitions: [string, string, string[]][] = [
@@ -63,14 +63,99 @@ const definitions: [string, string, string[]][] = [
   ['hris', 'HRIS', ['HRIS']],
   ['employee-relations', 'Employee relations', ['employee relations']],
   ['product-strategy', 'Product strategy', ['product strategy']],
+  [
+    'distributed-systems',
+    'Distributed systems',
+    ['distributed systems', 'distributed services', 'distributed computing'],
+  ],
+  ['microservices', 'Microservices', ['microservices', 'microservice']],
+  ['cloud-infrastructure', 'Cloud infrastructure', ['cloud infrastructure', 'cloud computing']],
+  [
+    'cloud-applications',
+    'Cloud applications',
+    ['cloud applications', 'cloud-based applications', 'cloud-native applications'],
+  ],
+  [
+    'operating-systems',
+    'Operating systems',
+    ['operating systems', 'operating system', 'OS concepts'],
+  ],
+  ['low-level', 'Low-level programming', ['low-level', 'low level programming', 'low level']],
+  ['memory-management', 'Memory management', ['memory management']],
+  ['multithreading', 'Multithreading', ['multithreading', 'multi-threading', 'multi threading']],
+  ['concurrency', 'Concurrency', ['concurrency', 'concurrent programming']],
+  ['systems-programming', 'Systems programming', ['systems programming']],
+  ['networking', 'Networking', ['computer networking', 'networking']],
+  ['storage', 'Storage systems', ['storage systems', 'distributed storage']],
+  ['caching', 'Caching', ['caching', 'distributed cache']],
+  [
+    'fault-tolerance',
+    'Fault tolerance',
+    ['fault-tolerance', 'fault tolerance', 'fault-tolerant', 'fault tolerant'],
+  ],
+  ['high-availability', 'High availability', ['high availability', 'high-availability']],
+  [
+    'performance-optimization',
+    'Performance optimization',
+    ['performance optimization', 'performance optimisation'],
+  ],
+  [
+    'performance-benchmarking',
+    'Performance benchmarking',
+    ['performance benchmarking', 'performance benchmarks'],
+  ],
+  ['low-latency', 'Low latency', ['low latency', 'low-latency']],
+  [
+    'scalability',
+    'Scalability',
+    ['scalability', 'scalable', 'large scale systems', 'large-scale systems'],
+  ],
+  ['data-structures', 'Data structures', ['data structures']],
+  ['algorithms', 'Algorithms', ['algorithms']],
+  ['kafka', 'Apache Kafka', ['Apache Kafka', 'Kafka']],
+  ['rabbitmq', 'RabbitMQ', ['RabbitMQ']],
+  ['dynamodb', 'DynamoDB', ['DynamoDB']],
+  ['grpc', 'gRPC', ['gRPC']],
+  ['observability', 'Observability', ['observability']],
 ];
+
+const competencyDefinitions: [string, string, string[]][] = [
+  [
+    'leadership',
+    'Team leadership',
+    ['team leadership', 'people management', 'leading a group of', 'leading a team'],
+  ],
+  ['mentoring', 'Mentoring', ['mentoring', 'mentorship']],
+  [
+    'stakeholder-communication',
+    'Stakeholder communication',
+    ['stakeholder communication', 'stakeholder management'],
+  ],
+  ['delivery-ownership', 'Delivery ownership', ['delivery ownership', 'project ownership']],
+  [
+    'cross-functional-leadership',
+    'Cross-functional leadership',
+    [
+      'cross-functional leadership',
+      'cross functional leadership',
+      'lead cross-functional initiatives',
+      'leading cross-functional initiatives',
+      'led cross-functional initiatives',
+    ],
+  ],
+];
+
+export const supportedConcepts = [...definitions, ...competencyDefinitions].map(([id, name]) => ({
+  id,
+  name,
+}));
 
 export const supportedSkills = definitions.map(([id, name]) => ({ id, name }));
 
 export function resolveSkill(name: string) {
   const key = name.trim().toLowerCase();
 
-  const definition = definitions.find(([, label, aliases]) =>
+  const definition = [...definitions, ...competencyDefinitions].find(([, label, aliases]) =>
     [label, ...aliases].some((alias) => alias.toLowerCase() === key),
   );
 
@@ -90,10 +175,30 @@ const patterns = definitions.map(([id, name, aliases]) => ({
   ),
 }));
 
+const requirementPatterns = [
+  ...patterns,
+  ...competencyDefinitions.map(([id, name, aliases]) => ({
+    id,
+    name,
+    pattern: new RegExp(
+      `(^|[^\\p{L}\\p{N}])(${aliases.map(escapePattern).join('|')})(?=$|[^\\p{L}\\p{N}])`,
+      'iu',
+    ),
+  })),
+];
+
 export function skillsInText(text: string) {
-  return patterns
+  return requirementPatterns
     .flatMap((skill) => {
       const match = skill.pattern.exec(text);
+
+      if (
+        skill.id === 'low-level' &&
+        match &&
+        !/\b(?:programming|systems?|memory|threading|software|engineering|c\+\+)\b/i.test(text)
+      ) {
+        return [];
+      }
 
       if (
         ['golang', 'react', 'rust', 'spark'].includes(skill.id) &&
@@ -123,6 +228,58 @@ export function skillsInText(text: string) {
         : [];
     })
     .sort((a, b) => a.position - b.position);
+}
+
+// Preserve every occurrence for description annotations, using the same recognition rules.
+export function skillMentions(text: string) {
+  const mentions: ReturnType<typeof skillsInText> = [];
+  let offset = 0;
+
+  for (const line of text.slice(0, 200_000).split('\n')) {
+    for (const concept of skillsInText(line)) {
+      const definition = requirementPatterns.find((item) => item.id === concept.id)!;
+      const pattern = new RegExp(definition.pattern.source, 'giu');
+
+      for (const match of line.matchAll(pattern)) {
+        mentions.push({
+          ...concept,
+          position: offset + match.index + match[1]!.length,
+          length: match[2]!.length,
+        });
+
+        if (mentions.length >= 2_000) {
+          break;
+        }
+      }
+
+      if (mentions.length >= 2_000) {
+        break;
+      }
+    }
+
+    offset += line.length + 1;
+
+    if (mentions.length >= 2_000) {
+      break;
+    }
+  }
+
+  // Longer aliases win when two concepts overlap; no nested or overlapping highlights.
+  const sorted = mentions.sort(
+    (a, b) => a.position - b.position || b.length - a.length || a.id.localeCompare(b.id),
+  );
+
+  let end = 0;
+
+  return sorted.filter((item) => {
+    if (item.position < end) {
+      return false;
+    }
+
+    end = item.position + item.length;
+
+    return true;
+  });
 }
 
 function claimStatus(line: ResumeLine, position: number): ResumeSignal['status'] {
@@ -159,6 +316,14 @@ export function detectSkills(lines: ResumeLine[]): ResumeSignal[] {
       const match = skill.pattern.exec(line.text);
 
       if (!match) {
+        continue;
+      }
+
+      if (
+        skill.id === 'low-level' &&
+        line.section !== 'skills' &&
+        !/\b(?:programming|systems?|memory|threading|software|engineering|c\+\+)\b/i.test(line.text)
+      ) {
         continue;
       }
 
@@ -219,7 +384,16 @@ export function detectSkills(lines: ResumeLine[]): ResumeSignal[] {
 }
 
 const competencyPatterns: [string, string, RegExp][] = [
-  ['leadership', 'Team leadership', /\b(?:managed|led|supervised)\s+(?:a\s+)?team\b/i],
+  [
+    'leadership',
+    'Team leadership',
+    /\b(?:managed|led|supervised|leading)\s+(?:(?:a|the|multiple)\s+)?(?:teams?|group of (?:junior and senior )?engineers)\b/i,
+  ],
+  [
+    'cross-functional-leadership',
+    'Cross-functional leadership',
+    /\b(?:led|leading|lead|managed)\b.{0,35}\b(?:cross[ -]functional|multiple teams|other teams)\b/i,
+  ],
   [
     'mentoring',
     'Mentoring',

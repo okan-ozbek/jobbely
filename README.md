@@ -205,6 +205,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [DOCUMENTS](docs/DOCUMENTS.md): local PDF/DOCX adapters, reading order, limits and isolation.
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.
+- [SKILL_RELATIONS](docs/SKILL_RELATIONS.md): weighted evidence graph, confidence colors and description highlighting.
 - [JOB_FEATURES](docs/JOB_FEATURES.md): indexed projection, backfill and hash/version invalidation.
 - [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): transient processing, worker CSP and private API boundaries.
 - [INGESTION](docs/INGESTION.md): refresh workflow, worker and failure handling.

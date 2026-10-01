@@ -10,6 +10,8 @@ React memory holds input, original reading blocks, corrections and results. No c
 
 ## Enforced limits
 
+Single-job description comparison uses the same private profile allowlist, including up to 100 optional competency claims, and transient `no-store` processing. The full public description is annotated as React text; private fields never enter injected HTML. Reviewed state lives in the root React tree so it can be reused across resume/job SPA views. An analysis identity/pending/error check prevents old reviewed results from coloring a changed profile. See [SKILL_RELATIONS](SKILL_RELATIONS.md).
+
 | Boundary          | Limit                                                                                                          |
 | ----------------- | -------------------------------------------------------------------------------------------------------------- |
 | File              | One active worker per workbench; 5 MiB compressed input                                                        |

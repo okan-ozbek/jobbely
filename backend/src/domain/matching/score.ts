@@ -2,8 +2,9 @@ import type { EmployerIdentity, ResumeEmployment } from '../resume/model.js';
 import { recognizeEmployer } from '../resume/employment.js';
 import { summarizeExperience } from '../resume/experience.js';
 import type { FeatureJob, MatchExplanation, MatchProfile } from './model.js';
+import { projectSkills, skillMatch, relationsVersion } from './skill-relations.js';
 
-export const scoringVersion = 'score-1';
+export const scoringVersion = `score-2:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -32,7 +33,7 @@ export function prepareCandidate(profile: MatchProfile, employers: EmployerIdent
 
   return {
     durations: summarizeExperience(employment, profile.analysisDate),
-    claims: new Map(profile.skills.map((skill) => [skill.id, skill.status])),
+    matches: projectSkills([...profile.skills, ...(profile.competencies ?? [])]),
     functions: new Set<string>(
       employment
         .filter((entry) => entry.kind === 'employment' && entry.category !== 'unclassified')
@@ -51,7 +52,7 @@ export function scoreJob(
   context: boolean,
   prepared = prepareCandidate(profile, employers),
 ): MatchExplanation {
-  const { durations, claims, functions } = prepared;
+  const { durations, matches, functions } = prepared;
 
   const result: MatchExplanation = {
     job,
@@ -85,24 +86,27 @@ export function scoreJob(
 
     const weight = group.importance === 'required' ? 3 : 1;
 
-    const matches = group.alternatives
-      .map((alternative) => ({ id: alternative.id, claim: claims.get(alternative.id) }))
-      .map((item) => ({
-        id: item.id,
-        credit: ['work_evidenced', 'user_confirmed'].includes(item.claim ?? '')
-          ? 1
-          : item.claim === 'mentioned'
-            ? 0.6
-            : 0,
-      }))
-      .sort((a, b) => b.credit - a.credit);
+    const alternatives = group.alternatives
+      .map((alternative) => ({ id: alternative.id, ...skillMatch(matches, alternative.id) }))
+      .sort(
+        (a, b) =>
+          b.credit - a.credit ||
+          Number(b.confidence === 'orange') - Number(a.confidence === 'orange') ||
+          a.id.localeCompare(b.id),
+      );
 
-    const best = matches[0]!;
+    const best = alternatives[0]!;
 
     skillTotal += weight;
     skillCredit += weight * best.credit;
 
     result.skills.push({
+      confidence: best.confidence,
+      credit: best.credit,
+      sourceId: best.sourceId,
+      sourceName: best.sourceName,
+      path: best.path,
+      reason: best.reason,
       names: group.alternatives.map((item) => item.name),
       importance: group.importance,
       status: best.credit === 1 ? 'matched' : best.credit > 0 ? 'claim_only' : 'not_evidenced',

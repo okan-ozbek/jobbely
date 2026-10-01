@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { matchResume } from '../../api/client.js';
 import { CompanyLogo } from '../../components/CompanyLogo.js';
+import { matchProfile } from './match-profile.js';
+import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
 import type { MatchInput, MatchResponse, ResumeAnalysis } from '../../api/client.js';
 
 const functions = [
@@ -15,10 +17,12 @@ export function ResumeMatches({
   analysis,
   pending,
   openJob,
+  onReviewed,
 }: {
   analysis: ResumeAnalysis;
   pending: boolean;
   openJob: (id: string) => void;
+  onReviewed: (analysis: ResumeAnalysis | null) => void;
 }) {
   const [reviewed, setReviewed] = useState(false);
   const [category, setCategory] = useState('engineering');
@@ -31,12 +35,13 @@ export function ResumeMatches({
   useEffect(() => {
     request.current?.abort();
     setReviewed(false);
+    onReviewed(null);
     setResult(null);
     setLoading(false);
     setError('');
 
     return () => request.current?.abort();
-  }, [analysis, pending, category, employerContext]);
+  }, [analysis, pending, category, employerContext, onReviewed]);
 
   const find = async (more = false) => {
     request.current?.abort();
@@ -48,21 +53,7 @@ export function ResumeMatches({
     setError('');
 
     const body: MatchInput = {
-      profile: {
-        analysisDate: analysis.analysisDate,
-        skills: analysis.skills.map(({ id, status }) => ({ id, status })),
-        employment: analysis.employment.map(
-          ({ employer, category: roleCategory, kind, relationship, start, end }) => ({
-            employer,
-            category: roleCategory,
-            kind,
-            relationship,
-            start,
-            end,
-          }),
-        ),
-        location: { value: analysis.location.value, status: analysis.location.status },
-      },
+      profile: matchProfile(analysis),
       categories: functions
         .filter((item) => !category || item.id === category)
         .map((item) => item.id),
@@ -139,7 +130,10 @@ export function ResumeMatches({
           type="checkbox"
           checked={reviewed}
           disabled={pending}
-          onChange={(event) => setReviewed(event.target.checked)}
+          onChange={(event) => {
+            setReviewed(event.target.checked);
+            onReviewed(event.target.checked ? analysis : null);
+          }}
         />
         I reviewed this profile and its claims.
       </label>
@@ -214,35 +208,9 @@ export function ResumeMatches({
                 </p>
                 <details>
                   <summary>Why this result</summary>
-                  <ul>
-                    {item.skills.map((skill, index) => (
-                      <li key={index}>
-                        <strong>{skill.names.join(' or ')}</strong> · {skill.importance} ·{' '}
-                        {skill.status.replaceAll('_', ' ')}
-                        <p className="small-note">{skill.excerpt}</p>
-                      </li>
-                    ))}
-                  </ul>
-                  {item.experience.map((entry, index) => (
-                    <p key={index}>
-                      {entry.minimumMonths / 12}+ years {entry.scope} {entry.importance}; reviewed{' '}
-                      {entry.scope === 'skill'
-                        ? 'duration not established'
-                        : `${entry.candidateMinimumMonths / 12}–${entry.candidateMaximumMonths / 12} years`}
-                      {' · '}
-                      {entry.status}
-                      <br />
-                      <span className="small-note">{entry.excerpt}</span>
-                    </p>
-                  ))}
+                  <ConfidenceLegend />
+                  <MatchEvidence comparison={item} />
                   <p>{item.location}</p>
-                  {item.uncertainties.length > 0 && (
-                    <ul>
-                      {item.uncertainties.map((value, index) => (
-                        <li key={index}>{value}</li>
-                      ))}
-                    </ul>
-                  )}
                   {item.employerAdjustment.reasons.map((value, index) => (
                     <p
                       className="small-note"

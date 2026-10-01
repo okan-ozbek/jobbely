@@ -6,7 +6,7 @@
 
 Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → explicit review confirmation → recommendations → original description/application.
 
-The strict request contains only skill IDs/statuses, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
+The strict request contains only skill and optional competency IDs/statuses, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
 
 ## Requirements
 
@@ -29,6 +29,8 @@ Extraction rejects interpretation of descriptions over 200,000 characters, and b
 | Qualifications |      5 | Unassessed; explicit mandatory statements require review                         |
 
 Work-evidenced and user-confirmed skill claims receive credit 1, listed mentions 0.6, learning/negated/absent claims 0. They remain claims rather than verified proficiency. Missing evidence does not establish lack of ability. A mandatory group below full credit is a required gap.
+
+[Weighted relations](SKILL_RELATIONS.md) can provide capped partial credit from related claims. Green direct matches, orange uncertain/related evidence and red missing evidence appear in recommendation explanations and an optional keyword overlay on the full description. Each inferred result exposes its source, path, edge reasons and evidence weight. Relations never establish experience duration or satisfy a mandatory skill at partial credit. “Our ideal … will have” sections are required; industry and group-leadership thresholds remain independent, including a 7-year industry / 2-year leadership statement.
 
 Experience uses overlap-aware bounds. A minimum bound above the requirement is met; a maximum below it with no unknown intervals is below; other cases are uncertain. Internships, projects and volunteering do not become professional tenure. No overqualification penalty applies.
 

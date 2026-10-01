@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowUpRight, CircleHelp, MapPin, Search, X } from 'lucide-react';
-import type { JobsQuery } from './api/client.js';
+import type { JobsQuery, ResumeAnalysis } from './api/client.js';
 import { useLocationQuery } from './hooks/useLocationQuery.js';
 import { useJobCatalog } from './hooks/useJobCatalog.js';
 import { useJobDetail } from './hooks/useJobDetail.js';
 import { CompanyLogo } from './components/CompanyLogo.js';
 import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
+import { useResumeAnalysis } from './features/resume/useResumeAnalysis.js';
+import { JobProfileComparison } from './features/resume/JobProfileComparison.js';
 import { RequirementsPanel } from './features/resume/RequirementsPanel.js';
 
 function relativeDate(value: string) {
@@ -32,6 +34,13 @@ const coverageNames = {
 
 export function App() {
   const { params, update } = useLocationQuery();
+  const resumeState = useResumeAnalysis();
+  const [reviewedAnalysis, setReviewedAnalysis] = useState<ResumeAnalysis | null>(null);
+
+  const comparisonAnalysis =
+    reviewedAnalysis === resumeState.analysis && !resumeState.loading && !resumeState.error
+      ? reviewedAnalysis
+      : null;
 
   const view =
     params.get('view') === 'resume'
@@ -198,7 +207,11 @@ export function App() {
           </div>
         )}
         <div hidden={view !== 'resume'}>
-          <ResumeWorkbench openJob={(id) => update({ view: null, job: id })} />
+          <ResumeWorkbench
+            state={resumeState}
+            onReviewed={setReviewedAnalysis}
+            openJob={(id) => update({ view: null, job: id })}
+          />
         </div>
         {view === 'resume' ? null : selectedId ? (
           <section className="detail-section">
@@ -245,11 +258,10 @@ export function App() {
                   </div>
                 </div>
                 <div className="detail-grid">
-                  <article
-                    className="description"
-                    dangerouslySetInnerHTML={{
-                      __html: selected.descriptionHtml,
-                    }}
+                  <JobProfileComparison
+                    job={selected}
+                    analysis={comparisonAnalysis}
+                    reviewResume={() => update({ view: 'resume', job: null })}
                   />
                   <aside className="detail-sidebar">
                     <RequirementsPanel jobId={selected.id} />

@@ -1,10 +1,12 @@
 import type { Job } from '../model.js';
 import type { ResumeEmployment, ResumeLocation, ResumeSignal } from '../resume/model.js';
 import type { JobRequirements } from './requirements.js';
+import type { SkillMatch } from './skill-relations.js';
 
 export interface MatchProfile {
   analysisDate: string;
   skills: Pick<ResumeSignal, 'id' | 'status'>[];
+  competencies?: Pick<ResumeSignal, 'id' | 'status'>[];
   employment: Pick<
     ResumeEmployment,
     'employer' | 'category' | 'kind' | 'relationship' | 'start' | 'end'
@@ -37,13 +39,13 @@ export interface MatchExplanation {
   completeness: number;
   band: 'strong' | 'possible' | 'exploratory' | 'review';
   requiredGaps: number;
-  skills: {
+  skills: (SkillMatch & {
     names: string[];
     importance: string;
     status: 'matched' | 'claim_only' | 'not_evidenced';
     matchedId: string | null;
     excerpt: string;
-  }[];
+  })[];
   experience: {
     minimumMonths: number;
     importance: string;
