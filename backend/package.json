@@ -16,6 +16,8 @@
     "sync": "tsx src/cli/sync.ts",
     "audit": "tsx src/cli/audit-source.ts",
     "features:backfill": "tsx src/cli/backfill-features.ts",
+    "matching:evaluate": "tsx src/cli/evaluate-matching.ts",
+    "matching:shadow": "tsx src/cli/shadow-job.ts",
     "worker": "tsx src/worker/main.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy"
