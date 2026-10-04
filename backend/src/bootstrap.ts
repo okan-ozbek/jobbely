@@ -1,3 +1,4 @@
+import { htmlJobDocumentReader } from './infrastructure/job-document.js';
 import 'dotenv/config';
 import { z } from 'zod';
 import { JobCatalog } from './application/catalog.js';
@@ -69,8 +70,9 @@ export async function bootstrap() {
       config.DATA_MODE,
       undefined,
       config.MATCH_CURSOR_SECRET,
+      htmlJobDocumentReader,
     ),
-    backfill: new BackfillJobFeatures(features),
+    backfill: new BackfillJobFeatures(features, htmlJobDocumentReader),
     closeFeatures: async () => {
       if (features instanceof PostgresJobFeatures) {
         await features.close();
