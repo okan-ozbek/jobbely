@@ -3,6 +3,7 @@ import type { Job } from '../model.js';
 import type { ResumeEmployment, ResumeLocation, ResumeSignal } from '../resume/model.js';
 import type { JobRequirements } from './requirements.js';
 import type { SkillMatch } from './skill-relations.js';
+import type { EducationClaim, SkillTenureClaim } from '../resume/qualifications.js';
 
 export interface MatchProfile {
   analysisDate: string;
@@ -31,6 +32,8 @@ export interface MatchProfile {
     'employer' | 'category' | 'kind' | 'relationship' | 'start' | 'end'
   > & { id?: string })[];
   location: Pick<ResumeLocation, 'value' | 'status'>;
+  education?: EducationClaim[];
+  skillTenure?: SkillTenureClaim[];
 }
 
 export interface MatchInput {
@@ -81,6 +84,14 @@ export interface MatchExplanation {
     excerpt: string;
   }[];
   uncertainties: string[];
+  roleRelevancePoints: number;
+  education: {
+    name: string;
+    importance: string;
+    status: 'met' | 'below' | 'uncertain';
+    reason: string;
+    excerpt: string;
+  }[];
   location: string;
   employerAdjustment: { points: number; reasons: string[]; version: string };
 }

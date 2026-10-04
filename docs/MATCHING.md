@@ -8,15 +8,17 @@
 
 ## Decision and rationale
 
+The 5 October [qualification policy](QUALIFICATIONS.md) extends comparison with reviewed degrees, explicit skill years and at most five contextual responsibility points. Analysis is `text-5`, public features `requirements-15:concepts-3:clauses-2:job-document-1` and scoring `score-5:relations-3`. This supersedes the earlier unassessed-degree policy below; authorization and language remain review items.
+
 Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → explicit review confirmation → recommendations → original description/application.
 
-The strict request contains only skill and optional competency IDs/statuses/facets/interpretation and bounded evidence references, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
+The strict request contains only skill and optional competency IDs/statuses/facets/interpretation and bounded evidence references, employment employer/function/kind/relationship/dates, degree level/field/completion, explicit reviewed skill months, current location/status and analysis date. It excludes full document text, institution/contact fields and resume excerpts. Career tenure is recomputed on the server; submitted career totals and recognized employer IDs are not accepted.
 
 ## Requirements
 
 [Extraction](../backend/src/domain/matching/requirements.ts) uses English headings and explicit cue rules. Required, preferred and contextual statements remain separate. “We use Python” is contextual; “Java or Kotlin” contributes one alternative group. Comma-separated alternatives are grouped when connected by “or”; conjunctions contribute separate requirements. Recognized aliases share the resume vocabulary.
 
-Thresholds retain minimum months, required/preferred importance, professional/function/skill scope and original line/excerpt. Skill-specific years and explicit team-management tenure are unresolved because the profile has no reviewed intervals for those activities; general engineering tenure does not establish management years. Location, authorization, qualification and language statements retain evidence. Unsupported mandatory statements, including residual terms in partly recognized skill clauses, are returned as `unparsed` and require review. This conservative grammar may also flag legitimate complex statements; it never establishes complete requirement coverage.
+Thresholds retain minimum months, required/preferred importance, professional/function/skill scope and original line/excerpt. Skill-specific years require explicit or manually reviewed durations with direct matching skill evidence; generic engineering tenure and inferred relations do not establish activity/management years. Location, authorization, qualification and language statements retain evidence. Recognized minimum degree requirements are compared separately; complex/equivalent-experience alternatives remain uncertain. Unsupported mandatory statements, including residual terms in partly recognized skill clauses, are returned as `unparsed` and require review. This conservative grammar may also flag legitimate complex statements; it never establishes complete requirement coverage.
 
 Extraction rejects interpretation of descriptions over 200,000 characters, and bounds features to 200 skill groups, 30 thresholds and 40 constraints/unparsed statements each. Exceeded limits set `truncated` and prevent confident fit bands. The public requirements route displays the same policy beside the sanitized original description, including closed-job details.
 
@@ -24,13 +26,13 @@ Extraction rejects interpretation of descriptions over 200,000 characters, and b
 
 [Scoring](../backend/src/domain/matching/score.ts) uses these dimensions:
 
-| Dimension      | Weight | Current assessment                                                               |
-| -------------- | -----: | -------------------------------------------------------------------------------- |
-| Skills         |     50 | Required group weight 3, preferred 1; best alternative contributes once          |
-| Experience     |     20 | Professional/function month union compared with extracted thresholds             |
-| Function       |     15 | Reviewed professional role functions; unknown functions unassessed               |
-| Location       |     10 | Conservative exact normalized location overlap; explicit restrictions unresolved |
-| Qualifications |      5 | Unassessed; explicit mandatory statements require review                         |
+| Dimension  | Weight | Current assessment                                                                |
+| ---------- | -----: | --------------------------------------------------------------------------------- |
+| Skills     |     50 | Required group weight 3, preferred 1; best alternative contributes once           |
+| Experience |     20 | Professional/function month union compared with extracted thresholds              |
+| Function   |     15 | Reviewed professional role functions; unknown functions unassessed                |
+| Location   |     10 | Conservative exact normalized location overlap; explicit restrictions unresolved  |
+| Education  |     10 | Reviewed completed degree level/subject; unknown/equivalent claims require review |
 
 Work-evidenced and user-confirmed skill claims receive credit 1, listed mentions 0.6, learning/negated/absent claims 0. They remain claims rather than verified proficiency. Missing evidence does not establish lack of ability. A mandatory group below full credit is a required gap.
 
@@ -38,9 +40,9 @@ Work-evidenced and user-confirmed skill claims receive credit 1, listed mentions
 
 Experience uses overlap-aware bounds. A minimum bound above the requirement is met; a maximum below it with no unknown intervals is below; other cases are uncertain. Internships, projects and volunteering do not become professional tenure. No overqualification penalty applies.
 
-For each dimension, base fit is the weighted credit divided by assessed weight, expressed out of 100. Completeness is the assessed fraction of the full 100-point policy. Unparsed statements reduce skill coverage by their required/preferred weights. Neither number is extraction accuracy or a hiring probability. No recognized mandatory comparison, completeness below 60%, truncation or unresolved mandatory constraints produces `review`. Required gaps produce `exploratory`; otherwise scores 80+ are `strong`, 60+ `possible`, lower `exploratory`.
+For each dimension, base fit is the weighted credit divided by assessed weight, expressed out of 100. Contextual responsibility/role skills add at most five points afterwards, exposed as `roleRelevancePoints`; base fit is capped at 100. Missing contextual skills never create required gaps. Completeness is assessed weight capped at 100. Unparsed statements reduce skill coverage by their required/preferred weights. Neither number is extraction accuracy or a hiring probability. No recognized mandatory comparison, completeness below 60%, truncation or unresolved mandatory constraints produces `review`. Required gaps produce `exploratory`; otherwise scores 80+ are `strong`, 60+ `possible`, lower `exploratory`.
 
-Remote does not establish worldwide eligibility. Different cities sharing a country do not establish overlap. Work authorization, relocation, qualifications and languages are not guessed from a location or education heading. These fields currently remain review items rather than editable structured eligibility claims.
+Remote does not establish worldwide eligibility. Different cities sharing a country do not establish overlap. Work authorization, relocation and languages are not guessed from location or education; they remain review items rather than editable eligibility claims. Degrees and skill years now have explicit review controls; missing evidence remains uncertain rather than a verified absence.
 
 ## Optional employer context
 

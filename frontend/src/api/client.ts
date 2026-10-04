@@ -88,6 +88,19 @@ export async function listCompanies(signal?: AbortSignal) {
   return result.data;
 }
 
+export async function listFacets(query: JobsQuery, signal?: AbortSignal) {
+  const result = await client.GET('/api/v1/jobs/facets', {
+    params: { query },
+    ...(signal ? { signal } : {}),
+  });
+
+  if (!result.data) {
+    throw new ApiError('Could not load location filters.');
+  }
+
+  return result.data;
+}
+
 export async function listCategories(signal?: AbortSignal) {
   const result = await client.GET('/api/v1/categories', signal ? { signal } : {});
 

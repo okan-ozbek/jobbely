@@ -1,5 +1,6 @@
 import type { SignalReview, SignalSemantics } from '../semantics/model.js';
 import type { categories } from '../taxonomy.js';
+import type { EducationClaim, SkillTenureClaim } from './qualifications.js';
 
 export type ResumeCategory = (typeof categories)[number]['slug'];
 
@@ -90,6 +91,8 @@ export interface ResumeAnalysis {
   competencies: ResumeSignal[];
   employment: ResumeEmployment[];
   location: ResumeLocation;
+  education?: EducationClaim[];
+  skillTenure?: SkillTenureClaim[];
   experience: {
     professional: ExperienceRange;
     internships: ExperienceRange;
@@ -119,6 +122,8 @@ export interface ResumeCorrections {
   removeCompetencies?: string[];
   location?: string;
   employment?: EmploymentCorrection[];
+  education?: EducationClaim[];
+  skillTenure?: SkillTenureClaim[];
 }
 
 export interface ResumeInput {

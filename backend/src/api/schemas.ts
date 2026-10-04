@@ -72,6 +72,8 @@ export const filterSchema = Type.Object(
     q: Type.Optional(Type.String({ maxLength: 200 })),
     company: Type.Optional(Type.String({ maxLength: 500 })),
     category: Type.Optional(Type.String({ maxLength: 500 })),
+    country: Type.Optional(Type.String({ pattern: '^[A-Za-z]{2}$' })),
+    city: Type.Optional(Type.String({ minLength: 1, maxLength: 200 })),
     workplace: Type.Optional(
       Type.String({
         pattern: '^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$',
@@ -102,4 +104,8 @@ export const facetsSchema = Type.Object({
   companies: facet,
   categories: facet,
   workplaces: facet,
+  countries: Type.Array(
+    Type.Object({ value: Type.String(), name: Type.String(), count: Type.Integer() }),
+  ),
+  cities: facet,
 });

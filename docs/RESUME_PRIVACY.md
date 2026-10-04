@@ -4,6 +4,8 @@
 
 ## Structured evidence update, 2 October 2026
 
+The 5 October [qualification update](QUALIFICATIONS.md) adds only degree level/field/completion and skill ID/months to the transient reviewed allowlist, bounded to 20 and 100 claims respectively. Institution names, contact fields and resume qualification excerpts are rejected by matching. Correction arrays carry the same bounds. Education and manually reviewed years clear with the rest of the profile; no persistence or worker/network boundary changes are introduced.
+
 [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
 
 ## Boundary and rationale

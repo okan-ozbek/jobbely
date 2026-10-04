@@ -67,6 +67,71 @@ async function setup(description?: string) {
 }
 
 describe('private matching API and public requirements', () => {
+  it('compares degree and duration annotations, includes responsibility skills and keeps candidate metadata transient', async () => {
+    const { app, repository, input } = await setup(
+      'Requirements\nBS (or higher) in Computer Science, or a related field\n7+ years of production level experience in one of: Java, Scala, C++, or similar language.\nThe impact you’ll have\nBuild Scala and Kubernetes services.',
+    );
+
+    const before = await repository.read();
+    const job = before.jobs[0]!;
+
+    const profile = {
+      ...input.profile,
+      skills: [
+        { id: 'java', status: 'user_confirmed' },
+        { id: 'scala', status: 'user_confirmed' },
+      ],
+      education: [{ level: 'master', field: 'computer-science', completion: 'completed' }],
+      skillTenure: [{ skillId: 'java', months: 96 }],
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: `/api/v1/jobs/${job.id}/resume-match`,
+      payload: { profile },
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    const result = response.json();
+
+    expect(result.metrics).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ rule: 'education', confidence: 'green' }),
+        expect.objectContaining({ rule: 'experience', confidence: 'green' }),
+      ]),
+    );
+
+    expect(
+      result.skills.some((skill: { rule: string }) => skill.rule.startsWith('role-context:')),
+    ).toBe(true);
+
+    for (const metric of result.metrics) {
+      expect(
+        result.descriptionText.slice(metric.position, metric.position + metric.length),
+      ).toMatch(/BS|7\+ years/);
+    }
+
+    expect(response.headers['cache-control']).toBe('no-store');
+    expect(await repository.read()).toEqual(before);
+
+    expect(
+      (
+        await app.inject({
+          method: 'POST',
+          url: '/api/v1/resume-matches',
+          payload: {
+            ...input,
+            profile: {
+              ...profile,
+              education: [{ ...profile.education[0], institution: 'private school' }],
+            },
+          },
+        })
+      ).statusCode,
+    ).toBe(400);
+  });
+
   it('compares description keywords privately and updates colors after profile changes', async () => {
     const { app, repository, input } = await setup();
     const before = await repository.read();

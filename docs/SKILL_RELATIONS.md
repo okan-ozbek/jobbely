@@ -23,7 +23,7 @@ For example, Redis → cloud infrastructure (0.25) → AWS (0.12) produces 0.03 
 - Exact supported evidence wins. Relations never override negation/learning, satisfy a required gap at partial credit, add years, or unlock employer context despite gaps.
 - An alternative requirement contributes its strongest alternative once. Description highlighting evaluates each individual occurrence, so matching C++ does not turn an absent Java alternative green.
 - Project the candidate once per ranking request. Each job uses map lookups; no graph traversal per job or database network request.
-- Relations are separate from extraction. Employer stack/responsibility mentions stay contextual; highlighting them does not make them requirements.
+- Relations are separate from extraction. Responsibility/role mentions stay contextual; highlighting them does not make them requirements. The 5 October [qualification policy](QUALIFICATIONS.md) adds at most five relevance points from these skills without creating mandatory gaps. Company overview, benefits and legal/application context do not receive the benefit. Degree/year highlights use separate comparison metrics; inferred skills never establish their duration.
 - Policy changes increment `relationsVersion` and therefore scoring/cursor identity. Vocabulary/extraction changes also invalidate public job features and require `pnpm features:backfill`.
 
 ## Description comparison and privacy

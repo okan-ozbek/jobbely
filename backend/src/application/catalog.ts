@@ -1,6 +1,11 @@
 import { createHash } from 'node:crypto';
 import type { Company, Dataset, Job, Source } from '../domain/model.js';
 import type { JobRepository } from '../ports/ingestion.js';
+import {
+  catalogLocations,
+  catalogCountryName,
+  matchesCatalogLocation,
+} from '../domain/locations.js';
 
 /**
  * This interface defines the structure of a job query used to filter and paginate job listings.
@@ -10,6 +15,8 @@ export interface JobQuery {
   company?: string;
   category?: string;
   workplace?: string;
+  country?: string;
+  city?: string;
   cursor?: string;
   limit?: number;
 }
@@ -45,7 +52,8 @@ const matches = (job: Job, query: JobQuery) =>
       .includes(query.q.toLowerCase())) &&
   (!query.company || query.company.split(',').includes(job.companySlug)) &&
   (!query.category || query.category.split(',').includes(job.classification.category)) &&
-  (!query.workplace || query.workplace.split(',').includes(job.workplace));
+  (!query.workplace || query.workplace.split(',').includes(job.workplace)) &&
+  matchesCatalogLocation(job.locations, query.country, query.city);
 
 /**
  * Compares two jobs for ordering based on their last seen date and ID.
@@ -82,6 +90,8 @@ export class JobCatalog {
           query.company ?? '',
           query.category ?? '',
           query.workplace ?? '',
+          query.country ?? '',
+          query.city ?? '',
         ]),
       )
       .digest('hex');
@@ -169,6 +179,29 @@ export class JobCatalog {
       companies: count(jobs.map((job) => job.companySlug)),
       categories: count(jobs.map((job) => job.classification.category)),
       workplaces: count(jobs.map((job) => job.workplace)),
+      countries: count(
+        jobs.flatMap((job) => [
+          ...new Set(
+            catalogLocations(job.locations)
+              .map((location) => location.country)
+              .filter((value): value is string => !!value),
+          ),
+        ]),
+      )
+        .map((item) => ({ ...item, name: catalogCountryName(item.value) }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      cities: count(
+        jobs.flatMap((job) => [
+          ...new Set(
+            catalogLocations(job.locations)
+              .filter(
+                (location) => !query.country || location.country === query.country.toUpperCase(),
+              )
+              .map((location) => location.city)
+              .filter((value): value is string => !!value),
+          ),
+        ]),
+      ).sort((a, b) => a.value.localeCompare(b.value)),
     };
   }
 

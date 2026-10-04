@@ -1,3 +1,4 @@
+import { GlassSelect } from '../../components/GlassSelect.js';
 import { useEffect, useRef, useState } from 'react';
 import { matchResume } from '../../api/client.js';
 import { CompanyLogo } from '../../components/CompanyLogo.js';
@@ -102,9 +103,10 @@ export function ResumeMatches({
       <div className="match-controls">
         <label>
           Function
-          <select
+          <GlassSelect
+            aria-label="Matching function"
             value={category}
-            onChange={(event) => setCategory(event.target.value)}
+            onValueChange={(value) => setCategory(value)}
           >
             <option value="auto">
               {inferred
@@ -120,7 +122,7 @@ export function ResumeMatches({
                 {item.name}
               </option>
             ))}
-          </select>
+          </GlassSelect>
         </label>
       </div>
       <label className="resume-checkbox">
@@ -133,7 +135,7 @@ export function ResumeMatches({
             onReviewed(event.target.checked ? analysis : null);
           }}
         />
-        I’ve reviewed my skills, experience and location.
+        I’ve reviewed my skills, education, experience and location.
       </label>
       <button
         className="primary-button"

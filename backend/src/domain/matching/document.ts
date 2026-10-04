@@ -216,5 +216,13 @@ export function readJobDocument(input: string): JobDocument {
 }
 
 export function isQualificationBlock(block: JobBlock) {
-  return !['application', 'benefits', 'compensation', 'legal', 'overview'].includes(block.role);
+  return ![
+    'application',
+    'benefits',
+    'compensation',
+    'legal',
+    'overview',
+    'responsibilities',
+    'role',
+  ].includes(block.role);
 }

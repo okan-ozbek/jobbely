@@ -1,0 +1,27 @@
+# Decision: reviewed degrees, skill years and role relevance
+
+**Status:** Implemented, 5 October 2026, Europe/Amsterdam. This extends deterministic comparison; structured authorization/language review, OCR and production calibration remain proposed.
+
+## Decision and rationale
+
+Degree and experience requirements are measurable qualifications rather than ordinary skill IDs. Keep them distinct from technical skills while including them in scoring, profile review and original-description highlights. Skills in responsibilities describe useful role knowledge and contribute a bounded benefit without becoming mandatory qualifications.
+
+## Invariants
+
+- Bachelor/BS/BSc/BA, Master/MS/MSc/MA and Doctorate/PhD aliases retain degree level, recognized subject and completion. A higher completed degree can satisfy a minimum level. Computer science, engineering, mathematics and physics count as related fields only when the employer allows a related field. Unknown/unsupported subjects, combined degree obligations and equivalent-experience alternatives require review. In-progress degrees do not satisfy completed-degree requirements; detected claims require the overall profile review.
+- Professional and function experience still use reviewed employment date unions. A requirement for years using a particular skill uses only explicit or manually reviewed skill months and a matching direct claim. Dated role keywords, inferred relations and career totals never establish activity-specific years. Alternative skill durations use the largest known duration, never their sum; unresolved alternatives remain uncertain when no known alternative meets the threshold. Industry/overall tenure remains separate.
+- Recognized responsibility/role skills are contextual. Their average evidence credit adds at most five base-score points, exposed separately as `roleRelevancePoints`. Missing contextual skills never create required gaps or remove unresolved mandatory constraints. Company overview, benefits, legal and application context do not receive this benefit. These heuristic points are not an ATS score or hiring probability.
+- Education has weight 10 when requirements exist; confirmed education below a mandatory requirement creates a gap, missing evidence remains uncertain. Other weights remain skills 50, experience 20, function 15 and location 10. Base fit normalizes assessed weight and then adds bounded role points, capped at 100; completeness is capped at 100. Existing review/gap gates still apply.
+- Analysis/matching accept at most 20 degree claims and 100 skill-duration claims, with integer months between 0 and 600. The private allowlist contains level/field/completion and skill ID/months, never institution names, contact fields or degree excerpts. Edits invalidate review/results. No candidate persistence is introduced.
+
+Versions: analysis `text-5`, public features `requirements-15:concepts-3:clauses-2:job-document-1`, scoring `score-5:relations-3`. Nine additional technical concepts cover the annotated cloud storage, Azure Blob, pipelines, service monitoring, workflow orchestration, developer experience, client libraries, performance services and Databricks platform terms. Public feature backfill is required after extraction changes; private profiles are never part of backfill.
+
+## Implementation and verification
+
+[Qualification parser](../backend/src/domain/resume/qualifications.ts), [requirements](../backend/src/domain/matching/requirements.ts), [scorer](../backend/src/domain/matching/score.ts), [comparison annotations](../backend/src/application/resume/match-jobs.ts), [API allowlist](../backend/src/api/qualification-schemas.ts), [profile review](../frontend/src/features/resume/QualificationReview.tsx).
+
+[Parser tests](../backend/src/domain/resume/qualifications.test.ts) cover aliases, completion, negation, combined lines and explicit duration limits. [Comparison tests](../backend/src/domain/matching/qualifications.test.ts) cover related/higher degrees, unknown/equivalent alternatives, OR duration bounds, role relevance caps and unchanged mandatory gaps. API tests verify colored offsets, private response headers and rejection of institution metadata. Use the synthetic-only browser procedure in [RESUME_TESTING](RESUME_TESTING.md); tests establish regression behavior, not held-out calibration.
+
+## Limits and extension points
+
+The English grammar and small subject taxonomy require review for complex academic requirements. Manual years remain candidate self-reports; the app does not verify proficiency or independently reconstruct skill intervals. Rich degree fields, mixed academic/experience alternatives and interval-backed tool experience need a separate policy before expanding automated coverage.

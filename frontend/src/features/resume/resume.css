@@ -428,6 +428,7 @@
   overflow-y: auto;
 }
 .resume-workbench .resume-checkbox {
+  user-select: none;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -616,8 +617,8 @@
   font-size: 14px;
   line-height: 1.6;
   padding: 18px;
-  min-height: 110px;
-  height: 110px;
+  min-height: 58px;
+  height: 58px;
   max-height: 300px;
   resize: vertical;
 }
@@ -708,7 +709,7 @@
 }
 .home-companies img {
   object-fit: contain;
-  opacity: 0.65;
+  opacity: 1;
 }
 .attached-file {
   display: flex;
@@ -1092,5 +1093,56 @@
   .skill-chip button {
     min-width: 30px;
     min-height: 30px;
+  }
+}
+
+.qualification-review h3 {
+  margin-top: 22px;
+  font-size: 14px;
+}
+.qualification-entry {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr auto;
+  align-items: end;
+  gap: 10px;
+  margin: 16px 0;
+}
+.qualification-entry label {
+  min-width: 0;
+}
+.qualification-remove {
+  padding: 10px;
+  background: transparent;
+  border-radius: 10px;
+}
+.tenure-entry {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 12px 0;
+}
+.tenure-entry > span {
+  flex: 1;
+}
+.tenure-entry input {
+  max-width: 100px;
+}
+.tenure-add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 90px auto;
+  gap: 10px;
+  align-items: center;
+  margin-top: 16px;
+}
+@media (max-width: 650px) {
+  .qualification-entry {
+    grid-template-columns: minmax(0, 1fr);
+    position: relative;
+    padding-right: 34px;
+  }
+  .qualification-entry .qualification-remove {
+    position: absolute;
+    right: 0;
+    top: 0;
   }
 }

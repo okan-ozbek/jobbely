@@ -1,4 +1,5 @@
 import { sourceSchema } from './document-schemas.js';
+import { educationSchema, skillTenureSchema } from './qualification-schemas.js';
 import { signalSemantics, signalReviewSchema } from './semantic-schemas.js';
 import { Type } from '@sinclair/typebox';
 import { categories } from '../domain/taxonomy.js';
@@ -35,6 +36,8 @@ export const resumeInputSchema = Type.Object(
           addCompetencies: Type.Optional(names),
           removeCompetencies: Type.Optional(names),
           location: Type.Optional(field),
+          education: Type.Optional(educationSchema),
+          skillTenure: Type.Optional(skillTenureSchema),
           employment: Type.Optional(
             Type.Array(
               Type.Object(
@@ -149,6 +152,8 @@ export const resumeAnalysisSchema = Type.Object({
     ),
   }),
   skills: Type.Array(signal),
+  education: Type.Optional(educationSchema),
+  skillTenure: Type.Optional(skillTenureSchema),
   competencies: Type.Array(signal),
   employment: Type.Array(
     Type.Object({

@@ -74,7 +74,7 @@ export function HighlightedDescription({
     const spans = mapHtmlHighlights(
       nodes.map((node) => node.data),
       data?.descriptionText ?? '',
-      highlight ? (data?.skills ?? []) : [],
+      highlight ? [...(data?.skills ?? []), ...(data?.metrics ?? [])] : [],
     );
 
     return { root: document.body, indices, spans };
@@ -336,8 +336,12 @@ export function HighlightedDescription({
             {visible.annotation.decision === 'suggested' && (
               <p className="small-note">This possible skill contributes no match credit.</p>
             )}
-            {visible.annotation.interpretation === 'contextual' && (
-              <p className="small-note">Role context, rather than a scored qualification.</p>
+            {(visible.annotation.rule.startsWith('role-context:') ||
+              visible.annotation.interpretation === 'contextual') && (
+              <p className="small-note">
+                Relevant to the role. Responsibility skills can add up to 5 points together; missing
+                ones do not create required gaps.
+              </p>
             )}
           </div>,
           document.body,

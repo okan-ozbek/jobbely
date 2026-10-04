@@ -41,6 +41,25 @@
           },
           {
             "schema": {
+              "pattern": "^[A-Za-z]{2}$",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "country",
+            "required": false
+          },
+          {
+            "schema": {
+              "minLength": 1,
+              "maxLength": 200,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "city",
+            "required": false
+          },
+          {
+            "schema": {
               "pattern": "^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$",
               "type": "string"
             },
@@ -351,6 +370,25 @@
           },
           {
             "schema": {
+              "pattern": "^[A-Za-z]{2}$",
+              "type": "string"
+            },
+            "in": "query",
+            "name": "country",
+            "required": false
+          },
+          {
+            "schema": {
+              "minLength": 1,
+              "maxLength": 200,
+              "type": "string"
+            },
+            "in": "query",
+            "name": "city",
+            "required": false
+          },
+          {
+            "schema": {
               "pattern": "^(remote|hybrid|onsite|unknown)(,(remote|hybrid|onsite|unknown))*$",
               "type": "string"
             },
@@ -389,7 +427,9 @@
                   "required": [
                     "companies",
                     "categories",
-                    "workplaces"
+                    "workplaces",
+                    "countries",
+                    "cities"
                   ],
                   "properties": {
                     "companies": {
@@ -429,6 +469,46 @@
                       }
                     },
                     "workplaces": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value",
+                          "count"
+                        ],
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "countries": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "value",
+                          "name",
+                          "count"
+                        ],
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "cities": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -1120,6 +1200,136 @@
                       "location": {
                         "maxLength": 200,
                         "type": "string"
+                      },
+                      "education": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "level",
+                            "field",
+                            "completion"
+                          ],
+                          "properties": {
+                            "level": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "bachelor"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "master"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "doctorate"
+                                  ]
+                                }
+                              ]
+                            },
+                            "field": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "computer-science"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "engineering"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "mathematics"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "physics"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "business"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "other"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            },
+                            "completion": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "completed"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "in-progress"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "skillTenure": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "skillId",
+                            "months"
+                          ],
+                          "properties": {
+                            "skillId": {
+                              "minLength": 1,
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "months": {
+                              "minimum": 0,
+                              "maximum": 600,
+                              "type": "integer"
+                            }
+                          }
+                        }
                       },
                       "employment": {
                         "maxItems": 100,
@@ -2067,6 +2277,136 @@
                                 }
                               }
                             }
+                          }
+                        }
+                      }
+                    },
+                    "education": {
+                      "maxItems": 20,
+                      "uniqueItems": true,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "level",
+                          "field",
+                          "completion"
+                        ],
+                        "properties": {
+                          "level": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "bachelor"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "master"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "doctorate"
+                                ]
+                              }
+                            ]
+                          },
+                          "field": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "computer-science"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "engineering"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "mathematics"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "physics"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "business"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "other"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unknown"
+                                ]
+                              }
+                            ]
+                          },
+                          "completion": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "completed"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "in-progress"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unknown"
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "skillTenure": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "skillId",
+                          "months"
+                        ],
+                        "properties": {
+                          "skillId": {
+                            "minLength": 1,
+                            "maxLength": 200,
+                            "type": "string"
+                          },
+                          "months": {
+                            "minimum": 0,
+                            "maximum": 600,
+                            "type": "integer"
                           }
                         }
                       }
@@ -3247,6 +3587,136 @@
                       "analysisDate": {
                         "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
                         "type": "string"
+                      },
+                      "education": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "level",
+                            "field",
+                            "completion"
+                          ],
+                          "properties": {
+                            "level": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "bachelor"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "master"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "doctorate"
+                                  ]
+                                }
+                              ]
+                            },
+                            "field": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "computer-science"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "engineering"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "mathematics"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "physics"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "business"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "other"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            },
+                            "completion": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "completed"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "in-progress"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "skillTenure": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "skillId",
+                            "months"
+                          ],
+                          "properties": {
+                            "skillId": {
+                              "minLength": 1,
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "months": {
+                              "minimum": 0,
+                              "maximum": 600,
+                              "type": "integer"
+                            }
+                          }
+                        }
                       },
                       "skills": {
                         "maxItems": 200,
@@ -5333,6 +5803,91 @@
                                     "type": "string"
                                   }
                                 }
+                              },
+                              "education": {
+                                "type": "object",
+                                "required": [
+                                  "level",
+                                  "field",
+                                  "related",
+                                  "alternativeExperience"
+                                ],
+                                "properties": {
+                                  "level": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "bachelor"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "master"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "doctorate"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "field": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "computer-science"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "engineering"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "mathematics"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "physics"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "business"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "other"
+                                        ]
+                                      },
+                                      {
+                                        "type": "string",
+                                        "enum": [
+                                          "unknown"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "related": {
+                                    "type": "boolean"
+                                  },
+                                  "alternativeExperience": {
+                                    "type": "boolean"
+                                  }
+                                }
                               }
                             }
                           }
@@ -5726,6 +6281,285 @@
                         }
                       }
                     },
+                    "metrics": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "decision",
+                          "targetId",
+                          "facet",
+                          "suggestion",
+                          "confidence",
+                          "credit",
+                          "sourceId",
+                          "sourceName",
+                          "path",
+                          "reason",
+                          "id",
+                          "name",
+                          "interpretation",
+                          "rule",
+                          "position",
+                          "length"
+                        ],
+                        "properties": {
+                          "decision": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "full"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "partial"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "suggested"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "none"
+                                ]
+                              }
+                            ]
+                          },
+                          "targetId": {
+                            "type": "string"
+                          },
+                          "facet": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "general"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "usage"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "development"
+                                ]
+                              }
+                            ]
+                          },
+                          "suggestion": {
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "name",
+                              "facet",
+                              "question"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "facet": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "general"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "usage"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "development"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "question": {
+                                "type": "string"
+                              }
+                            },
+                            "nullable": true
+                          },
+                          "confidence": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "green"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "yellow"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "purple"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "red"
+                                ]
+                              }
+                            ]
+                          },
+                          "credit": {
+                            "type": "number"
+                          },
+                          "sourceId": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "sourceName": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "path": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "kind",
+                                "mode",
+                                "from",
+                                "to",
+                                "weight",
+                                "reason"
+                              ],
+                              "properties": {
+                                "kind": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "transferable"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "specialization"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "possible-tool"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "ecosystem"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "mode": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "partial"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "suggestion"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "from": {
+                                  "type": "string"
+                                },
+                                "to": {
+                                  "type": "string"
+                                },
+                                "weight": {
+                                  "type": "number"
+                                },
+                                "reason": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "reason": {
+                            "type": "string"
+                          },
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "interpretation": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "explicit"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "interpreted"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ambiguous"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contextual"
+                                ]
+                              }
+                            ]
+                          },
+                          "rule": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "integer"
+                          },
+                          "length": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
                     "comparison": {
                       "type": "object",
                       "required": [
@@ -5736,6 +6570,8 @@
                         "requiredGaps",
                         "skills",
                         "experience",
+                        "education",
+                        "roleRelevancePoints",
                         "uncertainties"
                       ],
                       "properties": {
@@ -6336,6 +7172,60 @@
                               }
                             }
                           }
+                        },
+                        "education": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "name",
+                              "importance",
+                              "status",
+                              "reason",
+                              "excerpt"
+                            ],
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "importance": {
+                                "type": "string"
+                              },
+                              "status": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "met"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "below"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "uncertain"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "excerpt": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "roleRelevancePoints": {
+                          "minimum": 0,
+                          "maximum": 5,
+                          "type": "integer"
                         },
                         "uncertainties": {
                           "type": "array",
@@ -7410,6 +8300,91 @@
                                 "type": "string"
                               }
                             }
+                          },
+                          "education": {
+                            "type": "object",
+                            "required": [
+                              "level",
+                              "field",
+                              "related",
+                              "alternativeExperience"
+                            ],
+                            "properties": {
+                              "level": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "bachelor"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "master"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "doctorate"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "field": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "computer-science"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "engineering"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "mathematics"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "physics"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "business"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "other"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "unknown"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "related": {
+                                "type": "boolean"
+                              },
+                              "alternativeExperience": {
+                                "type": "boolean"
+                              }
+                            }
                           }
                         }
                       }
@@ -7582,6 +8557,136 @@
                       "analysisDate": {
                         "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
                         "type": "string"
+                      },
+                      "education": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "level",
+                            "field",
+                            "completion"
+                          ],
+                          "properties": {
+                            "level": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "bachelor"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "master"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "doctorate"
+                                  ]
+                                }
+                              ]
+                            },
+                            "field": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "computer-science"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "engineering"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "mathematics"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "physics"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "business"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "other"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            },
+                            "completion": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "completed"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "in-progress"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "unknown"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      "skillTenure": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "skillId",
+                            "months"
+                          ],
+                          "properties": {
+                            "skillId": {
+                              "minLength": 1,
+                              "maxLength": 200,
+                              "type": "string"
+                            },
+                            "months": {
+                              "minimum": 0,
+                              "maximum": 600,
+                              "type": "integer"
+                            }
+                          }
+                        }
                       },
                       "skills": {
                         "maxItems": 200,
@@ -8710,6 +9815,8 @@
                           "unresolvedRequirements",
                           "skills",
                           "experience",
+                          "education",
+                          "roleRelevancePoints",
                           "uncertainties",
                           "location",
                           "coverage",
@@ -9602,6 +10709,91 @@
                                               "type": "string"
                                             }
                                           }
+                                        },
+                                        "education": {
+                                          "type": "object",
+                                          "required": [
+                                            "level",
+                                            "field",
+                                            "related",
+                                            "alternativeExperience"
+                                          ],
+                                          "properties": {
+                                            "level": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "bachelor"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "master"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "doctorate"
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "field": {
+                                              "anyOf": [
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "computer-science"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "engineering"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "mathematics"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "physics"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "business"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "other"
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "unknown"
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            "related": {
+                                              "type": "boolean"
+                                            },
+                                            "alternativeExperience": {
+                                              "type": "boolean"
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -10353,6 +11545,60 @@
                                 }
                               }
                             }
+                          },
+                          "education": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "name",
+                                "importance",
+                                "status",
+                                "reason",
+                                "excerpt"
+                              ],
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "importance": {
+                                  "type": "string"
+                                },
+                                "status": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "met"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "below"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "uncertain"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "reason": {
+                                  "type": "string"
+                                },
+                                "excerpt": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "roleRelevancePoints": {
+                            "minimum": 0,
+                            "maximum": 5,
+                            "type": "integer"
                           },
                           "uncertainties": {
                             "type": "array",

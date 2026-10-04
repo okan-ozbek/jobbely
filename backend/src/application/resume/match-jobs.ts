@@ -1,4 +1,5 @@
 import { isQualificationBlock, readJobDocument } from '../../domain/matching/document.js';
+import { degreeMentions } from '../../domain/resume/qualifications.js';
 import type { JobDocumentReader } from '../../ports/job-document.js';
 import { conceptsById } from '../../domain/semantics/concepts.js';
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
@@ -124,7 +125,16 @@ export class MatchJobs {
       new Set([...profile.skills, ...(profile.competencies ?? [])].map((item) => item.id)).size !==
         profile.skills.length + (profile.competencies?.length ?? 0) ||
       new Set(profile.employment.filter((role) => role.id).map((role) => role.id)).size !==
-        profile.employment.filter((role) => role.id).length
+        profile.employment.filter((role) => role.id).length ||
+      new Set((profile.skillTenure ?? []).map((claim) => claim.skillId)).size !==
+        (profile.skillTenure?.length ?? 0) ||
+      (profile.skillTenure ?? []).some(
+        (claim) =>
+          !conceptsById.has(claim.skillId) ||
+          !Number.isInteger(claim.months) ||
+          claim.months < 0 ||
+          claim.months > 600,
+      )
     ) {
       throw new MatchError('invalid_profile', 'Review the profile date and skill claims.');
     }
@@ -170,12 +180,13 @@ export class MatchJobs {
           document.blocks.some(
             (block) =>
               block.kind !== 'heading' &&
-              isQualificationBlock(block) &&
+              (isQualificationBlock(block) ||
+                block.role === 'responsibilities' ||
+                block.role === 'role') &&
               mention.position >= block.start &&
               mention.position < block.end &&
               requirements.skills.some(
                 (group) =>
-                  group.importance !== 'contextual' &&
                   group.evidence.start !== undefined &&
                   mention.position >= group.evidence.start &&
                   mention.position < (group.evidence.end ?? 0),
@@ -185,7 +196,91 @@ export class MatchJobs {
         .map((mention) => ({
           ...mention,
           ...skillMatch(prepared.matches, mention.id, mention.facet, mention.interpretation),
+          ...(!document.blocks.some(
+            (block) =>
+              isQualificationBlock(block) &&
+              mention.position >= block.start &&
+              mention.position < block.end,
+          )
+            ? { rule: `role-context:${mention.rule}` }
+            : {}),
         })),
+      metrics: [
+        ...requirements.constraints
+          .filter((constraint) => constraint.education && constraint.importance !== 'contextual')
+          .flatMap((constraint, index) => {
+            const match = comparison.education[index]!;
+
+            return degreeMentions(constraint.evidence.excerpt).map((mention) => ({
+              id: `degree:${mention.level}`,
+              targetId: `degree:${mention.level}`,
+              name: match.name,
+              rule: 'education',
+              interpretation: 'explicit' as const,
+              facet: 'general' as const,
+              position: (constraint.evidence.start ?? 0) + mention.position,
+              length: mention.length,
+              decision:
+                match.status === 'met'
+                  ? ('full' as const)
+                  : match.status === 'below'
+                    ? ('none' as const)
+                    : ('partial' as const),
+              confidence:
+                match.status === 'met'
+                  ? ('green' as const)
+                  : match.status === 'below'
+                    ? ('red' as const)
+                    : ('yellow' as const),
+              credit: Number(match.status === 'met'),
+              sourceId: null,
+              sourceName: null,
+              path: [],
+              suggestion: null,
+              reason: match.reason,
+            }));
+          }),
+        ...requirements.experience
+          .filter((item) => item.importance !== 'contextual')
+          .map((requirement, index) => {
+            const match = comparison.experience[index]!;
+
+            return {
+              id: `experience:${index}`,
+              targetId: `experience:${index}`,
+              name: `${requirement.minimumMonths / 12}+ years · ${requirement.scope}`,
+              rule: 'experience',
+              interpretation: 'explicit' as const,
+              facet: 'general' as const,
+              position: requirement.evidence.start ?? 0,
+              length:
+                requirement.evidence.excerpt.match(
+                  /^\d{1,2}(?:\s*(?:[-–]|to)\s*\d{1,2})?\s*\+?\s*years?/,
+                )?.[0].length ?? 0,
+              decision:
+                match.status === 'met'
+                  ? ('full' as const)
+                  : match.status === 'below'
+                    ? ('none' as const)
+                    : ('partial' as const),
+              confidence:
+                match.status === 'met'
+                  ? ('green' as const)
+                  : match.status === 'below'
+                    ? ('red' as const)
+                    : ('yellow' as const),
+              credit: Number(match.status === 'met'),
+              sourceId: null,
+              sourceName: null,
+              path: [],
+              suggestion: null,
+              reason:
+                match.status === 'uncertain'
+                  ? 'This duration needs review. Career dates and related skills do not establish years using a particular tool. Add an explicit skill experience claim in your profile.'
+                  : `Reviewed ${requirement.scope} experience: ${(match.candidateMinimumMonths / 12).toFixed(1)}–${(match.candidateMaximumMonths / 12).toFixed(1)} years; requirement: ${requirement.minimumMonths / 12}+ years.`,
+            };
+          }),
+      ],
       comparison,
       recommendationEligible: !!recommendationEligible,
       availability: recommendationEligible

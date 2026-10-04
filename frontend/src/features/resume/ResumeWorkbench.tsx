@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { QualificationReview } from './QualificationReview.js';
 import { ArrowRight, Paperclip, ShieldCheck, Sparkles, X } from 'lucide-react';
 import type { ResumeAnalysis } from '../../api/client.js';
 import { EmploymentReview } from './EmploymentReview.js';
@@ -88,7 +89,7 @@ export function ResumeWorkbench({
                 <textarea
                   value={state.text}
                   maxLength={100_000}
-                  rows={4}
+                  rows={1}
                   placeholder="Paste your resume here, or attach a file…"
                   onChange={(event) => {
                     state.setText(event.target.value);
@@ -321,6 +322,11 @@ export function ResumeWorkbench({
                       or your work authorization.
                     </p>
                   </section>
+                  <QualificationReview
+                    analysis={analysis}
+                    corrections={state.corrections}
+                    correct={state.correct}
+                  />
                   <SignalReview
                     signals={[...analysis.skills, ...analysis.competencies]}
                     suggestions={analysis.supportedSkills}

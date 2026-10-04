@@ -3,8 +3,9 @@ import { recognizeEmployer } from '../resume/employment.js';
 import { summarizeExperience } from '../resume/experience.js';
 import type { FeatureJob, MatchExplanation, MatchProfile } from './model.js';
 import { projectSkills, skillMatch, relationsVersion } from './skill-relations.js';
+import { degreeNames, degreeRank } from '../resume/qualifications.js';
 
-export const scoringVersion = `score-4:${relationsVersion}`;
+export const scoringVersion = `score-5:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -62,10 +63,14 @@ export function scoreJob(
     requiredGaps: 0,
     unresolvedRequirements:
       job.requirements.unparsed.filter((item) => item.importance !== 'contextual').length +
-      job.requirements.constraints.filter((item) => item.importance !== 'contextual').length,
+      job.requirements.constraints.filter(
+        (item) => item.importance !== 'contextual' && !item.education,
+      ).length,
     skills: [],
     experience: [],
+    education: [],
     uncertainties: [],
+    roleRelevancePoints: 0,
     location: 'Unknown: current location does not establish relocation or work authorization.',
     employerAdjustment: { points: 0, reasons: [], version: contextVersion },
   };
@@ -74,6 +79,8 @@ export function scoreJob(
   let skillCredit = 0;
   let experienceCredit = 0;
   let experienceAssessed = 0;
+  let contextCredit = 0;
+  let contextTotal = 0;
   let unresolvedMandatory = job.requirements.truncated;
 
   if (job.requirements.truncated) {
@@ -83,10 +90,6 @@ export function scoreJob(
   }
 
   for (const group of job.requirements.skills) {
-    if (group.importance === 'contextual') {
-      continue;
-    }
-
     const weight = group.importance === 'required' ? 3 : 1;
 
     const alternatives = group.alternatives
@@ -104,7 +107,24 @@ export function scoreJob(
 
     const best = alternatives[0]!;
 
-    if ((group.unresolvedAlternatives?.length ?? 0) > 0 && best.credit < 1) {
+    if (group.importance === 'contextual') {
+      const role = job.requirements.blocks.find(
+        (block) => block.id === group.evidence.blockId,
+      )?.role;
+
+      if (role !== 'responsibilities' && role !== 'role') {
+        continue;
+      }
+
+      contextTotal++;
+      contextCredit += best.credit;
+    }
+
+    if (
+      group.importance !== 'contextual' &&
+      (group.unresolvedAlternatives?.length ?? 0) > 0 &&
+      best.credit < 1
+    ) {
       result.unresolvedRequirements++;
       unresolvedMandatory ||= group.importance === 'required';
 
@@ -113,8 +133,10 @@ export function scoreJob(
       );
     }
 
-    skillTotal += weight;
-    skillCredit += weight * best.credit;
+    if (group.importance !== 'contextual') {
+      skillTotal += weight;
+      skillCredit += weight * best.credit;
+    }
 
     result.skills.push({
       ...best,
@@ -151,7 +173,38 @@ export function scoreJob(
         : requirement.scope === 'function'
           ? (durations.relevant.find((item) => item.category === job.requirements.category)
               ?.duration ?? { minimumMonths: 0, maximumMonths: 0, unknownEntries: 0 })
-          : { minimumMonths: 0, maximumMonths: 0, unknownEntries: 1 };
+          : (() => {
+              const ids = requirement.alternativeIds?.length
+                ? requirement.alternativeIds
+                : requirement.skillId
+                  ? [requirement.skillId]
+                  : [];
+
+              const group = job.requirements.skills.find(
+                (item) => item.evidence.clauseId === requirement.evidence.clauseId,
+              );
+
+              const tenures = (profile.skillTenure ?? []).filter(
+                (claim) =>
+                  ids.includes(claim.skillId) &&
+                  group?.alternatives.find((alternative) => alternative.id === claim.skillId)
+                    ?.facet !== 'development' &&
+                  skillMatch(matches, claim.skillId).credit === 1,
+              );
+
+              const months = Math.max(0, ...tenures.map((claim) => claim.months));
+
+              return {
+                minimumMonths: months,
+                maximumMonths: months,
+                unknownEntries:
+                  ids.length > 0 &&
+                  ids.every((id) => tenures.some((claim) => claim.skillId === id)) &&
+                  !group?.unresolvedAlternatives?.length
+                    ? 0
+                    : 1,
+              };
+            })();
 
     const status =
       range.minimumMonths >= requirement.minimumMonths
@@ -197,6 +250,72 @@ export function scoreJob(
 
   let locationAssessed = 0;
   let locationCredit = 0;
+  let educationAssessed = 0;
+  let educationCredit = 0;
+
+  const educationRequirements = job.requirements.constraints.filter(
+    (item) => item.education && item.importance !== 'contextual',
+  );
+
+  for (const requirement of educationRequirements) {
+    const degree = requirement.education!;
+    const claims = profile.education ?? [];
+    const relatedFields = ['computer-science', 'engineering', 'mathematics', 'physics'];
+
+    const matchesField = (field: string) =>
+      degree.field === 'unknown' ||
+      (degree.field !== 'other' &&
+        (field === degree.field ||
+          (degree.related &&
+            relatedFields.includes(degree.field) &&
+            relatedFields.includes(field))));
+
+    const met = claims.some(
+      (claim) =>
+        claim.completion === 'completed' &&
+        degreeRank[claim.level] >= degreeRank[degree.level] &&
+        matchesField(claim.field),
+    );
+
+    const uncertain =
+      !claims.length ||
+      degree.field === 'other' ||
+      claims.some(
+        (claim) =>
+          claim.completion === 'unknown' ||
+          (claim.field === 'unknown' && degree.field !== 'unknown'),
+      ) ||
+      degree.alternativeExperience;
+
+    const status = met ? 'met' : uncertain ? 'uncertain' : 'below';
+
+    const reason = met
+      ? 'A reviewed completed degree meets the level and recognized field requirement.'
+      : status === 'below'
+        ? 'The reviewed degree level, field or completion does not meet this requirement.'
+        : 'The degree, subject or equivalent-experience alternative needs review. Missing evidence is not a verified absence.';
+
+    result.education.push({
+      name: degreeNames[degree.level],
+      importance: requirement.importance,
+      status,
+      reason,
+      excerpt: requirement.evidence.excerpt,
+    });
+
+    if (status === 'uncertain') {
+      result.unresolvedRequirements++;
+      unresolvedMandatory ||= requirement.importance === 'required';
+      result.uncertainties.push(reason);
+    } else {
+      educationAssessed++;
+      educationCredit += Number(met);
+    }
+
+    if (status === 'below' && requirement.importance === 'required') {
+      result.requiredGaps++;
+    }
+  }
 
   const locationConstraints = job.requirements.constraints.filter(
     (item) => item.kind === 'location' && item.importance === 'required',
@@ -234,7 +353,11 @@ export function scoreJob(
   }
 
   for (const constraint of job.requirements.constraints) {
-    if (constraint.kind !== 'location' && constraint.importance !== 'contextual') {
+    if (
+      constraint.kind !== 'location' &&
+      !constraint.education &&
+      constraint.importance !== 'contextual'
+    ) {
       result.uncertainties.push(`${constraint.kind}: ${constraint.evidence.excerpt}`);
       unresolvedMandatory ||= constraint.importance === 'required';
     }
@@ -262,20 +385,30 @@ export function scoreJob(
     50 * skillCoverage +
     (thresholds.length ? (20 * experienceAssessed) / thresholds.length : 0) +
     15 * functionAssessed +
-    10 * locationAssessed;
+    10 * locationAssessed +
+    (educationRequirements.length ? (10 * educationAssessed) / educationRequirements.length : 0);
 
   const credit =
     (skillTotal ? (50 * skillCoverage * skillCredit) / skillTotal : 0) +
     (thresholds.length ? (20 * experienceCredit) / thresholds.length : 0) +
     15 * functionCredit +
-    10 * locationCredit;
+    10 * locationCredit +
+    (educationRequirements.length ? (10 * educationCredit) / educationRequirements.length : 0);
 
-  result.baseScore = assessedWeight ? Math.round((100 * credit) / assessedWeight) : 0;
-  result.completeness = Math.round(assessedWeight);
+  const rolePoints = contextTotal ? Math.round((5 * contextCredit) / contextTotal) : 0;
+
+  result.roleRelevancePoints = rolePoints;
+
+  result.baseScore = assessedWeight
+    ? Math.min(100, Math.round((100 * credit) / assessedWeight) + rolePoints)
+    : 0;
+
+  result.completeness = Math.min(100, Math.round(assessedWeight));
 
   const mandatoryComparison =
     result.skills.some((item) => item.importance === 'required') ||
-    thresholds.some((item) => item.importance === 'required');
+    thresholds.some((item) => item.importance === 'required') ||
+    result.education.some((item) => item.importance === 'required');
 
   if (!mandatoryComparison) {
     result.uncertainties.push(

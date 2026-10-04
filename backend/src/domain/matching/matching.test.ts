@@ -78,6 +78,7 @@ describe('evidence-backed requirement extraction', () => {
       skills: [
         { names: ['Java', 'Kotlin'], status: 'matched', matchedId: 'kotlin' },
         { status: 'not_evidenced', importance: 'preferred' },
+        { importance: 'contextual', names: ['React'] },
       ],
     });
   });

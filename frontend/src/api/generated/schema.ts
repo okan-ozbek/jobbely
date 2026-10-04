@@ -248,6 +248,8 @@ export interface operations {
                 q?: string;
                 company?: string;
                 category?: string;
+                country?: string;
+                city?: string;
                 workplace?: string;
                 limit?: number;
                 cursor?: string;
@@ -331,6 +333,8 @@ export interface operations {
                 q?: string;
                 company?: string;
                 category?: string;
+                country?: string;
+                city?: string;
                 workplace?: string;
                 limit?: number;
                 cursor?: string;
@@ -357,6 +361,15 @@ export interface operations {
                             count: number;
                         }[];
                         workplaces: {
+                            value: string;
+                            count: number;
+                        }[];
+                        countries: {
+                            value: string;
+                            name: string;
+                            count: number;
+                        }[];
+                        cities: {
                             value: string;
                             count: number;
                         }[];
@@ -557,6 +570,15 @@ export interface operations {
                         addCompetencies?: string[];
                         removeCompetencies?: string[];
                         location?: string;
+                        education?: {
+                            level: "bachelor" | "master" | "doctorate";
+                            field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                            completion: "completed" | "in-progress" | "unknown";
+                        }[];
+                        skillTenure?: {
+                            skillId: string;
+                            months: number;
+                        }[];
                         employment?: {
                             id: string;
                             removed?: boolean;
@@ -641,6 +663,15 @@ export interface operations {
                                 start?: number;
                                 end?: number;
                             }[];
+                        }[];
+                        education?: {
+                            level: "bachelor" | "master" | "doctorate";
+                            field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                            completion: "completed" | "in-progress" | "unknown";
+                        }[];
+                        skillTenure?: {
+                            skillId: string;
+                            months: number;
                         }[];
                         competencies: {
                             evidenceRefs?: {
@@ -826,6 +857,15 @@ export interface operations {
                 "application/json": {
                     profile: {
                         analysisDate: string;
+                        education?: {
+                            level: "bachelor" | "master" | "doctorate";
+                            field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                            completion: "completed" | "in-progress" | "unknown";
+                        }[];
+                        skillTenure?: {
+                            skillId: string;
+                            months: number;
+                        }[];
                         skills: {
                             evidenceRefs?: {
                                 blockId: string;
@@ -993,6 +1033,12 @@ export interface operations {
                                     line: number;
                                     rule: string;
                                 };
+                                education?: {
+                                    level: "bachelor" | "master" | "doctorate";
+                                    field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                                    related: boolean;
+                                    alternativeExperience: boolean;
+                                };
                             }[];
                             unparsed: {
                                 importance: "required" | "preferred" | "contextual";
@@ -1012,6 +1058,36 @@ export interface operations {
                             truncated: boolean;
                         };
                         skills: {
+                            decision: "full" | "partial" | "suggested" | "none";
+                            targetId: string;
+                            facet: "general" | "usage" | "development";
+                            suggestion: {
+                                id: string;
+                                name: string;
+                                facet: "general" | "usage" | "development";
+                                question: string;
+                            } | null;
+                            confidence: "green" | "yellow" | "purple" | "red";
+                            credit: number;
+                            sourceId: string | null;
+                            sourceName: string | null;
+                            path: {
+                                kind: "transferable" | "specialization" | "possible-tool" | "ecosystem";
+                                mode: "partial" | "suggestion";
+                                from: string;
+                                to: string;
+                                weight: number;
+                                reason: string;
+                            }[];
+                            reason: string;
+                            id: string;
+                            name: string;
+                            interpretation: "explicit" | "interpreted" | "ambiguous" | "contextual";
+                            rule: string;
+                            position: number;
+                            length: number;
+                        }[];
+                        metrics?: {
                             decision: "full" | "partial" | "suggested" | "none";
                             targetId: string;
                             facet: "general" | "usage" | "development";
@@ -1099,6 +1175,14 @@ export interface operations {
                                 scope: string;
                                 excerpt: string;
                             }[];
+                            education: {
+                                name: string;
+                                importance: string;
+                                status: "met" | "below" | "uncertain";
+                                reason: string;
+                                excerpt: string;
+                            }[];
+                            roleRelevancePoints: number;
                             uncertainties: string[];
                         };
                         recommendationEligible: boolean;
@@ -1312,6 +1396,12 @@ export interface operations {
                                 line: number;
                                 rule: string;
                             };
+                            education?: {
+                                level: "bachelor" | "master" | "doctorate";
+                                field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                                related: boolean;
+                                alternativeExperience: boolean;
+                            };
                         }[];
                         unparsed: {
                             importance: "required" | "preferred" | "contextual";
@@ -1358,6 +1448,15 @@ export interface operations {
                 "application/json": {
                     profile: {
                         analysisDate: string;
+                        education?: {
+                            level: "bachelor" | "master" | "doctorate";
+                            field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                            completion: "completed" | "in-progress" | "unknown";
+                        }[];
+                        skillTenure?: {
+                            skillId: string;
+                            months: number;
+                        }[];
                         skills: {
                             evidenceRefs?: {
                                 blockId: string;
@@ -1521,6 +1620,12 @@ export interface operations {
                                             line: number;
                                             rule: string;
                                         };
+                                        education?: {
+                                            level: "bachelor" | "master" | "doctorate";
+                                            field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                                            related: boolean;
+                                            alternativeExperience: boolean;
+                                        };
                                     }[];
                                     unparsed: {
                                         importance: "required" | "preferred" | "contextual";
@@ -1597,6 +1702,14 @@ export interface operations {
                                 scope: string;
                                 excerpt: string;
                             }[];
+                            education: {
+                                name: string;
+                                importance: string;
+                                status: "met" | "below" | "uncertain";
+                                reason: string;
+                                excerpt: string;
+                            }[];
+                            roleRelevancePoints: number;
                             uncertainties: string[];
                             location: string;
                             coverage: string;

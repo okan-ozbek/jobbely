@@ -15,6 +15,37 @@ const patterns = concepts.map((concept) => ({
 
 function allowed(id: string, alias: string, text: string, technicalList: boolean) {
   if (
+    id === 'databricks' &&
+    !technicalList &&
+    !/\b(?:using|used|with|platform|pipelines?|Spark|Delta|clusters?|notebooks?|SQL|proficiency|knowledge)\b/i.test(
+      text,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    id === 'developer-experience' &&
+    !technicalList &&
+    !/\b(?:tooling|tools|workflows?|infrastructure|platform|services?|improv(?:e|ed|ing)|DX)\b/i.test(
+      text,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    id === 'monitoring' &&
+    /^monitoring$/i.test(alias) &&
+    !technicalList &&
+    !/\b(?:services?|systems?|infrastructure|software|application|platform|observability|metrics|logs|Prometheus|Grafana)\b/i.test(
+      text,
+    )
+  ) {
+    return false;
+  }
+
+  if (
     id === 'excel' &&
     !technicalList &&
     !/\b(?:Microsoft Excel|spreadsheets?|workbooks?|pivot tables?|VLOOKUP|Excel formulas?|experience with Excel|knowledge of Excel|proficiency in Excel|proficient in Excel|Excel (?:required|preferred|skills))\b/i.test(

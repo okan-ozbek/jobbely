@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { ApiError, listCategories, listCompanies, listJobs } from '../api/client.js';
+import { ApiError, listCategories, listCompanies, listJobs, listFacets } from '../api/client.js';
 import type { Company, Job, JobsQuery } from '../api/client.js';
 
 export function useJobCatalog(query: JobsQuery) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [categories, setCategories] = useState<{ slug: string; name: string }[]>([]);
+
+  const [locations, setLocations] = useState<{
+    countries: { value: string; name: string; count: number }[];
+    cities: { value: string; count: number }[];
+  }>({ countries: [], cities: [] });
 
   const [jobs, setJobs] = useState<Job[]>([]);
   const [total, setTotal] = useState(0);
@@ -27,13 +32,26 @@ export function useJobCatalog(query: JobsQuery) {
     setError(null);
     setLoadingMore(false);
 
+    const countryQuery = { ...query };
+
+    delete countryQuery.country;
+    delete countryQuery.city;
+    delete countryQuery.cursor;
+
+    const cityQuery = { ...query };
+
+    delete cityQuery.city;
+    delete cityQuery.cursor;
+
     const timeout = window.setTimeout(() => {
       void Promise.all([
         listJobs(query, controller.signal),
         listCompanies(controller.signal),
         listCategories(controller.signal),
+        listFacets(countryQuery, controller.signal),
+        listFacets(cityQuery, controller.signal),
       ])
-        .then(([list, companyList, categoryList]) => {
+        .then(([list, companyList, categoryList, countryFacets, cityFacets]) => {
           if (requestId !== sequence.current) {
             return;
           }
@@ -45,6 +63,7 @@ export function useJobCatalog(query: JobsQuery) {
 
           setCompanies(companyList);
           setCategories(categoryList);
+          setLocations({ countries: countryFacets.countries, cities: cityFacets.cities });
         })
         .catch((reason) => {
           if (!controller.signal.aborted && requestId === sequence.current) {
@@ -102,6 +121,7 @@ export function useJobCatalog(query: JobsQuery) {
   return {
     companies,
     categories,
+    locations,
     jobs,
     total,
     nextCursor,

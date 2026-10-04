@@ -1,3 +1,4 @@
+import { GlassSelect } from '../../components/GlassSelect.js';
 import type { EmploymentCorrection, ResumeAnalysis } from '../../api/client.js';
 
 const functions = [
@@ -96,12 +97,12 @@ export function EmploymentReview({
               </label>
               <label>
                 <span>Function</span>
-                <select
+                <GlassSelect
+                  aria-label={`Function for ${entry.title || 'role'}`}
                   value={draft.category}
-                  onChange={(event) =>
+                  onValueChange={(value) =>
                     edit(entry.id, {
-                      category: event.target
-                        .value as ResumeAnalysis['employment'][number]['category'],
+                      category: value as ResumeAnalysis['employment'][number]['category'],
                     })
                   }
                 >
@@ -113,15 +114,16 @@ export function EmploymentReview({
                       {name}
                     </option>
                   ))}
-                </select>
+                </GlassSelect>
               </label>
               <label>
                 <span>Experience type</span>
-                <select
+                <GlassSelect
+                  aria-label={`Experience type for ${entry.title || 'role'}`}
                   value={draft.kind}
-                  onChange={(event) =>
+                  onValueChange={(value) =>
                     edit(entry.id, {
-                      kind: event.target.value as ResumeAnalysis['employment'][number]['kind'],
+                      kind: value as ResumeAnalysis['employment'][number]['kind'],
                     })
                   }
                 >
@@ -129,23 +131,23 @@ export function EmploymentReview({
                   <option value="internship">Internship</option>
                   <option value="project">Project</option>
                   <option value="volunteering">Volunteering</option>
-                </select>
+                </GlassSelect>
               </label>
               <label>
                 <span>Employer relationship</span>
-                <select
+                <GlassSelect
+                  aria-label={`Employer relationship for ${entry.title || 'role'}`}
                   value={draft.relationship}
-                  onChange={(event) =>
+                  onValueChange={(value) =>
                     edit(entry.id, {
-                      relationship: event.target
-                        .value as ResumeAnalysis['employment'][number]['relationship'],
+                      relationship: value as ResumeAnalysis['employment'][number]['relationship'],
                     })
                   }
                 >
                   <option value="unknown">Not confirmed</option>
                   <option value="direct">Direct employment</option>
                   <option value="client">Client assignment</option>
-                </select>
+                </GlassSelect>
               </label>
             </div>
             <button

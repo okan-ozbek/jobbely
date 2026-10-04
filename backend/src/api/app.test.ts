@@ -70,6 +70,36 @@ describe('read API and contract', () => {
     expect((await app.inject('/api/v1/jobs?workplace=spaceship')).statusCode).toBe(400);
   });
 
+  it('filters country and city from the same label, exposes facets and binds cursors to locations', async () => {
+    const { app } = await setup();
+    const facetResponse = await app.inject('/api/v1/jobs/facets');
+
+    expect(facetResponse.statusCode).toBe(200);
+
+    const facets = facetResponse.json();
+
+    expect(facets.countries.length).toBeGreaterThan(0);
+
+    const country = facets.countries[0].value;
+    const countryFacets = (await app.inject(`/api/v1/jobs/facets?country=${country}`)).json();
+    const city = countryFacets.cities[0].value;
+
+    const list = await app.inject(
+      `/api/v1/jobs?country=${country}&city=${encodeURIComponent(city)}`,
+    );
+
+    expect(list.statusCode).toBe(200);
+    expect(list.json().total).toBeGreaterThan(0);
+    expect((await app.inject('/api/v1/jobs?country=XX&city=Atlantis')).json().total).toBe(0);
+
+    const first = (await app.inject('/api/v1/jobs?limit=1')).json();
+
+    expect(
+      (await app.inject(`/api/v1/jobs?limit=1&country=${country}&cursor=${first.nextCursor}`))
+        .statusCode,
+    ).toBe(400);
+  });
+
   it('paginates without overlaps and rejects cursors after publication', async () => {
     const { app, repository, sources } = await setup();
     const first = (await app.inject('/api/v1/jobs?limit=2')).json();

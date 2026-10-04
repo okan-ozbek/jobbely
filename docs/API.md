@@ -14,22 +14,24 @@ Catalog routes delegate to `JobCatalog`, read stored information and contain no 
 
 ## Routes
 
-| GET route                 | Behavior                                                              |
-| ------------------------- | --------------------------------------------------------------------- |
-| `/api/v1/jobs`            | Active jobs, filters, total, cursor, dataset version and runtime mode |
-| `/api/v1/jobs/facets`     | Company/category/workplace counts for matching active jobs            |
-| `/api/v1/jobs/:id`        | Stored detail, including retained closed records; 404 if absent       |
-| `/api/v1/companies`       | Company directory with source coverage                                |
-| `/api/v1/companies/:slug` | One company's coverage; 404 if absent                                 |
-| `/api/v1/categories`      | Canonical taxonomy                                                    |
-| `/health/live`            | Process liveness                                                      |
-| `/health/ready`           | Repository availability; 503 on failure                               |
+| GET route                 | Behavior                                                                |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `/api/v1/jobs`            | Active jobs, filters, total, cursor, dataset version and runtime mode   |
+| `/api/v1/jobs/facets`     | Company/category/workplace/country/city counts for matching active jobs |
+| `/api/v1/jobs/:id`        | Stored detail, including retained closed records; 404 if absent         |
+| `/api/v1/companies`       | Company directory with source coverage                                  |
+| `/api/v1/companies/:slug` | One company's coverage; 404 if absent                                   |
+| `/api/v1/categories`      | Canonical taxonomy                                                      |
+| `/health/live`            | Process liveness                                                        |
+| `/health/ready`           | Repository availability; 503 on failure                                 |
 
-Listing filters are `q`, `company`, `category`, `workplace`, `limit` and `cursor`. Comma-separated company/category/workplace values are supported by the catalog. Search is case-insensitive substring matching across title, description text, departments and locations. Results sort by last-seen time descending with ID as a tie-breaker; limit defaults to 20 and is capped at 100.
+Listing filters are `q`, `company`, `category`, `workplace`, `country`, `city`, `limit` and `cursor`. Comma-separated company/category/workplace values are supported by the catalog. Country is an ISO alpha-2 code; city is bounded to 200 characters. Both must match the same parsed job location. Facets expose country code/name/count and city value/count, counting each job once per value. Deterministic parsing supports country names, common aliases/office codes, subdivisions and semicolon lists; ambiguous labels remain unknown, and remote regions do not become cities. This is catalog filtering, not eligibility or geocoding. Filters bind cursor fingerprints. Search is case-insensitive substring matching across title, description text, departments and locations. Results sort by last-seen time descending with ID as a tie-breaker; limit defaults to 20 and is capped at 100.
 
 Company responses include `logoUrl`, a local asset path served by the frontend origin. See [LOGOS.md](LOGOS.md) for ownership, sources and fallback behavior.
 
 ## Transient resume analysis
+
+The 5 October [qualification update](QUALIFICATIONS.md) extends analysis/corrections and both matching profiles with optional `education` (20 level/field/completion claims) and `skillTenure` (100 skill ID/month claims, integer months 0–600). Institution/contact fields remain rejected. Comparison responses include education judgments, bounded `roleRelevancePoints` and degree/year annotation metrics alongside skill annotations. These fields do not create candidate storage.
 
 `POST /api/v1/jobs/:id/resume-match` compares an allowlisted reviewed profile against one stored description, returning individual keyword offsets/colors, requirement evidence and explicit recommendation availability. Closed/stale/demo descriptions can be inspected without becoming eligible recommendations. It uses a 256 KiB body limit, `no-store`, allowed-origin validation, generic private errors and 15 requests/minute per connection IP. See [SKILL_RELATIONS](SKILL_RELATIONS.md). Both matching routes accept optional competency IDs/statuses; full resume/contact fields remain rejected.
 

@@ -6,6 +6,12 @@ import {
   jobDocumentSchema,
 } from './document-schemas.js';
 import { signalSemantics, facetSchema, interpretationSchema } from './semantic-schemas.js';
+import {
+  educationSchema,
+  skillTenureSchema,
+  degreeLevelSchema,
+  degreeFieldSchema,
+} from './qualification-schemas.js';
 import { Type } from '@sinclair/typebox';
 import { categories } from '../domain/taxonomy.js';
 import { supportedFunctions } from '../domain/matching/requirements.js';
@@ -91,6 +97,14 @@ export const requirementsSchema = Type.Object({
       ),
       importance,
       evidence,
+      education: Type.Optional(
+        Type.Object({
+          level: degreeLevelSchema,
+          field: degreeFieldSchema,
+          related: Type.Boolean(),
+          alternativeExperience: Type.Boolean(),
+        }),
+      ),
     }),
   ),
   unparsed: Type.Array(Type.Object({ importance, evidence })),
@@ -105,6 +119,8 @@ export const requirementsSchema = Type.Object({
 export const matchProfileSchema = Type.Object(
   {
     analysisDate: Type.String({ pattern: '^\\d{4}-\\d{2}-\\d{2}$' }),
+    education: Type.Optional(educationSchema),
+    skillTenure: Type.Optional(skillTenureSchema),
     skills: Type.Array(
       Type.Object(
         {
@@ -226,6 +242,16 @@ export const skillMatchSchema = Type.Object({
   reason: Type.String(),
 });
 
+const educationMatchSchema = Type.Array(
+  Type.Object({
+    name: Type.String(),
+    importance: Type.String(),
+    status: Type.Union(['met', 'below', 'uncertain'].map((value) => Type.Literal(value))),
+    reason: Type.String(),
+    excerpt: Type.String(),
+  }),
+);
+
 export const jobMatchInputSchema = Type.Object({ profile: matchProfileSchema }, strict);
 
 export const jobMatchResponseSchema = Type.Object({
@@ -242,6 +268,19 @@ export const jobMatchResponseSchema = Type.Object({
       position: Type.Integer(),
       length: Type.Integer(),
     }),
+  ),
+  metrics: Type.Optional(
+    Type.Array(
+      Type.Object({
+        ...skillMatchSchema.properties,
+        id: Type.String(),
+        name: Type.String(),
+        interpretation: interpretationSchema,
+        rule: Type.String(),
+        position: Type.Integer(),
+        length: Type.Integer(),
+      }),
+    ),
   ),
   comparison: Type.Object({
     baseScore: Type.Integer(),
@@ -277,6 +316,8 @@ export const jobMatchResponseSchema = Type.Object({
         excerpt: Type.String(),
       }),
     ),
+    education: educationMatchSchema,
+    roleRelevancePoints: Type.Integer({ minimum: 0, maximum: 5 }),
     uncertainties: Type.Array(Type.String()),
   }),
   recommendationEligible: Type.Boolean(),
@@ -331,6 +372,8 @@ export const matchItemSchema = Type.Object({
       excerpt: Type.String(),
     }),
   ),
+  education: educationMatchSchema,
+  roleRelevancePoints: Type.Integer({ minimum: 0, maximum: 5 }),
   uncertainties: Type.Array(Type.String()),
   location: Type.String(),
   coverage: Type.String(),

@@ -1,4 +1,5 @@
 import { resumeBlocks } from '../../domain/resume/blocks.js';
+import { detectEducation, detectSkillTenure } from '../../domain/resume/qualifications.js';
 import { conceptsById, defaultFacet } from '../../domain/semantics/concepts.js';
 import type { SignalReview } from '../../domain/semantics/model.js';
 import { readResumeText } from '../../domain/resume/document.js';
@@ -293,7 +294,7 @@ export class AnalyzeResume {
     }
 
     return {
-      version: 'text-4',
+      version: 'text-5',
       vocabularyVersion,
       analysisDate,
       document: { ...document, blocks },
@@ -319,6 +320,8 @@ export class AnalyzeResume {
       ),
       employment,
       location,
+      education: corrections.education ?? detectEducation(document.lines, analysisDate),
+      skillTenure: corrections.skillTenure ?? detectSkillTenure(document.lines),
       experience: summarizeExperience(employment, analysisDate),
       warnings,
       supportedSkills,

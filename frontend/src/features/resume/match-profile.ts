@@ -53,6 +53,12 @@ function claim({
 export function matchProfile(analysis: ResumeAnalysis): MatchInput['profile'] {
   return {
     analysisDate: analysis.analysisDate,
+    education: (analysis.education ?? []).map(({ level, field, completion }) => ({
+      level,
+      field,
+      completion,
+    })),
+    skillTenure: (analysis.skillTenure ?? []).map(({ skillId, months }) => ({ skillId, months })),
     skills: analysis.skills.map(claim),
     competencies: analysis.competencies.map(claim),
     employment: analysis.employment.map(

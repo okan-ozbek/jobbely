@@ -10,6 +10,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 [SKILL_RELATIONS.md](SKILL_RELATIONS.md) defines directed evidence relations, confidence colors, description annotations and their privacy/version invariants.
 
+[QUALIFICATIONS.md](QUALIFICATIONS.md) records degree/skill-year comparisons and bounded responsibility relevance added on 5 October 2026.
+
 [SEMANTICS.md](SEMANTICS.md) describes the implemented engineering registry, clause interpretation, four coverage states and scoped confirmation flow. [SEMANTIC_MATCHING_PLAN.md](SEMANTIC_MATCHING_PLAN.md) retains the remaining evaluation and expansion roadmap.
 
 [LLM_MATCHING.md](LLM_MATCHING.md) records reproduced structure/context failures and proposes three qualification groups, structured sentence evidence and a gated optional local-model experiment. Stages 1-3 are implemented in [STRUCTURED_MATCHING.md](STRUCTURED_MATCHING.md); the optional model experiment remains proposed.
@@ -26,6 +28,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [SEMANTICS.md](SEMANTICS.md)                     | Engineering concept packs, clause evidence, tool scopes and transient skill-discovery review          |
 | [STRUCTURED_MATCHING.md](STRUCTURED_MATCHING.md) | Job sections, logical resume blocks, qualification logic and bounded sentence provenance              |
 | [MATCHING.md](MATCHING.md)                       | Requirement evidence, explained scoring, freshness, pagination and optional employer context          |
+| [QUALIFICATIONS.md](QUALIFICATIONS.md)           | Reviewed degrees, explicit skill years, privacy bounds and contextual role relevance                  |
 | [JOB_FEATURES.md](JOB_FEATURES.md)               | Indexed public features, hash/version invalidation, replayable backfill and publication races         |
 | [RESUME_PRIVACY.md](RESUME_PRIVACY.md)           | Transient profiles, local worker CSP, resource bounds and private API handling                        |
 | [INGESTION.md](INGESTION.md)                     | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling    |
@@ -36,7 +39,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [SECURITY.md](SECURITY.md)                       | External-content trust boundary, HTML sanitization, secrets and public read API                       |
 | [API.md](API.md)                                 | Fastify/TypeBox, generated OpenAPI contract, catalog queries, pagination and health routes            |
 | [FRONTEND.md](FRONTEND.md)                       | React/Vite, API-only dependency, animated navigation, compact profile review and cancellable requests |
-| [DESIGN.md](DESIGN.md)                           | Resume-first glass UI, five-column company grid, typography, responsive and accessible interactions   |
+| [DESIGN.md](DESIGN.md)                           | Resume-first glass UI, four-column company grid, typography, responsive and accessible interactions   |
 | [LOGOS.md](LOGOS.md)                             | Local company assets, source records, API paths and the shared N/A fallback                           |
 | [SOURCES.md](SOURCES.md)                         | Company/source separation, explicit audit status, scheduling gate and coverage signals                |
 | [AUDITING.md](AUDITING.md)                       | Official-ID reconciliation, policy evidence, reviewed scope, activation and verified refresh guards   |

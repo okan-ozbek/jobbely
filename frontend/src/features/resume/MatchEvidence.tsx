@@ -23,13 +23,19 @@ export function MatchEvidence({
 }) {
   return (
     <>
+      {comparison.skills.some((skill) => skill.importance === 'contextual') && (
+        <p className="small-note">
+          Skills used in this role add {comparison.roleRelevancePoints}/5 points. Missing role
+          skills do not create required gaps.
+        </p>
+      )}
       <ul className="match-evidence">
         {comparison.skills.map((skill, index) => (
           <li key={index}>
             <strong className={`confidence-${skill.confidence}`}>
               {skill.names.join(' or ')} · {coverageLabel(skill.decision)}
             </strong>{' '}
-            · {skill.importance}
+            · {skill.importance === 'contextual' ? 'role relevance' : skill.importance}
             <p className="small-note">{skill.reason}</p>
             {skill.path.length > 0 && skill.decision !== 'suggested' && (
               <details className="relation-path">
@@ -88,9 +94,23 @@ export function MatchEvidence({
           · {entry.importance}
           <br />
           Reviewed:{' '}
-          {entry.scope === 'skill'
+          {entry.scope === 'skill' && entry.status === 'uncertain'
             ? 'duration not established'
             : `${(entry.candidateMinimumMonths / 12).toFixed(1)}–${(entry.candidateMaximumMonths / 12).toFixed(1)} years`}
+          <br />
+          <span className="small-note">{entry.excerpt}</span>
+        </p>
+      ))}
+      {comparison.education.map((entry, index) => (
+        <p key={`degree-${index}`}>
+          <strong
+            className={`confidence-${entry.status === 'met' ? 'green' : entry.status === 'below' ? 'red' : 'yellow'}`}
+          >
+            {entry.name} · {entry.status}
+          </strong>{' '}
+          · {entry.importance}
+          <br />
+          <span className="small-note">{entry.reason}</span>
           <br />
           <span className="small-note">{entry.excerpt}</span>
         </p>

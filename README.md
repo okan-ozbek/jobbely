@@ -205,6 +205,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [DOCUMENTS](docs/DOCUMENTS.md): local PDF/DOCX adapters, reading order, limits and isolation.
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.
+- [QUALIFICATIONS](docs/QUALIFICATIONS.md): reviewed degrees, explicit skill years and bounded responsibility relevance.
 - [SKILL_RELATIONS](docs/SKILL_RELATIONS.md): weighted evidence graph, confidence colors and description highlighting.
 - [SEMANTICS](docs/SEMANTICS.md): implemented engineering concepts, clause interpretation and scoped skill questions.
 - [SEMANTIC_MATCHING_PLAN](docs/SEMANTIC_MATCHING_PLAN.md): historical engineering roadmap; future work follows RESUME_MATCHING_REWORK.

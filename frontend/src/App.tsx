@@ -1,3 +1,6 @@
+import { scrollToSection } from './components/motion.js';
+import { CoverageStatus } from './components/CoverageStatus.js';
+import { GlassSelect } from './components/GlassSelect.js';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowUpRight, CircleHelp, MapPin, Search, X } from 'lucide-react';
 import type { JobsQuery, ResumeAnalysis } from './api/client.js';
@@ -19,16 +22,7 @@ const workplaceNames = {
   remote: 'Remote',
   hybrid: 'Hybrid',
   onsite: 'On-site',
-  unknown: 'Not specified',
-};
-
-const coverageNames = {
-  not_onboarded: 'Not connected',
-  partial: 'Partial coverage',
-  stale: 'Refresh overdue',
-  blocked: 'Refresh failed',
-  healthy: 'Full coverage',
-  demo: 'Sample source',
+  unknown: 'Work arrangement not listed',
 };
 
 export function App() {
@@ -59,6 +53,8 @@ export function App() {
   const companyFilter = params.get('company');
   const categoryFilter = params.get('category');
   const workplaceFilter = params.get('workplace');
+  const countryFilter = params.get('country');
+  const cityFilter = params.get('city');
 
   const query: JobsQuery = useMemo(() => {
     const result: JobsQuery = { limit: 20 };
@@ -79,9 +75,17 @@ export function App() {
       result.workplace = workplaceFilter;
     }
 
+    if (countryFilter) {
+      result.country = countryFilter;
+    }
+
+    if (cityFilter) {
+      result.city = cityFilter;
+    }
+
     return result;
     // Only filters affect the request, not navigation between a listing and its details.
-  }, [q, companyFilter, categoryFilter, workplaceFilter]);
+  }, [q, companyFilter, categoryFilter, workplaceFilter, countryFilter, cityFilter]);
 
   useEffect(() => {
     setQueryInput(params.get('q') ?? '');
@@ -90,6 +94,7 @@ export function App() {
   const {
     companies,
     categories,
+    locations,
     jobs,
     total,
     nextCursor,
@@ -118,6 +123,8 @@ export function App() {
       company: null,
       category: null,
       workplace: null,
+      country: null,
+      city: null,
       job: null,
     });
   };
@@ -141,7 +148,7 @@ export function App() {
           aria-label="Jobbely home"
           onClick={(event) => {
             event.preventDefault();
-            update({ view: 'resume', job: null, company: null });
+            update({ view: 'resume', job: null, company: null, from: null });
           }}
         >
           jobbely<span className="brand-dot">.</span>
@@ -150,7 +157,7 @@ export function App() {
           <button
             className={view === 'companies' ? 'nav-link active' : 'nav-link'}
             aria-current={view === 'companies' ? 'page' : undefined}
-            onClick={() => update({ view: 'companies', job: null })}
+            onClick={() => update({ view: 'companies', job: null, from: null })}
           >
             Companies
           </button>
@@ -214,16 +221,31 @@ export function App() {
           <ResumeWorkbench
             state={resumeState}
             onReviewed={setReviewedAnalysis}
-            openJob={(id) => update({ view: 'jobs', job: id })}
+            openJob={(id) => update({ view: 'jobs', job: id, from: 'resume' })}
           />
         </div>
         {view === 'resume' ? null : selectedId ? (
           <section className="detail-section">
             <button
               className="back-button"
-              onClick={() => update({ job: null })}
+              onClick={() => {
+                const returnToResume = params.get('from') === 'resume';
+
+                update({ view: returnToResume ? 'resume' : 'jobs', job: null, from: null });
+
+                if (returnToResume) {
+                  requestAnimationFrame(() => {
+                    const matches = document.querySelector<HTMLElement>('.matches-anchor');
+
+                    if (matches) {
+                      scrollToSection(matches);
+                    }
+                  });
+                }
+              }}
             >
-              <ArrowLeft size={16} /> Back to jobs
+              <ArrowLeft size={16} />{' '}
+              {params.get('from') === 'resume' ? 'Back to resume' : 'Back to jobs'}
             </button>
             {detailError ? (
               <div
@@ -368,10 +390,18 @@ export function App() {
                     key={company.slug}
                   >
                     <div className="company-card-top">
-                      <CompanyLogo
-                        name={company.name}
-                        logoUrl={company.logoUrl}
-                      />
+                      <a
+                        className="company-logo-link"
+                        href={company.careersUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Visit ${company.name} careers via logo`}
+                      >
+                        <CompanyLogo
+                          name={company.name}
+                          logoUrl={company.logoUrl}
+                        />
+                      </a>
                       <a
                         href={company.careersUrl}
                         target="_blank"
@@ -381,20 +411,10 @@ export function App() {
                         <ArrowUpRight size={18} />
                       </a>
                     </div>
-                    <h3>{company.name}</h3>
-                    <span className={`coverage-badge coverage-${company.status}`}>
-                      <span className="status-dot" />
-                      {company.status === 'stale'
-                        ? 'Partial coverage'
-                        : coverageNames[company.status]}
-                    </span>
-                    <p className="company-freshness">
-                      {company.status === 'stale'
-                        ? 'Refresh overdue'
-                        : company.lastCheckedAt
-                          ? `Checked ${relativeDate(company.lastCheckedAt)}`
-                          : 'Awaiting a source check'}
-                    </p>
+                    <div className="company-card-name">
+                      <h3>{company.name}</h3>
+                      <CoverageStatus company={company} />
+                    </div>
                     <div className="company-card-bottom">
                       <span>
                         <strong>{company.jobs.toLocaleString()}</strong>{' '}
@@ -413,14 +433,6 @@ export function App() {
                         View jobs <ArrowUpRight size={14} />
                       </button>
                     </div>
-                    <a
-                      className="company-site-link"
-                      href={company.careersUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Go to job site <ArrowUpRight size={14} />
-                    </a>
                   </article>
                 ))}
             </div>
@@ -450,10 +462,11 @@ export function App() {
               <div className="filter-row">
                 <label className="filter-field">
                   <span>Company</span>
-                  <select
+                  <GlassSelect
+                    disabled={loading}
                     aria-label="Filter by company"
                     value={params.get('company') ?? ''}
-                    onChange={(event) => update({ company: event.target.value || null })}
+                    onValueChange={(value) => update({ company: value || null })}
                   >
                     <option value="">All companies</option>
                     {companies.map((company) => (
@@ -464,14 +477,15 @@ export function App() {
                         {company.name}
                       </option>
                     ))}
-                  </select>
+                  </GlassSelect>
                 </label>
                 <label className="filter-field">
                   <span>Function</span>
-                  <select
+                  <GlassSelect
+                    disabled={loading}
                     aria-label="Filter by function"
                     value={params.get('category') ?? ''}
-                    onChange={(event) => update({ category: event.target.value || null })}
+                    onValueChange={(value) => update({ category: value || null })}
                   >
                     <option value="">All functions</option>
                     {categories.map((category) => (
@@ -482,14 +496,15 @@ export function App() {
                         {category.name}
                       </option>
                     ))}
-                  </select>
+                  </GlassSelect>
                 </label>
                 <label className="filter-field">
                   <span>Workplace</span>
-                  <select
+                  <GlassSelect
+                    disabled={loading}
                     aria-label="Filter by workplace"
                     value={params.get('workplace') ?? ''}
-                    onChange={(event) => update({ workplace: event.target.value || null })}
+                    onValueChange={(value) => update({ workplace: value || null })}
                   >
                     <option value="">Any workplace</option>
                     {Object.entries(workplaceNames).map(([value, label]) => (
@@ -500,7 +515,45 @@ export function App() {
                         {label}
                       </option>
                     ))}
-                  </select>
+                  </GlassSelect>
+                </label>
+                <label className="filter-field">
+                  <span>Country</span>
+                  <GlassSelect
+                    disabled={loading}
+                    aria-label="Filter by country"
+                    value={countryFilter ?? ''}
+                    onValueChange={(value) => update({ country: value || null, city: null })}
+                  >
+                    <option value="">All countries</option>
+                    {locations.countries.map((country) => (
+                      <option
+                        key={country.value}
+                        value={country.value}
+                      >
+                        {country.name}
+                      </option>
+                    ))}
+                  </GlassSelect>
+                </label>
+                <label className="filter-field">
+                  <span>City</span>
+                  <GlassSelect
+                    disabled={loading}
+                    aria-label="Filter by city"
+                    value={cityFilter ?? ''}
+                    onValueChange={(value) => update({ city: value || null })}
+                  >
+                    <option value="">All cities</option>
+                    {locations.cities.map((city) => (
+                      <option
+                        key={city.value}
+                        value={city.value}
+                      >
+                        {city.value}
+                      </option>
+                    ))}
+                  </GlassSelect>
                 </label>
               </div>
             </div>
@@ -543,7 +596,7 @@ export function App() {
                     className="job-row"
                     disabled={loading}
                     key={job.id}
-                    onClick={() => update({ job: job.id })}
+                    onClick={() => update({ job: job.id, from: 'jobs' })}
                   >
                     <CompanyLogo
                       name={nameOf(job.companySlug)}

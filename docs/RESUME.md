@@ -24,7 +24,7 @@ Dates support month/year, ISO month, numeric month/year, year-only ranges and Pr
 
 The `text-2` employment policy accepts company/title headers separated by `|`, `at`, `@` or spaced hyphen/en/em dashes, with dates on the same or following line. It recognizes SWE/SDE/CTO and founder titles; explicitly technical founders map to engineering while generic founders remain unclassified. Company names containing a role word do not automatically become the title. Multiline headers retain all contributing evidence lines. Bounded header checks reject bullet/responsibility prose as a date's employer/title, and unassociated dated experience produces an incomplete-total warning. These English heuristics still require candidate review; education years never establish employment. Updated 1 October 2026.
 
-Location extraction uses the header, not former work locations. Ambiguous/missing locations stay uncertain; authorization, relocation, language and qualifications are not inferred. Structured review of those eligibility claims, multilingual parsing, OCR and richer employer-domain weighting remain follow-ups.
+Location extraction uses the header, not former work locations. Ambiguous/missing locations stay uncertain; authorization, relocation and language are not inferred. The 5 October [qualification update](QUALIFICATIONS.md) implements degree level/subject/completion and explicit skill-year extraction with editable review. Richer academic fields, structured authorization/language review, multilingual parsing, OCR and richer employer-domain weighting remain follow-ups. Current analysis is `text-5`; the engineering registry includes 239 skill concepts and nine competencies, with conservative technical collision guards.
 
 ## Matching and state
 

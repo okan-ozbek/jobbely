@@ -5,8 +5,10 @@ import type { EvidenceAction, EvidenceOutcome } from '../semantics/propositions.
 import type { Interpretation, SkillFacet } from '../semantics/model.js';
 import type { Job } from '../model.js';
 import { skillsInText, vocabularyVersion } from '../resume/vocabulary.js';
+import { degreeMentions, degreeField, degreeRank } from '../resume/qualifications.js';
+import type { DegreeLevel, DegreeField } from '../resume/qualifications.js';
 
-export const requirementsVersion = 'requirements-13';
+export const requirementsVersion = 'requirements-15';
 
 export const featureVersion = `${requirementsVersion}:${vocabularyVersion}:${jobDocumentVersion}`;
 
@@ -68,6 +70,12 @@ export interface JobRequirements {
   }[];
   constraints: {
     kind: 'location' | 'authorization' | 'qualification' | 'language';
+    education?: {
+      level: DegreeLevel;
+      field: DegreeField;
+      related: boolean;
+      alternativeExperience: boolean;
+    };
     importance: Importance;
     evidence: RequirementEvidence;
   }[];
@@ -391,16 +399,25 @@ export function extractRequirements(
 
         const scope = leadershipTenure
           ? 'skill'
-          : /\b(?:professional|total|overall|industry)\b/i.test(activity)
+          : /\b(?:total|overall|industry)\b/i.test(activity)
             ? 'professional'
-            : /\b(?:with|using|in)\b/i.test(activity) && localSkills.length > 0
+            : /\b(?:with|using|in|building|developing|designing|supporting)\b/i.test(activity) &&
+                localSkills.length > 0
               ? 'skill'
-              : 'function';
+              : /\bprofessional\b/i.test(activity)
+                ? 'professional'
+                : 'function';
 
         result.experience.push({
           minimumMonths: Number(tenure[1]) * 12,
           ...(tenure[2] ? { maximumMonths: Number(tenure[2]) * 12 } : {}),
-          ...(alternativeList ? { alternativeIds: skills.map((item) => item.id) } : {}),
+          ...(alternativeList
+            ? {
+                alternativeIds: (
+                  groups.find((group) => group.logic === 'any-of')?.alternatives ?? localSkills
+                ).map((item) => item.id),
+              }
+            : {}),
           scope,
           skillId: leadershipTenure
             ? 'leadership'
@@ -426,7 +443,7 @@ export function extractRequirements(
                 sentence,
               )
             ? 'authorization'
-            : /\b(?:bachelor|master|degree|ph\.?d|BS|BSc|MS|MSc)\b/i.test(sentence)
+            : degreeMentions(sentence).length > 0 || /\bdegree\b/i.test(sentence)
               ? 'qualification'
               : /\b(?:fluent|fluency|native speaker|language proficiency)\b/i.test(sentence)
                 ? 'language'
@@ -442,6 +459,30 @@ export function extractRequirements(
 
         result.constraints.push({
           kind: constraint,
+          ...(constraint === 'qualification' &&
+          degreeMentions(sentence).length &&
+          !(
+            new Set(degreeMentions(sentence).map((mention) => mention.level)).size > 1 &&
+            /\band\b/i.test(sentence) &&
+            !/\bor\b/i.test(sentence)
+          )
+            ? {
+                education: {
+                  level: degreeMentions(sentence).sort(
+                    (a, b) => degreeRank[a.level] - degreeRank[b.level],
+                  )[0]!.level,
+                  field: degreeField(sentence),
+                  related: /\brelated (?:field|discipline|subject)\b/i.test(sentence),
+                  alternativeExperience:
+                    /\b(?:equivalent|comparable) (?:practical |professional |work )?experience\b/i.test(
+                      sentence,
+                    ) ||
+                    /\b(?:or|and\/or) (?:\d+[+]?\s*years?[^.!?]{0,40})?experience\b/i.test(
+                      sentence,
+                    ),
+                },
+              }
+            : {}),
           importance: level === 'contextual' && restriction ? 'required' : level,
           evidence,
         });
