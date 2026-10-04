@@ -331,6 +331,144 @@ describe('private matching API and public requirements', () => {
     }
   });
 
+  it('round trips structured evidence, rejects forged/private fields and invalidates evidence edits', async () => {
+    const { app, repository, input } = await setup();
+    const before = await repository.read();
+
+    const analyzed = await app.inject({
+      method: 'POST',
+      url: '/api/v1/resume-analysis',
+      payload: {
+        text: 'Synthetic Candidate\nExperience\nSoftware Engineer | Fictional Labs\nJan 2020 - Dec 2023\nBuilt TypeScript services.\nSkills\nKotlin',
+        analysisDate: '2026-10-01',
+      },
+    });
+
+    expect(analyzed.statusCode).toBe(200);
+
+    const analysis = analyzed.json();
+
+    expect(
+      analysis.document.blocks.some((block: { lineIds: string[] }) =>
+        block.lineIds.includes('line-5'),
+      ),
+    ).toBe(true);
+
+    const profile = {
+      ...input.profile,
+      skills: analysis.skills.map(
+        ({
+          id,
+          status,
+          facets,
+          deniedFacets,
+          uncertainFacets,
+          interpretation,
+          evidenceRefs,
+        }: {
+          id: string;
+          status: string;
+          facets: string[];
+          deniedFacets: string[];
+          uncertainFacets: string[];
+          interpretation: string;
+          evidenceRefs: unknown[];
+        }) => ({ id, status, facets, deniedFacets, uncertainFacets, interpretation, evidenceRefs }),
+      ),
+      employment: analysis.employment.map(
+        ({
+          id,
+          employer,
+          category,
+          kind,
+          relationship,
+          start,
+          end,
+        }: {
+          id: string;
+          employer: string;
+          category: string;
+          kind: string;
+          relationship: string;
+          start: string;
+          end: string;
+        }) => ({ id, employer, category, kind, relationship, start, end }),
+      ),
+    };
+
+    const request = (value: unknown) =>
+      app.inject({
+        method: 'POST',
+        url: '/api/v1/resume-matches',
+        payload: { ...input, profile: value },
+      });
+
+    const matched = await request(profile);
+
+    expect(matched.statusCode).toBe(200);
+
+    expect(matched.json().items[0].skills[0].evidenceRefs[0]).toMatchObject({
+      source: 'employment',
+      assertion: 'performed',
+      action: 'build',
+      objectId: 'typescript',
+      roleId: analysis.employment[0].id,
+    });
+
+    expect(matched.body).not.toContain('Built TypeScript services');
+
+    const first = profile.skills[0];
+
+    for (const extra of [
+      { objectId: 'java' },
+      { roleId: 'employment-999' },
+      { excerpt: 'PRIVATE_STRUCTURED_SENTINEL' },
+      { lineIds: Array.from({ length: 21 }, (_, index) => `line-${index}`) },
+    ]) {
+      const invalid = await request({
+        ...profile,
+        skills: [{ ...first, evidenceRefs: [{ ...first.evidenceRefs[0], ...extra }] }],
+      });
+
+      expect(invalid.statusCode).toBe(400);
+      expect(invalid.body).not.toContain('PRIVATE_STRUCTURED_SENTINEL');
+    }
+
+    const changed = await app.inject({
+      method: 'POST',
+      url: '/api/v1/resume-matches',
+      payload: {
+        ...input,
+        profile: {
+          ...profile,
+          skills: [
+            { ...first, evidenceRefs: [{ ...first.evidenceRefs[0], assertion: 'assisted' }] },
+          ],
+        },
+        cursor: matched.json().nextCursor,
+      },
+    });
+
+    expect(changed.statusCode).toBe(409);
+    expect(await repository.read()).toEqual(before);
+
+    const compared = await app.inject({
+      method: 'POST',
+      url: `/api/v1/jobs/${before.jobs[0]!.id}/resume-match`,
+      payload: { profile },
+    });
+
+    expect(compared.statusCode).toBe(200);
+
+    expect(compared.json()).toMatchObject({
+      document: { version: 'job-document-1' },
+      requirements: {
+        clauses: expect.arrayContaining([expect.objectContaining({ modality: 'obligation' })]),
+      },
+      comparison: { band: 'strong', unresolvedRequirements: 0 },
+    });
+  });
+
   it('bounds matching requests per connection IP and does not trust spoofed forwarded addresses', async () => {
     const { app, input } = await setup();
 
