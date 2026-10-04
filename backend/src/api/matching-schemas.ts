@@ -1,3 +1,10 @@
+import {
+  actionSchema,
+  outcomeSchema,
+  evidenceRefSchema,
+  jobBlockSchema,
+  jobDocumentSchema,
+} from './document-schemas.js';
 import { signalSemantics, facetSchema, interpretationSchema } from './semantic-schemas.js';
 import { Type } from '@sinclair/typebox';
 import { categories } from '../domain/taxonomy.js';
@@ -11,6 +18,8 @@ const importance = Type.Union(
 );
 
 const evidence = Type.Object({
+  blockId: Type.Optional(Type.String()),
+  clauseId: Type.Optional(Type.String()),
   start: Type.Optional(Type.Integer()),
   end: Type.Optional(Type.Integer()),
   excerpt: Type.String(),
@@ -19,11 +28,37 @@ const evidence = Type.Object({
 });
 
 export const requirementsSchema = Type.Object({
+  documentVersion: Type.String(),
+  blocks: Type.Array(jobBlockSchema),
+  clauses: Type.Array(
+    Type.Object({
+      id: Type.String(),
+      blockId: Type.String(),
+      importance,
+      role: jobBlockSchema.properties.role,
+      action: actionSchema,
+      objectIds: Type.Array(Type.String()),
+      outcome: outcomeSchema,
+      modality: Type.Union(
+        ['obligation', 'preference', 'description', 'conditional'].map((item) =>
+          Type.Literal(item),
+        ),
+      ),
+      polarity: Type.Union(['positive', 'negated', 'uncertain'].map((item) => Type.Literal(item))),
+      logic: Type.Union([Type.Literal('all-of'), Type.Literal('any-of')]),
+      groupIds: Type.Array(Type.String()),
+      unresolvedAlternatives: Type.Array(Type.String()),
+      evidence,
+    }),
+  ),
   version: Type.String(),
   contentHash: Type.String(),
   category: Type.String(),
   skills: Type.Array(
     Type.Object({
+      id: Type.Optional(Type.String()),
+      logic: Type.Optional(Type.Union([Type.Literal('single'), Type.Literal('any-of')])),
+      unresolvedAlternatives: Type.Optional(Type.Array(Type.String())),
       alternatives: Type.Array(
         Type.Object({
           id: Type.String(),
@@ -39,6 +74,8 @@ export const requirementsSchema = Type.Object({
   experience: Type.Array(
     Type.Object({
       minimumMonths: Type.Integer(),
+      maximumMonths: Type.Optional(Type.Integer()),
+      alternativeIds: Type.Optional(Type.Array(Type.String())),
       scope: Type.Union(['professional', 'function', 'skill'].map((value) => Type.Literal(value))),
       skillId: Type.Union([Type.String(), Type.Null()]),
       importance,
@@ -103,6 +140,9 @@ export const matchProfileSchema = Type.Object(
     employment: Type.Array(
       Type.Object(
         {
+          id: Type.Optional(
+            Type.String({ pattern: '^(?:employment|manual)-[0-9]+$', maxLength: 40 }),
+          ),
           employer: field,
           category: Type.Union(categories.map((item) => Type.Literal(item.slug))),
           kind: Type.Union(
@@ -190,6 +230,8 @@ export const jobMatchInputSchema = Type.Object({ profile: matchProfileSchema }, 
 
 export const jobMatchResponseSchema = Type.Object({
   descriptionText: Type.String(),
+  document: jobDocumentSchema,
+  requirements: requirementsSchema,
   skills: Type.Array(
     Type.Object({
       ...skillMatchSchema.properties,
@@ -203,10 +245,19 @@ export const jobMatchResponseSchema = Type.Object({
   ),
   comparison: Type.Object({
     baseScore: Type.Integer(),
+    completeness: Type.Integer(),
+    band: Type.Union(
+      ['strong', 'possible', 'exploratory', 'review'].map((item) => Type.Literal(item)),
+    ),
+    unresolvedRequirements: Type.Integer(),
     requiredGaps: Type.Integer(),
     skills: Type.Array(
       Type.Object({
         ...skillMatchSchema.properties,
+        requirementId: Type.Optional(Type.String()),
+        evidenceRefs: Type.Array(evidenceRefSchema, { maxItems: 5 }),
+        unresolvedAlternatives: Type.Array(Type.String()),
+        logic: Type.Union([Type.Literal('single'), Type.Literal('any-of')]),
         names: Type.Array(Type.String()),
         importance: Type.String(),
         status: Type.String(),
@@ -217,6 +268,7 @@ export const jobMatchResponseSchema = Type.Object({
     experience: Type.Array(
       Type.Object({
         minimumMonths: Type.Integer(),
+        maximumMonths: Type.Optional(Type.Integer()),
         importance: Type.String(),
         candidateMinimumMonths: Type.Integer(),
         candidateMaximumMonths: Type.Integer(),
@@ -250,9 +302,14 @@ export const matchItemSchema = Type.Object({
     ['strong', 'possible', 'exploratory', 'review'].map((value) => Type.Literal(value)),
   ),
   requiredGaps: Type.Integer(),
+  unresolvedRequirements: Type.Integer(),
   skills: Type.Array(
     Type.Object({
       ...skillMatchSchema.properties,
+      requirementId: Type.Optional(Type.String()),
+      evidenceRefs: Type.Array(evidenceRefSchema, { maxItems: 5 }),
+      unresolvedAlternatives: Type.Array(Type.String()),
+      logic: Type.Union([Type.Literal('single'), Type.Literal('any-of')]),
       names: Type.Array(Type.String()),
       importance: Type.String(),
       status: Type.Union(
@@ -265,6 +322,7 @@ export const matchItemSchema = Type.Object({
   experience: Type.Array(
     Type.Object({
       minimumMonths: Type.Integer(),
+      maximumMonths: Type.Optional(Type.Integer()),
       candidateMinimumMonths: Type.Integer(),
       importance: Type.String(),
       candidateMaximumMonths: Type.Integer(),
