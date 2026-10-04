@@ -56,6 +56,14 @@ export function pdfReadingLines(words: PdfWord[], width: number) {
 
   const flush = () => {
     for (const right of [false, true]) {
+      if (
+        right &&
+        band.some((row) => row.some((word) => word.x > middle)) &&
+        band.some((row) => row.some((word) => word.x <= middle))
+      ) {
+        lines.push('');
+      }
+
       lines.push(
         ...band
           .map((row) => join(row.filter((word) => (right ? word.x > middle : word.x <= middle))))
@@ -138,6 +146,10 @@ export async function extractPdf(bytes: Uint8Array) {
 
       if (!reading.lines.length) {
         warnings.push(`Page ${number}: no text layer found. Images were not OCR'd.`);
+      }
+
+      if (number > 1) {
+        blocks.push({ order: blocks.length + 1, page: number, kind: 'paragraph', text: '' });
       }
 
       for (const line of reading.lines) {

@@ -1,3 +1,5 @@
+import type { CandidateEvidenceRef } from './propositions.js';
+
 export type SkillFacet = 'general' | 'usage' | 'development';
 
 export type Interpretation = 'explicit' | 'interpreted' | 'ambiguous' | 'contextual';
@@ -26,6 +28,7 @@ export interface ConceptMention {
 }
 
 export interface SignalSemantics {
+  evidenceRefs?: CandidateEvidenceRef[];
   facets?: SkillFacet[];
   deniedFacets?: SkillFacet[];
   uncertainFacets?: SkillFacet[];

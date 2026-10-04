@@ -145,9 +145,13 @@ describe('weighted skill evidence', () => {
       { minimumMonths: 24, status: 'uncertain' },
     ]);
 
-    expect(
-      job.requirements.skills.find((item) => item.alternatives[0]?.id === 'python')?.importance,
-    ).toBe('contextual');
+    expect(job.requirements.skills.some((item) => item.alternatives[0]?.id === 'python')).toBe(
+      false,
+    );
+
+    expect(job.requirements.blocks.find((item) => item.text === 'We use Python.')?.role).toBe(
+      'benefits',
+    );
   });
 
   it('recognizes technical concepts and cross-team competency evidence, not generic performance or big teams', () => {

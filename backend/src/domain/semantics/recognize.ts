@@ -1,4 +1,4 @@
-import { concepts, conceptsById } from './concepts.js';
+import { concepts, conceptsById, defaultFacet } from './concepts.js';
 import { facetInText, interpretationFor, normalizeText, phraseRules } from './clauses.js';
 import type { ConceptMention } from './model.js';
 
@@ -15,6 +15,28 @@ const patterns = concepts.map((concept) => ({
 
 function allowed(id: string, alias: string, text: string, technicalList: boolean) {
   if (
+    id === 'excel' &&
+    !technicalList &&
+    !/\b(?:Microsoft Excel|spreadsheets?|workbooks?|pivot tables?|VLOOKUP|Excel formulas?|experience with Excel|knowledge of Excel|proficiency in Excel|proficient in Excel|Excel (?:required|preferred|skills))\b/i.test(
+      text,
+    ) &&
+    !/^\s*Excel[.!]?\s*$/i.test(text)
+  ) {
+    return false;
+  }
+
+  if (
+    id === 'c' &&
+    /^C$/i.test(alias) &&
+    !technicalList &&
+    !/\b(?:embedded C|C language|C programming|programming (?:in|with) C)\b|C\+\+|\b(?:Java|Python|Rust)\b/.test(
+      text,
+    )
+  ) {
+    return false;
+  }
+
+  if (
     id === 'low-level' &&
     !/\b(?:programming|systems?|memory|threading|software|engineering)\b|C\+\+/i.test(text)
   ) {
@@ -27,7 +49,7 @@ function allowed(id: string, alias: string, text: string, technicalList: boolean
   ) {
     return (
       technicalList ||
-      /\b(?:built|developed|implemented|using|uses?|used|programming|language|framework|backend|frontend|services?|proficien(?:t|cy)|knowledge|experience|skills|studying|learning|exploring)\b/i.test(
+      /\b(?:built|build|develop|developed|implemented|architected|workflows|adoption|using|uses?|used|programming|language|framework|backend|frontend|services?|proficien(?:t|cy)|knowledge|experience|skills|studying|learning|exploring)\b/i.test(
         text,
       ) ||
       /^\s*(?:Go|React|Rust|Spark)(?:\s+(?:required|preferred))?\.?\s*$/i.test(text) ||
@@ -67,6 +89,37 @@ export function recognizeConcepts(text: string, technicalList = false): ConceptM
 
       if (mentions.length >= 2_000) {
         return mentions.sort((a, b) => a.position - b.position || b.length - a.length);
+      }
+    }
+  }
+
+  // Vendor scope qualifies abbreviated services; the vendor alone implies none.
+  const scopedServices: [string, string, RegExp][] = [
+    ['aws-s3', 'Amazon S3', /\bS3\b/g],
+    ['aws-ecs', 'Amazon ECS', /\bECS\b/g],
+    ['aws-elasticache', 'Amazon ElastiCache', /\bElastiCache\b/g],
+  ];
+
+  for (const vendor of normalized.matchAll(/\b(?:AWS|Amazon Web Services)\s*\([^)]{1,180}\)/gi)) {
+    for (const [id, name, pattern] of scopedServices) {
+      if (!conceptsById.has(id)) {
+        continue;
+      }
+
+      for (const service of vendor[0].matchAll(pattern)) {
+        if (
+          !mentions.some((item) => item.id === id && item.position === vendor.index + service.index)
+        ) {
+          mentions.push({
+            id,
+            name,
+            position: vendor.index + service.index,
+            length: service[0].length,
+            facet: defaultFacet(id),
+            interpretation: interpretationFor(text, vendor.index + service.index, 'explicit'),
+            rule: `alias:${id}:vendor-scope`,
+          });
+        }
       }
     }
   }

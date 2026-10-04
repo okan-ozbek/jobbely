@@ -4,7 +4,7 @@ import { summarizeExperience } from '../resume/experience.js';
 import type { FeatureJob, MatchExplanation, MatchProfile } from './model.js';
 import { projectSkills, skillMatch, relationsVersion } from './skill-relations.js';
 
-export const scoringVersion = `score-3:${relationsVersion}`;
+export const scoringVersion = `score-4:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -60,6 +60,9 @@ export function scoreJob(
     completeness: 0,
     band: 'review',
     requiredGaps: 0,
+    unresolvedRequirements:
+      job.requirements.unparsed.filter((item) => item.importance !== 'contextual').length +
+      job.requirements.constraints.filter((item) => item.importance !== 'contextual').length,
     skills: [],
     experience: [],
     uncertainties: [],
@@ -101,11 +104,27 @@ export function scoreJob(
 
     const best = alternatives[0]!;
 
+    if ((group.unresolvedAlternatives?.length ?? 0) > 0 && best.credit < 1) {
+      result.unresolvedRequirements++;
+      unresolvedMandatory ||= group.importance === 'required';
+
+      result.uncertainties.push(
+        `Alternative requirement needs review: ${group.unresolvedAlternatives!.join(' / ')}`,
+      );
+    }
+
     skillTotal += weight;
     skillCredit += weight * best.credit;
 
     result.skills.push({
       ...best,
+      ...(group.id ? { requirementId: group.id } : {}),
+      evidenceRefs:
+        [...profile.skills, ...(profile.competencies ?? [])].find(
+          (item) => item.id === best.sourceId,
+        )?.evidenceRefs ?? [],
+      unresolvedAlternatives: group.unresolvedAlternatives ?? [],
+      logic: group.logic ?? (group.alternatives.length > 1 ? 'any-of' : 'single'),
       credit: best.credit,
       sourceId: best.sourceId,
       sourceName: best.sourceName,
@@ -143,6 +162,9 @@ export function scoreJob(
 
     result.experience.push({
       minimumMonths: requirement.minimumMonths,
+      ...(requirement.maximumMonths !== undefined
+        ? { maximumMonths: requirement.maximumMonths }
+        : {}),
       importance: requirement.importance,
       candidateMinimumMonths: range.minimumMonths,
       candidateMaximumMonths: range.maximumMonths,
@@ -159,6 +181,8 @@ export function scoreJob(
           ? 1
           : Math.min(1, range.maximumMonths / Math.max(1, requirement.minimumMonths));
     } else {
+      result.unresolvedRequirements++;
+
       result.uncertainties.push(
         'Experience cannot be resolved from the reviewed dates or skill-specific tenure.',
       );

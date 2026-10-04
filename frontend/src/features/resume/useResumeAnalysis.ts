@@ -120,7 +120,7 @@ export function useResumeAnalysis() {
       end: '',
       category: 'unclassified',
       kind: 'employment',
-      relationship: 'unknown',
+      relationship: 'direct',
     });
   };
 

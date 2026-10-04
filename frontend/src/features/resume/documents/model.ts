@@ -42,7 +42,7 @@ export function finishDocument(
   blocks: ReadingBlock[],
   warnings: string[],
 ): ExtractedDocument {
-  const text = blocks.map((block) => block.text).join('\n');
+  const text = blocks.map((block) => block.text).join(format === 'docx' ? '\n\n' : '\n');
 
   if (
     blocks.length > documentLimits.blocks ||

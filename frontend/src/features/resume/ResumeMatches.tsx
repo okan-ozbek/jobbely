@@ -5,13 +5,9 @@ import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
 import type { MatchInput, MatchResponse, ResumeAnalysis } from '../../api/client.js';
 
-const functions = [
-  { id: 'engineering', name: 'Engineering' },
-  { id: 'data-ai', name: 'Data & AI' },
-  { id: 'product', name: 'Product' },
-  { id: 'sales', name: 'Sales' },
-  { id: 'people', name: 'People' },
-] as const;
+import { inferMatchingFunction, matchingFunctions as functions } from './matching-function.js';
+import { Disclosure } from '../../components/Disclosure.js';
+import { scrollToSection } from '../../components/motion.js';
 
 export function ResumeMatches({
   analysis,
@@ -25,8 +21,10 @@ export function ResumeMatches({
   onReviewed: (analysis: ResumeAnalysis | null) => void;
 }) {
   const [reviewed, setReviewed] = useState(false);
-  const [category, setCategory] = useState('engineering');
-  const [employerContext, setEmployerContext] = useState(false);
+  const [category, setCategory] = useState('auto');
+  const inferred = inferMatchingFunction(analysis);
+  const selectedCategory = category === 'auto' ? (inferred?.id ?? '') : category;
+  const resultsAnchor = useRef<HTMLParagraphElement>(null);
   const [result, setResult] = useState<MatchResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -41,7 +39,7 @@ export function ResumeMatches({
     setError('');
 
     return () => request.current?.abort();
-  }, [analysis, pending, category, employerContext, onReviewed]);
+  }, [analysis, pending, category, onReviewed]);
 
   const find = async (more = false) => {
     request.current?.abort();
@@ -55,9 +53,9 @@ export function ResumeMatches({
     const body: MatchInput = {
       profile: matchProfile(analysis),
       categories: functions
-        .filter((item) => !category || item.id === category)
+        .filter((item) => !selectedCategory || item.id === selectedCategory)
         .map((item) => item.id),
-      employerContext,
+      employerContext: false,
       limit: 20,
       ...(more && result?.nextCursor ? { cursor: result.nextCursor } : {}),
     };
@@ -67,6 +65,11 @@ export function ResumeMatches({
 
       if (!controller.signal.aborted) {
         setResult(more && result ? { ...next, items: [...result.items, ...next.items] } : next);
+        if (!more) {
+          requestAnimationFrame(() => {
+            if (!controller.signal.aborted) { scrollToSection(resultsAnchor.current); }
+          });
+        }
       }
     } catch (reason) {
       if (!controller.signal.aborted) {
@@ -86,13 +89,12 @@ export function ResumeMatches({
       aria-labelledby="matches-heading"
     >
       <div className="section-heading">
-        <h2 id="matches-heading">Find your next role</h2>
-        <span className="resume-status">Explained recommendations</span>
+        <h2 id="matches-heading">Your job matches</h2>
+        <span className="resume-status">Based on your profile</span>
       </div>
       <p className="small-note">
-        Review your skills, roles and location first. Scores summarize the available evidence; they
-        do not predict hiring decisions. Unknown authorization, qualifications and skill-specific
-        tenure remain visible.
+        Check your profile above, then find roles that fit. Match scores describe the evidence in
+        your resume; they don’t predict hiring decisions.
       </p>
       <div className="match-controls">
         <label>
@@ -101,6 +103,7 @@ export function ResumeMatches({
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
+            <option value="auto">{inferred ? `From resume � ${inferred.name}` : "From resume � all supported functions"}</option>
             <option value="">All supported functions</option>
             {functions.map((item) => (
               <option
@@ -112,19 +115,8 @@ export function ResumeMatches({
             ))}
           </select>
         </label>
-        <label className="resume-checkbox">
-          <input
-            type="checkbox"
-            checked={employerContext}
-            onChange={(event) => setEmployerContext(event.target.checked)}
-          />
-          Optional employer context
-        </label>
+
       </div>
-      <p className="small-note">
-        Employer context can add 3 points for reviewed direct experience in the same employer and
-        function. It cannot change a fit band or override gaps. Unknown employers have no penalty.
-      </p>
       <label className="resume-checkbox">
         <input
           type="checkbox"
@@ -135,7 +127,7 @@ export function ResumeMatches({
             onReviewed(event.target.checked ? analysis : null);
           }}
         />
-        I reviewed this profile and its claims.
+        I’ve reviewed my skills, experience and location.
       </label>
       <button
         className="primary-button"
@@ -158,8 +150,9 @@ export function ResumeMatches({
       {result && (
         <>
           <p
+            ref={resultsAnchor}
             role="status"
-            className="small-note"
+            className="small-note matches-anchor"
           >
             {result.evaluated.toLocaleString()} jobs evaluated ·{' '}
             {result.unenriched.toLocaleString()} awaiting requirement analysis · fresh within{' '}
@@ -168,11 +161,17 @@ export function ResumeMatches({
           </p>
           {result.items.length === 0 && (
             <div className="empty-state">
-              <h3>No eligible jobs right now.</h3>
+              <h3>
+                {result.unenriched > 0
+                  ? 'Job analysis is catching up.'
+                  : 'No freshly checked jobs right now.'}
+              </h3>
               <p>
                 {result.mode === 'demo'
                   ? 'Synthetic demo listings are excluded from recommendations.'
-                  : 'Choose another function or check company source coverage. Stale, closed and failed-source listings are excluded.'}
+                  : result.unenriched > 0
+                    ? 'Listings are available, but their requirements still need analysis. Try again after the job index is refreshed.'
+                    : 'This isn’t a judgment of your resume. There are no available listings passing the current freshness checks for this function. Check Companies for source status or try another function.'}
               </p>
             </div>
           )}
@@ -201,15 +200,18 @@ export function ResumeMatches({
                   </span>
                 </div>
                 <p className="small-note">
-                  Evidence completeness {item.completeness}% · {item.requiredGaps} required gap(s) ·
+                  Evidence completeness {item.completeness}% · {item.requiredGaps} recognized
+                  required gap(s) · {item.unresolvedRequirements} unresolved requirement(s) ·
                   checked {new Date(item.job.lastSeenAt).toLocaleString()}
                   <br />
                   {item.coverage}
                 </p>
-                <details>
-                  <summary>Why this result</summary>
+                <Disclosure summary="Why this result">
                   <ConfidenceLegend />
-                  <MatchEvidence comparison={item} />
+                  <MatchEvidence
+                    comparison={item}
+                    analysis={analysis}
+                  />
                   <p>{item.location}</p>
                   {item.employerAdjustment.reasons.map((value, index) => (
                     <p
@@ -219,7 +221,7 @@ export function ResumeMatches({
                       {value}
                     </p>
                   ))}
-                </details>
+                </Disclosure>
                 <div className="resume-actions">
                   <button
                     type="button"

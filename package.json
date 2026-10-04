@@ -10,6 +10,8 @@
     "build": "pnpm --filter @jobbely/backend build && pnpm contracts && pnpm --filter @jobbely/frontend build",
     "contracts": "pnpm --filter @jobbely/backend export:openapi && pnpm --filter @jobbely/frontend generate:api",
     "features:backfill": "pnpm --filter @jobbely/backend features:backfill",
+    "matching:evaluate": "pnpm --filter @jobbely/backend matching:evaluate",
+    "matching:shadow": "pnpm --filter @jobbely/backend matching:shadow",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm --filter @jobbely/backend test && pnpm --filter @jobbely/frontend test",
     "check": "pnpm format:check && node scripts/check-boundaries.mjs && pnpm logos:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",

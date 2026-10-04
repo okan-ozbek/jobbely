@@ -64,3 +64,45 @@ it('carries bounded semantic claims without sending private excerpts or document
 
   expect(JSON.stringify(matchProfile(analysis))).not.toContain('Private fictional address');
 });
+
+it('serializes only bounded evidence reference fields, never injected private metadata', () => {
+  const analysis = {
+    analysisDate: '2026-10-02',
+    skills: [
+      {
+        id: 'python',
+        status: 'work_evidenced',
+        evidenceRefs: [
+          {
+            blockId: 'resume-block-3',
+            lineIds: ['line-3'],
+            source: 'project',
+            action: 'build',
+            objectId: 'python',
+            outcome: 'unspecified',
+            assertion: 'performed',
+            excerpt: 'PRIVATE_REF_SENTINEL',
+            contact: 'PRIVATE_REF_SENTINEL',
+          },
+        ],
+      },
+    ],
+    competencies: [],
+    employment: [],
+    location: { value: '', status: 'unknown' },
+  } as unknown as ResumeAnalysis;
+
+  const profile = matchProfile(analysis);
+
+  expect(profile.skills[0]?.evidenceRefs?.[0]).toEqual({
+    blockId: 'resume-block-3',
+    lineIds: ['line-3'],
+    source: 'project',
+    action: 'build',
+    objectId: 'python',
+    outcome: 'unspecified',
+    assertion: 'performed',
+  });
+
+  expect(JSON.stringify(profile)).not.toContain('PRIVATE_REF_SENTINEL');
+});

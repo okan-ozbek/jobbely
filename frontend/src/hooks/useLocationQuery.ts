@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
+import { transitionPage } from '../components/motion.js';
 
 export function useLocationQuery() {
   const [search, setSearch] = useState(window.location.search);
 
   useEffect(() => {
-    const onPop = () => setSearch(window.location.search);
+    const onPop = () => transitionPage(() => setSearch(window.location.search));
 
     window.addEventListener('popstate', onPop);
 
@@ -26,8 +27,16 @@ export function useLocationQuery() {
 
     const url = `${window.location.pathname}${next.size ? `?${next}` : ''}`;
 
-    window.history[replace ? 'replaceState' : 'pushState'](null, '', url);
-    setSearch(window.location.search);
+    const commit = () => {
+      window.history[replace ? 'replaceState' : 'pushState'](null, '', url);
+      setSearch(window.location.search);
+    };
+
+    if (!replace && ('view' in changes || 'job' in changes)) {
+      transitionPage(commit);
+    } else {
+      commit();
+    }
   };
 
   return { params, update };

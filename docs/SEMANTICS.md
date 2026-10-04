@@ -2,9 +2,13 @@
 
 **Status:** Initial engineering increment implemented, 2 October 2026, Europe/Amsterdam. Independent held-out calibration and expanded role-specific language packs remain proposed.
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Decision and rationale
 
-Share a pure TypeScript concept registry and clause recognizer between resumes and job descriptions. The registry has 215 canonical concepts with stable IDs, aliases, kinds, families, definitions, supported facets and local provenance. Existing IDs are preserved. Reviewed engineering packs add compiler tools, memory/concurrency, distributed mechanisms, cloud services, backend practices and distinct delivery competencies. This introduces no runtime AI or external taxonomy service.
+Share a pure TypeScript concept registry and clause recognizer between resumes and job descriptions. The registry has 239 canonical concepts with stable IDs, aliases, kinds, families, definitions, supported facets and local provenance. Existing IDs are preserved. Reviewed engineering packs add compiler tools, memory/concurrency, distributed mechanisms, cloud services, backend practices and distinct delivery competencies. This introduces no runtime AI or external taxonomy service.
 
 Exact aliases and 16 reviewed activity rules emit a concept, facet, interpretation, rule and UTF-16 span. Safe punctuation normalization preserves offsets; resume offsets reference the returned document with normalized line endings. Longer aliases suppress contained component names: clang-tidy does not become a direct Clang claim, and LLVM IR does not assert LLVM tool experience. Ordinary Go/React/Rust/Spark and generic low-level phrases retain context guards.
 

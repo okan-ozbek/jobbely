@@ -585,6 +585,23 @@ export interface operations {
                         analysisDate: string;
                         document: {
                             text: string;
+                            blocks: {
+                                id: string;
+                                lineIds: string[];
+                                start: number;
+                                end: number;
+                                text: string;
+                                section: string;
+                                kind: "heading" | "bullet" | "paragraph" | "role";
+                                roleId?: string;
+                                source?: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                sourceSpans: {
+                                    start: number;
+                                    end: number;
+                                    blockStart: number;
+                                    blockEnd: number;
+                                }[];
+                            }[];
                             lines: {
                                 id: string;
                                 number: number;
@@ -596,6 +613,16 @@ export interface operations {
                             }[];
                         };
                         skills: {
+                            evidenceRefs?: {
+                                blockId: string;
+                                lineIds: string[];
+                                source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectId: string;
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                            }[];
                             facets?: ("general" | "usage" | "development")[];
                             deniedFacets?: ("general" | "usage" | "development")[];
                             uncertainFacets?: ("general" | "usage" | "development")[];
@@ -604,6 +631,10 @@ export interface operations {
                             name: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                             evidence: {
+                                blockId?: string;
+                                lineIds?: string[];
+                                source?: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
@@ -612,6 +643,16 @@ export interface operations {
                             }[];
                         }[];
                         competencies: {
+                            evidenceRefs?: {
+                                blockId: string;
+                                lineIds: string[];
+                                source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectId: string;
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                            }[];
                             facets?: ("general" | "usage" | "development")[];
                             deniedFacets?: ("general" | "usage" | "development")[];
                             uncertainFacets?: ("general" | "usage" | "development")[];
@@ -620,6 +661,10 @@ export interface operations {
                             name: string;
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                             evidence: {
+                                blockId?: string;
+                                lineIds?: string[];
+                                source?: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
@@ -639,6 +684,10 @@ export interface operations {
                             end: string;
                             status: "extracted" | "uncertain" | "user_confirmed";
                             evidence: {
+                                blockId?: string;
+                                lineIds?: string[];
+                                source?: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
@@ -650,6 +699,10 @@ export interface operations {
                             value: string;
                             status: "extracted" | "uncertain" | "unknown" | "user_confirmed";
                             evidence: {
+                                blockId?: string;
+                                lineIds?: string[];
+                                source?: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
                                 lineId: string;
                                 excerpt: string;
                                 rule: string;
@@ -774,6 +827,16 @@ export interface operations {
                     profile: {
                         analysisDate: string;
                         skills: {
+                            evidenceRefs?: {
+                                blockId: string;
+                                lineIds: string[];
+                                source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectId: string;
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                            }[];
                             facets?: ("general" | "usage" | "development")[];
                             deniedFacets?: ("general" | "usage" | "development")[];
                             uncertainFacets?: ("general" | "usage" | "development")[];
@@ -782,6 +845,16 @@ export interface operations {
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
                         competencies?: {
+                            evidenceRefs?: {
+                                blockId: string;
+                                lineIds: string[];
+                                source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectId: string;
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                            }[];
                             facets?: ("general" | "usage" | "development")[];
                             deniedFacets?: ("general" | "usage" | "development")[];
                             uncertainFacets?: ("general" | "usage" | "development")[];
@@ -790,6 +863,7 @@ export interface operations {
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
                         employment: {
+                            id?: string;
                             employer: string;
                             category: "engineering" | "data-ai" | "research" | "quant-trading" | "product" | "design" | "sales" | "marketing" | "customer-success" | "people" | "finance" | "legal" | "security-it" | "operations" | "manufacturing" | "retail" | "creative" | "unclassified";
                             kind: "employment" | "internship" | "project" | "volunteering";
@@ -814,6 +888,129 @@ export interface operations {
                 content: {
                     "application/json": {
                         descriptionText: string;
+                        document: {
+                            version: string;
+                            text: string;
+                            blocks: {
+                                id: string;
+                                kind: "heading" | "paragraph" | "list-item";
+                                headingPath: string[];
+                                role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                                importance: "required" | "preferred" | "contextual";
+                                start: number;
+                                end: number;
+                                line: number;
+                                text: string;
+                            }[];
+                            truncated: boolean;
+                        };
+                        requirements: {
+                            documentVersion: string;
+                            blocks: {
+                                id: string;
+                                kind: "heading" | "paragraph" | "list-item";
+                                headingPath: string[];
+                                role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                                importance: "required" | "preferred" | "contextual";
+                                start: number;
+                                end: number;
+                                line: number;
+                                text: string;
+                            }[];
+                            clauses: {
+                                id: string;
+                                blockId: string;
+                                importance: "required" | "preferred" | "contextual";
+                                role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectIds: string[];
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                modality: "obligation" | "preference" | "description" | "conditional";
+                                polarity: "positive" | "negated" | "uncertain";
+                                logic: "all-of" | "any-of";
+                                groupIds: string[];
+                                unresolvedAlternatives: string[];
+                                evidence: {
+                                    blockId?: string;
+                                    clauseId?: string;
+                                    start?: number;
+                                    end?: number;
+                                    excerpt: string;
+                                    line: number;
+                                    rule: string;
+                                };
+                            }[];
+                            version: string;
+                            contentHash: string;
+                            category: string;
+                            skills: {
+                                id?: string;
+                                logic?: "single" | "any-of";
+                                unresolvedAlternatives?: string[];
+                                alternatives: {
+                                    id: string;
+                                    name: string;
+                                    facet?: "general" | "usage" | "development";
+                                    interpretation?: "explicit" | "interpreted" | "ambiguous" | "contextual";
+                                }[];
+                                importance: "required" | "preferred" | "contextual";
+                                evidence: {
+                                    blockId?: string;
+                                    clauseId?: string;
+                                    start?: number;
+                                    end?: number;
+                                    excerpt: string;
+                                    line: number;
+                                    rule: string;
+                                };
+                            }[];
+                            experience: {
+                                minimumMonths: number;
+                                maximumMonths?: number;
+                                alternativeIds?: string[];
+                                scope: "professional" | "function" | "skill";
+                                skillId: string | null;
+                                importance: "required" | "preferred" | "contextual";
+                                evidence: {
+                                    blockId?: string;
+                                    clauseId?: string;
+                                    start?: number;
+                                    end?: number;
+                                    excerpt: string;
+                                    line: number;
+                                    rule: string;
+                                };
+                            }[];
+                            constraints: {
+                                kind: "location" | "authorization" | "qualification" | "language";
+                                importance: "required" | "preferred" | "contextual";
+                                evidence: {
+                                    blockId?: string;
+                                    clauseId?: string;
+                                    start?: number;
+                                    end?: number;
+                                    excerpt: string;
+                                    line: number;
+                                    rule: string;
+                                };
+                            }[];
+                            unparsed: {
+                                importance: "required" | "preferred" | "contextual";
+                                evidence: {
+                                    blockId?: string;
+                                    clauseId?: string;
+                                    start?: number;
+                                    end?: number;
+                                    excerpt: string;
+                                    line: number;
+                                    rule: string;
+                                };
+                            }[];
+                            locations: string[];
+                            workplace: "remote" | "hybrid" | "onsite" | "unknown";
+                            warnings: string[];
+                            truncated: boolean;
+                        };
                         skills: {
                             decision: "full" | "partial" | "suggested" | "none";
                             targetId: string;
@@ -846,6 +1043,9 @@ export interface operations {
                         }[];
                         comparison: {
                             baseScore: number;
+                            completeness: number;
+                            band: "strong" | "possible" | "exploratory" | "review";
+                            unresolvedRequirements: number;
                             requiredGaps: number;
                             skills: {
                                 decision: "full" | "partial" | "suggested" | "none";
@@ -870,6 +1070,19 @@ export interface operations {
                                     reason: string;
                                 }[];
                                 reason: string;
+                                requirementId?: string;
+                                evidenceRefs: {
+                                    blockId: string;
+                                    lineIds: string[];
+                                    source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                    roleId?: string;
+                                    action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                    objectId: string;
+                                    outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                    assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                                }[];
+                                unresolvedAlternatives: string[];
+                                logic: "single" | "any-of";
                                 names: string[];
                                 importance: string;
                                 status: string;
@@ -878,6 +1091,7 @@ export interface operations {
                             }[];
                             experience: {
                                 minimumMonths: number;
+                                maximumMonths?: number;
                                 importance: string;
                                 candidateMinimumMonths: number;
                                 candidateMaximumMonths: number;
@@ -1010,10 +1224,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        documentVersion: string;
+                        blocks: {
+                            id: string;
+                            kind: "heading" | "paragraph" | "list-item";
+                            headingPath: string[];
+                            role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                            importance: "required" | "preferred" | "contextual";
+                            start: number;
+                            end: number;
+                            line: number;
+                            text: string;
+                        }[];
+                        clauses: {
+                            id: string;
+                            blockId: string;
+                            importance: "required" | "preferred" | "contextual";
+                            role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                            action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                            objectIds: string[];
+                            outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                            modality: "obligation" | "preference" | "description" | "conditional";
+                            polarity: "positive" | "negated" | "uncertain";
+                            logic: "all-of" | "any-of";
+                            groupIds: string[];
+                            unresolvedAlternatives: string[];
+                            evidence: {
+                                blockId?: string;
+                                clauseId?: string;
+                                start?: number;
+                                end?: number;
+                                excerpt: string;
+                                line: number;
+                                rule: string;
+                            };
+                        }[];
                         version: string;
                         contentHash: string;
                         category: string;
                         skills: {
+                            id?: string;
+                            logic?: "single" | "any-of";
+                            unresolvedAlternatives?: string[];
                             alternatives: {
                                 id: string;
                                 name: string;
@@ -1022,6 +1274,8 @@ export interface operations {
                             }[];
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                blockId?: string;
+                                clauseId?: string;
                                 start?: number;
                                 end?: number;
                                 excerpt: string;
@@ -1031,10 +1285,14 @@ export interface operations {
                         }[];
                         experience: {
                             minimumMonths: number;
+                            maximumMonths?: number;
+                            alternativeIds?: string[];
                             scope: "professional" | "function" | "skill";
                             skillId: string | null;
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                blockId?: string;
+                                clauseId?: string;
                                 start?: number;
                                 end?: number;
                                 excerpt: string;
@@ -1046,6 +1304,8 @@ export interface operations {
                             kind: "location" | "authorization" | "qualification" | "language";
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                blockId?: string;
+                                clauseId?: string;
                                 start?: number;
                                 end?: number;
                                 excerpt: string;
@@ -1056,6 +1316,8 @@ export interface operations {
                         unparsed: {
                             importance: "required" | "preferred" | "contextual";
                             evidence: {
+                                blockId?: string;
+                                clauseId?: string;
                                 start?: number;
                                 end?: number;
                                 excerpt: string;
@@ -1097,6 +1359,16 @@ export interface operations {
                     profile: {
                         analysisDate: string;
                         skills: {
+                            evidenceRefs?: {
+                                blockId: string;
+                                lineIds: string[];
+                                source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectId: string;
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                            }[];
                             facets?: ("general" | "usage" | "development")[];
                             deniedFacets?: ("general" | "usage" | "development")[];
                             uncertainFacets?: ("general" | "usage" | "development")[];
@@ -1105,6 +1377,16 @@ export interface operations {
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
                         competencies?: {
+                            evidenceRefs?: {
+                                blockId: string;
+                                lineIds: string[];
+                                source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                roleId?: string;
+                                action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                objectId: string;
+                                outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                            }[];
                             facets?: ("general" | "usage" | "development")[];
                             deniedFacets?: ("general" | "usage" | "development")[];
                             uncertainFacets?: ("general" | "usage" | "development")[];
@@ -1113,6 +1395,7 @@ export interface operations {
                             status: "mentioned" | "work_evidenced" | "learning" | "negated" | "user_confirmed";
                         }[];
                         employment: {
+                            id?: string;
                             employer: string;
                             category: "engineering" | "data-ai" | "research" | "quant-trading" | "product" | "design" | "sales" | "marketing" | "customer-success" | "people" | "finance" | "legal" | "security-it" | "operations" | "manufacturing" | "retail" | "creative" | "unclassified";
                             kind: "employment" | "internship" | "project" | "volunteering";
@@ -1150,10 +1433,48 @@ export interface operations {
                                 applyUrl: string;
                                 lastSeenAt: string;
                                 requirements: {
+                                    documentVersion: string;
+                                    blocks: {
+                                        id: string;
+                                        kind: "heading" | "paragraph" | "list-item";
+                                        headingPath: string[];
+                                        role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                                        importance: "required" | "preferred" | "contextual";
+                                        start: number;
+                                        end: number;
+                                        line: number;
+                                        text: string;
+                                    }[];
+                                    clauses: {
+                                        id: string;
+                                        blockId: string;
+                                        importance: "required" | "preferred" | "contextual";
+                                        role: "overview" | "role" | "responsibilities" | "qualifications" | "benefits" | "compensation" | "application" | "legal" | "unknown";
+                                        action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                        objectIds: string[];
+                                        outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                        modality: "obligation" | "preference" | "description" | "conditional";
+                                        polarity: "positive" | "negated" | "uncertain";
+                                        logic: "all-of" | "any-of";
+                                        groupIds: string[];
+                                        unresolvedAlternatives: string[];
+                                        evidence: {
+                                            blockId?: string;
+                                            clauseId?: string;
+                                            start?: number;
+                                            end?: number;
+                                            excerpt: string;
+                                            line: number;
+                                            rule: string;
+                                        };
+                                    }[];
                                     version: string;
                                     contentHash: string;
                                     category: string;
                                     skills: {
+                                        id?: string;
+                                        logic?: "single" | "any-of";
+                                        unresolvedAlternatives?: string[];
                                         alternatives: {
                                             id: string;
                                             name: string;
@@ -1162,6 +1483,8 @@ export interface operations {
                                         }[];
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            blockId?: string;
+                                            clauseId?: string;
                                             start?: number;
                                             end?: number;
                                             excerpt: string;
@@ -1171,10 +1494,14 @@ export interface operations {
                                     }[];
                                     experience: {
                                         minimumMonths: number;
+                                        maximumMonths?: number;
+                                        alternativeIds?: string[];
                                         scope: "professional" | "function" | "skill";
                                         skillId: string | null;
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            blockId?: string;
+                                            clauseId?: string;
                                             start?: number;
                                             end?: number;
                                             excerpt: string;
@@ -1186,6 +1513,8 @@ export interface operations {
                                         kind: "location" | "authorization" | "qualification" | "language";
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            blockId?: string;
+                                            clauseId?: string;
                                             start?: number;
                                             end?: number;
                                             excerpt: string;
@@ -1196,6 +1525,8 @@ export interface operations {
                                     unparsed: {
                                         importance: "required" | "preferred" | "contextual";
                                         evidence: {
+                                            blockId?: string;
+                                            clauseId?: string;
                                             start?: number;
                                             end?: number;
                                             excerpt: string;
@@ -1213,6 +1544,7 @@ export interface operations {
                             completeness: number;
                             band: "strong" | "possible" | "exploratory" | "review";
                             requiredGaps: number;
+                            unresolvedRequirements: number;
                             skills: {
                                 decision: "full" | "partial" | "suggested" | "none";
                                 targetId: string;
@@ -1236,6 +1568,19 @@ export interface operations {
                                     reason: string;
                                 }[];
                                 reason: string;
+                                requirementId?: string;
+                                evidenceRefs: {
+                                    blockId: string;
+                                    lineIds: string[];
+                                    source: "employment" | "project" | "volunteering" | "summary" | "skills" | "other";
+                                    roleId?: string;
+                                    action: "build" | "operate" | "optimize" | "design" | "deliver" | "learn" | "observe" | "list" | "other";
+                                    objectId: string;
+                                    outcome: "latency" | "throughput" | "reliability" | "consistency" | "delivery" | "unspecified";
+                                    assertion: "performed" | "assisted" | "observed" | "learning" | "negated" | "listed" | "reviewed" | "contextual";
+                                }[];
+                                unresolvedAlternatives: string[];
+                                logic: "single" | "any-of";
                                 names: string[];
                                 importance: string;
                                 status: "matched" | "claim_only" | "not_evidenced";
@@ -1244,6 +1589,7 @@ export interface operations {
                             }[];
                             experience: {
                                 minimumMonths: number;
+                                maximumMonths?: number;
                                 candidateMinimumMonths: number;
                                 importance: string;
                                 candidateMaximumMonths: number;

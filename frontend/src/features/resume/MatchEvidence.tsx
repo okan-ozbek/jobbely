@@ -1,5 +1,5 @@
 import { coverageLabel } from './semantic-review.js';
-import type { JobMatchResponse } from '../../api/client.js';
+import type { JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
 
 type Comparison = JobMatchResponse['comparison'];
 
@@ -14,7 +14,13 @@ export function ConfidenceLegend() {
   );
 }
 
-export function MatchEvidence({ comparison }: { comparison: Comparison }) {
+export function MatchEvidence({
+  comparison,
+  analysis,
+}: {
+  comparison: Comparison;
+  analysis?: ResumeAnalysis;
+}) {
   return (
     <>
       <ul className="match-evidence">
@@ -43,6 +49,28 @@ export function MatchEvidence({ comparison }: { comparison: Comparison }) {
                 </ol>
               </details>
             )}
+            {skill.evidenceRefs.map((ref, evidenceIndex) => {
+              const block = analysis?.document.blocks.find((item) => item.id === ref.blockId);
+              const role = analysis?.employment.find((item) => item.id === ref.roleId);
+
+              return (
+                <details key={evidenceIndex}>
+                  <summary>
+                    Resume evidence · {ref.source} · {ref.assertion} · {ref.action}
+                    {role ? ` · ${role.title} at ${role.employer}` : ''}
+                  </summary>
+                  <p className="small-note">
+                    Source lines: {ref.lineIds.join(', ')}. Outcome: {ref.outcome}.
+                  </p>
+                  {block && <p>{block.text}</p>}
+                </details>
+              );
+            })}
+            {skill.unresolvedAlternatives.length > 0 && (
+              <p className="small-note">
+                Unknown alternatives to review: {skill.unresolvedAlternatives.join(' / ')}
+              </p>
+            )}
             <p className="small-note">{skill.excerpt}</p>
           </li>
         ))}
@@ -52,7 +80,8 @@ export function MatchEvidence({ comparison }: { comparison: Comparison }) {
           <strong
             className={`confidence-${entry.status === 'met' ? 'green' : entry.status === 'below' ? 'red' : 'yellow'}`}
           >
-            {entry.minimumMonths / 12}+ years{' '}
+            {entry.minimumMonths / 12}
+            {entry.maximumMonths ? `–${entry.maximumMonths / 12}` : '+'} years{' '}
             {entry.scope === 'skill' ? 'in this specific skill or leadership role' : entry.scope} ·{' '}
             {entry.status}
           </strong>{' '}

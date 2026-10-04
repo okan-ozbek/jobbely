@@ -2,6 +2,10 @@
 
 **Status:** Implemented for the first slice, 30 September 2026.
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Decision and rationale
 
 Use Fastify with TypeBox route schemas for public validation/serialization and generate OpenAPI from those routes. The frontend consumes generated types through `openapi-fetch`, without importing backend models. Provider Zod schemas remain internal and independent of the public contract.

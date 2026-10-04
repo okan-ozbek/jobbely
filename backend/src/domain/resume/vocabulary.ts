@@ -1,4 +1,6 @@
-import type { ResumeLine, ResumeSignal } from './model.js';
+import { actionIn, evidenceClause, outcomeIn, assertionIn } from '../semantics/propositions.js';
+import type { CandidateEvidenceRef } from '../semantics/propositions.js';
+import type { ResumeBlock, ResumeLine, ResumeSignal } from './model.js';
 import { concepts, conceptsById, resolveConcept, registryVersion } from '../semantics/concepts.js';
 import { assertionAt, clauseVersion } from '../semantics/clauses.js';
 import { conceptsInText, recognizeConcepts } from '../semantics/recognize.js';
@@ -30,7 +32,7 @@ export function skillMentions(text: string) {
   });
 }
 
-function detectSignals(lines: ResumeLine[], competency: boolean): ResumeSignal[] {
+function detectSignals(lines: (ResumeLine | ResumeBlock)[], competency: boolean): ResumeSignal[] {
   const detected = new Map<string, ResumeSignal>();
 
   const priorities = {
@@ -42,7 +44,7 @@ function detectSignals(lines: ResumeLine[], competency: boolean): ResumeSignal[]
   };
 
   for (const line of lines) {
-    if (line.heading || line.section === 'header' || !line.text.trim()) {
+    if (('heading' in line && line.heading) || line.section === 'header' || !line.text.trim()) {
       continue;
     }
 
@@ -99,7 +101,15 @@ function detectSignals(lines: ResumeLine[], competency: boolean): ResumeSignal[]
       const evidence = {
         start: line.start + mention.position,
         end: line.start + mention.position + mention.length,
-        lineId: line.id,
+        lineId: 'lineIds' in line ? line.lineIds[0]! : line.id,
+        ...('lineIds' in line
+          ? {
+              blockId: line.id,
+              lineIds: line.lineIds,
+              source: ('source' in line ? line.source : undefined) ?? sourceFor(line.section),
+              ...(line.roleId ? { roleId: line.roleId } : {}),
+            }
+          : {}),
         excerpt: line.text.trim(),
         rule: `${mention.rule}:${status}`,
       };
@@ -158,6 +168,39 @@ function detectSignals(lines: ResumeLine[], competency: boolean): ResumeSignal[]
         signal.evidence[signal.evidence.length - 1] = evidence;
       }
 
+      const ref: CandidateEvidenceRef = {
+        blockId: line.id,
+        lineIds: 'lineIds' in line ? line.lineIds : [line.id],
+        source: ('source' in line ? line.source : undefined) ?? sourceFor(line.section),
+        ...('roleId' in line && line.roleId ? { roleId: line.roleId } : {}),
+        action:
+          line.section === 'skills'
+            ? 'list'
+            : actionIn(evidenceClause(line.text, mention.position)),
+        objectId: mention.id,
+        outcome: outcomeIn(evidenceClause(line.text, mention.position)),
+        assertion: assertionIn(
+          line.text,
+          mention.position,
+          !['experience', 'projects', 'volunteering'].includes(line.section),
+        ),
+      };
+
+      if (
+        (signal.evidenceRefs?.length ?? 0) < 5 &&
+        !signal.evidenceRefs?.some((item) => item.blockId === ref.blockId)
+      ) {
+        signal.evidenceRefs = [...(signal.evidenceRefs ?? []), ref];
+      }
+
+      if (
+        signal.evidenceRefs?.length === 5 &&
+        ['work_evidenced', 'negated', 'learning'].includes(status) &&
+        !signal.evidenceRefs.some((item) => item.assertion === ref.assertion)
+      ) {
+        signal.evidenceRefs[4] = ref;
+      }
+
       detected.set(mention.id, signal);
     }
   }
@@ -165,11 +208,11 @@ function detectSignals(lines: ResumeLine[], competency: boolean): ResumeSignal[]
   return [...detected.values()];
 }
 
-export function detectSkills(lines: ResumeLine[]) {
+export function detectSkills(lines: (ResumeLine | ResumeBlock)[]) {
   return detectSignals(lines, false);
 }
 
-export function detectCompetencies(lines: ResumeLine[]) {
+export function detectCompetencies(lines: (ResumeLine | ResumeBlock)[]) {
   return detectSignals(lines, true);
 }
 
@@ -200,3 +243,17 @@ const competencyPatterns: [string, string, RegExp][] = [
     /\b(?:owned|delivered|launched)\b.{0,60}\b(?:project|product|release|migration|platform)\b/i,
   ],
 ];
+
+function sourceFor(section: ResumeLine['section']): CandidateEvidenceRef['source'] {
+  return section === 'experience'
+    ? 'employment'
+    : section === 'projects'
+      ? 'project'
+      : section === 'volunteering'
+        ? 'volunteering'
+        : section === 'summary'
+          ? 'summary'
+          : section === 'skills'
+            ? 'skills'
+            : 'other';
+}

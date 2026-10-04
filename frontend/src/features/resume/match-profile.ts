@@ -8,14 +8,39 @@ function claim({
   deniedFacets,
   uncertainFacets,
   interpretation,
+  evidenceRefs,
 }: ResumeAnalysis['skills'][number]) {
+  // Accept explicit self-reports without inventing development experience or
+  // overriding a denied/unsure answer. Inference retains its original scope.
+  const accepted = status === 'mentioned' && interpretation === 'explicit';
+  const acceptedFacets = accepted
+    ? (uncertainFacets ?? []).filter((facet) => facet !== 'development' && !deniedFacets?.includes(facet))
+    : [];
+  const remainingUncertainty = uncertainFacets?.filter((facet) => !acceptedFacets.includes(facet));
+
   return {
     id,
-    status,
-    ...(facets ? { facets } : {}),
+    status: accepted ? 'user_confirmed' as const : status,
+    ...(facets || acceptedFacets.length ? { facets: [...new Set([...(facets ?? []), ...acceptedFacets])] } : {}),
     ...(deniedFacets ? { deniedFacets } : {}),
-    ...(uncertainFacets ? { uncertainFacets } : {}),
+    ...(remainingUncertainty ? { uncertainFacets: remainingUncertainty } : {}),
     ...(interpretation ? { interpretation } : {}),
+    ...(evidenceRefs
+      ? {
+          evidenceRefs: evidenceRefs.map(
+            ({ blockId, lineIds, source, roleId, action, objectId, outcome, assertion }) => ({
+              blockId,
+              lineIds: [...lineIds],
+              source,
+              ...(roleId ? { roleId } : {}),
+              action,
+              objectId,
+              outcome,
+              assertion,
+            }),
+          ),
+        }
+      : {}),
   };
 }
 
@@ -25,7 +50,8 @@ export function matchProfile(analysis: ResumeAnalysis): MatchInput['profile'] {
     skills: analysis.skills.map(claim),
     competencies: analysis.competencies.map(claim),
     employment: analysis.employment.map(
-      ({ employer, category, kind, relationship, start, end }) => ({
+      ({ id, employer, category, kind, relationship, start, end }) => ({
+        id,
         employer,
         category,
         kind,

@@ -92,6 +92,10 @@ export function roleCategory(title: string) {
   return rules.find(([pattern]) => pattern.test(title))?.[1] ?? 'unclassified';
 }
 
+export function cleanRoleTitle(title: string) {
+  return title.replace(/(?:\s*[,|–—-]\s*|\s*\()\b(?:full[ -]?time|part[ -]?time)\)?\s*$/i, '').trim();
+}
+
 function parseHeader(header: string, employers: EmployerIdentity[]) {
   const parts = header
     .replace(/^(?:[-*•]\s*)/, '')
@@ -212,6 +216,7 @@ export function detectEmployment(
     result.push({
       id: `employment-${headerLine.number}`,
       ...header,
+      title: cleanRoleTitle(header.title),
       recognizedCompany: recognizeEmployer(header.employer, employers),
       category: roleCategory(header.title),
       kind:
@@ -222,7 +227,9 @@ export function detectEmployment(
             : /\bintern\b/i.test(header.title)
               ? 'internship'
               : 'employment',
-      relationship: /\bclient\b/i.test(header.employer) ? 'client' : 'unknown',
+      relationship: /\b(?:client|freelanc\w*|contractor|self[ -]employed)\b/i.test(`${header.employer} ${header.title}`)
+        ? 'client'
+        : line.section === 'experience' ? 'direct' : 'unknown',
       start: range?.[1] ?? '',
       end: range?.[2] ?? '',
       status: range ? 'extracted' : 'uncertain',
@@ -243,7 +250,8 @@ export function detectLocation(lines: ResumeLine[]): ResumeLocation {
 
   const cityCountry = header.find(
     (line) =>
-      /^[\p{L} .'-]+,\s*[\p{L} .'-]+$/u.test(line.text.trim()) && !titlePattern.test(line.text),
+      /^[\p{L} .'-]+,\s*[\p{L} .'-]+$/u.test(line.text.split(/[|•]/)[0]!.trim()) &&
+      !titlePattern.test(line.text),
   );
 
   const line = explicit ?? cityCountry;
@@ -252,7 +260,10 @@ export function detectLocation(lines: ResumeLine[]): ResumeLocation {
     return { value: '', status: 'unknown', evidence: [] };
   }
 
-  const value = line.text.replace(/^\s*(?:location|based in|address)\s*:/i, '').trim();
+  const value = line.text
+    .split(/[|•]/)[0]!
+    .replace(/^\s*(?:location|based in|address)\s*:/i, '')
+    .trim();
 
   return {
     value,

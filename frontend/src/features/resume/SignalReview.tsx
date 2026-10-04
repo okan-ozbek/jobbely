@@ -1,153 +1,37 @@
 import { useState } from 'react';
-import type { ConceptReview, ResumeAnalysis } from '../../api/client.js';
+import { Sparkles, X } from 'lucide-react';
+import type { ResumeAnalysis } from '../../api/client.js';
 
-const labels = {
-  mentioned: 'Listed claim',
-  work_evidenced: 'Supporting statement',
-  learning: 'Learning',
-  negated: 'Negative claim',
-  user_confirmed: 'User confirmed',
-};
-
-export function SignalReview({
-  title,
-  signals,
-  suggestions = [],
-  add,
-  remove,
-  review,
-}: {
-  title: string;
+export function SignalReview({ signals, suggestions = [], add, remove }: {
   signals: ResumeAnalysis['skills'];
   suggestions?: ResumeAnalysis['supportedSkills'];
   add: (name: string) => void;
-  review: (review: ConceptReview) => void;
   remove: (signal: ResumeAnalysis['skills'][number]) => void;
 }) {
   const [name, setName] = useState('');
-  const listId = `${title.toLowerCase()}-suggestions`;
 
   return (
-    <section className="resume-panel">
-      <div className="section-heading">
-        <h2>
-          {title} <span>{signals.length}</span>
-        </h2>
-      </div>
-      <p className="small-note">
-        Resume claims, with their evidence. Detection does not verify proficiency.
-      </p>
-      <div className="resume-signals">
+    <section className="resume-panel skills-review">
+      <div className="section-heading"><h2>Skills <span>{signals.length}</span></h2></div>
+      <p className="small-note">Keep what fits. Remove anything that doesn’t. <Sparkles size={12} /> marks an inferred activity.</p>
+      <div className="skill-chips">
         {signals.map((signal) => (
-          <article
-            className="resume-signal"
-            key={signal.id}
-          >
-            <div className="resume-signal-heading">
-              <strong>{signal.name}</strong>
-              <button
-                type="button"
-                className="resume-text-button"
-                aria-label={`Remove ${signal.name} from ${title.toLowerCase()}`}
-                onClick={() => remove(signal)}
-              >
-                Remove
-              </button>
-            </div>
-            <span className={`resume-status resume-status-${signal.status}`}>
-              {labels[signal.status]}
-            </span>
-            <p className="small-note">
-              {signal.interpretation === 'interpreted'
-                ? 'Interpreted activity'
-                : signal.interpretation === 'contextual'
-                  ? 'Company context'
-                  : signal.interpretation === 'ambiguous'
-                    ? 'Uncertain interpretation'
-                    : 'Explicit claim'}
-              {signal.facets?.length ? ` · ${signal.facets.join(', ')}` : ''}
-            </p>
-            {[...(signal.deniedFacets ?? []), ...(signal.uncertainFacets ?? [])].map((facet) => (
-              <p
-                className="small-note"
-                key={facet}
-              >
-                {facet} · {signal.deniedFacets?.includes(facet) ? 'Denied' : 'Uncertain'}{' '}
-                <button
-                  type="button"
-                  className="resume-text-button"
-                  onClick={() => review({ id: signal.id, facet, answer: 'confirmed' })}
-                >
-                  Confirm {signal.name} {facet}
-                </button>
-              </p>
-            ))}
-            {signal.evidence.length > 0 && (
-              <details>
-                <summary>View evidence</summary>
-                {signal.evidence.map((evidence, index) => (
-                  <blockquote key={`${evidence.lineId}-${index}`}>
-                    <span>{evidence.lineId.replace('line-', 'Line ')}</span>
-                    {evidence.excerpt}
-                  </blockquote>
-                ))}
-              </details>
-            )}
-            {signal.status !== 'user_confirmed' &&
-              !signal.deniedFacets?.length &&
-              !signal.uncertainFacets?.length && (
-                <button
-                  type="button"
-                  className="resume-text-button"
-                  onClick={() => add(signal.name)}
-                >
-                  Confirm this claim
-                </button>
-              )}
-          </article>
+          <span className={`skill-chip ${signal.interpretation === 'interpreted' ? 'skill-chip-inferred' : ''}`} key={signal.id}>
+            {signal.interpretation === 'interpreted' && <Sparkles size={12} aria-label="Inferred activity" />}
+            <span>{signal.name}</span>
+            {(signal.status === 'learning' || signal.status === 'negated' || signal.interpretation === 'ambiguous') && <small>{signal.status === 'learning' ? 'Learning' : signal.status === 'negated' ? 'Denied' : 'Uncertain'}</small>}
+            <button type="button" aria-label={`Remove ${signal.name} from skills`} onClick={() => remove(signal)}><X size={13} /></button>
+          </span>
         ))}
-        {signals.length === 0 && (
-          <p className="small-note">
-            No supported {title.toLowerCase()} detected. Add an explicit claim below.
-          </p>
-        )}
+        {signals.length === 0 && <p className="small-note">Add your skills below.</p>}
       </div>
-      <form
-        className="resume-add-row"
-        onSubmit={(event) => {
-          event.preventDefault();
-
-          if (name.trim()) {
-            add(name);
-            setName('');
-          }
-        }}
-      >
-        <label>
-          <span>Add {title === 'Skills' ? 'a skill' : 'a competency'}</span>
-          <input
-            value={name}
-            maxLength={100}
-            list={listId}
-            placeholder={title === 'Skills' ? 'e.g. TypeScript' : 'e.g. Mentoring'}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </label>
-        <datalist id={listId}>
-          {suggestions.map((skill) => (
-            <option
-              key={skill.id}
-              value={skill.name}
-            />
-          ))}
-        </datalist>
-        <button
-          type="submit"
-          className="resume-secondary-button"
-          disabled={!name.trim()}
-        >
-          Add
-        </button>
+      <form className="resume-add-row" onSubmit={(event) => {
+        event.preventDefault();
+        if (name.trim()) { add(name); setName(''); }
+      }}>
+        <label><span>Add a skill</span><input value={name} maxLength={100} list="skills-suggestions" placeholder="e.g. TypeScript" onChange={(event) => setName(event.target.value)} /></label>
+        <datalist id="skills-suggestions">{suggestions.map((skill) => <option key={skill.id} value={skill.name} />)}</datalist>
+        <button type="submit" className="resume-secondary-button" disabled={!name.trim()}>Add</button>
       </form>
     </section>
   );

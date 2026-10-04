@@ -1,6 +1,8 @@
 # Proposal: structured requirements and optional local semantic extraction
 
-**Status:** Proposed, 2 October 2026, Europe/Amsterdam. Diagnosis reproduced against current code; no model installed, no inference service added, and no scoring or extraction behavior changed by this document. The implemented deterministic baseline remains [SEMANTICS](SEMANTICS.md).
+**Status:** Stages 1-3 implemented on 2 October 2026, Europe/Amsterdam; see [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md). Stages 4-7 remain proposed. No local model or inference service is installed.
+
+**Roadmap update, 4 October 2026:** [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md) supersedes this document's remaining delivery sequence with the current-code review, backend-hosted model experiments, requirement-to-evidence comparison, revised percentages and evaluation gates. Retain this document as the historical structure-first diagnosis.
 
 ## Recommendation and scope
 
@@ -29,7 +31,7 @@ The following public/synthetic examples were reproduced on 2 October. No real ca
 | SaaS/SOA, event-sourced workflows, operational outcomes                      | Vocabulary and action rules omit important backend capabilities; ordinary-word guards can reject legitimate programming-language use        | Add contextual canonicalization and action/object/outcome evidence with positive and negative contrasts            |
 | Header location next to contact fields                                       | The location parser expects a whole location line; a delimited contact line can produce unknown                                             | Parse the location segment separately, without forwarding contact fields to matching                               |
 
-Two confirmed API observations illustrate why a higher percentage alone is the wrong goal. The public Netflix Software Engineer 3 – Ink posting returned a base score of 100 with one recognized required skill and no extracted experience comparison. The stored Amsterdam Databricks Software Engineer – Backend posting returned 90 while treating Java and C++ as independent requirements. These are limited current comparisons, not calibrated ATS scores. The existing ranking domain can mark such cases as review, but the single-job response omits completeness and band, leaving the comparison without those safeguards in its presentation.
+Two confirmed API observations illustrate why a higher percentage alone is the wrong goal. The public Netflix Software Engineer 3 – Ink posting returned a base score of 100 with one recognized required skill and no extracted experience comparison. The stored Amsterdam Databricks Software Engineer – Backend posting returned 90 while treating Java and C++ as independent requirements. These are limited current comparisons, not calibrated ATS scores. At diagnosis time the single-job response omitted completeness and band. Stage 3 now exposes both in the comparison, with unresolved counts; these recorded scores describe the earlier baseline.
 
 ## Document structure before semantic extraction
 
@@ -126,4 +128,4 @@ Keep manual acceptance tests for: ordinary excel versus Excel spreadsheets; engi
 - [Scoring](../backend/src/domain/matching/score.ts), [single-job comparison](../backend/src/application/resume/match-jobs.ts), [response schemas](../backend/src/api/matching-schemas.ts), [comparison UI](../frontend/src/features/resume/JobProfileComparison.tsx).
 - [Current privacy](RESUME_PRIVACY.md), [documents](DOCUMENTS.md), [projection races](JOB_FEATURES.md), [quality](QUALITY.md), [synthetic review guide](RESUME_TESTING.md).
 
-This proposal is grounded in read-only PDF layout/extraction inspection using the application's PDF adapter, current source review, synthetic HTML/clause probes and two live local comparison API requests. Source references for the proposed runtime/model capabilities were checked on 2 October 2026. No LLM inference, accuracy benchmark, application code changes or new automated application test suite was performed for this proposal. Documentation formatting and local link checks are separate completion checks.
+This proposal is grounded in read-only PDF layout/extraction inspection using the application's PDF adapter, current source review, synthetic HTML/clause probes and two live local comparison API requests. Source references for the proposed runtime/model capabilities were checked on 2 October 2026. No LLM inference or held-out accuracy benchmark was performed. This paragraph records the original diagnosis; implementation and automated verification for stages 1-3 are documented in [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md). Documentation formatting and local link checks are separate completion checks.

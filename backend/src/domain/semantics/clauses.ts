@@ -1,7 +1,7 @@
 import type { Interpretation, SkillFacet } from './model.js';
 import { defaultFacet } from './concepts.js';
 
-export const clauseVersion = 'clauses-1';
+export const clauseVersion = 'clauses-2';
 
 export function normalizeText(text: string) {
   // These replacements preserve UTF-16 offsets into the original document.
@@ -108,6 +108,31 @@ export interface PhraseRule {
 
 // Rules encode observable activities, not employer reputation or generic soft-skill adjectives.
 export const phraseRules: readonly PhraseRule[] = [
+  {
+    id: 'cross-team-delivery-scope',
+    pattern: /\b(?:led|owned|delivered) (?:architecture and )?cross[ -]team delivery\b/gi,
+    concepts: [{ id: 'cross-functional-delivery' }, { id: 'delivery-ownership' }],
+  },
+  {
+    id: 'cache-latency-outcome',
+    pattern: /\b(?:reduced|cut|lowered) (?:hot[ -]path |request |response )?latency(?: from)?\b/gi,
+    concepts: [{ id: 'low-latency' }, { id: 'performance-optimization' }],
+  },
+  {
+    id: 'throughput-benchmarking',
+    pattern: /\bthroughput\/latency benchmarks?\b/gi,
+    concepts: [{ id: 'performance-benchmarking' }, { id: 'throughput' }],
+  },
+  {
+    id: 'inference-training',
+    pattern: /\binference and training technologies\b/gi,
+    concepts: [{ id: 'ml-inference' }, { id: 'model-training' }],
+  },
+  {
+    id: 'training-inference',
+    pattern: /\btraining and inference technologies\b/gi,
+    concepts: [{ id: 'model-training' }, { id: 'ml-inference' }],
+  },
   {
     id: 'failure-recovery',
     pattern:

@@ -23,7 +23,24 @@ export interface ResumeLine {
   heading: boolean;
 }
 
+export interface ResumeBlock {
+  id: string;
+  lineIds: string[];
+  start: number;
+  end: number;
+  text: string;
+  section: ResumeSection;
+  kind: 'heading' | 'bullet' | 'paragraph' | 'role';
+  source?: 'employment' | 'project' | 'volunteering' | 'summary' | 'skills' | 'other';
+  roleId?: string;
+  sourceSpans: { start: number; end: number; blockStart: number; blockEnd: number }[];
+}
+
 export interface ResumeEvidence {
+  blockId?: string;
+  lineIds?: string[];
+  source?: 'employment' | 'project' | 'volunteering' | 'summary' | 'skills' | 'other';
+  roleId?: string;
   start?: number;
   end?: number;
   lineId: string;
@@ -68,7 +85,7 @@ export interface ResumeAnalysis {
   version: string;
   vocabularyVersion: string;
   analysisDate: string;
-  document: { text: string; lines: ResumeLine[] };
+  document: { text: string; lines: ResumeLine[]; blocks: ResumeBlock[] };
   skills: ResumeSignal[];
   competencies: ResumeSignal[];
   employment: ResumeEmployment[];
