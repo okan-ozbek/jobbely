@@ -1,16 +1,22 @@
+import { readJobDocument, jobDocumentVersion, isQualificationBlock } from './document.js';
+import type { JobDocument, JobBlock } from './document.js';
+import { actionIn, outcomeIn } from '../semantics/propositions.js';
+import type { EvidenceAction, EvidenceOutcome } from '../semantics/propositions.js';
 import type { Interpretation, SkillFacet } from '../semantics/model.js';
 import type { Job } from '../model.js';
 import { skillsInText, vocabularyVersion } from '../resume/vocabulary.js';
 
-export const requirementsVersion = 'requirements-10';
+export const requirementsVersion = 'requirements-13';
 
-export const featureVersion = `${requirementsVersion}:${vocabularyVersion}`;
+export const featureVersion = `${requirementsVersion}:${vocabularyVersion}:${jobDocumentVersion}`;
 
 export const supportedFunctions = ['engineering', 'data-ai', 'product', 'sales', 'people'];
 
 export type Importance = 'required' | 'preferred' | 'contextual';
 
 export interface RequirementEvidence {
+  blockId?: string;
+  clauseId?: string;
   start?: number;
   end?: number;
   excerpt: string;
@@ -19,18 +25,42 @@ export interface RequirementEvidence {
 }
 
 export interface SkillRequirement {
+  id?: string;
+  logic?: 'single' | 'any-of';
+  unresolvedAlternatives?: string[];
   alternatives: { id: string; name: string; facet?: SkillFacet; interpretation?: Interpretation }[];
   importance: Importance;
   evidence: RequirementEvidence;
 }
 
+export interface RequirementClause {
+  id: string;
+  blockId: string;
+  importance: Importance;
+  role: JobBlock['role'];
+  action: EvidenceAction;
+  objectIds: string[];
+  outcome: EvidenceOutcome;
+  modality: 'obligation' | 'preference' | 'description' | 'conditional';
+  polarity: 'positive' | 'negated' | 'uncertain';
+  logic: 'all-of' | 'any-of';
+  groupIds: string[];
+  unresolvedAlternatives: string[];
+  evidence: RequirementEvidence;
+}
+
 export interface JobRequirements {
+  documentVersion: string;
+  blocks: JobBlock[];
+  clauses: RequirementClause[];
   version: string;
   contentHash: string;
   category: string;
   skills: SkillRequirement[];
   experience: {
     minimumMonths: number;
+    maximumMonths?: number;
+    alternativeIds?: string[];
     scope: 'professional' | 'function' | 'skill';
     skillId: string | null;
     importance: Importance;
@@ -48,42 +78,6 @@ export interface JobRequirements {
   truncated: boolean;
 }
 
-function heading(text: string): Importance | null {
-  if (/^our ideal .{1,100} will have\s*[:：]?$/i.test(text)) {
-    return 'required';
-  }
-
-  if (/^(?:as (?:a|an) .{1,100} you will|why join .{1,100})\s*[:：?]?$/i.test(text)) {
-    return 'contextual';
-  }
-
-  if (
-    /^(?:preferred qualifications|preferred experience|nice to haves?|bonus(?: points)?|desirable|preferred skills)\s*[:：]?$/i.test(
-      text,
-    )
-  ) {
-    return 'preferred';
-  }
-
-  if (
-    /^(?:minimum requirements|minimum qualifications|basic qualifications|required qualifications|key qualifications|requirements|what you bring|what you(?:'|’)ll need|what we need to see|what we(?:'|’)re looking for|about you|qualifications|required skills|experience|education and training)\s*[:：]?$/i.test(
-      text,
-    )
-  ) {
-    return 'required';
-  }
-
-  if (
-    /^(?:key responsibilities|responsibilities|job details|job description|role overview|job type|shift|primary location|additional locations|posting statement|position of trust|work model for this role|additional information|role details|about (?:us|the role)|what you(?:'|’)ll do|our (?:team|stack)|benefits|the role)\s*[:：]?$/i.test(
-      text,
-    )
-  ) {
-    return 'contextual';
-  }
-
-  return null;
-}
-
 function importance(text: string, section: Importance): Importance {
   if (
     /\b(?:equal opportunity|equal employment|all qualified applicants|ethical hiring|recruitment fees|(?:we|employers?) (?:do not|never) charge|salary range|we offer|offers?[^.!?]{0,80}\bbenefits|benefits include|(?:health|dental|vision) insurance|paid (?:time off|leave)|(?:salary|compensation) range)\b/i.test(
@@ -93,7 +87,11 @@ function importance(text: string, section: Importance): Importance {
     return 'contextual';
   }
 
-  if (/\b(?:not required|optional|nice.to.have|preferred|a plus|bonus)\b/i.test(text)) {
+  if (
+    /\b(?:not required|optional|nice.to.have|preferred|preferably|ideally|a plus|bonus)\b/i.test(
+      text,
+    )
+  ) {
     return 'preferred';
   }
 
@@ -114,7 +112,7 @@ function importance(text: string, section: Importance): Importance {
   }
 
   if (
-    /\b(?:must|required|at least \d+\s*\+?\s*years?|minimum (?:of )?\d+\s*years?|proficiency (?:in|with)|proficient (?:in|with)|experience (?:in|with)|knowledge of|you (?:have|bring))\b/i.test(
+    /\b(?:must|required|at least \d+\s*\+?\s*years?|minimum (?:of )?\d+\s*years?|proficiency (?:in|with)|proficient (?:in|with)|experience (?:in|with|developing|building|working)|knowledge of|you (?:have|bring))\b/i.test(
       text,
     )
   ) {
@@ -125,19 +123,26 @@ function importance(text: string, section: Importance): Importance {
 }
 
 const requirementGrammar = new Set(
-  'the ideal candidate you your must have has with in of for to at a an and or either is are be required preferred proficient proficiency knowledge experience experienced using use used strong solid excellent good working work practical hands on demonstrated proven skill skills ability abilities expertise technical technology technologies programming language languages framework frameworks database databases system systems familiarity familiar basic advanced understanding fluency'.split(
+  'the ideal candidate you your must have has with in of for to at a an and or either is are be required preferred proficient proficiency knowledge experience experienced using use used strong solid excellent good working work practical hands on demonstrated proven skill skills ability abilities expertise technical technology technologies programming language languages framework frameworks database databases system systems familiarity familiar basic advanced understanding fluency foundational developing building supporting preferably ideally pipelines platform platforms on production level similar one any software years large scale maintaining scalable'.split(
     ' ',
   ),
 );
 
 function remainingSkillStatement(sentence: string, skills: ReturnType<typeof skillsInText>) {
-  let remainder = sentence;
+  const characters = sentence.split('');
 
-  for (const skill of [...skills].reverse()) {
-    remainder =
-      remainder.slice(0, skill.position) +
-      ' '.repeat(skill.length) +
-      remainder.slice(skill.position + skill.length);
+  for (const skill of skills) {
+    for (let offset = skill.position; offset < skill.position + skill.length; offset++) {
+      characters[offset] = ' ';
+    }
+  }
+
+  let remainder = characters.join('');
+
+  for (const unknown of /\bor\b|\bone of\b/i.test(sentence)
+    ? unresolvedAlternatives(sentence, skills)
+    : []) {
+    remainder = remainder.replace(unknown, ' ');
   }
 
   return (
@@ -150,8 +155,12 @@ function remainingSkillStatement(sentence: string, skills: ReturnType<typeof ski
 
 export function extractRequirements(
   job: Pick<Job, 'descriptionText' | 'contentHash' | 'classification' | 'locations' | 'workplace'>,
+  document: JobDocument = readJobDocument(job.descriptionText),
 ): JobRequirements {
   const result: JobRequirements = {
+    documentVersion: document.version,
+    blocks: document.blocks,
+    clauses: [],
     version: featureVersion,
     contentHash: job.contentHash,
     category: job.classification.category,
@@ -165,9 +174,7 @@ export function extractRequirements(
     truncated: false,
   };
 
-  let section: Importance = 'contextual';
-
-  if (job.descriptionText.length > 200_000) {
+  if (document.truncated) {
     result.warnings.push(
       'Description exceeds the extraction limit; requirements need manual review.',
     );
@@ -177,35 +184,32 @@ export function extractRequirements(
     return result;
   }
 
-  const lines = job.descriptionText.split(/\r?\n/);
-
-  let offset = 0;
-
-  for (const [index, raw] of lines.entries()) {
-    const lineStart = offset;
-
-    offset += raw.length + (job.descriptionText[offset + raw.length] === '\r' ? 2 : 1);
-
-    const text = raw.replace(/^\s*[•*\-]\s*/, '').trim();
-    const nextSection = heading(text);
-
-    if (nextSection) {
-      section = nextSection;
+  for (const block of document.blocks) {
+    if (block.kind === 'heading') {
       continue;
     }
+
+    const raw = block.text;
+    const lineStart = block.start;
+    const index = block.line - 1;
+    const text = raw.replace(/^\s*[•*\-]\s*/, '').trim();
+    const section = block.importance;
 
     let sentenceSearch = 0;
 
     // Sentence boundaries prevent contextual stack statements inheriting later requirements.
-    for (const sentence of text.split(/(?<=[.!?])\s+(?=[A-Z])/)) {
+    for (const sentence of requirementSentences(text)) {
       const sentencePosition = text.indexOf(sentence, sentenceSearch);
 
       sentenceSearch = sentencePosition + sentence.length;
 
       const sentenceStart = lineStart + Math.max(0, raw.indexOf(text)) + sentencePosition;
-      const level = importance(sentence, section);
+      const level = isQualificationBlock(block) ? importance(sentence, section) : 'contextual';
+      const clauseId = `${block.id}-clause-${sentencePosition}`;
 
       const evidence = {
+        blockId: block.id,
+        clauseId,
         excerpt: sentence.slice(0, 2_000),
         line: index + 1,
         rule: `requirements:${level}`,
@@ -213,7 +217,11 @@ export function extractRequirements(
         end: sentenceStart + sentence.length,
       };
 
-      const recognized = skillsInText(sentence);
+      const recognized = ['application', 'legal', 'benefits', 'compensation', 'overview'].includes(
+        block.role,
+      )
+        ? []
+        : skillsInText(sentence);
 
       // One interpreted activity contributes once, even when the recognizer emits related concepts.
       const skills = recognized.filter(
@@ -224,11 +232,18 @@ export function extractRequirements(
               (previous) =>
                 previous.position <= item.position &&
                 previous.position + previous.length >= item.position + item.length &&
-                previous.rule.startsWith('clause:'),
+                previous.rule.startsWith('clause:') &&
+                !/inference-training|training-inference/.test(previous.rule),
             ),
       );
 
       const groups: SkillRequirement[] = [];
+
+      const alternativeList =
+        /\b(?:one of|either|any of)\b/i.test(sentence) || /\bor\b/i.test(sentence);
+
+      const unknownAlternatives =
+        alternativeList && skills.length ? unresolvedAlternatives(sentence, skills) : [];
 
       for (const [position, skill] of skills.entries()) {
         const previous = skills[position - 1];
@@ -237,9 +252,16 @@ export function extractRequirements(
           ? sentence.slice(previous.position + previous.length, skill.position)
           : '';
 
-        const alternative = previous && /^\s*(?:,?\s*or|\/)\s*$/i.test(connector);
+        const alternative =
+          previous &&
+          (/^\s*(?:,?\s*or(?:\s+(?:with|in|on|using))?|\/)\s*$/i.test(connector) ||
+            (alternativeList &&
+              /^\s*,[^.;:]*$/i.test(connector) &&
+              !/\b(?:and|must|experience|required|with|in)\b/i.test(connector)));
 
         if (alternative) {
+          groups.at(-1)!.logic = 'any-of';
+
           groups.at(-1)!.alternatives.push({
             id: skill.id,
             name: skill.name,
@@ -266,6 +288,9 @@ export function extractRequirements(
           }
         } else {
           groups.push({
+            id: `${clauseId}-group-${position}`,
+            logic: alternativeList && position === 0 ? 'any-of' : 'single',
+            unresolvedAlternatives: alternativeList && position === 0 ? unknownAlternatives : [],
             alternatives: [
               {
                 id: skill.id,
@@ -278,8 +303,6 @@ export function extractRequirements(
             evidence: {
               ...evidence,
               rule: `requirements:${level}:${skill.rule}`,
-              start: sentenceStart + skill.position,
-              end: sentenceStart + skill.position + skill.length,
             },
           });
         }
@@ -287,9 +310,35 @@ export function extractRequirements(
 
       result.skills.push(...groups);
 
+      result.clauses.push({
+        id: clauseId,
+        blockId: block.id,
+        importance: level,
+        role: block.role,
+        action: actionIn(sentence),
+        objectIds: skills.map((item) => item.id),
+        outcome: outcomeIn(sentence),
+        modality: /\b(?:if|when|unless)\b/i.test(sentence)
+          ? 'conditional'
+          : level === 'required'
+            ? 'obligation'
+            : level === 'preferred'
+              ? 'preference'
+              : 'description',
+        polarity: /\b(?:not required|no experience|without experience)\b/i.test(sentence)
+          ? 'negated'
+          : skills.some((item) => item.interpretation === 'ambiguous')
+            ? 'uncertain'
+            : 'positive',
+        logic: groups.length === 1 && groups[0]?.logic === 'any-of' ? 'any-of' : 'all-of',
+        groupIds: groups.map((group) => group.id!),
+        unresolvedAlternatives: unknownAlternatives,
+        evidence,
+      });
+
       const tenures = [
         ...sentence.matchAll(
-          /(\d{1,2})(?:\s*(?:[-–]|to)\s*\d{1,2})?\s*\+?\s*years?\s+(?:of\s+)?/gi,
+          /(\d{1,2})(?:\s*(?:[-–]|to)\s*(\d{1,2}))?\s*\+?\s*years?\s+(?:of\s+)?/gi,
         ),
       ];
 
@@ -350,6 +399,8 @@ export function extractRequirements(
 
         result.experience.push({
           minimumMonths: Number(tenure[1]) * 12,
+          ...(tenure[2] ? { maximumMonths: Number(tenure[2]) * 12 } : {}),
+          ...(alternativeList ? { alternativeIds: skills.map((item) => item.id) } : {}),
           scope,
           skillId: leadershipTenure
             ? 'leadership'
@@ -357,7 +408,12 @@ export function extractRequirements(
               ? localSkills[0]!.id
               : null,
           importance: level,
-          evidence: { ...evidence, excerpt: `${tenure[0]}${activity}`.slice(0, 2_000) },
+          evidence: {
+            ...evidence,
+            start: sentenceStart + tenure.index,
+            end: sentenceStart + tenure.index + tenure[0].length + activity.length,
+            excerpt: `${tenure[0]}${activity}`.slice(0, 2_000),
+          },
         });
       }
 
@@ -366,11 +422,11 @@ export function extractRequirements(
           sentence,
         )
           ? 'location'
-          : /\b(?:authorized to work|work authorization|visa|sponsorship|work permit|citizenship)\b/i.test(
+          : /\b(?:authorized to work|work authorization|visa|sponsorship|work permit|citizenship|export.controlled|government license)\b/i.test(
                 sentence,
               )
             ? 'authorization'
-            : /\b(?:bachelor|master|degree|ph\.?d)\b/i.test(sentence)
+            : /\b(?:bachelor|master|degree|ph\.?d|BS|BSc|MS|MSc)\b/i.test(sentence)
               ? 'qualification'
               : /\b(?:fluent|fluency|native speaker|language proficiency)\b/i.test(sentence)
                 ? 'language'
@@ -380,7 +436,7 @@ export function extractRequirements(
         const restriction =
           constraint === 'location' ||
           (constraint === 'authorization' &&
-            /\b(?:no|cannot|not available|not provided|authorized to work|work permit required)\b/i.test(
+            /\b(?:no|cannot|not available|not provided|authorized to work|work permit required|export.controlled|government license)\b/i.test(
               sentence,
             ));
 
@@ -407,32 +463,45 @@ export function extractRequirements(
   }
 
   // Repeated boilerplate does not add weight. Keep distinct evidence in the description.
-  result.skills = result.skills.filter(
-    (group, index, all) =>
-      all.findIndex(
-        (item) =>
-          item.importance === group.importance &&
-          item.alternatives
-            .map((skill) => `${skill.id}:${skill.facet ?? 'general'}`)
-            .sort()
-            .join('|') ===
-            group.alternatives
-              .map((skill) => `${skill.id}:${skill.facet ?? 'general'}`)
-              .sort()
-              .join('|'),
-      ) === index,
-  );
+  const groupKeys = new Map<string, SkillRequirement>();
+  const aliases = new Map<string, string>();
+
+  for (const group of result.skills) {
+    const key = `${group.importance}:${group.logic}:${group.alternatives
+      .map((skill) => `${skill.id}:${skill.facet ?? 'general'}`)
+      .sort()
+      .join('|')}:${(group.unresolvedAlternatives ?? []).join('|')}`;
+
+    const previous = groupKeys.get(key);
+
+    if (previous) {
+      aliases.set(group.id!, previous.id!);
+    } else {
+      groupKeys.set(key, group);
+    }
+  }
+
+  result.skills = [...groupKeys.values()];
+
+  for (const clause of result.clauses) {
+    clause.groupIds = [...new Set(clause.groupIds.map((id) => aliases.get(id) ?? id))];
+  }
 
   result.truncated =
+    result.clauses.some(
+      (clause) => (clause.evidence.end ?? 0) - (clause.evidence.start ?? 0) > 2_000,
+    ) ||
     result.skills.length > 200 ||
     result.experience.length > 30 ||
     result.constraints.length > 40 ||
-    result.unparsed.length > 40;
+    result.unparsed.length > 40 ||
+    result.clauses.length > 400;
 
   if (result.truncated) {
     result.warnings.push('Requirement bounds exceeded. This job needs manual review.');
   }
 
+  result.clauses = result.clauses.slice(0, 400);
   result.skills = result.skills.slice(0, 200);
   result.experience = result.experience.slice(0, 30);
   result.constraints = result.constraints.slice(0, 40);
@@ -443,4 +512,48 @@ export function extractRequirements(
   );
 
   return result;
+}
+
+function unresolvedAlternatives(
+  sentence: string,
+  skills: ReturnType<typeof skillsInText>,
+): string[] {
+  const list = sentence.split(/\b(?:one of|either|any of)\s*:?[ ]*/i).at(-1)!;
+
+  return list
+    .split(/,|\bor\b|\//i)
+    .map((part) => part.trim().replace(/\.$/, ''))
+    .filter(
+      (part) =>
+        part &&
+        !skills.some(
+          (skill) =>
+            part.toLowerCase().includes(skill.name.toLowerCase()) ||
+            skillsInText(part).some((mention) => mention.id === skill.id),
+        ) &&
+        !/^(?:required|preferred)$/i.test(part),
+    )
+    .slice(0, 10)
+    .map((part) => part.slice(0, 100));
+}
+
+function requirementSentences(text: string): string[] {
+  const boundary =
+    /(?<=[.!?])\s+(?=[A-Z])|,\s+(?=(?:[Pp]referably|[Ii]deally|[Nn]ice.to.have|[Pp]referred)\b)|\s+(?=(?:[Pp]referably|[Ii]deally)\b)/g;
+
+  const parts: string[] = [];
+  let start = 0;
+
+  for (const match of text.matchAll(boundary)) {
+    if (/\b(?:e\.g|i\.e|vs|Mr|Ms|Dr)\.$/i.test(text.slice(0, match.index))) {
+      continue;
+    }
+
+    parts.push(text.slice(start, match.index));
+    start = match.index + match[0].length;
+  }
+
+  parts.push(text.slice(start));
+
+  return parts.filter(Boolean);
 }
