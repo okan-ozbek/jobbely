@@ -2,6 +2,10 @@
 
 **Status:** Implemented and PostgreSQL integration-tested 1 October 2026, Europe/Amsterdam. General catalog search remains on its existing snapshot path.
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Storage and invariants
 
 `JobFeature` is a projection of public employer descriptions, with posting FK, content hash, extraction/vocabulary version, category, skill IDs and bounded requirement JSON. It stores no candidate fields. The [migration](../backend/prisma/migrations/202610010001_job_features/migration.sql) adds a version/category/posting index, a skill-array GIN index, an active/category/source/posting lookup index and `DatasetVersion.featureGeneration`. The GIN index is available for future prefilters; current ranking evaluates all eligible feature rows rather than filtering out candidates missing required skills.

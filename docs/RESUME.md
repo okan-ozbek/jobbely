@@ -2,6 +2,10 @@
 
 **Status:** Pasted text, local PDF/DOCX extraction, profile correction and initial explained matching implemented. Recorded 1 October 2026, Europe/Amsterdam. Product history: [RESUME_PLAN](../RESUME_PLAN.md); checks: [RESUME_TESTING](RESUME_TESTING.md).
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Pipeline and layers
 
 PDF and DOCX are separate [local document adapters](DOCUMENTS.md). They produce text, ordered reading blocks and warnings in an isolated browser worker. Candidates inspect/edit the result and submit the same bounded text-analysis contract used by pasted resumes. Backend domain policies remain pure; `AnalyzeResume` orchestrates extraction/corrections without IO or persistence. The frontend consumes generated API types and never imports backend internals.

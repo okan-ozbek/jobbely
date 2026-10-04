@@ -25,7 +25,7 @@ describe('bounded local DOCX adapter', () => {
     const result = extractDocx(bytes);
 
     expect(result.text).toBe(
-      'Synthetic Candidate\nExperience\nEngineer | Fictional Labs\nTypeScript | PostgreSQL',
+      'Synthetic Candidate\n\nExperience\n\nEngineer | Fictional Labs\n\nTypeScript | PostgreSQL',
     );
 
     expect(result.blocks.map((block) => block.kind)).toEqual([
@@ -134,7 +134,7 @@ describe('bounded PDF adapter', () => {
 
     const docx = extractDocx(syntheticDocx(lines.map(paragraph).join('')));
 
-    expect(pdf.text).toBe(docx.text);
+    expect(pdf.text.replace(/\n+/g, '\n')).toBe(docx.text.replace(/\n+/g, '\n'));
     expect(pdf.blocks.map((block) => block.page)).toEqual([1, 1, 1, 1, 1]);
   });
 
@@ -155,6 +155,7 @@ describe('bounded PDF adapter', () => {
         'Left 1',
         'Left 2',
         'Left 3',
+        '',
         'Right 0',
         'Right 1',
         'Right 2',

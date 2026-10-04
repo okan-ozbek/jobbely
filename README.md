@@ -207,7 +207,9 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.
 - [SKILL_RELATIONS](docs/SKILL_RELATIONS.md): weighted evidence graph, confidence colors and description highlighting.
 - [SEMANTICS](docs/SEMANTICS.md): implemented engineering concepts, clause interpretation and scoped skill questions.
-- [SEMANTIC_MATCHING_PLAN](docs/SEMANTIC_MATCHING_PLAN.md): remaining evaluation and function-expansion roadmap.
+- [SEMANTIC_MATCHING_PLAN](docs/SEMANTIC_MATCHING_PLAN.md): historical engineering roadmap; future work follows RESUME_MATCHING_REWORK.
+- [RESUME_MATCHING_REWORK](docs/RESUME_MATCHING_REWORK.md): proposed semantic matching replacement, current-code findings, backend-hosted model experiments and phased acceptance gates.
+- [SEMANTIC_EXPERIMENTS](docs/SEMANTIC_EXPERIMENTS.md): development evaluation, requirement algebra and local-model public-job shadow tools; live matching remains deterministic.
 - [JOB_FEATURES](docs/JOB_FEATURES.md): indexed projection, backfill and hash/version invalidation.
 - [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): transient processing, worker CSP and private API boundaries.
 - [INGESTION](docs/INGESTION.md): refresh workflow, worker and failure handling.
@@ -228,4 +230,6 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 
 Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts, in-app job applications, paid data providers and AI classification are outside the initial scope.
 
-Resume matching interprets reviewed engineering activities through a 215-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.
+Resume matching interprets reviewed engineering activities through a 239-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.
+
+Matching now preserves job sections and logical resume evidence blocks, displaying required qualifications, preferred/nice-to-have qualifications and additional information. Comparisons retain unknown statements, OR alternatives, duration ranges, completeness and evidence provenance. See [STRUCTURED_MATCHING.md](docs/STRUCTURED_MATCHING.md) for the implemented stages 1-3 and [LLM_MATCHING.md](docs/LLM_MATCHING.md) for the remaining optional local-model experiment. No AI service is required to run this version.

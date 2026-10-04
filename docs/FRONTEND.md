@@ -10,7 +10,7 @@ The UI searches stored jobs, filters by company/function/workplace, opens full s
 
 `CompanyLogo` renders local assets from each company's API-provided `logoUrl` in the directory, job rows and details. Missing/failed images use a local N/A asset. Source records, maintenance and fallback rules live in [LOGOS.md](LOGOS.md).
 
-The minimal editorial style uses Faculty Glyphic headings, DM Sans body text, warm paper, near-black and red. Fonts are hosted locally. Visual tokens, responsive layouts and accessibility rules are recorded in [DESIGN.md](DESIGN.md).
+The 4 October redesign defaults to a centered resume composer with a translucent glass interface, soft lavender/blue gradients and locally hosted DM Sans. Companies is the header navigation action; its directory uses five columns on wide screens. Existing catalog/detail routes remain accessible from company cards and matches. Visual tokens, responsive layouts and accessibility rules are recorded in [DESIGN.md](DESIGN.md).
 
 ## State and responsibilities
 

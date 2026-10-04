@@ -1,3 +1,4 @@
+import { jobHeading } from '../domain/matching/document.js';
 import { load } from 'cheerio';
 import sanitizeHtml from 'sanitize-html';
 import type { HtmlPreparation } from '../ports/ingestion.js';
@@ -22,9 +23,12 @@ export const htmlPreparation: HtmlPreparation = {
         'em',
         'b',
         'i',
+        'h1',
         'h2',
         'h3',
         'h4',
+        'h5',
+        'h6',
         'blockquote',
         'a',
         'div',
@@ -43,8 +47,17 @@ export const htmlPreparation: HtmlPreparation = {
 
     const document = load(html);
 
+    // Standalone/leading emphasized section labels can precede an inline body.
+    document('strong, b').each((_index, element) => {
+      const label = document(element).text().trim();
+
+      if (jobHeading(label) && document(element).parent().text().trimStart().startsWith(label)) {
+        document(element).before('\n').after('\n');
+      }
+    });
+
     document('br').replaceWith('\n');
-    document('p, div, li, h2, h3, h4').append('\n');
+    document('p, div, li, h1, h2, h3, h4, h5, h6').prepend('\n').append('\n');
 
     return {
       html,

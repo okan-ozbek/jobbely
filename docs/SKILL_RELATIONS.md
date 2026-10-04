@@ -2,6 +2,10 @@
 
 **Status:** Implemented typed partial/suggestion graph, updated 2 October 2026. Weights are reviewed starter policies, not calibrated probabilities. Held-out candidate/job evaluation remains pending.
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Decision and rationale
 
 Use a TypeScript adjacency list, with canonical vocabulary IDs as nodes and directed edges containing kind, permitted mode, weight and reason. A graph database adds no useful capability to this bounded, versioned policy. Language, infrastructure, systems concepts and cross-team competencies can offer partial evidence for another requirement without rewriting the candidate's claimed skills.

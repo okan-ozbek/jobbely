@@ -8,7 +8,6 @@ import { CompanyLogo } from './components/CompanyLogo.js';
 import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
 import { useResumeAnalysis } from './features/resume/useResumeAnalysis.js';
 import { JobProfileComparison } from './features/resume/JobProfileComparison.js';
-import { RequirementsPanel } from './features/resume/RequirementsPanel.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -28,7 +27,7 @@ const coverageNames = {
   partial: 'Partial coverage',
   stale: 'Refresh overdue',
   blocked: 'Refresh failed',
-  healthy: 'Up to date',
+  healthy: 'Full coverage',
   demo: 'Sample source',
 };
 
@@ -47,7 +46,9 @@ export function App() {
       ? 'resume'
       : params.get('view') === 'companies'
         ? 'companies'
-        : 'jobs';
+        : params.get('view') === 'jobs' || params.has('job') || params.has('company')
+          ? 'jobs'
+          : 'resume';
 
   const selectedId = view === 'resume' ? null : params.get('job');
 
@@ -122,7 +123,11 @@ export function App() {
   };
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell view-${view}`}>
+      <div
+        className="ambient-light"
+        aria-hidden="true"
+      />
       <a
         className="skip-link"
         href="#main-content"
@@ -134,30 +139,20 @@ export function App() {
           className="brand"
           href="/"
           aria-label="Jobbely home"
+          onClick={(event) => {
+            event.preventDefault();
+            update({ view: 'resume', job: null, company: null });
+          }}
         >
           jobbely<span className="brand-dot">.</span>
         </a>
         <nav aria-label="Main navigation">
-          <button
-            className={view === 'jobs' ? 'nav-link active' : 'nav-link'}
-            aria-current={view === 'jobs' ? 'page' : undefined}
-            onClick={() => update({ view: null, job: null })}
-          >
-            Jobs
-          </button>
           <button
             className={view === 'companies' ? 'nav-link active' : 'nav-link'}
             aria-current={view === 'companies' ? 'page' : undefined}
             onClick={() => update({ view: 'companies', job: null })}
           >
             Companies
-          </button>
-          <button
-            className={view === 'resume' ? 'nav-link active' : 'nav-link'}
-            aria-current={view === 'resume' ? 'page' : undefined}
-            onClick={() => update({ view: 'resume', job: null })}
-          >
-            Resume
           </button>
         </nav>
       </header>
@@ -183,9 +178,9 @@ export function App() {
                   </>
                 ) : (
                   <>
-                    Great companies.
+                    Your next chapter.
                     <br />
-                    <span>One place.</span>
+                    <span>Great company.</span>
                   </>
                 )}
               </h1>
@@ -193,7 +188,7 @@ export function App() {
             <p>
               {view === 'jobs'
                 ? 'Explore roles from the companies you care about. Direct from their job boards.'
-                : 'Explore our company directory, with original listings and clear source coverage.'}
+                : 'Explore the companies on Jobbely. Every role leads back to the original job site.'}
             </p>
           </section>
         )}
@@ -207,11 +202,11 @@ export function App() {
           </div>
         )}
         <div hidden={view !== 'resume'}>
-          {params.get('job') && (
+          {view === 'resume' && params.get('job') && (
             <button
               className="back-button"
               disabled={!comparisonAnalysis}
-              onClick={() => update({ view: null })}
+              onClick={() => update({ view: 'jobs' })}
             >
               Return to this job
             </button>
@@ -219,7 +214,7 @@ export function App() {
           <ResumeWorkbench
             state={resumeState}
             onReviewed={setReviewedAnalysis}
-            openJob={(id) => update({ view: null, job: id })}
+            openJob={(id) => update({ view: 'jobs', job: id })}
           />
         </div>
         {view === 'resume' ? null : selectedId ? (
@@ -274,7 +269,6 @@ export function App() {
                     reviewSignal={resumeState.reviewSignal}
                   />
                   <aside className="detail-sidebar">
-                    <RequirementsPanel jobId={selected.id} />
                     <h2 className="sidebar-heading">The details</h2>
                     <dl>
                       <dt>Function</dt>
@@ -391,17 +385,27 @@ export function App() {
                     <h3>{company.name}</h3>
                     <span className={`coverage-badge coverage-${company.status}`}>
                       <span className="status-dot" />
-                      {coverageNames[company.status]}
+                      {company.status === 'stale'
+                        ? 'Partial coverage'
+                        : coverageNames[company.status]}
                     </span>
+                    <p className="company-freshness">
+                      {company.status === 'stale'
+                        ? 'Refresh overdue'
+                        : company.lastCheckedAt
+                          ? `Checked ${relativeDate(company.lastCheckedAt)}`
+                          : 'Awaiting a source check'}
+                    </p>
                     <div className="company-card-bottom">
                       <span>
-                        {company.jobs} {mode === 'demo' ? 'examples' : 'listings'}
+                        <strong>{company.jobs.toLocaleString()}</strong>{' '}
+                        {mode === 'demo' ? 'examples' : 'listings'}
                       </span>
                       <button
                         aria-label={`View ${company.name} jobs`}
                         onClick={() =>
                           update({
-                            view: null,
+                            view: 'jobs',
                             company: company.slug,
                             job: null,
                           })
@@ -410,6 +414,14 @@ export function App() {
                         View jobs <ArrowUpRight size={14} />
                       </button>
                     </div>
+                    <a
+                      className="company-site-link"
+                      href={company.careersUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Go to job site <ArrowUpRight size={14} />
+                    </a>
                   </article>
                 ))}
             </div>
@@ -610,7 +622,7 @@ export function App() {
             ? 'Sample listings · preview mode'
             : mode === 'postgres'
               ? 'Original listings. Direct sources.'
-              : 'Loading listings…'}
+              : 'Connecting to company sources…'}
         </span>
       </footer>
     </div>

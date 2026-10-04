@@ -1,5 +1,5 @@
 .resume-workbench {
-  padding-bottom: 24px;
+  padding-bottom: 0;
 }
 
 .confidence-green {
@@ -125,7 +125,7 @@
   width: 100%;
   font: inherit;
   color: var(--ink);
-  border-radius: 0;
+  border-radius: 12px;
 }
 .resume-workbench textarea {
   resize: vertical;
@@ -538,4 +538,348 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.qualification-groups {
+  margin-top: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.qualification-groups section {
+  margin-block: 2rem;
+}
+.qualification-groups h2 {
+  margin-bottom: 1rem;
+}
+.qualification-groups li {
+  margin-block: 1rem;
+  line-height: 1.8;
+}
+.qualification-groups p {
+  line-height: 1.8;
+}
+
+/* Resume entry and progressive profile review. */
+.resume-start {
+  max-width: 760px;
+  margin: 0 auto;
+  min-height: calc(100dvh - 190px);
+  padding: clamp(15px, 3vh, 40px) 0 20px;
+  text-align: center;
+}
+.resume-hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #68648f;
+  border: 1px solid #ffffffcc;
+  padding: 7px 13px;
+  background: #ffffff60;
+  border-radius: 30px;
+}
+.resume-hero h1 {
+  font-size: clamp(44px, 6vw, 64px);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 1.08;
+  margin: 20px 0 16px;
+}
+.resume-hero h1 span {
+  color: #7671b8;
+}
+.resume-hero > p {
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0 0 26px;
+}
+.resume-composer {
+  max-width: 650px;
+  margin: auto;
+  padding: 10px;
+  text-align: left;
+  background: linear-gradient(135deg, #ffffffd6, #ffffff8f);
+  border: 1px solid #ffffff;
+  border-radius: 26px;
+  box-shadow:
+    0 16px 50px #6471a413,
+    inset 0 1px 0 white;
+  backdrop-filter: blur(24px);
+}
+.resume-workbench .composer-text-label {
+  display: block;
+}
+.resume-workbench .composer-text-label textarea {
+  background: transparent;
+  border: none;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 18px;
+  min-height: 110px;
+  height: 110px;
+  max-height: 300px;
+  resize: vertical;
+}
+.resume-workbench .composer-text-label textarea::placeholder {
+  color: #74788e;
+}
+.resume-workbench .composer-text-label textarea:focus-visible {
+  outline-offset: -3px;
+}
+.composer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 6px 6px;
+}
+.composer-clear {
+  background: transparent;
+  display: grid;
+  place-items: center;
+  padding: 8px;
+  border-radius: 10px;
+}
+.composer-actions .primary-button {
+  margin-left: auto;
+}
+.resume-workbench .attach-button {
+  position: relative;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #5e637d;
+  border-radius: 12px;
+}
+.attach-button:hover {
+  background: #e9eaf080;
+}
+.attach-button:focus-within {
+  outline: 3px solid #7774e3;
+  outline-offset: 2px;
+}
+.resume-workbench .attach-button .sr-only {
+  width: 1px;
+  padding: 0;
+}
+.composer-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 10px;
+  margin: 17px 0 4px;
+}
+.resume-workbench .privacy-details {
+  font-size: 10px;
+  color: var(--muted);
+  max-width: 510px;
+  margin: auto;
+}
+.privacy-details summary {
+  display: inline-block;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.privacy-details p {
+  text-align: left;
+  padding: 15px;
+  border-radius: 12px;
+  background: #ffffffaa;
+  font-size: 12px;
+}
+.home-companies {
+  margin: 24px auto 0;
+  color: var(--muted);
+  font-size: 10px;
+}
+.home-companies > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 18px;
+}
+.home-companies img {
+  object-fit: contain;
+  opacity: 0.65;
+}
+.attached-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  padding: 10px 18px;
+  color: var(--signal-text);
+}
+.attached-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.attached-file button {
+  background: none;
+  margin-left: auto;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+.document-progress {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 12px;
+}
+.document-progress button {
+  background: none;
+  text-decoration: underline;
+}
+.document-preview {
+  margin: 10px;
+  font-size: 12px;
+}
+.document-preview .resume-lines {
+  max-height: 240px;
+  overflow-y: auto;
+}
+.has-analysis .resume-start {
+  min-height: 0;
+  padding-top: 30px;
+}
+.has-analysis .resume-hero h1 {
+  font-size: 44px;
+}
+.has-analysis .home-companies {
+  display: none;
+}
+.profile-review {
+  margin: 25px 0;
+  background: #ffffffa6;
+  border: 1px solid white;
+  border-radius: 24px;
+}
+.profile-review > summary {
+  padding: 24px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.profile-review > summary span {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 12px;
+  font-weight: 400;
+}
+.profile-review-content {
+  padding: 0 24px 24px;
+}
+.resume-workbench .resume-panel {
+  background: #ffffffa6;
+  padding: 24px;
+  border: 1px solid white;
+  border-radius: 24px;
+  margin: 16px 0;
+}
+.profile-review-content .resume-panel {
+  padding: 20px;
+  border-color: var(--border);
+  background: #ffffff70;
+}
+.resume-workbench h2 {
+  font-weight: 500;
+  font-size: 20px;
+}
+.resume-summary {
+  border-radius: 18px;
+}
+.resume-summary strong {
+  font-family: var(--body-font);
+}
+.resume-reading {
+  max-height: 700px;
+  overflow-y: auto;
+}
+.resume-workbench .resume-secondary-button {
+  border-radius: 12px;
+  background: #ffffff99;
+}
+.resume-workbench .resume-status {
+  border-radius: 20px;
+  background: #efedf8;
+  color: #68618d;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+.resume-workbench .match-card {
+  padding: 22px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: #ffffffa6;
+  margin: 15px 0;
+}
+.resume-workbench .match-card h3 {
+  font-weight: 500;
+}
+.match-controls {
+  margin-bottom: 15px;
+}
+.match-controls > details {
+  flex: 1;
+  font-size: 12px;
+  color: var(--muted);
+}
+.match-controls > details summary {
+  padding: 12px 0;
+}
+@media (max-width: 650px) {
+  .resume-start {
+    padding: 45px 0 30px;
+    min-height: calc(100dvh - 160px);
+  }
+  .resume-hero > p {
+    font-size: 13px;
+    max-width: 290px;
+    margin: 0 auto 28px;
+  }
+  .resume-hero h1 {
+    margin-top: 25px;
+  }
+  .resume-composer {
+    border-radius: 22px;
+  }
+  .composer-actions {
+    gap: 4px;
+  }
+  .composer-actions .primary-button {
+    padding: 12px;
+    font-size: 11px;
+    gap: 5px;
+  }
+  .resume-workbench .attach-button {
+    font-size: 11px;
+    padding: 10px 6px;
+    gap: 5px;
+  }
+  .composer-note {
+    font-size: 9px;
+  }
+  .home-companies > div {
+    gap: 25px;
+  }
+  .profile-review > summary span {
+    display: block;
+    margin-left: 18px;
+    margin-top: 6px;
+  }
+  .profile-review-content {
+    padding: 0 12px 12px;
+  }
+  .resume-workbench .resume-panel {
+    padding: 18px;
+  }
 }

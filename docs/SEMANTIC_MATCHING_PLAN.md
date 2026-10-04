@@ -2,6 +2,8 @@
 
 **Status:** Engineering increment implemented; remaining evaluation and function expansion proposed. Recorded 2 October 2026, Europe/Amsterdam.
 
+**Roadmap update, 4 October 2026:** [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md) supersedes the remaining delivery sequence with semantic evidence comparison and backend-hosted model evaluation. Keep this document as the history of the deterministic engineering increment.
+
 **Follow-up diagnosis, 2 October 2026:** [LLM_MATCHING.md](LLM_MATCHING.md) records reproduced section/line-boundary loss, mixed obligations, alternative-list failures and sparse comparison coverage. Its structure-first delivery sequence and optional local-model evaluation refine the next increment; the current product remains deterministic and has no LLM integration.
 
 **Objective:** Understand more natural descriptions, expand the vocabulary, and distinguish full coverage, partial coverage, suggested unmentioned skills and missing evidence. Keep runtime analysis deterministic, explainable and private. This extends [MATCHING](MATCHING.md) and [SKILL_RELATIONS](SKILL_RELATIONS.md); [SEMANTICS](SEMANTICS.md) records the shipped engineering increment.
@@ -187,3 +189,5 @@ Implementation update, 2 October 2026: [SEMANTICS.md](SEMANTICS.md) documents th
 Start with steps 1–3: the evaluation corpus, semantic match states/colors, and a typed compiler/systems registry. This creates a testable distinction between partial evidence and skill-discovery questions before sentence inference broadens the inputs. Then deliver the first clause patterns and purple confirmation flow together, so new interpretations can be corrected and tested end to end.
 
 The engineering milestone is complete when an abstract job sentence maps to an explained requirement, equivalent resume evidence covers it without an exact keyword, C++ produces an appropriate purple tooling question, and the answer updates the comparison without overstating proficiency or years. Other functions follow after this milestone passes its evaluation gates.
+
+Follow-up on 2 October 2026: stages 1-3 of [LLM_MATCHING](LLM_MATCHING.md) are implemented in [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md), extending the initial registry to 239 concepts and 21 rules with document structure and sentence evidence. The local-model stages remain proposed.

@@ -1,3 +1,4 @@
+import type { CandidateEvidenceRef } from '../semantics/propositions.js';
 import type { Job } from '../model.js';
 import type { ResumeEmployment, ResumeLocation, ResumeSignal } from '../resume/model.js';
 import type { JobRequirements } from './requirements.js';
@@ -7,16 +8,28 @@ export interface MatchProfile {
   analysisDate: string;
   skills: Pick<
     ResumeSignal,
-    'id' | 'status' | 'facets' | 'deniedFacets' | 'uncertainFacets' | 'interpretation'
+    | 'id'
+    | 'status'
+    | 'facets'
+    | 'deniedFacets'
+    | 'uncertainFacets'
+    | 'interpretation'
+    | 'evidenceRefs'
   >[];
   competencies?: Pick<
     ResumeSignal,
-    'id' | 'status' | 'facets' | 'deniedFacets' | 'uncertainFacets' | 'interpretation'
+    | 'id'
+    | 'status'
+    | 'facets'
+    | 'deniedFacets'
+    | 'uncertainFacets'
+    | 'interpretation'
+    | 'evidenceRefs'
   >[];
-  employment: Pick<
+  employment: (Pick<
     ResumeEmployment,
     'employer' | 'category' | 'kind' | 'relationship' | 'start' | 'end'
-  >[];
+  > & { id?: string })[];
   location: Pick<ResumeLocation, 'value' | 'status'>;
 }
 
@@ -45,7 +58,12 @@ export interface MatchExplanation {
   completeness: number;
   band: 'strong' | 'possible' | 'exploratory' | 'review';
   requiredGaps: number;
+  unresolvedRequirements: number;
   skills: (SkillMatch & {
+    requirementId?: string;
+    evidenceRefs: CandidateEvidenceRef[];
+    unresolvedAlternatives: string[];
+    logic: 'single' | 'any-of';
     names: string[];
     importance: string;
     status: 'matched' | 'claim_only' | 'not_evidenced';
@@ -54,6 +72,7 @@ export interface MatchExplanation {
   })[];
   experience: {
     minimumMonths: number;
+    maximumMonths?: number;
     importance: string;
     candidateMinimumMonths: number;
     candidateMaximumMonths: number;
@@ -69,7 +88,8 @@ export interface MatchExplanation {
 export type FeatureInput = Pick<
   Job,
   'id' | 'contentHash' | 'descriptionText' | 'classification' | 'locations' | 'workplace'
->;
+> &
+  Partial<Pick<Job, 'descriptionHtml'>>;
 
 export interface StoredFeature {
   postingId: string;

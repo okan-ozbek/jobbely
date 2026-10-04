@@ -1,3 +1,4 @@
+import { sourceSchema } from './document-schemas.js';
 import { signalSemantics, signalReviewSchema } from './semantic-schemas.js';
 import { Type } from '@sinclair/typebox';
 import { categories } from '../domain/taxonomy.js';
@@ -63,6 +64,10 @@ export const resumeInputSchema = Type.Object(
 
 const evidence = Type.Array(
   Type.Object({
+    blockId: Type.Optional(Type.String()),
+    lineIds: Type.Optional(Type.Array(Type.String())),
+    source: Type.Optional(sourceSchema),
+    roleId: Type.Optional(Type.String()),
     lineId: Type.String(),
     excerpt: Type.String(),
     rule: Type.String(),
@@ -95,6 +100,29 @@ export const resumeAnalysisSchema = Type.Object({
   analysisDate: Type.String(),
   document: Type.Object({
     text: Type.String(),
+    blocks: Type.Array(
+      Type.Object({
+        id: Type.String(),
+        lineIds: Type.Array(Type.String()),
+        start: Type.Integer(),
+        end: Type.Integer(),
+        text: Type.String(),
+        section: Type.String(),
+        kind: Type.Union(
+          ['heading', 'bullet', 'paragraph', 'role'].map((item) => Type.Literal(item)),
+        ),
+        roleId: Type.Optional(Type.String()),
+        source: Type.Optional(sourceSchema),
+        sourceSpans: Type.Array(
+          Type.Object({
+            start: Type.Integer(),
+            end: Type.Integer(),
+            blockStart: Type.Integer(),
+            blockEnd: Type.Integer(),
+          }),
+        ),
+      }),
+    ),
     lines: Type.Array(
       Type.Object({
         id: Type.String(),

@@ -2,11 +2,15 @@
 
 **Status:** Implemented initial deterministic matching across engineering, data/AI, product, sales and people. Recorded 1 October 2026, Europe/Amsterdam. Calibration on a held-out corpus and distributed load testing remain pending.
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Decision and rationale
 
 Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → explicit review confirmation → recommendations → original description/application.
 
-The strict request contains only skill and optional competency IDs/statuses/facets/interpretation, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
+The strict request contains only skill and optional competency IDs/statuses/facets/interpretation and bounded evidence references, employment employer/function/kind/relationship/dates, current location/status and analysis date. It excludes full document text, contact fields and resume excerpts. Tenure is recomputed on the server; submitted duration totals and recognized employer IDs are not accepted.
 
 ## Requirements
 

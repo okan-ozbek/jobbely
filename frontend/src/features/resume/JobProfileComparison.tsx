@@ -1,11 +1,17 @@
-import { coverageLabel, reviewQuestions } from './semantic-review.js';
+import { reviewQuestions } from './semantic-review.js';
 import { SkillQuestions } from './SkillQuestions.js';
 import { useEffect, useState } from 'react';
-import { compareJobResume } from '../../api/client.js';
-import type { ConceptReview, Job, JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
+import { compareJobResume, getRequirements } from '../../api/client.js';
+import type {
+  ConceptReview,
+  Job,
+  JobMatchResponse,
+  JobRequirements,
+  ResumeAnalysis,
+} from '../../api/client.js';
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
-import { highlightSegments } from './highlights.js';
+import { QualificationGroups } from './QualificationGroups.js';
 
 export function JobProfileComparison({
   job,
@@ -26,6 +32,27 @@ export function JobProfileComparison({
 
   const [error, setError] = useState('');
   const [highlight, setHighlight] = useState(true);
+  const [original, setOriginal] = useState(false);
+  const [reading, setReading] = useState<{ jobId: string; data: JobRequirements } | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    setReading(null);
+    setOriginal(false);
+
+    void getRequirements(job.id, controller.signal)
+      .then((value) => {
+        if (!controller.signal.aborted) {
+          setReading({ jobId: job.id, data: value });
+        }
+      })
+      .catch(() => {
+        /* The original description remains available. */
+      });
+
+    return () => controller.abort();
+  }, [job.id]);
 
   useEffect(() => {
     setResponse(null);
@@ -84,9 +111,14 @@ export function JobProfileComparison({
             ) : (
               <>
                 <p className="small-note">
-                  {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}. Keywords
-                  in company context are highlighted too; they do not automatically count as
-                  requirements.
+                  {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}.
+                  Qualifications carry the evidence colors; company and application text remains
+                  additional information.
+                  {data.comparison.band === 'review'
+                    ? ' This reading needs review.'
+                    : ` Fit: ${data.comparison.band}.`}{' '}
+                  Evidence completeness {data.comparison.completeness}% ·{' '}
+                  {data.comparison.unresolvedRequirements} unresolved requirement(s).
                 </p>
                 <SkillQuestions
                   questions={reviewQuestions(data.comparison.skills)}
@@ -102,35 +134,30 @@ export function JobProfileComparison({
                 </label>
                 <details>
                   <summary>
-                    Requirement evidence · {data.comparison.requiredGaps} required gap(s)
+                    Requirement evidence · {data.comparison.requiredGaps} recognized required gap(s)
                   </summary>
-                  <MatchEvidence comparison={data.comparison} />
+                  <MatchEvidence
+                    comparison={data.comparison}
+                    analysis={analysis ?? undefined}
+                  />
                 </details>
               </>
             )}
           </>
         )}
       </section>
-      {data && highlight ? (
-        <article
-          className="description highlighted-description"
-          aria-label="Job description with resume evidence"
-        >
-          {highlightSegments(data.descriptionText, data.skills).map((segment, index) =>
-            segment.span ? (
-              <mark
-                key={index}
-                className={`keyword-${segment.span.confidence}`}
-                title={`${segment.span.name}: ${segment.span.reason}${segment.span.path.length && segment.span.decision !== 'suggested' ? ` ${segment.span.sourceName} → ${segment.span.path.map((edge) => edge.to).join(' → ')} (${Math.round(segment.span.credit * 100)}% evidence weight)` : ''}`}
-              >
-                {segment.text}
-                <span className="sr-only"> ({coverageLabel(segment.span.decision)})</span>
-              </mark>
-            ) : (
-              segment.text
-            ),
-          )}
-        </article>
+      <button
+        type="button"
+        className="resume-secondary-button"
+        onClick={() => setOriginal(!original)}
+      >
+        {original ? 'Show grouped qualifications' : 'Show original description'}
+      </button>
+      {!original && (data?.requirements ?? (reading?.jobId === job.id ? reading.data : null)) ? (
+        <QualificationGroups
+          requirements={data?.requirements ?? reading!.data}
+          annotations={highlight ? (data?.skills ?? []) : []}
+        />
       ) : (
         <article
           className="description"

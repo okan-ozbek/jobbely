@@ -1,3 +1,4 @@
+import { resumeBlocks } from '../../domain/resume/blocks.js';
 import { conceptsById, defaultFacet } from '../../domain/semantics/concepts.js';
 import type { SignalReview } from '../../domain/semantics/model.js';
 import { readResumeText } from '../../domain/resume/document.js';
@@ -161,12 +162,11 @@ export class AnalyzeResume {
 
     const document = readResumeText(input.text);
     let employment = detectEmployment(document.lines, this.employers);
+    const extractedEmployment = [...employment];
 
     const employmentHeaderLines = new Set(
       employment.flatMap((entry) => entry.evidence.map((item) => item.lineId)),
     );
-
-    const skillLines = document.lines.filter((line) => !employmentHeaderLines.has(line.id));
 
     if (employment.length > 100) {
       throw new ResumeInputError('At most 100 employment entries are supported.');
@@ -211,7 +211,7 @@ export class AnalyzeResume {
         title: '',
         category: 'unclassified',
         kind: 'employment',
-        relationship: 'unknown',
+        relationship: 'direct',
         start: '',
         end: '',
         recognizedCompany: null,
@@ -278,19 +278,39 @@ export class AnalyzeResume {
       }
     }
 
+    const blocks = resumeBlocks(document.lines, extractedEmployment);
+
+    for (const block of blocks) {
+      const role = employment.find((entry) => entry.id === block.roleId);
+
+      if (block.roleId && !role) {
+        delete block.roleId;
+      }
+
+      if (role?.kind === 'project' || role?.kind === 'volunteering') {
+        block.source = role.kind;
+      }
+    }
+
     return {
-      version: 'text-2',
+      version: 'text-4',
       vocabularyVersion,
       analysisDate,
-      document,
+      document: { ...document, blocks },
       skills: reviewedSignals(
-        correctedSignals(detectSkills(skillLines), corrections.addSkills, corrections.removeSkills),
+        correctedSignals(
+          detectSkills(blocks.filter((block) => block.kind !== 'role' && block.kind !== 'heading')),
+          corrections.addSkills,
+          corrections.removeSkills,
+        ),
         reviews,
         false,
       ),
       competencies: reviewedSignals(
         correctedSignals(
-          detectCompetencies(document.lines),
+          detectCompetencies(
+            blocks.filter((block) => block.kind !== 'role' && block.kind !== 'heading'),
+          ),
           corrections.addCompetencies,
           corrections.removeCompetencies,
         ),

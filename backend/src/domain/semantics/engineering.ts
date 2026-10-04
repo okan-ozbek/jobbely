@@ -7,6 +7,113 @@ export const engineeringPacks: {
   entries: [string, string, string[]][];
 }[] = [
   {
+    kind: 'language',
+    family: 'backend',
+    entries: [
+      ['scala', 'Scala', ['Scala']],
+      ['c', 'C', ['embedded C', 'C language', 'C programming']],
+      ['php', 'PHP', ['PHP']],
+    ],
+  },
+  {
+    kind: 'tool',
+    family: 'operations',
+    entries: [
+      ['datadog', 'Datadog', ['Datadog']],
+      ['sql-server', 'Microsoft SQL Server', ['Microsoft SQL Server', 'SQL Server']],
+      ['claude-code', 'Claude Code', ['Claude Code']],
+      ['asio', 'Asio', ['Boost.Asio', 'Asio']],
+    ],
+  },
+  {
+    kind: 'capability',
+    family: 'backend',
+    entries: [
+      [
+        'high-throughput',
+        'High-throughput systems',
+        [
+          'high-throughput systems',
+          'high throughput systems',
+          'high-throughput services',
+          'high throughput services',
+        ],
+      ],
+      [
+        'saas',
+        'SaaS platforms',
+        ['SaaS', 'SaaS platform', 'SaaS platforms', 'software as a service'],
+      ],
+      [
+        'soa',
+        'Service-oriented architecture',
+        [
+          'service-oriented architecture',
+          'service-oriented architectures',
+          'service oriented architectures',
+          'SOA',
+        ],
+      ],
+      [
+        'multi-tenancy',
+        'Multi-tenancy',
+        ['multi-tenant', 'multi tenant', 'tenant-isolated', 'multi-tenancy'],
+      ],
+      ['event-sourcing', 'Event sourcing', ['event sourcing', 'event-sourced', 'event sourced']],
+      [
+        'serialization',
+        'Serialization',
+        ['serialization', 'serializers', 'binary payload parsing'],
+      ],
+      ['crash-recovery', 'Crash recovery', ['crash recovery', 'deterministic crash recovery']],
+      ['deduplication', 'Deduplication', ['deduplication']],
+      ['bounded-retries', 'Bounded retries', ['bounded retries', 'independent retries']],
+      ['failure-isolation', 'Failure isolation', ['failure isolation']],
+      [
+        'transaction-locking',
+        'Transaction locking',
+        ['row-level SQL locking', 'row-level locking', 'SQL locking'],
+      ],
+      [
+        'animation-pipelines',
+        'Animation pipelines',
+        ['animation studios', 'animation pipelines', 'animation studio pipelines'],
+      ],
+    ],
+  },
+  {
+    kind: 'capability',
+    family: 'machine-learning',
+    entries: [
+      [
+        'generative-ai',
+        'Generative AI',
+        ['generative AI', 'GenAI', 'GenAI-native', 'generative artificial intelligence'],
+      ],
+      [
+        'ml-inference',
+        'ML inference',
+        [
+          'ML inference',
+          'model inference',
+          'inference serving',
+          'scalable inference',
+          'inference technologies',
+        ],
+      ],
+      [
+        'model-training',
+        'Model training',
+        [
+          'model training',
+          'training models',
+          'training technologies',
+          'training and inference technologies',
+        ],
+      ],
+    ],
+  },
+  {
     kind: 'tool',
     family: 'compiler',
     entries: [
@@ -162,6 +269,8 @@ export const engineeringPacks: {
     entries: [
       ['aws-ec2', 'Amazon EC2', ['Amazon EC2', 'AWS EC2']],
       ['aws-s3', 'Amazon S3', ['Amazon S3', 'AWS S3']],
+      ['aws-ecs', 'Amazon ECS', ['Amazon ECS', 'AWS ECS']],
+      ['aws-elasticache', 'Amazon ElastiCache', ['Amazon ElastiCache', 'AWS ElastiCache']],
       ['aws-lambda', 'AWS Lambda', ['AWS Lambda']],
       ['aws-eks', 'Amazon EKS', ['Amazon EKS', 'AWS EKS']],
       ['aws-sqs', 'Amazon SQS', ['Amazon SQS', 'AWS SQS']],

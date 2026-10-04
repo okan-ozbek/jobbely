@@ -44,7 +44,7 @@ export function RequirementsPanel({ jobId }: { jobId: string }) {
             <div key={level}>
               <h3>
                 {level === 'contextual'
-                  ? 'Stack / context'
+                  ? 'Additional information'
                   : level === 'required'
                     ? 'Required'
                     : 'Preferred'}
@@ -78,21 +78,31 @@ export function RequirementsPanel({ jobId }: { jobId: string }) {
           {requirements.experience.map((item, index) => (
             <p key={index}>
               <strong>
-                {item.minimumMonths / 12}+ years · {item.scope}
+                {item.minimumMonths / 12}
+                {item.maximumMonths ? `–${item.maximumMonths / 12}` : '+'} years · {item.scope}
               </strong>
               <br />
               {item.evidence.excerpt}
             </p>
           ))}
-          {requirements.constraints.map((item, index) => (
-            <p key={index}>
-              <strong>
-                {item.kind} · {item.importance}
-              </strong>
-              <br />
-              {item.evidence.excerpt}
-            </p>
-          ))}
+          {requirements.constraints.length > 0 && (
+            <section aria-label="Eligibility review">
+              <h3>Eligibility and qualifications to review</h3>
+              <p className="small-note">
+                Location, authorization and qualifications need confirmation separately from skill
+                coverage.
+              </p>
+              {requirements.constraints.map((item, index) => (
+                <p key={index}>
+                  <strong>
+                    {item.kind} · {item.importance}
+                  </strong>
+                  <br />
+                  {item.evidence.excerpt}
+                </p>
+              ))}
+            </section>
+          )}
           {requirements.unparsed.map((item, index) => (
             <p key={index}>
               <strong>Needs review · {item.importance}</strong>

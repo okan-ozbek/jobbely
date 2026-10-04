@@ -3,7 +3,6 @@ import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import type { MatchJobs } from '../application/resume/match-jobs.js';
 import type { JobCatalog } from '../application/catalog.js';
-import { extractRequirements } from '../domain/matching/requirements.js';
 import { errorSchema } from './schemas.js';
 import {
   requirementsSchema,
@@ -66,7 +65,7 @@ export function registerMatchingRoutes(
       const job = await catalog.job(request.params.id);
 
       return job
-        ? extractRequirements(job)
+        ? matcher.requirements(job)
         : reply.code(404).send({ code: 'not_found', message: 'This listing could not be found.' });
     },
   );

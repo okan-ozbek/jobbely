@@ -1,44 +1,31 @@
-# Decision: minimal editorial interface
+# Decision: resume-first glass interface
 
-**Status:** Implemented, 30 September 2026.
+**Status:** Implemented, 4 October 2026, Europe/Amsterdam. Supersedes the 30 September editorial direction.
 
 ## Direction and rationale
 
-Use [Pixelware](https://pixelware.nl/) as the visual reference: warm paper, near-black ink, a vivid red signal, Faculty Glyphic display typography, DM Sans body text, open space and fine dividing lines. Adapt the direction to a job-search utility: a short introduction, immediately available search, three visible filters, readable listing rows, a company directory and a full detail page.
+The home page centers on one resume composer: paste text or attach a PDF/DOCX, explicitly request analysis, review the profile, then request job matches. A soft lavender/blue gradient, translucent surfaces, rounded corners and restrained typography provide the requested Apple/Meta-inspired direction. Decorative lighting uses CSS rather than remote assets or continuous animation.
 
-The UI omits portfolio animations, decorative statistics, repeated promotional copy and redundant source notes. Company coverage, original department labels, timestamps, closed-vacancy state and the synthetic-preview notice remain because they help users assess a listing. `partial` coverage is presented as “Partial coverage”; provider audits remain an operator concern.
+Companies is the single header navigation action; the wordmark returns to the resume through SPA navigation. Existing public job search and detail routes remain available through company cards, recommendations and explicit `view=jobs` URLs. Profile state remains in tab memory across these views.
 
 ## Tokens and typography
 
-| Token           | Value     | Purpose                                              |
-| --------------- | --------- | ---------------------------------------------------- |
-| `--paper`       | `#f4f2ee` | Main background                                      |
-| `--surface`     | `#fcfbf8` | Search controls and detail panel                     |
-| `--ink`         | `#121114` | Primary text                                         |
-| `--muted`       | `#5c5860` | Secondary text                                       |
-| `--border`      | `#d6d2d6` | Dividers and control outlines                        |
-| `--signal`      | `#ff0000` | Large display text, active underline, primary action |
-| `--signal-text` | `#b40000` | Small interactive text and focus indicators          |
+Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6fb`, dark ink `#232538`, muted text `#62677c` and purple `#514abe` for small interactive text. DM Sans is locally hosted with system sans-serif fallbacks; display and body text share the same family. Company logos retain original colors on white.
 
-Keep tokens centralized in [`styles.css`](../frontend/src/styles.css). Faculty Glyphic is used for the wordmark, display headings, job titles and company names at its available regular weight. DM Sans is used for controls, metadata and long descriptions. Avoid synthetic display-font weights.
+Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Content containers and native controls retain visible focus styles.
 
-Fonts are hosted in [`frontend/public/fonts`](../frontend/public/fonts/) with Latin/extended Latin WOFF2 files and their original OFL licenses. Only the common Latin subsets are preloaded. `font-display: swap` and system fallbacks keep content readable while loading. Production serves these files with the rest of the static build; rendering makes no Google Fonts requests. Their README records exact sources.
+## Interaction invariants
 
-## Layout and interaction invariants
-
-- Keep search and filters visible; filtering and job navigation continue to use shareable query parameters.
-- Use a bounded content width, generous row spacing, restrained borders and a shared logo treatment. Logos retain their original colors on white.
-- The company grid responds from four to three to two columns. Small screens stack the introduction and put job facts/application links before the description.
-- Support long job titles, multi-location text and sanitized rich descriptions without horizontal page overflow.
-- Use visible focus indicators, a skip link, native labeled inputs/selects and descriptive company action labels. Never rely on a colored status dot alone.
-- Use vivid red for large type and black-text primary actions; use the darker red for small links and feedback. Muted text remains readable against paper/surface backgrounds.
-- Hover states do not shift content. Reduced-motion preferences disable transitions. The design adds no continuous animation.
-- Style loading, empty, error, demo and closed states consistently; their meaning must not be removed during visual cleanup.
+- The initial home page contains one composer, concise privacy/format guidance and a small company-logo row. Analysis corrections, reading order, roles and experience live behind a profile-review disclosure. Matching still requires explicit review confirmation.
+- Files continue through the existing isolated local worker. Analysis remains explicit and transient; no resume storage, automatic upload or privacy boundary change is introduced.
+- Company cards show logo, name, coverage status, stored active listing count, check freshness, internal jobs and original careers links. Counts are catalog counts, not freshly verified recommendation counts.
+- Desktop grids have five columns above 1150px, four through 1150px, three through 900px and two through 650px; very narrow screens use one. These breakpoints prevent compressed unreadable cards.
+- Full coverage is reserved for the existing healthy API state. Stale sources show Partial coverage plus Refresh overdue; failed sources show Refresh failed. Unconnected companies remain visibly Not connected, and synthetic sources retain sample labels.
+- Closed, demo, empty, loading and error states remain explicit. Matching empty states distinguish jobs awaiting requirement analysis from a lack of freshly checked listings.
+- Native labels, keyboard focus, skip navigation, responsive controls and reduced-motion support remain. Status never depends on color alone. No continuous animation is added.
 
 ## Implementation and verification
 
-[`App.tsx`](../frontend/src/App.tsx) owns view markup; request state remains in the existing hooks. [`styles.css`](../frontend/src/styles.css) owns tokens, typography, component styles and breakpoints. [`index.html`](../frontend/index.html) preloads fonts and defines the matching browser theme/favicon. [`CompanyLogo`](../frontend/src/components/CompanyLogo.tsx) still owns failed-image behavior; see [LOGOS.md](LOGOS.md).
+[App](../frontend/src/App.tsx), [resume composer](../frontend/src/features/resume/ResumeWorkbench.tsx), [matching UI](../frontend/src/features/resume/ResumeMatches.tsx), [shared styles](../frontend/src/styles.css), [resume styles](../frontend/src/features/resume/resume.css), [browser metadata](../frontend/index.html).
 
-Run `pnpm format` and `pnpm check`. Verify desktop and narrow-screen listing/directory/detail views, search/filter/reset behavior, pagination, original employer links, empty/loading states, local font loading and page overflow. Browser checks are manual; the repository does not yet include an automated frontend suite. See [FRONTEND.md](FRONTEND.md) and [QUALITY.md](QUALITY.md).
-
-Engineering semantic matching now distinguishes full (green), partial (yellow), suggested (purple, zero credit) and absent/denied (red) coverage. Scoped tool-usage/development answers stay transient and invalidate profile review and pagination. Matching accepts bounded semantic metadata, never resume excerpts. See [SEMANTICS.md](SEMANTICS.md) for the implemented registry, context guards, confirmation flow and limits.
+Run root formatting/lint, frontend types/tests/build and browser checks for home, companies, filtering, profile review, matching and job navigation. Verify desktop five-column layout and narrow-screen overflow; viewport emulation limitations must be reported rather than assumed away. Matching/source policies remain in [MATCHING](MATCHING.md) and [SOURCES](SOURCES.md).

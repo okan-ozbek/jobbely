@@ -156,14 +156,6 @@ export function EmploymentReview({
                 </select>
               </label>
             </div>
-            {entry.evidence.length > 0 && (
-              <details>
-                <summary>Original evidence</summary>
-                {entry.evidence.map((evidence, index) => (
-                  <blockquote key={`${evidence.lineId}-${index}`}>{evidence.excerpt}</blockquote>
-                ))}
-              </details>
-            )}
             <button
               type="button"
               className="resume-text-button"

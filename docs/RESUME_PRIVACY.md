@@ -2,6 +2,10 @@
 
 **Status:** Text analysis, stateless matching and local PDF/DOCX extraction implemented. Recorded 1 October 2026, Europe/Amsterdam. This supersedes the proposed server-upload/subprocess design; server document uploads remain unsupported.
 
+## Structured evidence update, 2 October 2026
+
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+
 ## Boundary and rationale
 
 Original file bytes remain on the candidate's device. A dedicated browser worker extracts bounded text and reading blocks; after reviewing that text the candidate explicitly requests temporary backend analysis. This avoids exposing the API's filesystem, environment and database credentials to a document parser. Matching accepts only a small structured profile, never the full document or contact fields.

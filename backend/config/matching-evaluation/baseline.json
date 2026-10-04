@@ -1,0 +1,22 @@
+{
+  "recordedDate": "2026-10-04",
+  "committedBase": "b3ce8473258b4ae11db24f9da37b1565007b9d03",
+  "includesPriorUncommittedWork": true,
+  "featureVersion": "requirements-13:concepts-2:clauses-2:job-document-1",
+  "scoringVersion": "score-4:relations-3",
+  "sourceHashes": {
+    "backend/src/application/resume/analyze-resume.ts": "cb9341cd85a3b54e3fc5f2958518d5042e69d0eb61c377a48ac215360ea44adf",
+    "backend/src/domain/resume/vocabulary.ts": "edadca39b1876f0f3e7ef202d0235120ed8e1d6918234dbe6bb9fe9879edead5",
+    "backend/src/domain/semantics/recognize.ts": "548dbc6e4ca4f1afa287ee2ae5f68c57026f2a415f058360bb5f311b93d7e5c5",
+    "backend/src/domain/semantics/clauses.ts": "0ee20755dacaf037d68d632f76a6e79998a5810f419356f59afb66c127127629",
+    "backend/src/domain/matching/requirements.ts": "6191e4bdfef5124513fa96ddb7a181b810a3395d3b2f294225c43331545dcf7e",
+    "backend/src/domain/matching/score.ts": "7e3ea2a9d448a0f752c127c3061e130cbf546ed90192f61f60996277baf8b6c0",
+    "backend/src/domain/matching/skill-relations.ts": "437643bda5e2ad0c82da3e87a164106708f019496385a5b1fb1ce37bf644db61"
+  },
+  "evaluation": {
+    "corpusVersion": "semantic-development-1",
+    "labelStatus": "agent-authored-development",
+    "independentlyReviewed": false,
+    "heldOutAvailable": false
+  }
+}

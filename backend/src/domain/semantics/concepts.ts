@@ -2,12 +2,15 @@ import { coreSkills, coreCompetencies } from './core.js';
 import { engineeringPacks } from './engineering.js';
 import type { Concept, ConceptKind, SkillFacet } from './model.js';
 
-export const registryVersion = 'concepts-1';
+export const registryVersion = 'concepts-2';
 
 const languages = new Set([
   'typescript',
   'javascript',
   'java',
+  'scala',
+  'c',
+  'php',
   'kotlin',
   'python',
   'golang',

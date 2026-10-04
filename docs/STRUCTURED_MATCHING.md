@@ -1,0 +1,41 @@
+# Decision: structured documents and evidence contracts
+
+**Status:** Implemented stages 1-3 of [LLM_MATCHING](LLM_MATCHING.md), 2 October 2026, Europe/Amsterdam. Interpretation remains deterministic. Optional local-model extraction and held-out ranking calibration remain proposed.
+
+## Rationale and layers
+
+A keyword cannot establish whether an employer is describing a candidate qualification, its own stack or application instructions. Preserve bounded document structure before extracting clauses, and retain the sentence and source reference beside every interpretation. Job HTML handling belongs to infrastructure through the [JobDocumentReader port](../backend/src/ports/job-document.ts); [bootstrap](../backend/src/bootstrap.ts) supplies the HTML adapter to public requirements, description comparison and backfill. Pure domain extraction accepts a JobDocument; plain text is its fallback. No new persistence engine, AI dependency or network call is added.
+
+## Job structure and requirement logic
+
+The [HTML reader](../backend/src/infrastructure/job-document.ts) uses sanitized HTML, retaining heading ancestry, list/paragraph boundaries and leading recognized bold labels. Ordinary emphasized skill names remain inside sentences. The [plain-text reader](../backend/src/domain/matching/document.ts) recovers known fused/inline headings, including Qualifications followed directly by a year range. Plain text cannot recover arbitrary lost HTML hierarchy.
+
+Blocks retain a stable position-derived ID, kind, heading path, section role, text, line and offsets into the returned canonical job text. Roles distinguish overview, responsibilities, qualifications, benefits, compensation, application, legal and unknown content. Qualification sentences can carry explicit requirements within role text. Application accommodations and equal-opportunity statements add no skill requirements or colors. Eligibility restrictions remain separately reviewable even within legal information.
+
+[Requirements](../backend/src/domain/matching/requirements.ts) retain clauses with action, object IDs, outcome, obligation/preference/conditional/description modality, polarity, grouping, source span and rule provenance. Mixed required/preferred statements split at explicit preference cues; common abbreviations retain their sentence. OR groups contribute once and preserve unknown/open-ended alternatives. Independent AND requirements remain separate groups; a clause containing multiple groups has all-of logic. Duplicate requirements reuse one comparison group while preserving their public clauses. Conditional and unsupported language remains reviewable, rather than becoming a new eligibility engine.
+
+Durations retain minimum and optional target maximum months, professional/function/activity scope and alternatives. More than the target maximum is not a penalty. Separate engineering and leadership thresholds stay separate. A programming-language match, role dates or inferred concept never establish activity-specific tenure.
+
+Public input is bounded at 200,000 text characters / 2,000,000 HTML characters and 2,000 blocks. Projections cap clauses at 400, skill groups at 200, thresholds at 30, constraints and unresolved statements at 40 each. Oversized clauses or exceeded bounds require review; the complete original description remains accessible. Conservative residual-word rules can mark valid complex qualifications unresolved. These counts are diagnostic, not calibrated extraction accuracy.
+
+## Resume evidence and privacy
+
+[Logical blocks](../backend/src/domain/resume/blocks.ts) join adjacent continuation lines within a bullet/paragraph, bounded to 20 source lines and 8,000 characters. They preserve original line IDs and offset mappings and stop at blank separators, headings, role headers, new bullets and completed sentences. PDF page/column bands and DOCX paragraphs introduce explicit separators. Layout remains heuristic and editable; no OCR is added.
+
+Signals distinguish employment, project, volunteering, summary and listed evidence. Structured references retain block/line IDs, optional reviewed role ID, action/object/outcome and performed/assisted/observed/learning/negated/listed assertions. Review status and facets remain distinct from the original source assertion; manual confirmation has no invented source span. Role corrections can change the source association. Original resume text and evidence excerpts stay in transient analysis and local React memory.
+
+The [matching allowlist](../frontend/src/features/resume/match-profile.ts) copies only enumerated reference fields, alongside existing claims, dates and location. Private excerpts/contact fields/document text never enter matching requests or public features. Strict API schemas reject extra fields, oversized reference arrays, object-ID mismatch and absent role references. Evidence edits are included in the signed cursor fingerprint. IDs are provenance for a reviewed self-report, not server authentication of a candidate's history.
+
+## Presentation and policy identity
+
+[QualificationGroups](../frontend/src/features/resume/QualificationGroups.tsx) displays required, preferred/nice-to-have and additional information, with unresolved counts and a full-original toggle. Qualification colors retain the established green/full, yellow/partial, purple/zero-credit-question and red/no-evidence semantics. [MatchEvidence](../frontend/src/features/resume/MatchEvidence.tsx) resolves returned IDs to the local resume block for source inspection. Both recommendations and single-job comparison show completeness and review status. Sparse recognized extraction cannot imply complete qualification coverage.
+
+Identity is text-3 for resume blocks and requirements-13:concepts-2:clauses-2:job-document-1 for public features. Scoring is score-4:relations-3. Rebuild public projections with `pnpm features:backfill`; no schema migration is required. [JOB_FEATURES](JOB_FEATURES.md) publication locks, hash checks and revision invalidation remain unchanged. Rules and document-policy changes require another version bump/backfill.
+
+## Verification and remaining work
+
+[Synthetic structure tests](../backend/src/domain/matching/structured.test.ts) cover fused/nested headings, mixed preference/range clauses, unknown alternatives, independent thresholds, context guards, exact spans, wrapped bullets, source separation and scoped services. [API tests](../backend/src/api/matching.test.ts) cover reference round trips, private-field rejection, unchanged storage and cursor invalidation. [Local document tests](../frontend/src/features/resume/documents/documents.test.ts) retain PDF/DOCX, archive, isolation and cancellation checks. [PostgreSQL tests](../backend/src/infrastructure/storage/postgres.test.ts) exercise publication/ingestion races, hash invalidation and idempotence. Verification on 2 October 2026: root `pnpm check` passed formatting, dependency boundaries, local assets, zero-warning lint, strict types, generated contracts and both builds. The full backend run against the dedicated PostgreSQL test database passed 425 tests including all nine database tests; frontend passed 23. A 25,000-feature synthetic ranking test remains bounded; a separate local request evaluated 3,163 eligible engineering jobs, returned 20 and reported zero unenriched jobs in approximately 2.4 seconds. This single observation is not a production latency benchmark.
+
+Public projection backfill inspected/updated 13,162 postings; a subsequent pass inspected/updated zero. Browser checks used fictional candidates, verifying qualification colors, zero colored application/footer terms, 3-5 year display, original-description access, local evidence, review gating, reload clearing and all three groups at 1280px and 375px without horizontal overflow. Real candidate content was not added to fixtures, logs or docs. Mobile/desktop viewport overrides were reset.
+
+This is a bounded rules implementation, not general sentence understanding, a particular ATS simulation or proof of qualification satisfaction. Role-specific duration intervals, structured candidate eligibility, public-job model shadow evaluation, held-out accuracy and production load calibration remain future work in [LLM_MATCHING](LLM_MATCHING.md).
