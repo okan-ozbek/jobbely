@@ -1,3 +1,4 @@
+import { evidenceRefSchema } from './document-schemas.js';
 import { Type } from '@sinclair/typebox';
 
 export const facetSchema = Type.Union(
@@ -13,6 +14,7 @@ export const interpretationSchema = Type.Union(
 const facets = Type.Array(facetSchema, { maxItems: 3, uniqueItems: true });
 
 export const signalSemantics = {
+  evidenceRefs: Type.Optional(Type.Array(evidenceRefSchema, { maxItems: 5 })),
   facets: Type.Optional(facets),
   deniedFacets: Type.Optional(facets),
   uncertainFacets: Type.Optional(facets),
