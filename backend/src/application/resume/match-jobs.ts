@@ -1,3 +1,5 @@
+import { isQualificationBlock, readJobDocument } from '../../domain/matching/document.js';
+import type { JobDocumentReader } from '../../ports/job-document.js';
 import { conceptsById } from '../../domain/semantics/concepts.js';
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { Company, Source, Job } from '../../domain/model.js';
@@ -51,6 +53,9 @@ export class MatchJobs {
     private readonly mode: 'demo' | 'postgres',
     private readonly clock: () => Date = () => new Date(),
     signingKey?: string,
+    private readonly documents: JobDocumentReader = {
+      read: (input) => readJobDocument(input.descriptionText),
+    },
   ) {
     this.key = signingKey ? Buffer.from(signingKey) : randomBytes(32);
   }
@@ -101,17 +106,32 @@ export class MatchJobs {
       [...profile.skills, ...(profile.competencies ?? [])].some((signal) => {
         const allowed = conceptsById.get(signal.id)?.facets ?? ['general'];
 
-        return [
-          ...(signal.facets ?? []),
-          ...(signal.deniedFacets ?? []),
-          ...(signal.uncertainFacets ?? []),
-        ].some((facet) => !allowed.includes(facet));
+        const refsInvalid = signal.evidenceRefs?.some(
+          (ref) =>
+            ref.objectId !== signal.id ||
+            (ref.roleId && !profile.employment.some((role) => role.id === ref.roleId)),
+        );
+
+        return (
+          !!refsInvalid ||
+          [
+            ...(signal.facets ?? []),
+            ...(signal.deniedFacets ?? []),
+            ...(signal.uncertainFacets ?? []),
+          ].some((facet) => !allowed.includes(facet))
+        );
       }) ||
       new Set([...profile.skills, ...(profile.competencies ?? [])].map((item) => item.id)).size !==
-        profile.skills.length + (profile.competencies?.length ?? 0)
+        profile.skills.length + (profile.competencies?.length ?? 0) ||
+      new Set(profile.employment.filter((role) => role.id).map((role) => role.id)).size !==
+        profile.employment.filter((role) => role.id).length
     ) {
       throw new MatchError('invalid_profile', 'Review the profile date and skill claims.');
     }
+  }
+
+  requirements(job: Job) {
+    return extractRequirements(job, this.documents.read(job));
   }
 
   async explain(job: Job, profile: MatchProfile) {
@@ -119,13 +139,10 @@ export class MatchJobs {
 
     const prepared = prepareCandidate(profile, this.companies);
 
-    const comparison = scoreJob(
-      { ...job, requirements: extractRequirements(job) },
-      profile,
-      this.companies,
-      false,
-      prepared,
-    );
+    const document = this.documents.read(job);
+    const requirements = extractRequirements(job, document);
+
+    const comparison = scoreJob({ ...job, requirements }, profile, this.companies, false, prepared);
 
     const now = this.clock().toISOString();
     const cutoff = new Date(Date.parse(now) - 36 * 60 * 60_000).toISOString();
@@ -145,11 +162,30 @@ export class MatchJobs {
       run.finishedAt <= now;
 
     return {
-      descriptionText: job.descriptionText,
-      skills: skillMentions(job.descriptionText).map((mention) => ({
-        ...mention,
-        ...skillMatch(prepared.matches, mention.id, mention.facet, mention.interpretation),
-      })),
+      descriptionText: document.text,
+      document,
+      requirements,
+      skills: skillMentions(document.text)
+        .filter((mention) =>
+          document.blocks.some(
+            (block) =>
+              block.kind !== 'heading' &&
+              isQualificationBlock(block) &&
+              mention.position >= block.start &&
+              mention.position < block.end &&
+              requirements.skills.some(
+                (group) =>
+                  group.importance !== 'contextual' &&
+                  group.evidence.start !== undefined &&
+                  mention.position >= group.evidence.start &&
+                  mention.position < (group.evidence.end ?? 0),
+              ),
+          ),
+        )
+        .map((mention) => ({
+          ...mention,
+          ...skillMatch(prepared.matches, mention.id, mention.facet, mention.interpretation),
+        })),
       comparison,
       recommendationEligible: !!recommendationEligible,
       availability: recommendationEligible
