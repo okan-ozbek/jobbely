@@ -1,28 +1,18 @@
-import { reviewQuestions } from './semantic-review.js';
-import { SkillQuestions } from './SkillQuestions.js';
 import { useEffect, useState } from 'react';
-import { compareJobResume, getRequirements } from '../../api/client.js';
-import type {
-  ConceptReview,
-  Job,
-  JobMatchResponse,
-  JobRequirements,
-  ResumeAnalysis,
-} from '../../api/client.js';
+import { compareJobResume } from '../../api/client.js';
+import type { Job, JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
 import { matchProfile } from './match-profile.js';
-import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
-import { QualificationGroups } from './QualificationGroups.js';
+import { ConfidenceLegend } from './MatchEvidence.js';
+import { HighlightedDescription } from './HighlightedDescription.js';
 
 export function JobProfileComparison({
   job,
   analysis,
   reviewResume,
-  reviewSignal,
 }: {
   job: Job;
   analysis: ResumeAnalysis | null;
   reviewResume: () => void;
-  reviewSignal: (review: ConceptReview) => void;
 }) {
   const [response, setResponse] = useState<{
     jobId: string;
@@ -32,27 +22,6 @@ export function JobProfileComparison({
 
   const [error, setError] = useState('');
   const [highlight, setHighlight] = useState(true);
-  const [original, setOriginal] = useState(false);
-  const [reading, setReading] = useState<{ jobId: string; data: JobRequirements } | null>(null);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    setReading(null);
-    setOriginal(false);
-
-    void getRequirements(job.id, controller.signal)
-      .then((value) => {
-        if (!controller.signal.aborted) {
-          setReading({ jobId: job.id, data: value });
-        }
-      })
-      .catch(() => {
-        /* The original description remains available. */
-      });
-
-    return () => controller.abort();
-  }, [job.id]);
 
   useEffect(() => {
     setResponse(null);
@@ -111,19 +80,14 @@ export function JobProfileComparison({
             ) : (
               <>
                 <p className="small-note">
-                  {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}.
-                  Qualifications carry the evidence colors; company and application text remains
-                  additional information.
+                  {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}. Match{' '}
+                  {data.comparison.baseScore}%.
                   {data.comparison.band === 'review'
                     ? ' This reading needs review.'
                     : ` Fit: ${data.comparison.band}.`}{' '}
                   Evidence completeness {data.comparison.completeness}% ·{' '}
                   {data.comparison.unresolvedRequirements} unresolved requirement(s).
                 </p>
-                <SkillQuestions
-                  questions={reviewQuestions(data.comparison.skills)}
-                  answer={reviewSignal}
-                />
                 <label className="resume-checkbox">
                   <input
                     type="checkbox"
@@ -132,38 +96,20 @@ export function JobProfileComparison({
                   />
                   Highlight recognized skills and activities
                 </label>
-                <details>
-                  <summary>
-                    Requirement evidence · {data.comparison.requiredGaps} recognized required gap(s)
-                  </summary>
-                  <MatchEvidence
-                    comparison={data.comparison}
-                    analysis={analysis ?? undefined}
-                  />
-                </details>
+                <p className="small-note">
+                  Hover, focus or tap a highlighted skill to see why it matches.
+                </p>
               </>
             )}
           </>
         )}
       </section>
-      <button
-        type="button"
-        className="resume-secondary-button"
-        onClick={() => setOriginal(!original)}
-      >
-        {original ? 'Show grouped qualifications' : 'Show original description'}
-      </button>
-      {!original && (data?.requirements ?? (reading?.jobId === job.id ? reading.data : null)) ? (
-        <QualificationGroups
-          requirements={data?.requirements ?? reading!.data}
-          annotations={highlight ? (data?.skills ?? []) : []}
-        />
-      ) : (
-        <article
-          className="description"
-          dangerouslySetInnerHTML={{ __html: job.descriptionHtml }}
-        />
-      )}
+      <HighlightedDescription
+        html={job.descriptionHtml}
+        data={data}
+        analysis={analysis}
+        highlight={highlight}
+      />
     </div>
   );
 }

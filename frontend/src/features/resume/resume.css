@@ -883,3 +883,212 @@
     padding: 18px;
   }
 }
+.resume-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+.resume-profile {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.6fr) minmax(0, 1.4fr);
+  align-items: start;
+  gap: 18px;
+}
+.profile-review > .disclosure-toggle {
+  padding: 24px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.profile-review > .disclosure-toggle > span > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 12px;
+}
+.privacy-details > .disclosure-toggle {
+  justify-content: center;
+  width: auto;
+  margin: auto;
+  padding: 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.privacy-details > .disclosure-toggle svg {
+  width: 12px;
+}
+.attached-file {
+  margin: 6px;
+  padding: 24px 16px;
+  min-height: 82px;
+  font-size: 14px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #efedfcaa, #edf6ff99);
+  animation: page-in 220ms ease both;
+}
+.attached-file > svg {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+}
+.attached-file button {
+  padding: 8px;
+  border-radius: 50%;
+}
+.attached-file button:hover {
+  background: #ffffffb0;
+}
+.skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 5px 5px 11px;
+  border: 1px solid #dcd8ef;
+  border-radius: 20px;
+  background: #f5f3fc;
+  color: #49416c;
+  font-size: 12px;
+  max-width: 100%;
+  transition:
+    background 150ms,
+    transform 150ms;
+}
+.skill-chip-inferred {
+  border-style: dashed;
+  background: #f4f7fc;
+}
+.skill-chip > span {
+  overflow-wrap: anywhere;
+}
+.skill-chip small {
+  font-size: 9px;
+  color: var(--muted);
+}
+.skill-chip button {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border-radius: 50%;
+  padding: 5px;
+  min-width: 24px;
+  min-height: 24px;
+  color: inherit;
+}
+.skill-chip button:hover {
+  background: #e6e1f5;
+}
+.skills-review > .small-note > svg {
+  display: inline;
+  vertical-align: middle;
+}
+.matches-anchor {
+  scroll-margin-top: 30px;
+}
+.match-card {
+  animation: page-in 250ms ease both;
+}
+.skill-highlight {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 1px 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: box-shadow 150ms;
+}
+.skill-highlight:hover,
+.skill-highlight:focus-visible,
+.skill-highlight[aria-expanded='true'] {
+  outline: 2px solid #817aca;
+  outline-offset: 2px;
+}
+.skill-context {
+  position: fixed;
+  z-index: 100;
+  padding: 18px;
+  border: 1px solid white;
+  border-radius: 20px;
+  background: #f9f9ffed;
+  backdrop-filter: blur(24px);
+  box-shadow:
+    0 14px 60px #30236526,
+    0 2px 8px #30236512;
+  font-size: 13px;
+  overflow-y: auto;
+  animation: context-in 160ms ease both;
+}
+.skill-context-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 9px;
+}
+.skill-context-heading strong {
+  font-size: 16px;
+}
+.skill-context-heading button {
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  background: transparent;
+  border-radius: 50%;
+}
+.skill-context p {
+  margin: 12px 0 0;
+  line-height: 1.6;
+}
+.skill-context > span {
+  font-size: 11px;
+  font-weight: 600;
+}
+.skill-context ul {
+  padding-left: 18px;
+  margin: 12px 0;
+}
+.skill-context li {
+  margin-bottom: 8px;
+}
+.skill-context blockquote {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 2px solid #b4aade;
+  border-radius: 0 8px 8px 0;
+  background: #eeebf780;
+  font-size: 11px;
+  line-height: 1.6;
+}
+@keyframes context-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@media (max-width: 800px) {
+  .resume-profile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+@media (max-width: 650px) {
+  .profile-review > .disclosure-toggle {
+    padding: 20px 18px;
+  }
+  .profile-review > .disclosure-toggle > span > span {
+    display: block;
+    margin: 5px 0 0;
+  }
+  .attached-file {
+    font-size: 12px;
+  }
+  .skill-chip button {
+    min-width: 30px;
+    min-height: 30px;
+  }
+}

@@ -266,7 +266,6 @@ export function App() {
                     job={selected}
                     analysis={comparisonAnalysis}
                     reviewResume={() => update({ view: 'resume' })}
-                    reviewSignal={resumeState.reviewSignal}
                   />
                   <aside className="detail-sidebar">
                     <h2 className="sidebar-heading">The details</h2>

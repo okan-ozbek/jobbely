@@ -769,3 +769,87 @@ footer {
     transition: none !important;
   }
 }
+/* Motion and small controls share the same glass surface. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #aaa5d1 #eeedf780;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #eeedf780;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb {
+  background: #aaa5d1;
+  border: 2px solid #eeedf7;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #817ba9;
+}
+.disclosure-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+}
+.disclosure-toggle > svg {
+  flex-shrink: 0;
+  transition: transform 260ms ease;
+}
+.disclosure[data-open='true'] > .disclosure-toggle > svg {
+  transform: rotate(180deg);
+}
+.disclosure-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 320ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms ease;
+}
+.disclosure[data-open='true'] > .disclosure-grid {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.disclosure-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+::view-transition-old(root) {
+  animation: page-out 140ms ease both;
+}
+::view-transition-new(root) {
+  animation: page-in 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes page-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
+}

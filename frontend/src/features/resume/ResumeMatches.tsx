@@ -65,9 +65,12 @@ export function ResumeMatches({
 
       if (!controller.signal.aborted) {
         setResult(more && result ? { ...next, items: [...result.items, ...next.items] } : next);
+
         if (!more) {
           requestAnimationFrame(() => {
-            if (!controller.signal.aborted) { scrollToSection(resultsAnchor.current); }
+            if (!controller.signal.aborted) {
+              scrollToSection(resultsAnchor.current);
+            }
           });
         }
       }
@@ -103,7 +106,11 @@ export function ResumeMatches({
             value={category}
             onChange={(event) => setCategory(event.target.value)}
           >
-            <option value="auto">{inferred ? `From resume · ${inferred.name}` : "From resume · all supported functions"}</option>
+            <option value="auto">
+              {inferred
+                ? `From resume ï¿½ ${inferred.name}`
+                : 'From resume ï¿½ all supported functions'}
+            </option>
             <option value="">All supported functions</option>
             {functions.map((item) => (
               <option
@@ -115,7 +122,6 @@ export function ResumeMatches({
             ))}
           </select>
         </label>
-
       </div>
       <label className="resume-checkbox">
         <input

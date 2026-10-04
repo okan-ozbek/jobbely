@@ -106,3 +106,24 @@ it('serializes only bounded evidence reference fields, never injected private me
 
   expect(JSON.stringify(profile)).not.toContain('PRIVATE_REF_SENTINEL');
 });
+
+it('accepts explicit listed keywords by default while preserving scope, negative and ambiguous claims', () => {
+  const analysis = {
+    analysisDate: '2026-10-05',
+    skills: [
+      { id: 'python', status: 'mentioned', interpretation: 'explicit', facets: [], uncertainFacets: ['usage'] },
+      { id: 'clang', status: 'mentioned', interpretation: 'explicit', facets: ['usage'], uncertainFacets: ['development'], deniedFacets: ['development'] },
+      { id: 'rust', status: 'learning', interpretation: 'explicit', uncertainFacets: ['usage'] },
+      { id: 'java', status: 'negated', interpretation: 'explicit', deniedFacets: ['usage'] },
+      { id: 'aws', status: 'mentioned', interpretation: 'ambiguous', uncertainFacets: ['usage'] },
+      { id: 'systems-programming', status: 'mentioned', interpretation: 'interpreted', facets: ['general'] },
+    ],
+    competencies: [], employment: [], location: { value: '', status: 'unknown' },
+  } as unknown as ResumeAnalysis;
+  const result = matchProfile(analysis);
+  expect(result.skills[0]).toMatchObject({ status: 'user_confirmed', facets: ['usage'], uncertainFacets: [] });
+  expect(result.skills[1]).toMatchObject({ facets: ['usage'], uncertainFacets: ['development'], deniedFacets: ['development'] });
+  expect(result.skills.slice(2).map((skill) => skill.status)).toEqual(['learning', 'negated', 'mentioned', 'mentioned']);
+  expect(result.skills[5]).toMatchObject({ interpretation: 'interpreted', facets: ['general'] });
+  expect(result.employment).toEqual([]);
+});

@@ -13,15 +13,21 @@ function claim({
   // Accept explicit self-reports without inventing development experience or
   // overriding a denied/unsure answer. Inference retains its original scope.
   const accepted = status === 'mentioned' && interpretation === 'explicit';
+
   const acceptedFacets = accepted
-    ? (uncertainFacets ?? []).filter((facet) => facet !== 'development' && !deniedFacets?.includes(facet))
+    ? (uncertainFacets ?? []).filter(
+        (facet) => facet !== 'development' && !deniedFacets?.includes(facet),
+      )
     : [];
+
   const remainingUncertainty = uncertainFacets?.filter((facet) => !acceptedFacets.includes(facet));
 
   return {
     id,
-    status: accepted ? 'user_confirmed' as const : status,
-    ...(facets || acceptedFacets.length ? { facets: [...new Set([...(facets ?? []), ...acceptedFacets])] } : {}),
+    status: accepted ? ('user_confirmed' as const) : status,
+    ...(facets || acceptedFacets.length
+      ? { facets: [...new Set([...(facets ?? []), ...acceptedFacets])] }
+      : {}),
     ...(deniedFacets ? { deniedFacets } : {}),
     ...(remainingUncertainty ? { uncertainFacets: remainingUncertainty } : {}),
     ...(interpretation ? { interpretation } : {}),

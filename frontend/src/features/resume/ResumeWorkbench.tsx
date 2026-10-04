@@ -40,9 +40,12 @@ export function ResumeWorkbench({
   useEffect(() => {
     if (analysis && !hadAnalysis.current) {
       const frame = requestAnimationFrame(() => scrollToSection(matches.current));
+
       hadAnalysis.current = true;
+
       return () => cancelAnimationFrame(frame);
     }
+
     hadAnalysis.current = !!analysis;
   }, [analysis]);
 
@@ -73,18 +76,20 @@ export function ResumeWorkbench({
               state.analyze();
             }}
           >
-            {!fileName && (<label className="composer-text-label">
-              <span className="sr-only">Resume text</span>
-              <textarea
-                value={state.text}
-                maxLength={100_000}
-                rows={4}
-                placeholder="Paste your resume here, or attach a file…"
-                onChange={(event) => {
-                  state.setText(event.target.value);
-                }}
-              />
-            </label>)}
+            {!fileName && (
+              <label className="composer-text-label">
+                <span className="sr-only">Resume text</span>
+                <textarea
+                  value={state.text}
+                  maxLength={100_000}
+                  rows={4}
+                  placeholder="Paste your resume here, or attach a file…"
+                  onChange={(event) => {
+                    state.setText(event.target.value);
+                  }}
+                />
+              </label>
+            )}
             {fileName && (
               <div className="attached-file">
                 <Paperclip size={14} />
@@ -116,26 +121,28 @@ export function ResumeWorkbench({
                   <X size={16} />
                 </button>
               )}
-              {!fileName && (<label className="attach-button">
-                <Paperclip size={17} />
-                <span>Attach resume</span>
-                <input
-                  className="sr-only"
-                  type="file"
-                  accept=".pdf,.docx"
-                  disabled={documentInput.loading}
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
+              {!fileName && (
+                <label className="attach-button">
+                  <Paperclip size={17} />
+                  <span>Attach resume</span>
+                  <input
+                    className="sr-only"
+                    type="file"
+                    accept=".pdf,.docx"
+                    disabled={documentInput.loading}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
 
-                    if (file) {
-                      setFileName(file.name);
-                      void documentInput.select(file);
-                    }
+                      if (file) {
+                        setFileName(file.name);
+                        void documentInput.select(file);
+                      }
 
-                    event.target.value = '';
-                  }}
-                />
-              </label>)}
+                      event.target.value = '';
+                    }}
+                  />
+                </label>
+              )}
               <button
                 className="primary-button"
                 type="submit"
@@ -168,13 +175,21 @@ export function ResumeWorkbench({
             </p>
           )}
           {!!documentInput.document?.warnings.length && (
-            <p className="small-note" role="status">{documentInput.document.warnings.join(' ')}</p>
+            <p
+              className="small-note"
+              role="status"
+            >
+              {documentInput.document.warnings.join(' ')}
+            </p>
           )}
         </section>
         <p className="composer-note">
           <ShieldCheck size={14} /> Your resume isn’t saved. PDF or DOCX, up to 5 MB.
         </p>
-        <Disclosure className="privacy-details" summary="How your resume is handled">
+        <Disclosure
+          className="privacy-details"
+          summary="How your resume is handled"
+        >
           <p>
             Files are read on your device. When you continue, the text is sent to Jobbely for
             temporary analysis. Your profile stays in this tab and clears when you reload. PDFs
@@ -229,7 +244,14 @@ export function ResumeWorkbench({
       )}
       {analysis && (
         <>
-          <Disclosure className="profile-review" summary={<>Review your profile <span>Skills, experience & location</span></>}>
+          <Disclosure
+            className="profile-review"
+            summary={
+              <>
+                Review your profile <span>Skills, experience & location</span>
+              </>
+            }
+          >
             <div className="profile-review-content">
               <div
                 className="resume-summary"
@@ -297,7 +319,14 @@ export function ResumeWorkbench({
                     signals={[...analysis.skills, ...analysis.competencies]}
                     suggestions={analysis.supportedSkills}
                     add={(name) => state.addSignal('skills', name)}
-                    remove={(signal) => state.removeSignal(analysis.competencies.some((item) => item.id === signal.id) ? 'competencies' : 'skills', signal)}
+                    remove={(signal) =>
+                      state.removeSignal(
+                        analysis.competencies.some((item) => item.id === signal.id)
+                          ? 'competencies'
+                          : 'skills',
+                        signal,
+                      )
+                    }
                   />
                 </div>
               </div>
@@ -329,13 +358,16 @@ export function ResumeWorkbench({
               )}
             </div>
           </Disclosure>
-          <div ref={matches} className="matches-anchor">
-          <ResumeMatches
-            analysis={analysis}
-            pending={state.loading || !!state.error}
-            openJob={openJob}
-            onReviewed={onReviewed}
-          />
+          <div
+            ref={matches}
+            className="matches-anchor"
+          >
+            <ResumeMatches
+              analysis={analysis}
+              pending={state.loading || !!state.error}
+              openJob={openJob}
+              onReviewed={onReviewed}
+            />
           </div>
         </>
       )}

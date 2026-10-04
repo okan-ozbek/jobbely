@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { highlightSegments } from './highlights.js';
+import { highlightSegments, mapHtmlHighlights } from './highlights.js';
 
 it('preserves the full description and safely segments repeated keywords, Unicode and literal markup', () => {
   const text = '<script>λ C++ AWS\nAWS</script>';
@@ -17,6 +17,23 @@ it('preserves the full description and safely segments repeated keywords, Unicod
     'AWS',
     'AWS',
   ]);
+});
+
+it('maps offsets across HTML emphasis without highlighting the earlier contextual occurrence', () => {
+  const nodes = ['We use storage systems.', 'Required:', 'Build ', 'storage', ' systems', ' with C++ λ.'];
+  const text = 'We use storage systems.\nRequired:\nBuild storage systems with C++ λ.';
+  const position = text.lastIndexOf('storage systems');
+  const spans = mapHtmlHighlights(nodes, text, [{ position, length: 'storage systems'.length, id: 'storage' }]);
+
+  expect(spans[0]).toEqual([]);
+  expect(spans[3]).toEqual([{ position: 0, length: 7, id: 'storage' }]);
+  expect(spans[4]).toEqual([{ position: 1, length: 7, id: 'storage' }]);
+  expect(nodes.map((node, index) => highlightSegments(node, spans[index]!).map((segment) => segment.text).join('')).join('')).toBe(nodes.join(''));
+});
+
+it('fails closed on different HTML content and rejects invalid offsets', () => {
+  expect(mapHtmlHighlights(['Use Redis'], 'Use AWS', [{ position: 4, length: 3 }])).toEqual([[]]);
+  expect(mapHtmlHighlights(['Use Redis'], 'Use Redis', [{ position: -1, length: 5 }, { position: 4, length: 999 }])).toEqual([[]]);
 });
 
 it('ignores overlapping, invalid and out-of-bounds annotations without dropping text', () => {

@@ -4,6 +4,25 @@ import { AnalyzeResume } from '../../application/resume/analyze-resume.js';
 const analyzer = new AnalyzeResume([], () => new Date('2026-10-01T00:00:00Z'));
 
 describe('employment headers and date association', () => {
+  it('separates schedule qualifiers from titles and defaults ordinary roles to direct employment', () => {
+    const result = analyzer.execute({ text: [
+      'Experience',
+      'Fictional Labs — Software Engineer, Full-time Jan 2020 - Dec 2021',
+      'Pine Studio — Freelance Software Engineer Jan 2022 - Dec 2022',
+      'Copper Systems',
+      'Full Stack Engineer (Part-time)',
+      'Jan 2023 - Dec 2023',
+      'Violet Labs — Contract Software Engineer Jan 2024 - Dec 2024',
+    ].join('\n') });
+
+    expect(result.employment.map(({ title, relationship }) => ({ title, relationship }))).toEqual([
+      { title: 'Software Engineer', relationship: 'direct' },
+      { title: 'Freelance Software Engineer', relationship: 'client' },
+      { title: 'Full Stack Engineer', relationship: 'direct' },
+      { title: 'Contract Software Engineer', relationship: 'client' },
+    ]);
+    expect(result.employment[0]!.evidence[0]!.excerpt).toContain('Full-time');
+  });
   it('reads six inline roles across a page continuation and unions concurrent work', () => {
     const result = analyzer.execute({
       text: [

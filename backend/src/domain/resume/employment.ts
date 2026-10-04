@@ -93,7 +93,9 @@ export function roleCategory(title: string) {
 }
 
 export function cleanRoleTitle(title: string) {
-  return title.replace(/(?:\s*[,|–—-]\s*|\s*\()\b(?:full[ -]?time|part[ -]?time)\)?\s*$/i, '').trim();
+  return title
+    .replace(/(?:\s*[,|–—-]\s*|\s*\()\b(?:full[ -]?time|part[ -]?time)\)?\s*$/i, '')
+    .trim();
 }
 
 function parseHeader(header: string, employers: EmployerIdentity[]) {
@@ -227,9 +229,13 @@ export function detectEmployment(
             : /\bintern\b/i.test(header.title)
               ? 'internship'
               : 'employment',
-      relationship: /\b(?:client|freelanc\w*|contractor|self[ -]employed)\b/i.test(`${header.employer} ${header.title}`)
+      relationship: /\b(?:client|freelanc\w*|contract(?:or)?|self[ -]employed)\b/i.test(
+        `${header.employer} ${header.title}`,
+      )
         ? 'client'
-        : line.section === 'experience' ? 'direct' : 'unknown',
+        : line.section === 'experience'
+          ? 'direct'
+          : 'unknown',
       start: range?.[1] ?? '',
       end: range?.[2] ?? '',
       status: range ? 'extracted' : 'uncertain',
