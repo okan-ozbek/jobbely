@@ -140,7 +140,7 @@ export async function extractPdf(bytes: Uint8Array) {
 
       if (reading.twoColumns) {
         warnings.push(
-          `Page ${number}: two-column order inferred. Check the preview before analysis.`,
+          `Page ${number}: column order was inferred. Review the detected skills and roles.`,
         );
       }
 

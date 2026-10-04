@@ -34,6 +34,12 @@ export function ResumeWorkbench({
   const documentInput = useDocumentInput(state.setText);
   const [fileName, setFileName] = useState('');
   const analysis = state.analysis;
+
+  const fileWarnings =
+    documentInput.document?.warnings.filter(
+      (warning) => !warning.startsWith('Reading order is inferred'),
+    ) ?? [];
+
   const matches = useRef<HTMLDivElement>(null);
   const hadAnalysis = useRef(false);
 
@@ -174,12 +180,12 @@ export function ResumeWorkbench({
               {documentInput.error}
             </p>
           )}
-          {!!documentInput.document?.warnings.length && (
+          {fileWarnings.length > 0 && (
             <p
               className="small-note"
               role="status"
             >
-              {documentInput.document.warnings.join(' ')}
+              {fileWarnings.join(' ')}
             </p>
           )}
         </section>
@@ -318,7 +324,16 @@ export function ResumeWorkbench({
                   <SignalReview
                     signals={[...analysis.skills, ...analysis.competencies]}
                     suggestions={analysis.supportedSkills}
-                    add={(name) => state.addSignal('skills', name)}
+                    add={(name) =>
+                      state.addSignal(
+                        analysis.competencies.some(
+                          (item) => item.name.toLowerCase() === name.trim().toLowerCase(),
+                        )
+                          ? 'competencies'
+                          : 'skills',
+                        name,
+                      )
+                    }
                     remove={(signal) =>
                       state.removeSignal(
                         analysis.competencies.some((item) => item.id === signal.id)

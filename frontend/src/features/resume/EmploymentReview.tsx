@@ -59,14 +59,6 @@ export function EmploymentReview({
             key={entry.id}
           >
             <legend>{entry.title || 'New role'}</legend>
-            <div className="resume-employment-meta">
-              <span className="resume-status">{entry.status.replaceAll('_', ' ')}</span>
-              <span>
-                {entry.recognizedCompany
-                  ? `Recognized employer: ${entry.recognizedCompany}`
-                  : 'Employer not in recognition registry'}
-              </span>
-            </div>
             <div className="resume-fields">
               <label>
                 <span>Employer</span>

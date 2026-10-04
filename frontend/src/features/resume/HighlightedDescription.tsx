@@ -29,6 +29,7 @@ const tags = new Set([
   'div',
   'span',
 ]);
+
 const blocked = new Set(['script', 'style', 'iframe', 'object', 'template']);
 
 export function HighlightedDescription({
@@ -43,13 +44,16 @@ export function HighlightedDescription({
   highlight: boolean;
 }) {
   const popupId = useId();
+
   const [active, setActive] = useState<{
     annotation: Annotation;
     rect: DOMRect;
     data: JobMatchResponse;
   } | null>(null);
+
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const popup = useRef<HTMLDivElement>(null);
+  const pinned = useRef(false);
 
   const prepared = useMemo(() => {
     const document = new DOMParser().parseFromString(html, 'text/html');
@@ -66,6 +70,7 @@ export function HighlightedDescription({
     collect(document.body);
 
     const indices = new Map(nodes.map((node, index) => [node, index]));
+
     const spans = mapHtmlHighlights(
       nodes.map((node) => node.data),
       data?.descriptionText ?? '',
@@ -83,7 +88,18 @@ export function HighlightedDescription({
 
   const closeSoon = () => {
     keepOpen();
-    timer.current = setTimeout(() => setActive(null), 180);
+
+    if (!pinned.current) {
+      timer.current = setTimeout(() => setActive(null), 180);
+    }
+  };
+
+  const closeOnBlur = (target: EventTarget | null) => {
+    if (target instanceof Node && !popup.current?.contains(target)) {
+      pinned.current = false;
+    }
+
+    closeSoon();
   };
 
   useEffect(() => {
@@ -92,6 +108,15 @@ export function HighlightedDescription({
         return;
       }
 
+      if (
+        event.type === 'pointerdown' &&
+        event.target instanceof Element &&
+        event.target.closest('.skill-highlight')
+      ) {
+        return;
+      }
+
+      pinned.current = false;
       setActive(null);
     };
 
@@ -104,11 +129,13 @@ export function HighlightedDescription({
     window.addEventListener('scroll', dismiss, true);
     window.addEventListener('resize', dismiss);
     window.addEventListener('keydown', escape);
+    window.addEventListener('pointerdown', dismiss);
 
     return () => {
       window.removeEventListener('scroll', dismiss, true);
       window.removeEventListener('resize', dismiss);
       window.removeEventListener('keydown', escape);
+      window.removeEventListener('pointerdown', dismiss);
 
       if (timer.current) {
         clearTimeout(timer.current);
@@ -124,14 +151,17 @@ export function HighlightedDescription({
 
       return highlightSegments(node.textContent ?? '', prepared.spans[index] ?? []).map(
         (segment, segmentIndex) => {
-          const annotation = segment.span;
+          const annotation = segment.span
+            ? { ...segment.span, position: segment.span.sourcePosition }
+            : undefined;
 
           if (!annotation || !data) {
             return segment.text;
           }
 
-          const open = (element: HTMLElement) => {
+          const open = (element: HTMLElement, pin = false) => {
             keepOpen();
+            pinned.current = pin;
             setActive({ annotation, rect: element.getBoundingClientRect(), data });
           };
 
@@ -145,21 +175,22 @@ export function HighlightedDescription({
               className={`keyword-${annotation.confidence} skill-highlight`}
               tabIndex={0}
               role="button"
+              aria-haspopup="dialog"
               aria-label={`${annotation.name}: ${coverageLabel(annotation.decision)}. Show match context.`}
               aria-expanded={expanded}
               aria-controls={expanded ? popupId : undefined}
               onMouseEnter={(event) => open(event.currentTarget)}
               onMouseLeave={closeSoon}
               onFocus={(event) => open(event.currentTarget)}
-              onBlur={closeSoon}
+              onBlur={(event) => closeOnBlur(event.relatedTarget)}
               onClick={(event) => {
                 event.preventDefault();
-                open(event.currentTarget);
+                open(event.currentTarget, true);
               }}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault();
-                  open(event.currentTarget);
+                  open(event.currentTarget, true);
                 }
               }}
             >
@@ -215,20 +246,28 @@ export function HighlightedDescription({
       (skill) =>
         skill.targetId === visible.annotation.targetId && skill.facet === visible.annotation.facet,
     );
+
   const above =
     visible &&
     window.innerHeight - visible.rect.bottom < visible.rect.top &&
     window.innerHeight - visible.rect.bottom < 280;
+
   const width = Math.min(360, window.innerWidth - 32);
 
-  const excerpts =
-    context?.sourceId === visible?.annotation.sourceId
-      ? context?.evidenceRefs.flatMap((ref) => {
-          const block = analysis?.document.blocks.find((item) => item.id === ref.blockId);
+  const source = [...(analysis?.skills ?? []), ...(analysis?.competencies ?? [])].find(
+    (signal) => signal.id === visible?.annotation.sourceId,
+  );
 
-          return block ? [block.text] : [];
-        })
-      : [];
+  const refs =
+    context && context.sourceId === visible?.annotation.sourceId
+      ? context.evidenceRefs
+      : (source?.evidenceRefs ?? []);
+
+  const excerpts = refs.flatMap((ref) => {
+    const block = analysis?.document.blocks.find((item) => item.id === ref.blockId);
+
+    return block ? [block.text] : [];
+  });
 
   return (
     <>
@@ -259,7 +298,7 @@ export function HighlightedDescription({
             onMouseEnter={keepOpen}
             onMouseLeave={closeSoon}
             onFocus={keepOpen}
-            onBlur={closeSoon}
+            onBlur={(event) => closeOnBlur(event.relatedTarget)}
           >
             <div className="skill-context-heading">
               <strong>{visible.annotation.name}</strong>
@@ -274,7 +313,11 @@ export function HighlightedDescription({
             <span className={`confidence-${visible.annotation.confidence}`}>
               {coverageLabel(visible.annotation.decision)}
             </span>
-            <p>{visible.annotation.reason}</p>
+            <p>
+              {visible.annotation.decision === 'partial' && visible.annotation.path.length > 0
+                ? `${visible.annotation.sourceName} provides related experience, but does not directly establish ${visible.annotation.name.toLowerCase()}.`
+                : visible.annotation.reason}
+            </p>
             {visible.annotation.sourceName && (
               <p className="small-note">
                 Resume skill: <strong>{visible.annotation.sourceName}</strong>

@@ -991,6 +991,8 @@
   animation: page-in 250ms ease both;
 }
 .skill-highlight {
+  display: inline-block;
+  max-width: 100%;
   cursor: pointer;
   border-radius: 4px;
   padding: 1px 2px;

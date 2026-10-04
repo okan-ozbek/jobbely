@@ -8,7 +8,7 @@
 
 ## Boundary and rationale
 
-Original file bytes remain on the candidate's device. A dedicated browser worker extracts bounded text and reading blocks; after reviewing that text the candidate explicitly requests temporary backend analysis. This avoids exposing the API's filesystem, environment and database credentials to a document parser. Matching accepts only a small structured profile, never the full document or contact fields.
+Original file bytes remain on the candidate's device. A dedicated browser worker extracts bounded text and reading blocks; the candidate explicitly requests temporary backend analysis using Review my resume. Attached files show a file card instead of raw extracted text; profile fields are reviewed after analysis. This avoids exposing the API's filesystem, environment and database credentials to a document parser. Matching accepts only a small structured profile, never the full document or contact fields.
 
 React memory holds input, original reading blocks, corrections and results. No candidate database table, disk file, browser storage, service-worker cache, object store or candidate queue is created. Full reload/closing the tab clears state; SPA navigation retains review. Clear, replacement, cancellation and unmount abort work and release references. This does not promise physical erasure from browser memory, OS swap, crash dumps or client diagnostics.
 

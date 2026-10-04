@@ -16,13 +16,13 @@ Glass surfaces use white gradients, fine white borders, subtle shadows and backd
 
 ## Interaction invariants
 
-- The initial home page contains one composer, concise privacy/format guidance and a small company-logo row. Analysis corrections, reading order, roles and experience live behind a profile-review disclosure. Matching still requires explicit review confirmation.
+- The initial home page contains one composer, concise privacy/format guidance and a small company-logo row. A selected file replaces the raw text input and attachment action. Corrections, compact combined skill/competency chips, roles and experience live behind an animated profile-review disclosure; raw reading and evidence previews are omitted. Matching still requires explicit review confirmation.
 - Files continue through the existing isolated local worker. Analysis remains explicit and transient; no resume storage, automatic upload or privacy boundary change is introduced.
 - Company cards show logo, name, coverage status, stored active listing count, check freshness, internal jobs and original careers links. Counts are catalog counts, not freshly verified recommendation counts.
 - Desktop grids have five columns above 1150px, four through 1150px, three through 900px and two through 650px; very narrow screens use one. These breakpoints prevent compressed unreadable cards.
 - Full coverage is reserved for the existing healthy API state. Stale sources show Partial coverage plus Refresh overdue; failed sources show Refresh failed. Unconnected companies remain visibly Not connected, and synthetic sources retain sample labels.
 - Closed, demo, empty, loading and error states remain explicit. Matching empty states distinguish jobs awaiting requirement analysis from a lack of freshly checked listings.
-- Native labels, keyboard focus, skip navigation, responsive controls and reduced-motion support remain. Status never depends on color alone. No continuous animation is added.
+- Native labels, keyboard focus, skip navigation, responsive controls and reduced-motion support remain. Status never depends on color alone. Page transitions, disclosure height/opacity, result entrance and smooth scrolling provide brief feedback; reduced motion removes animation and smooth scrolling. No continuous animation is added.
 
 ## Implementation and verification
 

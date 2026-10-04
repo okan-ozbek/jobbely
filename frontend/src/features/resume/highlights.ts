@@ -35,11 +35,16 @@ export function highlightSegments<T extends Span>(text: string, spans: T[]) {
 
 // Canonical offsets refer to prepared plain text. Align its non-whitespace
 // characters to original HTML text nodes, preserving paragraphs and emphasis.
-// A content mismatch fails closed; never highlight a different occurrence.
+// The job reader also normalizes heading colons. Other content mismatches
+// fail closed rather than highlighting a different occurrence.
 export function mapHtmlHighlights<T extends Span>(nodes: string[], text: string, spans: T[]) {
-  const compact = (value: string) => value.replace(/\s/g, '');
+  const separator = (value: string) => /[\s:：]/.test(value);
 
-  const result: (T & { position: number; length: number })[][] = nodes.map(() => []);
+  const compact = (value: string) => value.replace(/[\s:：]/g, '');
+
+  const result: (T & { position: number; length: number; sourcePosition: number })[][] = nodes.map(
+    () => [],
+  );
 
   if (nodes.map(compact).join('') !== compact(text)) {
     return result;
@@ -48,17 +53,19 @@ export function mapHtmlHighlights<T extends Span>(nodes: string[], text: string,
   const prefix = [0];
 
   for (const char of text.split('')) {
-    prefix.push(prefix.at(-1)! + (/\s/.test(char) ? 0 : 1));
+    prefix.push(prefix.at(-1)! + (separator(char) ? 0 : 1));
   }
 
   const valid = highlightSegments(text, spans).flatMap((segment) =>
     segment.span ? [segment.span] : [],
   );
+
   const ranges = valid.map((span) => ({
     span,
     start: prefix[span.position]!,
     end: prefix[span.position + span.length]!,
   }));
+
   let compactOffset = 0;
   let rangeIndex = 0;
 
@@ -68,14 +75,19 @@ export function mapHtmlHighlights<T extends Span>(nodes: string[], text: string,
 
     const finish = (end: number) => {
       if (active && start >= 0) {
-        result[nodeIndex]!.push({ ...active.span, position: start, length: end - start });
+        result[nodeIndex]!.push({
+          ...active.span,
+          position: start,
+          length: end - start,
+          sourcePosition: active.span.position,
+        });
       }
 
       start = -1;
     };
 
     for (let index = 0; index < node.length; index++) {
-      if (/\s/.test(node[index]!)) {
+      if (separator(node[index]!)) {
         continue;
       }
 
@@ -84,6 +96,7 @@ export function mapHtmlHighlights<T extends Span>(nodes: string[], text: string,
       }
 
       const range = ranges[rangeIndex];
+
       const next =
         range && range.start <= compactOffset && compactOffset < range.end ? range : undefined;
 

@@ -108,8 +108,8 @@ export function ResumeMatches({
           >
             <option value="auto">
               {inferred
-                ? `From resume � ${inferred.name}`
-                : 'From resume � all supported functions'}
+                ? `From resume · ${inferred.name}`
+                : 'From resume · all supported functions'}
             </option>
             <option value="">All supported functions</option>
             {functions.map((item) => (
@@ -199,7 +199,7 @@ export function ResumeMatches({
                     </div>
                   </div>
                   <span className="resume-status">
-                    {item.band === 'review' ? 'Needs review' : item.band} · {item.baseScore}
+                    {item.band === 'review' ? 'Needs review' : item.band} · {item.baseScore}%
                     {item.employerAdjustment.points > 0
                       ? ` + ${item.employerAdjustment.points}`
                       : ''}
