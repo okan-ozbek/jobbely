@@ -16,37 +16,37 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 [LLM_MATCHING.md](LLM_MATCHING.md) records reproduced structure/context failures and proposes three qualification groups, structured sentence evidence and a gated optional local-model experiment. Stages 1-3 are implemented in [STRUCTURED_MATCHING.md](STRUCTURED_MATCHING.md); the optional model experiment remains proposed.
 
-| Reference                                        | Decisions and responsibilities                                                                        |
-| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| [ARCHITECTURE.md](ARCHITECTURE.md)               | Modular monolith, separate packages/processes, dependency direction, ports and composition root       |
-| [ADAPTER.md](ADAPTER.md)                         | Provider adapters, canonical extraction contract, validation, pagination and provider extension       |
-| [WAVE_B.md](WAVE_B.md)                           | Enterprise ATS integration, capped search traversal, employer filters and restricted-source limits    |
-| [WAVE_C.md](WAVE_C.md)                           | Priority native boards, structured HTML, Amazon partitions and access gates                           |
-| [WAVE_D.md](WAVE_D.md)                           | Seven deferred employers, planning membership and future onboarding boundaries                        |
-| [RESUME.md](RESUME.md)                           | Deterministic text analysis, evidence, editable profiles and complete initial matching flow           |
-| [DOCUMENTS.md](DOCUMENTS.md)                     | Local PDF/DOCX adapters, reading order, parser boundaries and format regression checks                |
-| [SEMANTICS.md](SEMANTICS.md)                     | Engineering concept packs, clause evidence, tool scopes and transient skill-discovery review          |
-| [STRUCTURED_MATCHING.md](STRUCTURED_MATCHING.md) | Job sections, logical resume blocks, qualification logic and bounded sentence provenance              |
-| [MATCHING.md](MATCHING.md)                       | Requirement evidence, explained scoring, freshness, pagination and optional employer context          |
-| [QUALIFICATIONS.md](QUALIFICATIONS.md)           | Reviewed degrees, explicit skill years, privacy bounds and contextual role relevance                  |
-| [JOB_FEATURES.md](JOB_FEATURES.md)               | Indexed public features, hash/version invalidation, replayable backfill and publication races         |
-| [RESUME_PRIVACY.md](RESUME_PRIVACY.md)           | Transient profiles, local worker CSP, resource bounds and private API handling                        |
-| [INGESTION.md](INGESTION.md)                     | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling    |
-| [STORAGE.md](STORAGE.md)                         | PostgreSQL/Prisma, repository and unit of work, leases, JSON evidence and version history             |
-| [CLASSIFICATION.md](CLASSIFICATION.md)           | Taxonomy, ordered strategies, company overrides, ambiguity and explainable decisions                  |
-| [LIFECYCLE.md](LIFECYCLE.md)                     | Source identity, content hashing, missing observations, closure and removal quarantine                |
-| [HTTP.md](HTTP.md)                               | Shared transport, allowed destinations, pacing, retries and request budgets                           |
-| [SECURITY.md](SECURITY.md)                       | External-content trust boundary, HTML sanitization, secrets and public read API                       |
-| [API.md](API.md)                                 | Fastify/TypeBox, generated OpenAPI contract, catalog queries, pagination and health routes            |
-| [FRONTEND.md](FRONTEND.md)                       | React/Vite, API-only dependency, animated navigation, compact profile review and cancellable requests |
-| [DESIGN.md](DESIGN.md)                           | Resume-first glass UI, four-column company grid, typography, responsive and accessible interactions   |
-| [LOGOS.md](LOGOS.md)                             | Reviewed transparent SVGs, source records, manual vector maintenance and the shared N/A fallback      |
-| [SOURCES.md](SOURCES.md)                         | Company/source separation, explicit audit status, scheduling gate and coverage signals                |
-| [AUDITING.md](AUDITING.md)                       | Official-ID reconciliation, policy evidence, reviewed scope, activation and verified refresh guards   |
-| [QUALITY.md](QUALITY.md)                         | Strict types, dependency checks, behavioral tests and separate integration/live-source gates          |
-| [FORMATTING.md](FORMATTING.md)                   | Shared Prettier style, explicit braces, editor defaults, exclusions and formatting gates              |
-| [DEPLOYMENT.md](DEPLOYMENT.md)                   | Static frontend, persistent Node API/worker, PostgreSQL, environment and operational recipe           |
-| [SOURCE_CHECKS.md](SOURCE_CHECKS.md)             | Dated Wave A feed and official-site checks; not a permanent architecture decision                     |
+| Reference                                        | Decisions and responsibilities                                                                      |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| [ARCHITECTURE.md](ARCHITECTURE.md)               | Modular monolith, separate packages/processes, dependency direction, ports and composition root     |
+| [ADAPTER.md](ADAPTER.md)                         | Provider adapters, canonical extraction contract, validation, pagination and provider extension     |
+| [WAVE_B.md](WAVE_B.md)                           | Enterprise ATS integration, capped search traversal, employer filters and restricted-source limits  |
+| [WAVE_C.md](WAVE_C.md)                           | Priority native boards, structured HTML, Amazon partitions and access gates                         |
+| [WAVE_D.md](WAVE_D.md)                           | Seven deferred employers, planning membership and future onboarding boundaries                      |
+| [RESUME.md](RESUME.md)                           | Deterministic text analysis, evidence, editable profiles and complete initial matching flow         |
+| [DOCUMENTS.md](DOCUMENTS.md)                     | Local PDF/DOCX adapters, reading order, parser boundaries and format regression checks              |
+| [SEMANTICS.md](SEMANTICS.md)                     | Engineering concept packs, clause evidence, tool scopes and transient skill-discovery review        |
+| [STRUCTURED_MATCHING.md](STRUCTURED_MATCHING.md) | Job sections, logical resume blocks, qualification logic and bounded sentence provenance            |
+| [MATCHING.md](MATCHING.md)                       | Requirement evidence, explained scoring, freshness, pagination and optional employer context        |
+| [QUALIFICATIONS.md](QUALIFICATIONS.md)           | Reviewed degrees, explicit skill years, privacy bounds and contextual role relevance                |
+| [JOB_FEATURES.md](JOB_FEATURES.md)               | Indexed public features, hash/version invalidation, replayable backfill and publication races       |
+| [RESUME_PRIVACY.md](RESUME_PRIVACY.md)           | Transient profiles, local worker CSP, resource bounds and private API handling                      |
+| [INGESTION.md](INGESTION.md)                     | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling  |
+| [STORAGE.md](STORAGE.md)                         | PostgreSQL/Prisma, repository and unit of work, leases, JSON evidence and version history           |
+| [CLASSIFICATION.md](CLASSIFICATION.md)           | Taxonomy, ordered strategies, company overrides, ambiguity and explainable decisions                |
+| [LIFECYCLE.md](LIFECYCLE.md)                     | Source identity, content hashing, missing observations, closure and removal quarantine              |
+| [HTTP.md](HTTP.md)                               | Shared transport, allowed destinations, pacing, retries and request budgets                         |
+| [SECURITY.md](SECURITY.md)                       | External-content trust boundary, HTML sanitization, secrets and public read API                     |
+| [API.md](API.md)                                 | Fastify/TypeBox, generated OpenAPI contract, catalog queries, pagination and health routes          |
+| [FRONTEND.md](FRONTEND.md)                       | React/Vite, API-only dependency, query-keyed results, loading skeletons and cancellable requests    |
+| [DESIGN.md](DESIGN.md)                           | Resume-first glass UI, four-column company grid, typography, responsive and accessible interactions |
+| [LOGOS.md](LOGOS.md)                             | Reviewed transparent SVGs, source records, manual vector maintenance and the shared N/A fallback    |
+| [SOURCES.md](SOURCES.md)                         | Company/source separation, explicit audit status, scheduling gate and coverage signals              |
+| [AUDITING.md](AUDITING.md)                       | Official-ID reconciliation, policy evidence, reviewed scope, activation and verified refresh guards |
+| [QUALITY.md](QUALITY.md)                         | Strict types, dependency checks, behavioral tests and separate integration/live-source gates        |
+| [FORMATTING.md](FORMATTING.md)                   | Shared Prettier style, explicit braces, editor defaults, exclusions and formatting gates            |
+| [DEPLOYMENT.md](DEPLOYMENT.md)                   | Static frontend, persistent Node API/worker, PostgreSQL, environment and operational recipe         |
+| [SOURCE_CHECKS.md](SOURCE_CHECKS.md)             | Dated Wave A feed and official-site checks; not a permanent architecture decision                   |
 
 ## How future agents should use these references
 

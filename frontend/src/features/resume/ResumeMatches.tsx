@@ -2,6 +2,7 @@ import { GlassSelect } from '../../components/GlassSelect.js';
 import { useEffect, useRef, useState } from 'react';
 import { matchResume } from '../../api/client.js';
 import { CompanyLogo } from '../../components/CompanyLogo.js';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
 import type { MatchInput, MatchResponse, ResumeAnalysis } from '../../api/client.js';
@@ -28,6 +29,7 @@ export function ResumeMatches({
   const resultsAnchor = useRef<HTMLParagraphElement>(null);
   const [result, setResult] = useState<MatchResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [appending, setAppending] = useState(false);
   const [error, setError] = useState('');
   const request = useRef<AbortController | null>(null);
 
@@ -49,6 +51,7 @@ export function ResumeMatches({
 
     request.current = controller;
     setLoading(true);
+    setAppending(more);
     setError('');
 
     const body: MatchInput = {
@@ -155,7 +158,13 @@ export function ResumeMatches({
           {error}
         </p>
       )}
-      {result && (
+      {loading && !appending && (
+        <LoadingSkeleton
+          kind="matches"
+          label="Finding matching jobs…"
+        />
+      )}
+      {result && (!loading || appending) && (
         <>
           <p
             ref={resultsAnchor}
@@ -249,6 +258,13 @@ export function ResumeMatches({
               </article>
             ))}
           </div>
+          {loading && appending && (
+            <LoadingSkeleton
+              kind="matches"
+              label="Loading more recommendations…"
+              count={2}
+            />
+          )}
           {result.nextCursor && (
             <button
               className="load-more"
@@ -258,7 +274,7 @@ export function ResumeMatches({
                 void find(true);
               }}
             >
-              Load more recommendations
+              {loading ? 'Loading more recommendations…' : 'Load more recommendations'}
             </button>
           )}
         </>

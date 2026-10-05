@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { compareJobResume } from '../../api/client.js';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import type { Job, JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend } from './MatchEvidence.js';
@@ -76,7 +77,10 @@ export function JobProfileComparison({
             {error ? (
               <p role="alert">{error}</p>
             ) : !data ? (
-              <p role="status">Comparing your reviewed profile…</p>
+              <LoadingSkeleton
+                kind="text"
+                label="Comparing your reviewed profile…"
+              />
             ) : (
               <>
                 <p className="small-note">

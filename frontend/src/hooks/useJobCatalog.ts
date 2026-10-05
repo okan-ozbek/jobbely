@@ -22,7 +22,10 @@ export function useJobCatalog(query: JobsQuery) {
   const [error, setError] = useState<string | null>(null);
 
   const [retry, setRetry] = useState(0);
+  const [settled, setSettled] = useState<{ query: JobsQuery; retry: number } | null>(null);
   const sequence = useRef(0);
+  // Hide old rows on the very first render of a new query, before effects run.
+  const current = settled?.query === query && settled.retry === retry;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -31,6 +34,9 @@ export function useJobCatalog(query: JobsQuery) {
     setLoading(true);
     setError(null);
     setLoadingMore(false);
+    setJobs([]);
+    setTotal(0);
+    setNextCursor(null);
 
     const countryQuery = { ...query };
 
@@ -72,6 +78,7 @@ export function useJobCatalog(query: JobsQuery) {
         })
         .finally(() => {
           if (requestId === sequence.current && !controller.signal.aborted) {
+            setSettled({ query, retry });
             setLoading(false);
           }
         });
@@ -84,7 +91,7 @@ export function useJobCatalog(query: JobsQuery) {
   }, [query, retry]);
 
   const loadMore = async () => {
-    if (!nextCursor || loading || loadingMore) {
+    if (!current || !nextCursor || loading || loadingMore) {
       return;
     }
 
@@ -122,13 +129,13 @@ export function useJobCatalog(query: JobsQuery) {
     companies,
     categories,
     locations,
-    jobs,
-    total,
-    nextCursor,
+    jobs: current ? jobs : [],
+    total: current ? total : 0,
+    nextCursor: current ? nextCursor : null,
     mode,
-    loading,
-    loadingMore,
-    error,
+    loading: loading || !current,
+    loadingMore: current && loadingMore,
+    error: current ? error : null,
     loadMore,
     refresh: () => setRetry((value) => value + 1),
   };

@@ -1,5 +1,6 @@
 import { scrollToSection } from './components/motion.js';
 import { CompanyDirectory } from './components/CompanyDirectory.js';
+import { LoadingSkeleton } from './components/LoadingSkeleton.js';
 import { GlassSelect } from './components/GlassSelect.js';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowUpRight, CircleHelp, MapPin, Search, X } from 'lucide-react';
@@ -255,12 +256,10 @@ export function App() {
                 {detailError}
               </div>
             ) : !selected ? (
-              <div
-                className="empty-state"
-                role="status"
-              >
-                Loading the full description…
-              </div>
+              <LoadingSkeleton
+                kind="detail"
+                label="Loading the full description…"
+              />
             ) : (
               <>
                 <div className="detail-heading">
@@ -503,13 +502,12 @@ export function App() {
               className="job-list"
               aria-busy={loading}
             >
-              {loading && jobs.length === 0 ? (
-                <div
-                  className="empty-state"
-                  role="status"
-                >
-                  Loading jobs…
-                </div>
+              {loading ? (
+                <LoadingSkeleton
+                  kind="jobs"
+                  label="Loading jobs…"
+                  count={5}
+                />
               ) : (
                 jobs.map((job) => (
                   <button
@@ -557,6 +555,13 @@ export function App() {
                 ))
               )}
             </div>
+            {loadingMore && (
+              <LoadingSkeleton
+                kind="jobs"
+                label="Loading more jobs…"
+                count={2}
+              />
+            )}
             {!loading && !error && total === 0 && (
               <div className="empty-state">
                 <Search size={25} />

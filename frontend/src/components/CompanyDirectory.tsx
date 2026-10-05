@@ -1,6 +1,7 @@
 import { ArrowUpRight, Search } from 'lucide-react';
 import { CompanyLogo } from './CompanyLogo.js';
 import { CoverageStatus } from './CoverageStatus.js';
+import { LoadingSkeleton } from './LoadingSkeleton.js';
 import type { Company } from '../api/client.js';
 
 // Presentation groups do not affect source coverage, matching or employer identity.
@@ -58,7 +59,8 @@ export function CompanyDirectory({
     <section className="companies-section">
       <div className="section-heading">
         <h2>
-          Company directory <span>{companies.length}</span>
+          Company directory{' '}
+          <span>{loading && companies.length === 0 ? '…' : companies.length}</span>
         </h2>
         <label className="directory-search">
           <Search size={16} />
@@ -71,12 +73,11 @@ export function CompanyDirectory({
         </label>
       </div>
       {loading && companies.length === 0 && (
-        <div
-          className="empty-state"
-          role="status"
-        >
-          Loading companies…
-        </div>
+        <LoadingSkeleton
+          kind="companies"
+          label="Loading companies…"
+          count={8}
+        />
       )}
       {groups
         .filter((group) => group.companies.length > 0)

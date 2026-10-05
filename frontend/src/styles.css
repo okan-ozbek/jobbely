@@ -522,7 +522,7 @@ footer {
 }
 .search-input input:focus-visible {
   outline: none;
-  background: #ffffff60;
+  background: none;
 }
 .search-input:has(input:focus-visible) > svg {
   color: var(--signal-text);

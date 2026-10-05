@@ -4,7 +4,7 @@ import type { Job } from '../api/client.js';
 
 export function useJobDetail(selectedId: string | null) {
   const [selected, setSelected] = useState<Job | null>(null);
-  const [detailError, setDetailError] = useState<string | null>(null);
+  const [detailError, setDetailError] = useState<{ id: string; message: string } | null>(null);
 
   useEffect(() => {
     setSelected(null);
@@ -24,12 +24,18 @@ export function useJobDetail(selectedId: string | null) {
       })
       .catch((reason) => {
         if (!controller.signal.aborted) {
-          setDetailError(reason instanceof Error ? reason.message : 'Listing unavailable.');
+          setDetailError({
+            id: selectedId,
+            message: reason instanceof Error ? reason.message : 'Listing unavailable.',
+          });
         }
       });
 
     return () => controller.abort();
   }, [selectedId]);
 
-  return { selected, detailError };
+  return {
+    selected: selected?.id === selectedId ? selected : null,
+    detailError: detailError?.id === selectedId ? detailError.message : null,
+  };
 }

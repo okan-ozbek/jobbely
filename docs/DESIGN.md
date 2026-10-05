@@ -12,7 +12,7 @@ Companies is the single header navigation action; the wordmark returns to the re
 
 Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6fb`, dark ink `#232538`, muted text `#62677c` and purple `#514abe` for small interactive text. DM Sans is locally hosted with system sans-serif fallbacks; display and body text share the same family. Directory logos use flat brand colors on transparent wrappers; the home logo row is monochrome. See [LOGOS](LOGOS.md) for sources and the Radix text fallback.
 
-Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Shared searchable glass listboxes replace native select popups, retaining labels, keyboard navigation and visible focus. Catalog search has a subtle background/icon focus cue without an added outline.
+Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Shared searchable glass listboxes replace native select popups, retaining labels, keyboard navigation and visible focus. Catalog search keeps its original transparent background on focus and uses the search icon color as its focus cue without an added outline.
 
 ## Interaction invariants
 
@@ -23,7 +23,8 @@ Glass surfaces use white gradients, fine white borders, subtle shadows and backd
 - The directory has Big tech and Quant & banking sections, with one search across both. This is an editorial presentation grouping, independent of source coverage and matching. Company names and adjacent status controls share a centered row. Recommendation cards have 32px between them, with no additional card margins.
 - Full coverage is reserved for the existing healthy API state. Stale sources show Partial coverage plus Refresh overdue; failed sources show Refresh failed. Unconnected companies remain visibly Not connected, and synthetic sources retain sample labels.
 - Closed, demo, empty, loading and error states remain explicit. Matching empty states distinguish jobs awaiting requirement analysis from a lack of freshly checked listings.
-- Native labels, keyboard focus, skip navigation, responsive controls and reduced-motion support remain. Status never depends on color alone. Page transitions, disclosure height/opacity, result entrance and smooth scrolling provide brief feedback; reduced motion removes animation and smooth scrolling. No continuous animation is added.
+- Content-shaped glass skeletons indicate pending jobs, directory, detail, resume/file reading and matching. They shimmer only while loading, contain no fake content, and remain static under reduced motion. Changed filters replace old results immediately; pagination keeps the existing results and adds placeholders below.
+- Native labels, keyboard focus, skip navigation, responsive controls and reduced-motion support remain. Status never depends on color alone. Page transitions, disclosure height/opacity, result entrance and smooth scrolling provide brief feedback; reduced motion removes animation and smooth scrolling. Skeleton shimmer runs only during pending work.
 
 ## Implementation and verification
 

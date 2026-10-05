@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getRequirements } from '../../api/client.js';
 import type { JobRequirements } from '../../api/client.js';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 
 export function RequirementsPanel({ jobId }: { jobId: string }) {
   const [requirements, setRequirements] = useState<JobRequirements | null>(null);
@@ -37,7 +38,10 @@ export function RequirementsPanel({ jobId }: { jobId: string }) {
       {error ? (
         <p role="alert">{error}</p>
       ) : !requirements ? (
-        <p role="status">Reading requirements…</p>
+        <LoadingSkeleton
+          kind="text"
+          label="Reading requirements…"
+        />
       ) : (
         <>
           {(['required', 'preferred', 'contextual'] as const).map((level) => (

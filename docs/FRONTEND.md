@@ -19,9 +19,11 @@ The 5 October annotations add country/city catalog filters with dependent facet 
 ## State and responsibilities
 
 - `useLocationQuery` owns query-string state and browser history. Filters and selected job are shareable URL parameters; search typing replaces history entries while navigation pushes them.
-- `useJobCatalog` owns debounced, abortable catalog requests and pagination. Request sequence checks prevent superseded responses from replacing current results. A stale cursor restarts the list.
-- `useJobDetail` owns cancellable detail loading and ignores responses after cancellation.
+- `useJobCatalog` owns debounced, abortable catalog requests and pagination. The settled query/retry identifies which results may render; changed filters immediately hide previous rows, before the request effect runs. Refreshes clear rows/count/cursor, including on failure, so another company's jobs cannot appear under the new filters. Request sequence checks prevent superseded responses from replacing current results. A stale cursor restarts the list.
+- `useJobDetail` owns cancellable detail loading and ignores responses after cancellation. Both the displayed job and error are keyed to the selected ID, preventing a prior detail from flashing during navigation.
 - The typed API client owns HTTP calls and public error decoding. Rendering consumes canonical public records.
+
+[LoadingSkeleton](../frontend/src/components/LoadingSkeleton.tsx) supplies content-shaped placeholders for the job catalog, append pagination, initial company directory, job detail, requirement reading, profile comparison, local file reading, initial resume analysis, recalculated experience totals and matching. Existing catalog/recommendation rows remain visible only when appending to the same result set. Editable review controls stay mounted during recalculation. Skeletons contain no pretend employer/job data or interactive controls, announce a concise loading status and stop shimmering for reduced-motion preferences. Failure/empty states replace them when requests settle.
 
 The catalog currently fetches companies/categories alongside each filter refresh rather than caching metadata separately. This is simple for the first slice but should be reduced as traffic grows.
 

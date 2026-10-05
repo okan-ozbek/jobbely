@@ -9,6 +9,7 @@ import { useDocumentInput } from './documents/useDocumentInput.js';
 import { ResumeMatches } from './ResumeMatches.js';
 import { Disclosure } from '../../components/Disclosure.js';
 import { scrollToSection } from '../../components/motion.js';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import './resume.css';
 
 function formatDuration(duration: ResumeAnalysis['experience']['professional']) {
@@ -173,6 +174,13 @@ export function ResumeWorkbench({
               </button>
             </div>
           )}
+          {documentInput.loading && (
+            <LoadingSkeleton
+              kind="text"
+              label="Reading your file…"
+              count={1}
+            />
+          )}
           {documentInput.error && (
             <p
               className="error-state"
@@ -249,6 +257,12 @@ export function ResumeWorkbench({
           {analysis && ' Totals below are from the last successful analysis.'}
         </div>
       )}
+      {state.loading && !analysis && (
+        <LoadingSkeleton
+          kind="profile"
+          label="Reading your resume…"
+        />
+      )}
       {analysis && (
         <>
           <Disclosure
@@ -264,27 +278,37 @@ export function ResumeWorkbench({
                 className="resume-summary"
                 aria-busy={state.loading}
               >
-                <div>
-                  <span>Professional experience</span>
-                  <strong>{formatDuration(analysis.experience.professional)}</strong>
-                  <small>
-                    Overlapping roles counted once.
-                    {analysis.experience.professional.unknownEntries > 0 &&
-                      ` ${analysis.experience.professional.unknownEntries} role(s) have unknown duration.`}
-                  </small>
-                </div>
-                <div>
-                  <span>Internships</span>
-                  <strong>{formatDuration(analysis.experience.internships)}</strong>
-                  <small>Separate from professional experience.</small>
-                </div>
-                <div>
-                  <span>Detected skills</span>
-                  <strong>{analysis.skills.length + analysis.competencies.length}</strong>
-                  <small>
-                    {analysis.supportedSkills.length} supported concepts; manual additions welcome.
-                  </small>
-                </div>
+                {state.loading ? (
+                  <LoadingSkeleton
+                    kind="profile"
+                    label="Updating your experience totals…"
+                  />
+                ) : (
+                  <>
+                    <div>
+                      <span>Professional experience</span>
+                      <strong>{formatDuration(analysis.experience.professional)}</strong>
+                      <small>
+                        Overlapping roles counted once.
+                        {analysis.experience.professional.unknownEntries > 0 &&
+                          ` ${analysis.experience.professional.unknownEntries} role(s) have unknown duration.`}
+                      </small>
+                    </div>
+                    <div>
+                      <span>Internships</span>
+                      <strong>{formatDuration(analysis.experience.internships)}</strong>
+                      <small>Separate from professional experience.</small>
+                    </div>
+                    <div>
+                      <span>Detected skills</span>
+                      <strong>{analysis.skills.length + analysis.competencies.length}</strong>
+                      <small>
+                        {analysis.supportedSkills.length} supported concepts; manual additions
+                        welcome.
+                      </small>
+                    </div>
+                  </>
+                )}
               </div>
               {analysis.warnings.length > 0 && (
                 <aside
