@@ -4,8 +4,9 @@ import { summarizeExperience } from '../resume/experience.js';
 import type { FeatureJob, MatchExplanation, MatchProfile } from './model.js';
 import { projectSkills, skillMatch, relationsVersion } from './skill-relations.js';
 import { degreeNames, degreeRank } from '../resume/qualifications.js';
+import { assessmentCoverage, assessmentRatio } from './assessment-coverage.js';
 
-export const scoringVersion = `score-5:${relationsVersion}`;
+export const scoringVersion = `score-6:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -58,7 +59,7 @@ export function scoreJob(
   const result: MatchExplanation = {
     job,
     baseScore: 0,
-    completeness: 0,
+    assessmentCoverage: { assessed: 0, total: 0, percentage: null, limited: false },
     band: 'review',
     requiredGaps: 0,
     unresolvedRequirements:
@@ -133,7 +134,10 @@ export function scoreJob(
       );
     }
 
-    if (group.importance !== 'contextual') {
+    if (
+      group.importance !== 'contextual' &&
+      (!group.unresolvedAlternatives?.length || best.credit === 1)
+    ) {
       skillTotal += weight;
       skillCredit += weight * best.credit;
     }
@@ -403,7 +407,10 @@ export function scoreJob(
     ? Math.min(100, Math.round((100 * credit) / assessedWeight) + rolePoints)
     : 0;
 
-  result.completeness = Math.min(100, Math.round(assessedWeight));
+  result.assessmentCoverage = assessmentCoverage(job.requirements, result);
+
+  result.unresolvedRequirements =
+    result.assessmentCoverage.total - result.assessmentCoverage.assessed;
 
   const mandatoryComparison =
     result.skills.some((item) => item.importance === 'required') ||
@@ -417,7 +424,7 @@ export function scoreJob(
   }
 
   result.band =
-    assessedWeight < 60 || unresolvedMandatory || !mandatoryComparison
+    assessmentRatio(result.assessmentCoverage) < 0.6 || unresolvedMandatory || !mandatoryComparison
       ? 'review'
       : result.requiredGaps
         ? 'exploratory'
@@ -442,16 +449,22 @@ export function scoreJob(
   return result;
 }
 
-export function compareMatches(left: MatchExplanation, right: MatchExplanation) {
+type RankedMatch = Pick<
+  MatchExplanation,
+  'band' | 'baseScore' | 'assessmentCoverage' | 'employerAdjustment'
+> & { job: Pick<FeatureJob, 'id' | 'lastSeenAt'> };
+
+export function compareMatches(left: RankedMatch, right: RankedMatch) {
   const bands = { strong: 0, possible: 1, exploratory: 2, review: 3 };
+  const leftCoverage = assessmentRatio(left.assessmentCoverage);
+  const rightCoverage = assessmentRatio(right.assessmentCoverage);
 
   return (
     bands[left.band] - bands[right.band] ||
-    right.baseScore +
-      right.employerAdjustment.points -
-      left.baseScore -
-      left.employerAdjustment.points ||
-    right.completeness - left.completeness ||
+    (right.baseScore + right.employerAdjustment.points) * rightCoverage -
+      (left.baseScore + left.employerAdjustment.points) * leftCoverage ||
+    rightCoverage - leftCoverage ||
+    right.baseScore - left.baseScore ||
     right.job.lastSeenAt.localeCompare(left.job.lastSeenAt) ||
     left.job.id.localeCompare(right.job.id)
   );

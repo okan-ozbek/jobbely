@@ -6,6 +6,7 @@ import { formatLocation } from '../../components/format-location.js';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
+import { MatchMetrics } from './MatchMetrics.js';
 import type { MatchInput, MatchResponse, ResumeAnalysis } from '../../api/client.js';
 
 import { inferMatchingFunction, matchingFunctions as functions } from './matching-function.js';
@@ -201,16 +202,14 @@ export function ResumeMatches({
                     </div>
                   </div>
                   <span className="resume-status">
-                    {item.band === 'review' ? 'Needs review' : item.band} · {item.baseScore}%
-                    {item.employerAdjustment.points > 0
-                      ? ` + ${item.employerAdjustment.points}`
-                      : ''}
+                    {item.band === 'review' ? 'Needs review' : item.band}
                   </span>
                 </div>
+                <MatchMetrics comparison={item} />
                 <p className="small-note">
-                  Evidence completeness {item.completeness}% · {item.requiredGaps} recognized
-                  required gap(s) · {item.unresolvedRequirements} unresolved requirement(s) ·
-                  checked {new Date(item.job.lastSeenAt).toLocaleString()}
+                  {item.requiredGaps} recognized required gap(s) · {item.unresolvedRequirements}{' '}
+                  unresolved requirement(s) · checked{' '}
+                  {new Date(item.job.lastSeenAt).toLocaleString()}
                   <br />
                   {item.coverage}
                 </p>

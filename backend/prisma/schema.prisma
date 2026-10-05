@@ -74,3 +74,47 @@ model Snapshot {
   payload Json
   @@index([sourceId, fetchedAt])
 }
+
+model AccountUser {
+  id String @id @default(uuid())
+  state String @default("active")
+  email String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  identities AccountIdentity[]
+  sessions ApplicationSession[]
+}
+
+model AccountIdentity {
+  id String @id @default(uuid())
+  issuer String
+  subject String
+  provider String
+  userId String
+  user AccountUser @relation(fields: [userId], references: [id])
+  @@unique([issuer, subject])
+  @@index([userId])
+}
+
+model ApplicationSession {
+  tokenHash String @id
+  csrfToken String
+  userId String
+  user AccountUser @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  idleExpiresAt DateTime
+  absoluteExpiresAt DateTime
+  revokedAt DateTime?
+  @@index([userId])
+  @@index([absoluteExpiresAt])
+}
+
+model OAuthAttempt {
+  stateHash String @id
+  browserHash String
+  provider String
+  verifier String
+  nonce String
+  expiresAt DateTime
+  @@index([expiresAt])
+}

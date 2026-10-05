@@ -72,6 +72,38 @@ async function setup(mode: 'demo' | 'postgres' = 'postgres') {
 }
 
 describe('stateless full matching flow', () => {
+  it('paginates coverage-adjusted ranking without skipping the sparse perfect-fit result', async () => {
+    const { dataset, backfill, matcher, input } = await setup();
+
+    dataset.jobs[0] = storedJob(
+      '1',
+      'Requirements\nTypeScript required.\nKnowledge of VHDL required.',
+    );
+
+    dataset.jobs[1] = storedJob(
+      '2',
+      'Requirements\nTypeScript required.\nKnowledge of VHDL required.\nPreferred qualifications\nDocker',
+    );
+
+    dataset.jobs[0]!.contentHash = 'changed-sparse';
+    dataset.jobs[1]!.contentHash = 'changed-broader';
+
+    dataset.version++;
+
+    await backfill.execute();
+
+    const first = await matcher.execute(input);
+
+    expect(first.items[0]?.job.id).toBe('2');
+    expect(first.nextCursor).toBeTruthy();
+
+    const second = await matcher.execute({ ...input, cursor: first.nextCursor! });
+
+    expect(second.items[0]?.job.id).toBe('1');
+    expect(second.items[0]?.baseScore).toBeGreaterThan(first.items[0]!.baseScore);
+    expect(second.nextCursor).toBeNull();
+  });
+
   it('allows retained description comparison while clearly excluding stale, closed, missing and demo jobs from recommendations', async () => {
     const { matcher, input, dataset } = await setup();
 

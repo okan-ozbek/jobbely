@@ -67,6 +67,40 @@ async function setup(description?: string) {
 }
 
 describe('private matching API and public requirements', () => {
+  it('returns the same criterion coverage in recommendations and single-job comparison', async () => {
+    const { app, input } = await setup(
+      'Requirements\nTypeScript required.\nKnowledge of VHDL required.',
+    );
+
+    const matched = await app.inject({
+      method: 'POST',
+      url: '/api/v1/resume-matches',
+      payload: input,
+    });
+
+    expect(matched.statusCode).toBe(200);
+
+    const item = matched.json().items[0];
+
+    expect(item.assessmentCoverage).toEqual({
+      assessed: 1,
+      total: 2,
+      percentage: 50,
+      limited: false,
+    });
+
+    expect(item).not.toHaveProperty('completeness');
+
+    const compared = await app.inject({
+      method: 'POST',
+      url: `/api/v1/jobs/${item.job.id}/resume-match`,
+      payload: { profile: input.profile },
+    });
+
+    expect(compared.statusCode).toBe(200);
+    expect(compared.json().comparison.assessmentCoverage).toEqual(item.assessmentCoverage);
+  });
+
   it('compares degree and duration annotations, includes responsibility skills and keeps candidate metadata transient', async () => {
     const { app, repository, input } = await setup(
       'Requirements\nBS (or higher) in Computer Science, or a related field\n7+ years of production level experience in one of: Java, Scala, C++, or similar language.\nThe impact you’ll have\nBuild Scala and Kubernetes services.',

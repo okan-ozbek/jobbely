@@ -41,7 +41,12 @@ function legacyResumeProbes() {
         false,
       );
 
-      return { id, score: result.baseScore, completeness: result.completeness, band: result.band };
+      return {
+        id,
+        score: result.baseScore,
+        assessmentCoverage: result.assessmentCoverage,
+        band: result.band,
+      };
     }),
   };
 }

@@ -220,7 +220,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [HTTP](docs/HTTP.md): network policy and retries.
 - [SECURITY](docs/SECURITY.md): trust boundaries and HTML preparation.
 - [API](docs/API.md): public contract, query behavior and pagination.
-- [ACCOUNTS_BILLING_PLAN](docs/ACCOUNTS_BILLING_PLAN.md): proposed registration/login, five free matches, monthly paid tiers, Stripe payment lifecycle and admin company/job/pricing controls.
+- [ACCOUNT_BILLING_PLAN](docs/ACCOUNT_BILLING_PLAN.md): delivery plan for GitHub/LinkedIn sign-in, five free matches, US$7.95 monthly Pro, Stripe and administration; [ACCOUNTS](docs/ACCOUNTS.md) records the implemented account foundation and setup.
 - [ANALYTICS_PLAN](docs/ANALYTICS_PLAN.md): proposed admin audience, registration, observed active users, funnel, retention, subscription metrics and privacy controls.
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
 - [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.
@@ -231,8 +231,8 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [FORMATTING](docs/FORMATTING.md): readable Prettier style, ESLint fixes and editor defaults.
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.
 
-Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts and subscriptions are a proposed next increment in [ACCOUNTS_BILLING_PLAN](docs/ACCOUNTS_BILLING_PLAN.md), beyond the original MVP scope. In-app job applications, paid data providers and AI classification remain outside the initial scope.
+Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. The [account foundation](docs/ACCOUNTS.md) is implemented beyond the original scope; subscriptions/paywall/admin work remains in [ACCOUNT_BILLING_PLAN](docs/ACCOUNT_BILLING_PLAN.md). In-app job applications, paid data providers and AI classification remain outside the initial scope.
 
 Resume matching interprets reviewed engineering activities through a 239-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.
 
-Matching now preserves job sections and logical resume evidence blocks, displaying required qualifications, preferred/nice-to-have qualifications and additional information. Comparisons retain unknown statements, OR alternatives, duration ranges, completeness and evidence provenance. See [STRUCTURED_MATCHING.md](docs/STRUCTURED_MATCHING.md) for the implemented stages 1-3 and [LLM_MATCHING.md](docs/LLM_MATCHING.md) for the remaining optional local-model experiment. No AI service is required to run this version.
+Matching now preserves job sections and logical resume evidence blocks, displaying required qualifications, preferred/nice-to-have qualifications and additional information. Comparisons retain unknown statements, OR alternatives, duration ranges, assessment coverage and evidence provenance. [MATCHING.md](docs/MATCHING.md#assessment-coverage-update-5-october-2026) defines separate fit/coverage labels and criterion-based ranking. See [STRUCTURED_MATCHING.md](docs/STRUCTURED_MATCHING.md) for the implemented stages 1-3 and [LLM_MATCHING.md](docs/LLM_MATCHING.md) for the remaining optional local-model experiment. No AI service is required to run this version.

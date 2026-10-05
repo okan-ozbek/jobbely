@@ -58,7 +58,7 @@ export interface FeatureJob {
 export interface MatchExplanation {
   job: FeatureJob;
   baseScore: number;
-  completeness: number;
+  assessmentCoverage: AssessmentCoverage;
   band: 'strong' | 'possible' | 'exploratory' | 'review';
   requiredGaps: number;
   unresolvedRequirements: number;
@@ -94,6 +94,13 @@ export interface MatchExplanation {
   }[];
   location: string;
   employerAdjustment: { points: number; reasons: string[]; version: string };
+}
+
+export interface AssessmentCoverage {
+  assessed: number;
+  total: number;
+  percentage: number | null;
+  limited: boolean;
 }
 
 export type FeatureInput = Pick<

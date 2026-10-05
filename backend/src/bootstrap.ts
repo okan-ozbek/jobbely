@@ -17,6 +17,9 @@ import { MemoryJobRepository } from './infrastructure/storage/memory.js';
 import { PostgresJobRepository } from './infrastructure/storage/postgres.js';
 import { seedDemo } from './infrastructure/demo.js';
 import { AuditedPostingValidation } from './infrastructure/audits/validation.js';
+import { Accounts } from './application/accounts/accounts.js';
+import { PostgresAccounts } from './infrastructure/storage/accounts-postgres.js';
+import { OAuthIdentityProvider } from './infrastructure/accounts/oauth.js';
 
 export const config = z
   .object({
@@ -26,6 +29,40 @@ export const config = z
     HOST: z.string().default('127.0.0.1'),
     FRONTEND_ORIGIN: z.url().default('http://127.0.0.1:5173'),
     MATCH_CURSOR_SECRET: z.string().min(32).optional(),
+    GITHUB_CLIENT_ID: z.string().min(1).optional(),
+    GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
+    LINKEDIN_CLIENT_ID: z.string().min(1).optional(),
+    LINKEDIN_CLIENT_SECRET: z.string().min(1).optional(),
+  })
+  .superRefine((value, context) => {
+    for (const provider of ['GITHUB', 'LINKEDIN'] as const) {
+      if (!!value[`${provider}_CLIENT_ID`] !== !!value[`${provider}_CLIENT_SECRET`]) {
+        context.addIssue({
+          code: 'custom',
+          message: `${provider} requires both client ID and secret.`,
+        });
+      }
+    }
+
+    if (value.GITHUB_CLIENT_ID || value.LINKEDIN_CLIENT_ID) {
+      const origin = new URL(value.FRONTEND_ORIGIN);
+
+      if (
+        value.DATA_MODE !== 'postgres' ||
+        origin.origin !== value.FRONTEND_ORIGIN ||
+        (origin.protocol !== 'https:' &&
+          !(
+            origin.protocol === 'http:' &&
+            ['127.0.0.1', 'localhost', '[::1]'].includes(origin.hostname)
+          ))
+      ) {
+        context.addIssue({
+          code: 'custom',
+          message:
+            'Sign-in requires PostgreSQL and an HTTPS origin (HTTP loopback is allowed locally).',
+        });
+      }
+    }
   })
   .parse(process.env);
 
@@ -56,11 +93,39 @@ export async function bootstrap() {
 
   const adapters = createAdapters(http);
 
+  const accountRepository =
+    config.DATA_MODE === 'postgres' ? new PostgresAccounts(config.DATABASE_URL!) : undefined;
+
+  const providers = [
+    ...(config.GITHUB_CLIENT_ID && config.GITHUB_CLIENT_SECRET
+      ? [
+          new OAuthIdentityProvider('github', {
+            clientId: config.GITHUB_CLIENT_ID,
+            clientSecret: config.GITHUB_CLIENT_SECRET,
+            callbackUrl: `${config.FRONTEND_ORIGIN}/api/v1/auth/github/callback`,
+          }),
+        ]
+      : []),
+    ...(config.LINKEDIN_CLIENT_ID && config.LINKEDIN_CLIENT_SECRET
+      ? [
+          new OAuthIdentityProvider('linkedin', {
+            clientId: config.LINKEDIN_CLIENT_ID,
+            clientSecret: config.LINKEDIN_CLIENT_SECRET,
+            callbackUrl: `${config.FRONTEND_ORIGIN}/api/v1/auth/linkedin/callback`,
+          }),
+        ]
+      : []),
+  ];
+
   return {
     companies,
     sources,
     repository,
     adapters,
+    ...(accountRepository ? { accounts: new Accounts(accountRepository, providers) } : {}),
+    closeAccounts: async () => {
+      await accountRepository?.close();
+    },
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE),
     resume: new AnalyzeResume(companies),
     matcher: new MatchJobs(

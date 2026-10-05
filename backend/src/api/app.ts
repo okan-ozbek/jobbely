@@ -11,6 +11,8 @@ import type { AnalyzeResume } from '../application/resume/analyze-resume.js';
 import { registerResumeRoutes } from './resume-routes.js';
 import type { MatchJobs } from '../application/resume/match-jobs.js';
 import { registerMatchingRoutes } from './matching-routes.js';
+import { registerAccountRoutes } from './account-routes.js';
+import type { Accounts } from '../application/accounts/accounts.js';
 import {
   companySchema,
   errorSchema,
@@ -28,6 +30,8 @@ export async function createApp(dependencies: {
   resume?: AnalyzeResume;
   matcher?: MatchJobs;
   closeFeatures?: () => Promise<void>;
+  accounts?: Accounts;
+  closeAccounts?: () => Promise<void>;
 }) {
   /**
    * Creates and configures the Fastify application instance with all routes, hooks, and error handling.
@@ -45,6 +49,7 @@ export async function createApp(dependencies: {
    */
   await app.register(cors, {
     origin: dependencies.origin ?? 'http://127.0.0.1:5173',
+    credentials: true,
   });
 
   /**
@@ -62,6 +67,7 @@ export async function createApp(dependencies: {
   app.addHook('onClose', async () => {
     await dependencies.repository.close();
     await dependencies.closeFeatures?.();
+    await dependencies.closeAccounts?.();
   });
 
   /**
@@ -261,6 +267,8 @@ export async function createApp(dependencies: {
       dependencies.origin ?? 'http://127.0.0.1:5173',
     );
   }
+
+  registerAccountRoutes(app, dependencies.accounts, dependencies.origin ?? 'http://127.0.0.1:5173');
 
   await app.ready();
 

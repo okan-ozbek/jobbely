@@ -4,7 +4,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
-[ACCOUNTS_BILLING_PLAN.md](ACCOUNTS_BILLING_PLAN.md) proposes guest access to five resume matches, managed registration/login, monthly paid tiers, server-enforced entitlements, Stripe Checkout/Portal/webhook handling and an admin dashboard for company/job removal and versioned pricing. Accounts, payments and admin controls remain unimplemented.
+[ACCOUNT_BILLING_PLAN.md](ACCOUNT_BILLING_PLAN.md) tracks five free resume matches, GitHub/LinkedIn sign-in, US$7.95 monthly Pro, Stripe and administration. [ACCOUNTS.md](ACCOUNTS.md) records the implemented account/session/dialog and draft-offer foundation. Paywall enforcement, Stripe, admin controls and analytics remain pending.
 
 [ANALYTICS_PLAN.md](ANALYTICS_PLAN.md) proposes admin audience, registration, observed DAU/WAU/MAU, funnel, retention, billing and health reporting, with explicit metric definitions, privacy/consent boundaries and aggregation checks. Analytics remains unimplemented.
 
@@ -14,7 +14,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 [SKILL_RELATIONS.md](SKILL_RELATIONS.md) defines directed evidence relations, confidence colors, description annotations and their privacy/version invariants.
 
-[QUALIFICATIONS.md](QUALIFICATIONS.md) records degree/skill-year comparisons and bounded responsibility relevance added on 5 October 2026.
+[QUALIFICATIONS.md](QUALIFICATIONS.md) records degree/skill-year comparisons and bounded responsibility relevance added on 5 October 2026. [MATCHING.md](MATCHING.md#assessment-coverage-update-5-october-2026) defines distinct identified-criterion coverage, separate fit/coverage labels and coverage-adjusted ranking within review bands.
 
 [SEMANTICS.md](SEMANTICS.md) describes the implemented engineering registry, clause interpretation, four coverage states and scoped confirmation flow. [SEMANTIC_MATCHING_PLAN.md](SEMANTIC_MATCHING_PLAN.md) retains the remaining evaluation and expansion roadmap.
 

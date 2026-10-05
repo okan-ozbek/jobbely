@@ -5,6 +5,7 @@ import type { Job, JobMatchResponse, ResumeAnalysis } from '../../api/client.js'
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend } from './MatchEvidence.js';
 import { HighlightedDescription } from './HighlightedDescription.js';
+import { MatchMetrics } from './MatchMetrics.js';
 
 export function JobProfileComparison({
   job,
@@ -60,8 +61,7 @@ export function JobProfileComparison({
           <h2>Your resume against this role</h2>
           {data && (
             <span className="resume-status">
-              {data.comparison.band === 'review' ? 'Needs review' : data.comparison.band} ·{' '}
-              {data.comparison.baseScore}% match
+              {data.comparison.band === 'review' ? 'Needs review' : data.comparison.band}
             </span>
           )}
         </div>
@@ -90,9 +90,10 @@ export function JobProfileComparison({
               />
             ) : (
               <>
+                <MatchMetrics comparison={data.comparison} />
                 <p className="small-note">
-                  {data.comparison.completeness}% evidence · {data.comparison.requiredGaps} required
-                  gaps · {data.comparison.unresolvedRequirements} to review
+                  {data.comparison.requiredGaps} recognized required gaps ·{' '}
+                  {data.comparison.unresolvedRequirements} to review
                 </p>
                 <details className="comparison-source small-note">
                   <summary>

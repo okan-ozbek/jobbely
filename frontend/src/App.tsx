@@ -13,6 +13,7 @@ import { formatLocation } from './components/format-location.js';
 import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
 import { useResumeAnalysis } from './features/resume/useResumeAnalysis.js';
 import { JobProfileComparison } from './features/resume/JobProfileComparison.js';
+import { AccountMenu } from './features/accounts/AccountMenu.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -31,6 +32,7 @@ export function App() {
   const { params, update } = useLocationQuery();
   const resumeState = useResumeAnalysis();
   const [reviewedAnalysis, setReviewedAnalysis] = useState<ResumeAnalysis | null>(null);
+  const [privateSessionRevision, setPrivateSessionRevision] = useState(0);
 
   const comparisonAnalysis =
     reviewedAnalysis === resumeState.analysis && !resumeState.loading && !resumeState.error
@@ -156,6 +158,13 @@ export function App() {
           jobbely<span className="brand-dot">.</span>
         </a>
         <nav aria-label="Main navigation">
+          <AccountMenu
+            onSessionEnd={() => {
+              resumeState.clear();
+              setReviewedAnalysis(null);
+              setPrivateSessionRevision((value) => value + 1);
+            }}
+          />
           <button
             className={view === 'companies' ? 'nav-link active' : 'nav-link'}
             aria-current={view === 'companies' ? 'page' : undefined}
@@ -221,6 +230,7 @@ export function App() {
             </button>
           )}
           <ResumeWorkbench
+            key={privateSessionRevision}
             state={resumeState}
             onReviewed={setReviewedAnalysis}
             openJob={(id) => update({ view: 'jobs', job: id, from: 'resume' })}

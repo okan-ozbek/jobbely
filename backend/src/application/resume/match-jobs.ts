@@ -34,7 +34,10 @@ interface Cursor {
   fingerprint: string;
   revision: string;
   at: string;
-  anchor: Pick<MatchExplanation, 'band' | 'baseScore' | 'completeness' | 'employerAdjustment'> & {
+  anchor: Pick<
+    MatchExplanation,
+    'band' | 'baseScore' | 'assessmentCoverage' | 'employerAdjustment'
+  > & {
     job: { id: string; lastSeenAt: string };
   };
 }
@@ -387,7 +390,7 @@ export class MatchJobs {
 
         evaluated++;
 
-        if (cursor && compareMatches(result, cursor.anchor as MatchExplanation) <= 0) {
+        if (cursor && compareMatches(result, cursor.anchor) <= 0) {
           continue;
         }
 
@@ -445,7 +448,7 @@ export class MatchJobs {
               anchor: {
                 band: last.band,
                 baseScore: last.baseScore,
-                completeness: last.completeness,
+                assessmentCoverage: last.assessmentCoverage,
                 employerAdjustment: last.employerAdjustment,
                 job: { id: last.job.id, lastSeenAt: last.job.lastSeenAt },
               },

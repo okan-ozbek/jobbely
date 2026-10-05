@@ -1234,3 +1234,25 @@
     top: 0;
   }
 }
+.match-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 36px;
+  margin: 20px 0 8px;
+}
+
+.match-metrics dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.match-metrics dd {
+  margin: 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.match-metrics-help summary {
+  width: fit-content;
+  cursor: pointer;
+}

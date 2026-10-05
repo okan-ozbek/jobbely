@@ -66,7 +66,9 @@ Resume matching follows the same layers: pure requirements/scoring, an applicati
 
 ## First-slice limitations
 
-The first slice implements the three public API adapters and single-employer source configuration needed by the 10-company cohort. Shared-parent-board membership (Slack/Salesforce), full-text indexed search at scale, regional partition adapters, classification overrides/replay, raw retention cleanup, authentication, and full 60-company source onboarding remain explicit follow-ups. Do not enable unreviewed sources in the scheduled worker or report them as complete.
+The 5 October [account foundation](ACCOUNTS.md) follows these same layers: pure capability/session policy, application-owned sign-in, identity/storage ports, provider/PostgreSQL adapters, API guards and explicit bootstrap wiring. It adds identity-only persistence and a draft price catalog. Billing/preview enforcement, admin grants/MFA and analytics remain future increments.
+
+The first slice implements the three public API adapters and single-employer source configuration needed by the 10-company cohort. Shared-parent-board membership (Slack/Salesforce), full-text indexed search at scale, regional partition adapters, classification overrides/replay, raw retention cleanup, production account/billing operations, and full 60-company source onboarding remain explicit follow-ups. Do not enable unreviewed sources in the scheduled worker or report them as complete.
 
 The PostgreSQL repository is the persistent mode. A memory repository is for tests and a clearly labeled demo only; it is not a production fallback if a database connection fails. Its lease model is intentionally simpler than the persistent repository; independent-client concurrency and lease recovery must be verified against PostgreSQL.
 

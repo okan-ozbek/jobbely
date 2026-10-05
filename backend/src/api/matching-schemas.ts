@@ -254,6 +254,13 @@ const educationMatchSchema = Type.Array(
 
 export const jobMatchInputSchema = Type.Object({ profile: matchProfileSchema }, strict);
 
+const assessmentCoverageSchema = Type.Object({
+  assessed: Type.Integer({ minimum: 0 }),
+  total: Type.Integer({ minimum: 0 }),
+  percentage: Type.Union([Type.Integer({ minimum: 0, maximum: 100 }), Type.Null()]),
+  limited: Type.Boolean(),
+});
+
 export const jobMatchResponseSchema = Type.Object({
   descriptionText: Type.String(),
   document: jobDocumentSchema,
@@ -284,7 +291,7 @@ export const jobMatchResponseSchema = Type.Object({
   ),
   comparison: Type.Object({
     baseScore: Type.Integer(),
-    completeness: Type.Integer(),
+    assessmentCoverage: assessmentCoverageSchema,
     band: Type.Union(
       ['strong', 'possible', 'exploratory', 'review'].map((item) => Type.Literal(item)),
     ),
@@ -338,7 +345,7 @@ export const matchItemSchema = Type.Object({
     requirements: requirementsSchema,
   }),
   baseScore: Type.Integer(),
-  completeness: Type.Integer(),
+  assessmentCoverage: assessmentCoverageSchema,
   band: Type.Union(
     ['strong', 'possible', 'exploratory', 'review'].map((value) => Type.Literal(value)),
   ),

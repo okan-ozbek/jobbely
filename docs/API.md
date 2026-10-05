@@ -14,6 +14,8 @@ Catalog routes delegate to `JobCatalog`, read stored information and contain no 
 
 ## Routes
 
+The 5 October [account foundation](ACCOUNTS.md) adds generated contracts for plans, provider discovery, OAuth start/callback, account reads and logout. These are session-aware with no-store/origin/CSRF protections as documented there. The draft catalog explicitly reports purchasing/paywall disabled; current anonymous matching routes are not yet tier-enforced.
+
 | GET route                 | Behavior                                                                |
 | ------------------------- | ----------------------------------------------------------------------- |
 | `/api/v1/jobs`            | Active jobs, filters, total, cursor, dataset version and runtime mode   |

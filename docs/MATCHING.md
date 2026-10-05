@@ -8,7 +8,7 @@
 
 ## Decision and rationale
 
-The 5 October [qualification policy](QUALIFICATIONS.md) extends comparison with reviewed degrees, explicit skill years and at most five contextual responsibility points. Analysis is `text-5`, public features `requirements-15:concepts-3:clauses-2:job-document-1` and scoring `score-5:relations-3`. This supersedes the earlier unassessed-degree policy below; authorization and language remain review items.
+The 5 October [qualification policy](QUALIFICATIONS.md) extends comparison with reviewed degrees, explicit skill years and at most five contextual responsibility points. Current analysis is `text-6`, public features `requirements-15:concepts-3:clauses-2:job-document-1` and scoring `score-6:relations-3`. The assessment coverage update below supersedes the earlier dimension-weight completeness policy; authorization and language remain review items.
 
 Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → Find matching jobs (confirms the current profile) → recommendations → original description/application.
 
@@ -40,7 +40,19 @@ Work-evidenced and user-confirmed skill claims receive credit 1, listed mentions
 
 Experience uses overlap-aware bounds. A minimum bound above the requirement is met; a maximum below it with no unknown intervals is below; other cases are uncertain. Internships, projects and volunteering do not become professional tenure. No overqualification penalty applies.
 
-For each dimension, base fit is the weighted credit divided by assessed weight, expressed out of 100. Contextual responsibility/role skills add at most five points afterwards, exposed as `roleRelevancePoints`; base fit is capped at 100. Missing contextual skills never create required gaps. Completeness is assessed weight capped at 100. Unparsed statements reduce skill coverage by their required/preferred weights. Neither number is extraction accuracy or a hiring probability. No recognized mandatory comparison, completeness below 60%, truncation or unresolved mandatory constraints produces `review`. Required gaps produce `exploratory`; otherwise scores 80+ are `strong`, 60+ `possible`, lower `exploratory`.
+For each dimension, base fit is the weighted credit divided by assessed weight, expressed out of 100. Contextual responsibility/role skills add at most five points afterwards, exposed as `roleRelevancePoints`; base fit is capped at 100. Missing contextual skills never create required gaps. Unparsed statements reduce the skills dimension's assessed weight by their required/preferred weights. Unresolved skill alternatives are excluded from assessed fit unless a known alternative fully satisfies the group. No recognized mandatory comparison, assessment coverage below 60%, truncation or unresolved mandatory constraints produces `review`. Required gaps produce `exploratory`; otherwise scores 80+ are `strong`, 60+ `possible`, lower `exploratory`.
+
+### Assessment coverage update, 5 October 2026
+
+The API replaces `completeness` with `assessmentCoverage`: assessed/total criterion counts, a rounded percentage or null, and a `limited` flag for truncated extraction. Recommendations and single-job comparisons use the same [pure coverage policy](../backend/src/domain/matching/assessment-coverage.ts). Coverage is the unweighted fraction of identified required/preferred criteria with completed comparisons. It is independent of scoring-dimension weights and matching success:
+
+- Each skill alternative group counts once. Full, partial and missing skill evidence are assessed outcomes; an unresolved alternative leaves the group unassessed unless a known alternative fully satisfies it.
+- Each recognized experience threshold and degree criterion is assessed when its result is met or below; uncertain claims remain unassessed.
+- Other explicit constraints (including location restrictions, authorization and language) and unparsed statements remain unassessed. Residual unsupported text in a partly recognized clause counts as one additional unresolved statement, not one criterion per unknown word.
+- Repeated criteria count once using stable semantic keys for skills/experience and normalized text for constraints/unparsed statements. Required/preferred importance remains part of identity. Unresolved counts use the same distinct criteria.
+- Contextual responsibilities, scoring function and incidental location overlap do not increase coverage. Qualifications absent from the job do not reduce it. No identified criteria or truncated extraction yields a null percentage; truncated results receive zero coverage for ranking even if a retained prefix has comparisons.
+
+The UI separates the review band, **Fit on assessed criteria**, and **Assessment coverage**, with identified-criterion counts and expandable interpretation guidance. It withholds the fit percentage when no criterion is assessed or extraction is limited. A high fit with low coverage remains possible and is explicitly reviewable. Coverage cannot count requirements the parser failed to identify, is not extraction accuracy or confidence, and does not establish proficiency or hiring probability. Independent held-out calibration remains pending.
 
 Remote does not establish worldwide eligibility. Different cities sharing a country do not establish overlap. Work authorization, relocation and languages are not guessed from location or education; they remain review items rather than editable eligibility claims. Degrees and skill years now have explicit review controls; missing evidence remains uncertain rather than a verified absence.
 
@@ -48,7 +60,7 @@ Remote does not establish worldwide eligibility. Different cities sharing a coun
 
 Off by default. A reviewed direct professional role in the **same target employer and function**, with a positive known duration, may add 3 points. This narrow continuity policy replaces the proposed broader prestige/domain weighting; it does not rank companies by reputation. Client assignments, unknown relationships, undated roles and unknown employers receive no adjustment or penalty.
 
-Adjustment is separate from base fit and completeness. It applies only without required gaps and outside `review`, cannot change the fit band, and is capped below the planned 5-point ceiling. Sorting happens within bands by base plus adjustment, completeness, freshness, then stable posting ID. Policy version and reason are returned. No score or experience year is inflated by a company name.
+Adjustment is separate from base fit and assessment coverage. It applies only without required gaps and outside `review`, cannot change the fit band, and is capped below the planned 5-point ceiling. Sorting preserves strong → possible → exploratory → review bands. Within each band it orders by `(base fit + optional adjustment) × assessed / total`, then exact coverage fraction, base fit, freshness and stable posting ID. The coverage fraction is not rounded for ranking. For example, a 90% fit with 80% coverage ranks above a 100% fit with 50% coverage within the same band. The product is an internal ranking heuristic, not a displayed confidence score; unassessed criteria do not become verified gaps. Policy version and reason are returned. No score or experience year is inflated by a company name. Scoring version changes invalidate old signed cursors; anchors include criterion counts. This scoring-only update needs no feature backfill or database migration.
 
 ## Availability, pagination and capacity
 

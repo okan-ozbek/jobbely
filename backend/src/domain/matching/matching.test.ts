@@ -180,7 +180,11 @@ describe('evidence-backed requirement extraction', () => {
 
     const result = scoreJob(featureJob('We use Python.'), candidate(), employers, false);
 
-    expect(result).toMatchObject({ band: 'review', completeness: 25, baseScore: 100 });
+    expect(result).toMatchObject({
+      band: 'review',
+      assessmentCoverage: { assessed: 0, total: 0, percentage: null },
+      baseScore: 100,
+    });
   });
 
   it('groups comma-separated alternatives and rejects ordinary language alias collisions', () => {
@@ -211,7 +215,7 @@ describe('evidence-backed requirement extraction', () => {
     );
 
     expect(result.band).toBe('review');
-    expect(result.completeness).toBeLessThan(60);
+    expect(result.assessmentCoverage.percentage).toBeLessThan(60);
     expect(result.uncertainties.join(' ')).toContain('VHDL');
     expect(result.employerAdjustment.points).toBe(0);
 

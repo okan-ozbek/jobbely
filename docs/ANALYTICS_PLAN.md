@@ -2,7 +2,7 @@
 
 **Status:** Proposed, 5 October 2026, Europe/Amsterdam. No analytics collector, tracking identifiers, aggregation tables or analytics dashboard is implemented by this plan.
 
-The admin dashboard in [ACCOUNTS_BILLING_PLAN](ACCOUNTS_BILLING_PLAN.md) will include audience, registration, activity, product-funnel and subscription analytics. “MUA” is interpreted as **MAU: monthly active users**. This document owns metric definitions, collection boundaries and verification; the accounts plan owns login, admin authorization and payment access.
+The admin dashboard in [ACCOUNT_BILLING_PLAN](ACCOUNT_BILLING_PLAN.md) will include audience, registration, activity, product-funnel and subscription analytics. “MUA” is interpreted as **MAU: monthly active users**. This document owns metric definitions, collection boundaries and verification; the accounts plan owns login, admin authorization and payment access. The [account foundation](ACCOUNTS.md) is implemented; analytics collection remains proposed.
 
 ## Dashboard views
 
