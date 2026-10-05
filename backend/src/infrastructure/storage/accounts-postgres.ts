@@ -16,6 +16,7 @@ interface SessionRow {
   userId: string;
   state: AccountUser['state'];
   email: string | null;
+  username: string | null;
   idleExpiresAt: Date;
   absoluteExpiresAt: Date;
   revokedAt: Date | null;
@@ -25,7 +26,7 @@ function sessionRecord(row: SessionRow): AccountSession {
   return {
     tokenHash: row.tokenHash,
     csrfToken: row.csrfToken,
-    user: { id: row.userId, state: row.state, email: row.email },
+    user: { id: row.userId, state: row.state, email: row.email, username: row.username },
     idleExpiresAt: row.idleExpiresAt.toISOString(),
     absoluteExpiresAt: row.absoluteExpiresAt.toISOString(),
     revokedAt: row.revokedAt?.toISOString() ?? null,
@@ -118,7 +119,7 @@ export class PostgresAccounts implements AccountRepository {
       UPDATE "ApplicationSession" s SET "idleExpiresAt" = LEAST(s."absoluteExpiresAt", ${now}::timestamp + INTERVAL '7 days')
       FROM "AccountUser" u WHERE s."userId" = u."id" AND s."tokenHash" = ${tokenHash}
       AND s."revokedAt" IS NULL AND s."idleExpiresAt" > ${now} AND s."absoluteExpiresAt" > ${now} AND u."state" = 'active'
-      RETURNING s.*, u."state", u."email"`;
+      RETURNING s.*, u."state", u."email", u."username"`;
 
     return row ? sessionRecord(row) : null;
   }

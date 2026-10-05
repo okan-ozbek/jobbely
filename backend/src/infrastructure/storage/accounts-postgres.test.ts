@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import pg from 'pg';
 import { PostgresAccounts } from './accounts-postgres.js';
 import type { AccountSession, VerifiedIdentity } from '../../domain/accounts/identity.js';
 import { accountSecretHash } from '../../application/accounts/accounts.js';
+import { ensureAccountTestSchema } from './account-test-schema.js';
 
 const connectionString = process.env['TEST_DATABASE_URL'];
 const integration = connectionString ? describe : describe.skip;
@@ -27,19 +27,7 @@ integration('PostgreSQL account identity and session concurrency', () => {
     client = new pg.Client({ connectionString });
     await client.connect();
 
-    const existing = await client.query(`SELECT to_regclass('"AccountUser"') AS table`);
-
-    if (!existing.rows[0]?.table) {
-      await client.query(
-        await readFile(
-          new URL(
-            '../../../prisma/migrations/202610050001_accounts/migration.sql',
-            import.meta.url,
-          ),
-          'utf8',
-        ),
-      );
-    }
+    await ensureAccountTestSchema(client);
 
     first = new PostgresAccounts(connectionString);
     second = new PostgresAccounts(connectionString);

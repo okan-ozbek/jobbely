@@ -16,6 +16,8 @@ Catalog routes delegate to `JobCatalog`, read stored information and contain no 
 
 The 5 October [account foundation](ACCOUNTS.md) adds generated contracts for plans, provider discovery, OAuth start/callback, account reads and logout. These are session-aware with no-store/origin/CSRF protections as documented there. The draft catalog explicitly reports purchasing/paywall disabled; current anonymous matching routes are not yet tier-enforced.
 
+[EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md) adds strict POST contracts for `/api/v1/auth/register`, `/auth/register/confirm`, `/auth/password/login`, `/auth/password/reset`, `/auth/password/reset/confirm` and `/auth/email/resend` (each under `/api/v1`). Provider discovery includes `emailAvailable`; account identity includes nullable display `username`. Verification codes remain strings to preserve leading zeros. Register/reset requests return a generic challenge receipt after durable queue acceptance, without codes or password hashes. Unknown reset addresses do not enqueue mail. Native account requests have a 4 KiB body limit, exact-Origin validation, no-store/silent logging and durable credential admission in addition to the account-route limiter.
+
 | GET route                 | Behavior                                                                |
 | ------------------------- | ----------------------------------------------------------------------- |
 | `/api/v1/jobs`            | Active jobs, filters, total, cursor, dataset version and runtime mode   |

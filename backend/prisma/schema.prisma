@@ -79,10 +79,62 @@ model AccountUser {
   id String @id @default(uuid())
   state String @default("active")
   email String?
+  username String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   identities AccountIdentity[]
   sessions ApplicationSession[]
+  passwordCredential PasswordCredential?
+}
+
+model PasswordCredential {
+  email String @id
+  userId String @unique
+  user AccountUser @relation(fields: [userId], references: [id])
+  passwordHash String
+  verifiedAt DateTime
+  updatedAt DateTime @updatedAt
+}
+
+model EmailChallenge {
+  tokenHash String @id
+  browserHash String
+  email String
+  purpose String
+  codeHash String
+  passwordHash String?
+  username String?
+  attempts Int @default(0)
+  sends Int @default(1)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  consumedAt DateTime?
+  @@index([email, purpose])
+  @@index([expiresAt])
+}
+
+model CredentialRateWindow {
+  key String @id
+  count Int
+  expiresAt DateTime
+  @@index([expiresAt])
+}
+
+model AccountEmailJob {
+  id String @id @default(uuid())
+  challengeHash String
+  codeHash String
+  sealedEmail String?
+  state String @default("queued")
+  attempts Int @default(0)
+  availableAt DateTime @default(now())
+  expiresAt DateTime
+  leaseToken String?
+  leaseUntil DateTime?
+  createdAt DateTime @default(now())
+  @@index([state, availableAt])
+  @@index([challengeHash])
+  @@index([expiresAt])
 }
 
 model AccountIdentity {

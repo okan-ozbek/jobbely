@@ -2,7 +2,7 @@
 
 **Status:** Account foundation implemented; remaining delivery phases proposed, 5 October 2026, Europe/Amsterdam. [ACCOUNTS](ACCOUNTS.md) documents implemented behavior and verification. The five-result paywall, Stripe integration, admin dashboard and analytics are not yet enabled.
 
-**Confirmed product choices:** Visitors can analyze a resume and see their top five matches without an account. An account is required to upgrade. Pro is **US$7.95 monthly** (795 USD minor units). The user selected application-owned accounts with GitHub and LinkedIn sign-in instead of a separate managed-auth supplier. Merchant/tax/commercial terms remain open.
+**Confirmed product choices:** Visitors can analyze a resume and see their top five matches without an account. An account is required to upgrade. Pro is **US$7.95 monthly** (795 USD minor units). The user selected application-owned accounts with email/password registration, optional username, email verification codes, GitHub and LinkedIn sign-in instead of a separate managed-auth supplier. Generic SMTP delivery uses a separate queue worker. Merchant/tax/commercial terms remain open.
 
 **Administration scope:** Authorized admins can remove companies and jobs from public display and manage pricing tiers through a private dashboard. Removal is reversible unpublishing; source identities and ingestion evidence remain intact.
 
@@ -29,13 +29,13 @@ When more than five results exist, show five real cards followed by one upgrade 
 
 ## Registration and login
 
-Use application-owned users and revocable sessions with **GitHub OAuth and LinkedIn OpenID Connect** as identity providers. No passwords, password recovery, Supabase or Clerk are required. Provider app registration, credentials and exact callback URLs are still required. This supersedes the original managed email-code proposal.
+Use application-owned users and revocable sessions with **email/password registration, GitHub OAuth and LinkedIn OpenID Connect**. Native registration has an optional display username and requires a six-digit email verification code. Password recovery uses a separate code flow. [EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md) records implemented hashing, limits and the independently runnable generic-SMTP queue worker. No managed-auth service is required. Provider app registration, credentials and exact callback URLs are still required for SSO.
 
 Request only identity/email permissions. Map accounts by stable issuer/subject, never mutable usernames or matching emails. Only explicitly verified provider email is stored; missing/unverified email stays null. A verified billing-contact requirement needs its own workflow before Checkout. See [GitHub OAuth](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) and [LinkedIn OIDC](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2).
 
 Proposed flow and controls:
 
-1. Sign-in/upgrade opens an inline account dialog. Start a browser-bound, one-time ten-minute OAuth attempt, then open the provider through a separately clicked link. The original resume tab stays mounted. Registration and returning login share the flow; account linking is deferred.
+1. Sign-in/upgrade opens an inline account dialog. Native registration, code confirmation, login and reset stay in the dialog. SSO starts a browser-bound, one-time ten-minute OAuth attempt, then opens the provider through a separately clicked link. The original resume tab stays mounted. Native credentials never automatically link to SSO by email; account linking is deferred.
 2. The backend exchanges the code, verifies GitHub's current numeric identity or LinkedIn's signed OIDC identity/nonce/userinfo subject, then maps issuer/subject to a local user. GitHub uses S256 PKCE. Wrong-browser/provider, tampered, expired or replayed callbacks fail before session issuance. Provider tokens are not retained.
 3. Issue an opaque application session in a Secure, HttpOnly, SameSite=Lax cookie. Store only a hash of the session secret in PostgreSQL. Implemented limits: seven days idle, thirty days absolute, renewed only within that absolute limit. Provider credentials stay in infrastructure; no authentication token is placed in a resume URL.
 4. Authenticated mutations require the session, exact allowed origin and CSRF protection. Backend billing/authorization decisions never trust a frontend user ID, plan, customer ID or role. Session and billing reads return `no-store`.
@@ -182,7 +182,7 @@ Keep billing SDK records out of public responses and avoid altering ranking payl
 ## Delivery sequence and acceptance gates
 
 1. **Policy and contracts — started.** Price/currency and GitHub/LinkedIn sign-in are selected. The draft offer catalog and pure Free/paid settled-coverage capability policy are implemented and tested. Preview receipts, paid cursor binding, moderation/pricing revisions and commercial terms remain pending.
-2. **Identity foundation — started.** Users/identity mappings, hashed sessions, one-time OAuth attempts, GitHub/LinkedIn adapters, account routes and sign-in dialog are implemented. Live journeys require app credentials. Admin grants, MFA/step-up, operator provisioning, deletion/recreation and retention jobs remain pending. No paid capability is enabled.
+2. **Identity foundation — started.** Users/identity mappings, hashed sessions, one-time OAuth attempts, GitHub/LinkedIn adapters, native password registration/login, email verification/reset codes, durable credential admission and an encrypted SMTP outbox/worker are implemented. Live journeys require provider/SMTP configuration. Admin grants, MFA/step-up, operator provisioning, deletion/recreation and retention jobs remain pending. No paid capability is enabled.
 3. **Free preview and paywall.** Server limits to five, restricted comparison receipts and typed locked state. UI handles zero/fewer/exactly/more than five results, errors and unchanged resume review. This is the first product-facing gate; arbitrary API limits/cursors must fail to bypass it.
 4. **Stripe sandbox end-to-end.** Implement Customer/Checkout/Portal adapters, durable inbox, access projection and reconciliation. Verify payment, extra authentication, async pending/failure, duplicate clicks, webhook replay/reordering, renewal failure/recovery, cancellation, refunds and disputes with synthetic identities and Stripe test fixtures/test clocks.
 5. **Integrated upgrade UX.** Keep the original resume tab alive through inline signup and separate Checkout, unlock after server verification, and test desktop/mobile/tab discard. Paid pagination and detail comparison must stop after logout, expiry or downgrade. All private state stays out of storage, URLs, telemetry and Stripe metadata.
@@ -197,7 +197,7 @@ Production enablement requires the product's actual monthly price and currency, 
 ## Open decisions and limits
 
 - **Price and currency:** US$7.95 monthly approved; catalog amount is 795 USD minor units. Stripe Price publication, tax presentation and commercial terms remain pending; Checkout stays disabled.
-- **Identity:** application-owned accounts with GitHub/LinkedIn sign-in selected. OAuth credentials, live verification, retention/deletion and admin MFA remain pending; no separate managed-auth service is required.
+- **Identity:** application-owned email/password and GitHub/LinkedIn sign-in selected. Generic SMTP and a separate email worker are implemented. Provider/SMTP configuration, live delivery/consent verification, retention/deletion and admin MFA remain pending; no separate managed-auth service is required.
 - **Usage allowances:** retain existing technical admission bounds initially; any daily paid/free quota needs explicit product copy and a versioned policy.
 - **Public catalog:** remains public. Charging for complete personalized ranking cannot make publicly available job advertisements inaccessible elsewhere.
 - **Cross-device resume continuity:** intentionally deferred. Accounts persist billing access, not a resume; reloads/new devices require a new analysis.

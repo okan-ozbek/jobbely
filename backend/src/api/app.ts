@@ -13,6 +13,7 @@ import type { MatchJobs } from '../application/resume/match-jobs.js';
 import { registerMatchingRoutes } from './matching-routes.js';
 import { registerAccountRoutes } from './account-routes.js';
 import type { Accounts } from '../application/accounts/accounts.js';
+import type { PasswordAccounts } from '../application/accounts/password-accounts.js';
 import {
   companySchema,
   errorSchema,
@@ -31,6 +32,7 @@ export async function createApp(dependencies: {
   matcher?: MatchJobs;
   closeFeatures?: () => Promise<void>;
   accounts?: Accounts;
+  passwordAccounts?: PasswordAccounts;
   closeAccounts?: () => Promise<void>;
 }) {
   /**
@@ -268,7 +270,12 @@ export async function createApp(dependencies: {
     );
   }
 
-  registerAccountRoutes(app, dependencies.accounts, dependencies.origin ?? 'http://127.0.0.1:5173');
+  registerAccountRoutes(
+    app,
+    dependencies.accounts,
+    dependencies.origin ?? 'http://127.0.0.1:5173',
+    dependencies.passwordAccounts,
+  );
 
   await app.ready();
 

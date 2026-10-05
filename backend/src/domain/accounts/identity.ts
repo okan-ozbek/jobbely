@@ -11,6 +11,7 @@ export interface AccountUser {
   id: string;
   state: 'active' | 'disabled' | 'deleted';
   email: string | null;
+  username?: string | null;
 }
 
 export interface AccountSession {

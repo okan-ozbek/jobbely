@@ -4,7 +4,7 @@
 
 ## Decision and rationale
 
-Deploy a static frontend, a persistent Node API process, PostgreSQL, and an optional separate Node ingestion worker. Keep the code as one workspace with separate packages/processes; this avoids introducing distributed service infrastructure before it is needed. The database survives releases, and API requests remain independent of upstream job boards.
+Deploy a static frontend, a persistent Node API process, PostgreSQL, an optional separate Node ingestion worker, and a separate SMTP email worker when native registration is enabled. Keep the code as one workspace with separate packages/processes; this avoids introducing distributed service infrastructure before it is needed. The database survives releases, and API requests remain independent of upstream job boards and email delivery.
 
 Prefer one public HTTPS origin with `/api/` routed to the API. This preserves the default relative API URLs and reduces configuration. Separate frontend/API origins are supported through an explicit frontend build input and backend CORS origin.
 
@@ -46,7 +46,9 @@ Vite exposes `VITE_*` values in the browser bundle and replaces them during buil
 
 Provision a private PostgreSQL database with persistent storage and backups. PostgreSQL 17 is the local Compose baseline; initial integration testing also used PostgreSQL 18. Configure the connection's TLS settings according to your database host's requirements, without disabling certificate checks as a workaround.
 
-The API and worker connect to the same application database. The worker additionally creates/manages pg-boss queue tables; its database role needs the relevant schema permissions. Keep the database port inaccessible from the public browser network.
+The API and workers connect to the same application database. The ingestion worker additionally creates/manages pg-boss queue tables; its database role needs the relevant schema permissions. The email worker uses migrated account/outbox tables independently of ingestion. Keep the database port inaccessible from the public browser network.
+
+For native registration, configure `AUTH_CODE_SECRET` on API and worker, and generic SMTP credentials on the worker. Run `pnpm worker:email` locally or `node dist/worker/account-email.js` from `backend/` after building. This process is required for verification/reset mail, uses an encrypted transactional outbox, requires TLS except explicit loopback capture, and can run in multiple supervised instances. Monitor failed/expired mail and queue availability; codes expire in ten minutes. The API startup and ingestion worker do not start email delivery. See [EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md) for complete configuration, retries, retention and live-delivery checks.
 
 ### 2. Build a release
 

@@ -4,12 +4,14 @@ import type { Account, SignInProvider } from '../../api/accounts.js';
 import { currentAccount, signInProviders, signOut, startSignIn } from '../../api/accounts.js';
 import { ApiError } from '../../api/client.js';
 import './accounts.css';
+import { EmailAccountForm } from './EmailAccountForm.js';
 
 const names = { github: 'GitHub', linkedin: 'LinkedIn' };
 
 export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
   const [account, setAccount] = useState<Account | null>(null);
   const [providers, setProviders] = useState<{ name: SignInProvider; available: boolean }[]>([]);
+  const [emailAvailable, setEmailAvailable] = useState(false);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -101,7 +103,8 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
     signInProviders(controller.signal)
       .then((result) => {
         if (!controller.signal.aborted) {
-          setProviders(result);
+          setProviders(result.items);
+          setEmailAvailable(result.emailAvailable);
         }
       })
       .catch(() => {
@@ -214,6 +217,7 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
         </div>
         {account?.user ? (
           <>
+            {account.user.username && <p>{account.user.username}</p>}
             <p>{account.user.email ?? 'You’re signed in.'}</p>
             <p className="small-note">Free account. Your resume stays in this tab.</p>
             <button
@@ -228,26 +232,31 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
           </>
         ) : (
           <>
-            <p className="small-note">
-              Sign in or create an account. Your resume stays in this tab while sign-in opens
-              separately.
-            </p>
-            <div className="account-provider-buttons">
-              {(['github', 'linkedin'] as const).map((provider) => (
-                <button
-                  key={provider}
-                  className="secondary-button"
-                  disabled={loading || !providers.find((item) => item.name === provider)?.available}
-                  onClick={() => {
-                    void begin(provider);
-                  }}
-                >
-                  Sign in with {names[provider]}
-                </button>
-              ))}
-            </div>
-            {!loading && !providers.some((provider) => provider.available) && (
-              <p className="small-note">Sign-in is currently unavailable.</p>
+            <p className="small-note">Your resume stays in this tab.</p>
+            {open && (
+              <EmailAccountForm
+                available={emailAvailable}
+                onSignedIn={refresh}
+                onPasswordReset={refresh}
+              />
+            )}
+            {providers.some((provider) => provider.available) && (
+              <div className="account-provider-buttons">
+                {(['github', 'linkedin'] as const).map((provider) => (
+                  <button
+                    key={provider}
+                    className="secondary-button"
+                    disabled={
+                      loading || !providers.find((item) => item.name === provider)?.available
+                    }
+                    onClick={() => {
+                      void begin(provider);
+                    }}
+                  >
+                    Sign in with {names[provider]}
+                  </button>
+                ))}
+              </div>
             )}
             {link && (
               <a

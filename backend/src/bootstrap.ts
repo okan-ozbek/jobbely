@@ -20,6 +20,10 @@ import { AuditedPostingValidation } from './infrastructure/audits/validation.js'
 import { Accounts } from './application/accounts/accounts.js';
 import { PostgresAccounts } from './infrastructure/storage/accounts-postgres.js';
 import { OAuthIdentityProvider } from './infrastructure/accounts/oauth.js';
+import { PasswordAccounts } from './application/accounts/password-accounts.js';
+import { PostgresPasswordAccounts } from './infrastructure/storage/password-accounts-postgres.js';
+import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
+import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
 
 export const config = z
   .object({
@@ -33,6 +37,20 @@ export const config = z
     GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
     LINKEDIN_CLIENT_ID: z.string().min(1).optional(),
     LINKEDIN_CLIENT_SECRET: z.string().min(1).optional(),
+    AUTH_CODE_SECRET: z.string().min(32).optional(),
+    SMTP_HOST: z.string().min(1).optional(),
+    SMTP_FROM: z.email().optional(),
+    SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(587),
+    SMTP_SECURE: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
+    SMTP_ALLOW_INSECURE_LOCAL: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
+    SMTP_USER: z.string().min(1).optional(),
+    SMTP_PASSWORD: z.string().min(1).optional(),
   })
   .superRefine((value, context) => {
     for (const provider of ['GITHUB', 'LINKEDIN'] as const) {
@@ -44,7 +62,21 @@ export const config = z
       }
     }
 
-    if (value.GITHUB_CLIENT_ID || value.LINKEDIN_CLIENT_ID) {
+    if (!!value.SMTP_USER !== !!value.SMTP_PASSWORD) {
+      context.addIssue({ code: 'custom', message: 'SMTP requires both username and password.' });
+    }
+
+    if (
+      value.SMTP_ALLOW_INSECURE_LOCAL &&
+      !['127.0.0.1', 'localhost', '::1'].includes(value.SMTP_HOST ?? '')
+    ) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Plain SMTP is restricted to loopback development.',
+      });
+    }
+
+    if (value.GITHUB_CLIENT_ID || value.LINKEDIN_CLIENT_ID || value.AUTH_CODE_SECRET) {
       const origin = new URL(value.FRONTEND_ORIGIN);
 
       if (
@@ -117,14 +149,30 @@ export async function bootstrap() {
       : []),
   ];
 
+  const passwordRepository =
+    config.DATA_MODE === 'postgres' && config.AUTH_CODE_SECRET
+      ? new PostgresPasswordAccounts(config.DATABASE_URL!)
+      : undefined;
+
   return {
     companies,
     sources,
     repository,
     adapters,
     ...(accountRepository ? { accounts: new Accounts(accountRepository, providers) } : {}),
+    ...(passwordRepository && config.AUTH_CODE_SECRET
+      ? {
+          passwordAccounts: new PasswordAccounts(
+            passwordRepository,
+            new ScryptPasswords(),
+            new EncryptedAccountEmail(config.AUTH_CODE_SECRET),
+            config.AUTH_CODE_SECRET,
+          ),
+        }
+      : {}),
     closeAccounts: async () => {
       await accountRepository?.close();
+      await passwordRepository?.close();
     },
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE),
     resume: new AnalyzeResume(companies),

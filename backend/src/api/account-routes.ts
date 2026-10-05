@@ -2,6 +2,8 @@ import type { FastifyInstance, FastifyRequest, FastifyReply, FastifyError } from
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { Type } from '@sinclair/typebox';
 import type { Accounts } from '../application/accounts/accounts.js';
+import type { PasswordAccounts } from '../application/accounts/password-accounts.js';
+import { PasswordAccountError } from '../domain/accounts/password.js';
 import { AccountAccessError, freeAccess, freeMatchLimit } from '../domain/accounts/access.js';
 import { initialPlans } from '../domain/accounts/plans.js';
 import { sessionAbsoluteMs, signInAttemptMs } from '../domain/accounts/identity.js';
@@ -39,6 +41,7 @@ export function registerAccountRoutes(
   server: FastifyInstance,
   accounts: Accounts | undefined,
   origin: string,
+  passwords?: PasswordAccounts,
 ) {
   const app = server.withTypeProvider<TypeBoxTypeProvider>();
   const secure = new URL(origin).protocol === 'https:';
@@ -77,6 +80,23 @@ export function registerAccountRoutes(
       },
     ],
     errorHandler: (error: FastifyError, _request: FastifyRequest, reply: FastifyReply) => {
+      if (error instanceof PasswordAccountError) {
+        const status =
+          error.code === 'invalid_credentials'
+            ? 401
+            : error.code === 'rate_limited'
+              ? 429
+              : error.code === 'access_unavailable'
+                ? 503
+                : 400;
+
+        if (status === 429) {
+          reply.header('Retry-After', '900');
+        }
+
+        return reply.code(status).send({ code: error.code, message: error.message });
+      }
+
       if (error.validation || [400, 413, 415].includes(error.statusCode ?? 0)) {
         return reply
           .code(error.statusCode ?? 400)
@@ -134,12 +154,14 @@ export function registerAccountRoutes(
         response: {
           200: Type.Object({
             items: Type.Array(Type.Object({ name: providerSchema, available: Type.Boolean() })),
+            emailAvailable: Type.Boolean(),
           }),
           ...accountErrors,
         },
       },
     },
     () => ({
+      emailAvailable: !!passwords,
       items: accounts?.availableProviders() ?? [
         { name: 'github' as const, available: false },
         { name: 'linkedin' as const, available: false },
@@ -234,7 +256,7 @@ export function registerAccountRoutes(
         response: {
           200: Type.Object({
             user: Type.Union([
-              Type.Object({ id: Type.String(), email: nullableString }),
+              Type.Object({ id: Type.String(), email: nullableString, username: nullableString }),
               Type.Null(),
             ]),
             csrfToken: nullableString,
@@ -255,7 +277,13 @@ export function registerAccountRoutes(
       const session = token !== undefined ? await service().current(token) : null;
 
       return {
-        user: session ? { id: session.user.id, email: session.user.email } : null,
+        user: session
+          ? {
+              id: session.user.id,
+              email: session.user.email,
+              username: session.user.username ?? null,
+            }
+          : null,
         csrfToken: session?.csrfToken ?? null,
         access: { ...freeAccess(session?.user.id ?? null), capabilities: [] },
       };
@@ -286,6 +314,187 @@ export function registerAccountRoutes(
       reply.header('Set-Cookie', cookie(sessionCookie, '', 0));
 
       return { signedOut: true as const };
+    },
+  );
+
+  function passwordService() {
+    if (!passwords) {
+      throw new PasswordAccountError(
+        'access_unavailable',
+        'Email sign-in is currently unavailable.',
+      );
+    }
+
+    return passwords;
+  }
+
+  const emailInput = Type.String({ minLength: 3, maxLength: 254 });
+  const passwordInput = Type.String({ minLength: 1, maxLength: 256 });
+
+  const codeInput = {
+    challenge: Type.String({ pattern: '^[A-Za-z0-9_-]{43}$' }),
+    code: Type.String({ pattern: '^\\d{6}$' }),
+  };
+
+  const codeResponse = Type.Object({
+    challenge: Type.String(),
+    message: Type.String(),
+    expiresInSeconds: Type.Integer(),
+  });
+
+  app.post(
+    '/api/v1/auth/register',
+    {
+      ...options,
+      schema: {
+        operationId: 'registerPasswordAccount',
+        body: Type.Object(
+          {
+            email: emailInput,
+            password: passwordInput,
+            username: Type.Optional(Type.String({ maxLength: 30 })),
+          },
+          strict,
+        ),
+        response: { 200: codeResponse, ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      const result = await passwordService().requestCode(
+        'register',
+        request.body,
+        request.ip,
+        readCookie(request, browserCookie),
+      );
+
+      reply.header('Set-Cookie', cookie(browserCookie, result.browser, signInAttemptMs));
+
+      return {
+        challenge: result.challenge,
+        message:
+          'Check your email for a confirmation code. If you already have an account, sign in instead.',
+        expiresInSeconds: 600,
+      };
+    },
+  );
+
+  app.post(
+    '/api/v1/auth/register/confirm',
+    {
+      ...options,
+      schema: {
+        operationId: 'confirmPasswordAccount',
+        body: Type.Object(codeInput, strict),
+        response: { 200: Type.Object({ signedIn: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      const result = await passwordService().confirm(
+        request.body.challenge,
+        request.body.code,
+        readCookie(request, browserCookie) ?? '',
+        request.ip,
+      );
+
+      reply.header('Set-Cookie', [
+        cookie(sessionCookie, result.token, sessionAbsoluteMs),
+        cookie(browserCookie, '', 0),
+      ]);
+
+      return { signedIn: true as const };
+    },
+  );
+
+  app.post(
+    '/api/v1/auth/password/login',
+    {
+      ...options,
+      schema: {
+        operationId: 'passwordSignIn',
+        body: Type.Object({ email: emailInput, password: passwordInput }, strict),
+        response: { 200: Type.Object({ signedIn: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      const result = await passwordService().login(request.body, request.ip);
+
+      reply.header('Set-Cookie', cookie(sessionCookie, result.token, sessionAbsoluteMs));
+
+      return { signedIn: true as const };
+    },
+  );
+
+  app.post(
+    '/api/v1/auth/password/reset',
+    {
+      ...options,
+      schema: {
+        operationId: 'requestPasswordReset',
+        body: Type.Object({ email: emailInput }, strict),
+        response: { 200: codeResponse, ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      const result = await passwordService().requestCode(
+        'reset',
+        request.body,
+        request.ip,
+        readCookie(request, browserCookie),
+      );
+
+      reply.header('Set-Cookie', cookie(browserCookie, result.browser, signInAttemptMs));
+
+      return {
+        challenge: result.challenge,
+        message: 'If an email/password account exists, a reset code will be emailed to you.',
+        expiresInSeconds: 600,
+      };
+    },
+  );
+
+  app.post(
+    '/api/v1/auth/password/reset/confirm',
+    {
+      ...options,
+      schema: {
+        operationId: 'completePasswordReset',
+        body: Type.Object({ ...codeInput, password: passwordInput }, strict),
+        response: { 200: Type.Object({ passwordReset: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      await passwordService().reset(
+        request.body.challenge,
+        request.body.code,
+        request.body.password,
+        readCookie(request, browserCookie) ?? '',
+        request.ip,
+      );
+
+      reply.header('Set-Cookie', [cookie(sessionCookie, '', 0), cookie(browserCookie, '', 0)]);
+
+      return { passwordReset: true as const };
+    },
+  );
+
+  app.post(
+    '/api/v1/auth/email/resend',
+    {
+      ...options,
+      schema: {
+        operationId: 'resendEmailCode',
+        body: Type.Object({ challenge: codeInput.challenge }, strict),
+        response: { 200: Type.Object({ accepted: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request) => {
+      await passwordService().resend(
+        request.body.challenge,
+        readCookie(request, browserCookie) ?? '',
+        request.ip,
+      );
+
+      return { accepted: true as const };
     },
   );
 }

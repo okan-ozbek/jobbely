@@ -67,6 +67,54 @@
   font-size: 14px;
   color: #b62542;
 }
+.account-form {
+  display: grid;
+  gap: 16px;
+}
+.account-form label {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+.account-form input {
+  width: 100%;
+  min-height: var(--control-height);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: var(--surface);
+}
+.account-mode-buttons {
+  display: flex;
+  gap: 8px;
+  margin: 20px 0;
+}
+.account-mode-buttons button {
+  flex: 1;
+  min-height: var(--control-height);
+  background: transparent;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+.account-mode-buttons button[aria-pressed='true'] {
+  color: var(--signal-text);
+  background: #746cde12;
+  border-color: #746cde45;
+}
+.account-text-button {
+  background: transparent;
+  color: var(--signal-text);
+  font-size: 13px;
+  padding: 12px 0;
+  margin-right: 16px;
+}
+.email-account h3 {
+  font-size: 16px;
+  margin: 20px 0 12px;
+}
 @media (max-width: 480px) {
   .header nav {
     gap: 6px;

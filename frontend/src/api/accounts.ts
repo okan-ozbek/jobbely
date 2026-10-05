@@ -29,7 +29,70 @@ export async function signInProviders(signal: AbortSignal) {
     throw new ApiError('Could not load sign-in options.');
   }
 
-  return result.data.items;
+  return result.data;
+}
+
+function accountResult<T>(result: { data?: T; error?: { message: string; code: string } }): T {
+  if (!result.data) {
+    throw new ApiError(
+      result.error?.message ?? 'Could not complete this account request.',
+      result.error?.code,
+    );
+  }
+
+  return result.data;
+}
+
+export async function registerPasswordAccount(
+  body: { email: string; password: string; username?: string },
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/auth/register', { body, signal, cache: 'no-store' }),
+  );
+}
+
+export async function confirmPasswordAccount(
+  body: { challenge: string; code: string },
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/auth/register/confirm', { body, signal, cache: 'no-store' }),
+  );
+}
+
+export async function passwordSignIn(
+  body: { email: string; password: string },
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/auth/password/login', { body, signal, cache: 'no-store' }),
+  );
+}
+
+export async function requestPasswordReset(body: { email: string }, signal: AbortSignal) {
+  return accountResult(
+    await client.POST('/api/v1/auth/password/reset', { body, signal, cache: 'no-store' }),
+  );
+}
+
+export async function completePasswordReset(
+  body: { challenge: string; code: string; password: string },
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/auth/password/reset/confirm', { body, signal, cache: 'no-store' }),
+  );
+}
+
+export async function resendEmailCode(challenge: string, signal: AbortSignal) {
+  return accountResult(
+    await client.POST('/api/v1/auth/email/resend', {
+      body: { challenge },
+      signal,
+      cache: 'no-store',
+    }),
+  );
 }
 
 export async function startSignIn(provider: SignInProvider, signal: AbortSignal) {
