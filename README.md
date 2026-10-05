@@ -220,7 +220,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [HTTP](docs/HTTP.md): network policy and retries.
 - [SECURITY](docs/SECURITY.md): trust boundaries and HTML preparation.
 - [API](docs/API.md): public contract, query behavior and pagination.
-- [ACCOUNTS_BILLING_PLAN](docs/ACCOUNTS_BILLING_PLAN.md): proposed registration/login, five free matches, monthly Pro access and Stripe payment lifecycle.
+- [ACCOUNTS_BILLING_PLAN](docs/ACCOUNTS_BILLING_PLAN.md): proposed registration/login, five free matches, monthly paid tiers, Stripe payment lifecycle and admin company/job/pricing controls.
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
 - [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.
 - [LOGOS](docs/LOGOS.md): local company logos, provenance, refresh commands and N/A fallback.

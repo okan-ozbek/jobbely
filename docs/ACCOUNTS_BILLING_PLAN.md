@@ -1,8 +1,10 @@
-# Plan: accounts, tiers and Stripe subscriptions
+# Plan: accounts, tiers, Stripe subscriptions and administration
 
-**Status:** Proposed, 5 October 2026, Europe/Amsterdam. No authentication, paywall or payment code is implemented by this plan.
+**Status:** Proposed, 5 October 2026, Europe/Amsterdam. No authentication, paywall, payment or admin-dashboard code is implemented by this plan.
 
 **Confirmed product choices:** Visitors can analyze a resume and see their top five matches without an account. An account is required to upgrade. The first paid tier is a monthly subscription.
+
+**Administration scope:** Authorized admins can remove companies and jobs from public display and manage pricing tiers through a private dashboard. Removal is reversible unpublishing; source identities and ingestion evidence remain intact.
 
 This is a new product increment beyond the original [MVP exclusions](../MVP_PLAN.md). Existing matching and resume privacy behavior remains implemented as documented in [MATCHING](MATCHING.md) and [RESUME_PRIVACY](RESUME_PRIVACY.md). The existing company-directory changes are independent of this plan.
 
@@ -58,9 +60,9 @@ Guest binding can use a short-lived HttpOnly preview-session cookie. It is not a
 
 ## Stripe integration and payment flow
 
-Use Stripe Billing with a single Pro product, one allowlisted monthly recurring Price and Stripe-hosted Checkout. Use the Customer Portal for card updates, invoices and cancellation. This avoids building payment forms. Stripe supports server-created Checkout Sessions and hosted subscription management. [Checkout Sessions](https://docs.stripe.com/api/checkout/sessions), [Customer Portal](https://docs.stripe.com/customer-management).
+Use Stripe Billing with an initial Pro product, one published monthly recurring Price revision and Stripe-hosted Checkout. The admin pricing workflow below publishes new revisions and can introduce tiers backed by implemented capabilities. Use the Customer Portal for card updates, invoices and cancellation. This avoids building payment forms. Stripe supports server-created Checkout Sessions and hosted subscription management. [Checkout Sessions](https://docs.stripe.com/api/checkout/sessions), [Customer Portal](https://docs.stripe.com/customer-management).
 
-1. Authenticated `POST /api/v1/billing/checkout` resolves the user and creates/reuses their unique Stripe Customer. Only the server chooses the configured Price, currency, quantity and return URLs. Send the internal user reference and billing identity; never send a resume or skill metadata. Reject client-supplied prices, arbitrary return URLs and other users' customer IDs.
+1. Authenticated `POST /api/v1/billing/checkout` resolves the user and creates/reuses their unique Stripe Customer. The client can select a published plan key; only the server resolves its current Price revision, currency, quantity and return URLs. Send the internal user reference and billing identity; never send a resume or skill metadata. Reject client-supplied prices, unpublished plans, arbitrary return URLs and other users' customer IDs.
 2. Reuse a pending attempt for double clicks and network retries, with database uniqueness/locking and Stripe idempotency keys for customer and Checkout creation. Direct current subscribers to Manage subscription. Block new purchases while a past-due subscription needs repair. Expire or reconcile abandoned attempts before allowing another to avoid duplicate subscriptions. [Stripe idempotency](https://docs.stripe.com/api/idempotent_requests), [duplicate-subscription controls](https://docs.stripe.com/payments/checkout/limit-subscriptions).
 3. Open Checkout in a separate tab/window while the original resume tab remains mounted. Prefer a user-clicked link once the session URL is ready so popup blocking does not lose the flow. Return to a billing-status page that contains no private profile. That page can report success, but does not grant access.
 4. The original app refetches its own entitlement on focus and uses bounded polling while payment is pending. Treat cross-tab messages as a prompt to refetch, not payment evidence. After verified activation, rerun the reviewed profile with Pro access and replace the preview with ranked pagination. A changed public dataset may change the order; do not promise a frozen ranking.
@@ -82,7 +84,7 @@ Stripe is the billing source of truth. Store a small local access projection for
 | Full refund for the currently covered period or payment dispute | Suspend the affected paid entitlement pending reconciliation/support resolution |
 | Partial refund                                                  | Keep access unless an explicit operator decision changes it                     |
 
-No free trial, coupons, annual plan or proration is proposed for v1. Do not infer paid coverage solely from the subscription's upcoming billing period or `active` status: Stripe explains that an active subscription does not prove every invoice has been paid. Normalize settled coverage and renewal state from the pinned API version. Zero-value promotional invoices, manual collection and arbitrary subscription products do not automatically grant Pro. [Subscription statuses](https://docs.stripe.com/billing/subscriptions/overview).
+No free trial, coupons, annual plan or proration is proposed for v1. Do not infer paid coverage solely from the subscription's upcoming billing period or `active` status: Stripe explains that an active subscription does not prove every invoice has been paid. Normalize settled coverage and renewal state from the pinned API version. Resolve entitlements against known historical plan/Price revisions as well as the current published one so grandfathered subscribers remain supported. Zero-value promotional invoices, manual collection and arbitrary subscription products do not automatically grant paid capabilities. [Subscription statuses](https://docs.stripe.com/billing/subscriptions/overview).
 
 Expose Manage subscription and the access-end date. Configure period-end cancellation in the Portal and a payment-repair action for failures. Refunds and subscription cancellation are separate operations; support tooling must explicitly reconcile both. Closing an account must not leave a renewing subscription with no owner able to cancel it.
 
@@ -98,9 +100,50 @@ Stripe can redeliver events and does not guarantee their order. Serialize reconc
 
 Reconcile active/pending/past-due subscriptions periodically and on the authenticated Checkout return path. Both paths use the same serialized update logic as webhooks. If Stripe is unavailable, already verified paid coverage remains valid until its recorded end; do not grant or extend unknown coverage. Monitor inbox age, reconciliation failures, customer/subscription mismatch, duplicate-purchase attempts and payment-to-unlock delay without recording candidate input. No payment-provider request should occur for every ranked job.
 
+## Admin dashboard
+
+Provide a private `/admin` area with Companies, Jobs, Pricing tiers and Activity views. Each view has search/filter controls, current state, a before/after preview for changes and clear success/failure feedback. Public signup or a paid subscription never grants administrator access. Admins receive no access to candidate resumes or transient profiles.
+
+### Permissions and audit trail
+
+Use server-owned grants for `catalog.manage` and `pricing.manage`. A catalog editor can moderate companies/jobs; a billing administrator can manage pricing; an operator may grant both. Provision the first administrator through an audited operator-only setup command tied to a verified identity, with no public bootstrap endpoint or self-assigned role. Role management in the dashboard is outside v1.
+
+Admin access requires MFA through the selected identity provider. A recent MFA challenge is required for publishing a price/tier change or bulk removal; email-code login alone is insufficient. Recheck grant and session validity on every admin API request, require CSRF protection for mutations, and revoke access promptly when a grant is removed. Hiding navigation is not authorization. Follow [OWASP authorization guidance](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html).
+
+Every change requires a reason and records actor, action, target, before/after values, UTC timestamp, correlation ID and outcome in an append-only audit trail. Successful local mutations and their audit entry commit together. Failed external pricing actions also retain a safe outcome record. Do not log resume data, session secrets, card information or complete Stripe payloads. Use optimistic revisions to reject stale edits; a second admin must reload rather than silently overwrite another's change.
+
+### Remove and restore companies and jobs
+
+“Remove” unpublishes a company or job. It does not delete the registry, posting history or source evidence, or claim that an employer closed the vacancy. Store a persistent moderation override keyed by the stable company slug or posting ID, independently of [source lifecycle](LIFECYCLE.md).
+
+- Unpublishing a company hides its directory card and every associated job from catalog searches, facets, counts, recommendations, requirements and public detail/comparison routes. Preview the affected job count before confirmation. A public deep link to a hidden item returns a generic not-found response without revealing its details.
+- Removing a job hides only that posting and preserves the company and other jobs. The rule is tied to its stable identity, so later imports or feature backfills cannot republish it. Duplicate postings with different source IDs require separate selection; do not suppress unrelated jobs by title.
+- Restoring a company does not restore jobs individually removed earlier. Restoring a job does not override a hidden company or bypass the job's active status, source availability, audit or freshness gates.
+- The admin UI shows both moderation state and underlying source/lifecycle state. Imports continue to maintain evidence; pausing ingestion, changing audit approval and activating scheduling stay in the existing operator workflow, including sources shared across companies.
+
+Apply visibility before pagination, counts and matching capacity checks, not after selecting the top five. Use a consistent moderation revision in catalog and feature snapshots, cursors and preview receipts. Each moderation transaction advances that revision; readers validate it before returning results, rejecting stale pages if a removal races a ranking scan. Paid access must also obey visibility. Admin queries use an explicit authorized include-hidden path; public callers cannot enable it with a query parameter.
+
+Already delivered browser content cannot be recalled. On the next request or focus refresh, discard stale hidden results and refresh counts. Avoid caching personalized or admin responses; invalidate any future public catalog caches when visibility changes. [Catalog implementation](../backend/src/application/catalog.ts), [matching scan](../backend/src/application/resume/match-jobs.ts), [publication races](JOB_FEATURES.md).
+
+### Manage pricing tiers
+
+The Pricing tiers view supports draft creation, editing, publishing and retirement. Fields include stable plan key, display name, description, currency, monthly amount, tax presentation and capabilities selected from the implemented allowlist. Initial Free stays five matches and initial Pro unlocks all eligible matches; changing the Free promise requires an explicit product-policy revision. A tier editor cannot grant unsupported features, admin privileges, broader source access or unbounded compute.
+
+Keep plan revisions immutable once published. Separate commercial amount changes from capability changes, and show which customers and pending Checkout attempts are affected before publication:
+
+1. Save a draft locally, validate supported currency/minor units, positive paid amount, monthly recurrence, supported capabilities and environment. Show the complete customer-facing price and feature preview.
+2. On an authorized Publish action, create/reuse the Stripe Product and create a new Stripe Price using a durable, idempotent change operation. Stripe amounts on existing Prices are not editable; a new amount needs a new Price. [Stripe product/price management](https://docs.stripe.com/products-prices/manage-prices).
+3. Only publish the local revision after Stripe creation and verification succeed. A retry resumes the recorded operation instead of creating another Price. If Stripe succeeds but the local commit fails, reconciliation recovers the draft operation; an orphan Price must never become purchasable automatically.
+4. New Checkout attempts use the new revision. Attempts already created honor their captured price/capabilities until their existing expiry; the preview identifies that window. Validate completion against the captured revision, not the latest one. UI pricing reads the published server catalog rather than hardcoded amounts.
+5. Existing subscribers keep their purchased Price and capability revision by default. Retirement disables new sales and new switches into the tier but does not cancel subscriptions or discard historical entitlement mappings. Publishing a new price does not silently reprice existing users.
+
+Migrating existing subscriptions is a separate future workflow requiring an affected-subscriber preview, approved effective date, customer communication and an explicit proration/payment policy. It is not part of the default Publish button. Stripe subscription price changes can affect invoices and proration, so they require deliberate handling. [Changing subscription prices](https://docs.stripe.com/billing/subscriptions/change-price).
+
+For v1, keep subscriber cancellation/payment repair in the Customer Portal; restrict plan-switching there until its choices agree with the published local catalog. The admin dashboard manages tier definitions and sale availability; refunds, individual subscriber migrations and manual access grants remain operator workflows. Price changes require no deployment after this catalog-backed workflow is implemented.
+
 ## Data, contracts and architecture
 
-Preserve the existing [layer boundaries](ARCHITECTURE.md): access policy in domain, subscription/account workflows in application, narrow identity/billing/persistence ports, managed auth and Stripe SDKs in infrastructure, input/session/signature validation in API, explicit wiring in bootstrap. Keep the existing backend and frontend packages; no new service or general event bus is required.
+Preserve the existing [layer boundaries](ARCHITECTURE.md): access and visibility policies in domain, subscription/account/moderation/pricing workflows in application, narrow identity/billing/persistence ports, managed auth and Stripe SDKs in infrastructure, input/session/signature/permission validation in API, explicit wiring in bootstrap. Keep the existing backend and frontend packages; no new service or general event bus is required. Add moderation overlays beside the current file-backed company registry rather than editing deployment configuration from browser requests; preserve [storage](STORAGE.md) and [source](SOURCES.md) invariants.
 
 Proposed persistent records:
 
@@ -113,6 +156,8 @@ Proposed persistent records:
 | CheckoutAttempt    | User, selected plan, idempotency key, Checkout ID, expiry and reconciliation state                                                                      |
 | BillingEventInbox  | Unique Stripe event ID, safe object references, processing lease/retry state, outcome timestamps                                                        |
 
+Admin additions are `AdminGrant` (verified user, permission, revocation), `CompanyVisibility` / `PostingVisibility` (target, removed state, reason, optimistic revision), a shared moderation revision, `PlanRevision` (immutable capability definition, environment and Stripe mapping), `PricingChangeOperation` (draft, idempotency/Stripe references and publication outcome), and `AdminAuditEntry` (actor, target, safe before/after values and outcome). Checkout attempts and subscription access bind to a plan revision. Keep historical revisions needed by subscribers even after retirement.
+
 No resume/profile/history table is introduced. Invoice/card/address data stays with Stripe except the minimum identifiers needed for reconciliation. Define account, session and event retention and deletion before launch; do not promise erasure of records Stripe must retain. Stripe stores no candidate input. Existing local-worker and private matching protections remain required.
 
 Proposed public contracts, subject to generated OpenAPI types during implementation:
@@ -121,18 +166,23 @@ Proposed public contracts, subject to generated OpenAPI types during implementat
 - `GET /api/v1/account`: current user identity and capabilities, billing state, access-end date; `no-store`.
 - `POST /api/v1/billing/checkout`, `POST /api/v1/billing/portal`: authenticated, CSRF-protected, server-owned Stripe session creation.
 - `POST /api/v1/billing/webhook`: signature-verified durable event acceptance.
+- `GET /api/v1/plans`: published public pricing/features; no unpublished Stripe IDs or admin drafts.
+- `/api/v1/admin/companies` and `/api/v1/admin/jobs`: permission-checked search/list, detail and visibility updates with a reason and expected revision. Use explicit moderation actions rather than destructive record deletion.
+- `/api/v1/admin/plans`: permission-checked draft/edit/publish/retire actions; publication has a durable operation ID and recoverable status.
+- `GET /api/v1/admin/activity`: authorized, bounded audit-history reads; no public audit feed.
 - Existing matching routes: enforce tier limits, add explicit access metadata and preview receipt, and return typed authentication/upgrade errors for protected operations.
 
 Keep billing SDK records out of public responses and avoid altering ranking payloads unnecessarily. Regenerate contracts after schema changes. Read [JOB_FEATURES](JOB_FEATURES.md) before adding entitlement-related snapshot/cursor checks so concurrent public-feature changes still produce the existing stale-result response.
 
 ## Delivery sequence and acceptance gates
 
-1. **Policy and contracts.** Decide price/currency, auth supplier and commercial terms. Define the access matrix, preview receipt, capability projection and lifecycle fixtures before UI or Stripe wiring. Confirm the free reranking boundary and test every protected endpoint.
-2. **Identity foundation.** Add users/sessions and the managed email-code adapter. Verify login, account recreation rules, signout, expired/revoked sessions, CSRF, account ownership and email delivery. No paid capability is enabled yet.
+1. **Policy and contracts.** Decide price/currency, auth supplier and commercial terms. Define the access matrix, preview receipt, capability projection, moderation and pricing revisions, and lifecycle fixtures before UI or Stripe wiring. Confirm the free reranking boundary and test every protected endpoint.
+2. **Identity foundation.** Add users/sessions and the managed email-code adapter, admin grants, MFA/step-up verification and operator bootstrap. Verify login, account recreation rules, signout, expired/revoked sessions, permission revocation, CSRF, account ownership and email delivery. No paid capability is enabled yet.
 3. **Free preview and paywall.** Server limits to five, restricted comparison receipts and typed locked state. UI handles zero/fewer/exactly/more than five results, errors and unchanged resume review. This is the first product-facing gate; arbitrary API limits/cursors must fail to bypass it.
 4. **Stripe sandbox end-to-end.** Implement Customer/Checkout/Portal adapters, durable inbox, access projection and reconciliation. Verify payment, extra authentication, async pending/failure, duplicate clicks, webhook replay/reordering, renewal failure/recovery, cancellation, refunds and disputes with synthetic identities and Stripe test fixtures/test clocks.
 5. **Integrated upgrade UX.** Keep the original resume tab alive through inline signup and separate Checkout, unlock after server verification, and test desktop/mobile/tab discard. Paid pagination and detail comparison must stop after logout, expiry or downgrade. All private state stays out of storage, URLs, telemetry and Stripe metadata.
-6. **Production readiness.** Dedicated PostgreSQL concurrency tests, required billing worker, secrets/HTTPS/proxy policy, alerts and reconciliation runbook, email configuration, sandbox/live separation and operator refund/cancellation procedure. Run root `pnpm check`, API authorization tests and browser journeys before release.
+6. **Admin dashboard.** Deliver Companies/Jobs moderation, Pricing tiers drafts/publication/retirement and Activity. Verify hidden content disappears from every public surface, remains hidden after import/backfill and restores correctly. Exercise concurrent removals/ranking, stale edits, unauthorized users, catalog-editor attempts to change prices, MFA expiry, revoked grants, duplicate price publication, external/local partial failure, old Checkout completion and grandfathered subscribers.
+7. **Production readiness.** Dedicated PostgreSQL concurrency tests, required billing worker, secrets/HTTPS/proxy policy, alerts and reconciliation runbook, email configuration, sandbox/live separation, administrator recovery and operator refund/cancellation procedure. Run root `pnpm check`, API authorization tests and browser journeys before release.
 
 Required security regressions include forged/tampered preview receipts, caller-selected `limit=50`, old paid cursors after downgrade, arbitrary-job comparison, another user's Portal/Checkout ID, spoofed Checkout success, invalid webhook signatures, duplicate/out-of-order events, downtime recovery, session fixation and redirect misuse. Verify absence of protected records in browser network responses, not just rendered cards. Preserve matching scores across Free/Pro for the same job/profile.
 
@@ -145,5 +195,7 @@ Production enablement requires the product's actual monthly price and currency, 
 - **Usage allowances:** retain existing technical admission bounds initially; any daily paid/free quota needs explicit product copy and a versioned policy.
 - **Public catalog:** remains public. Charging for complete personalized ranking cannot make publicly available job advertisements inaccessible elsewhere.
 - **Cross-device resume continuity:** intentionally deferred. Accounts persist billing access, not a resume; reloads/new devices require a new analysis.
+- **Existing subscriber migrations:** grandfather prices and capabilities by default; any bulk migration and notice/proration policy is a separate decision.
+- **Admin operations:** reversible removal and tier management are included; permanent purges, arbitrary source activation and dashboard role assignment remain outside v1.
 
-Planning verification: inspected current matching routes, schemas, signed cursor logic, private-route admission controls, Prisma models and frontend memory lifetime. Official payment/authentication guidance was checked on 5 October 2026. Implementation, migrations, live Stripe setup and end-to-end billing tests remain pending.
+Planning verification: inspected current matching routes, schemas, signed cursor logic, private-route admission controls, Prisma models, catalog filtering, source lifecycle and frontend memory lifetime. Official payment/authentication/authorization guidance was checked on 5 October 2026. Implementation, migrations, live Stripe setup and end-to-end billing/admin tests remain pending.

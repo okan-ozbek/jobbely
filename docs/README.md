@@ -4,7 +4,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
-[ACCOUNTS_BILLING_PLAN.md](ACCOUNTS_BILLING_PLAN.md) proposes guest access to five resume matches, managed registration/login, a monthly Pro tier, server-enforced entitlements and Stripe Checkout/Portal/webhook handling. Accounts and payments remain unimplemented.
+[ACCOUNTS_BILLING_PLAN.md](ACCOUNTS_BILLING_PLAN.md) proposes guest access to five resume matches, managed registration/login, monthly paid tiers, server-enforced entitlements, Stripe Checkout/Portal/webhook handling and an admin dashboard for company/job removal and versioned pricing. Accounts, payments and admin controls remain unimplemented.
 
 [SEMANTIC_EXPERIMENTS.md](SEMANTIC_EXPERIMENTS.md) records the first implemented foundation: requirement/evidence contracts, pure coverage algebra, reproducible development evaluation and a pinned local-model public-job shadow adapter. Live recommendations still use the deterministic policy.
 
