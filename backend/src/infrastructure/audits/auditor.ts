@@ -24,7 +24,11 @@ export class SourceAuditor {
     private readonly clock: () => Date = () => new Date(),
   ) {}
 
-  async run(artifactDirectory: string, existing?: { source: Source; extraction: Extraction }) {
+  async run(
+    artifactDirectory: string,
+    existing?: { source: Source; extraction: Extraction },
+    snapshots?: ReadonlyMap<string, Extraction>,
+  ) {
     const report: AuditReport = {
       version: 1,
       companySlug: this.company.slug,
@@ -246,7 +250,14 @@ export class SourceAuditor {
 
       try {
         const extraction =
-          existing?.extraction ?? (await this.adapters[source.provider].extract(source));
+          existing?.extraction ??
+          (snapshots
+            ? snapshots.get(source.id)
+            : await this.adapters[source.provider].extract(source));
+
+        if (!extraction) {
+          throw new Error('No successful snapshot from this refresh; source was not re-fetched');
+        }
 
         rawResponses.push(...extraction.rawResponses);
 

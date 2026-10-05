@@ -13,6 +13,8 @@ legal terms, approve employer scope, bypass challenges, or enable incomplete sou
 
 ## Commands
 
+[WAVE_REFRESH.md](WAVE_REFRESH.md) now automates audit execution after each employer's source refresh within the ordered A/B/C worker cycle. It checks the exact imported snapshots and saves progress/evidence without separate manual audit commands. Reports do not invent scope/access approvals or auto-activate candidate sources; the activation CLI below remains a separate gate.
+
 ```powershell
 pnpm audit:wave-a
 pnpm audit:wave-b

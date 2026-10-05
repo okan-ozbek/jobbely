@@ -279,4 +279,30 @@ describe('source synchronization', () => {
     await test.sync.execute(source);
     expect(commit.mock.calls[0]?.[0].rawResponses).toContainEqual(evidence);
   });
+
+  it('preserves the previous snapshot if the wave job is cancelled during extraction', async () => {
+    const test = setup();
+
+    await test.sync.execute(source);
+
+    const before = await test.repository.read();
+    const controller = new AbortController();
+    const extraction = await test.adapter.extract(source);
+
+    vi.spyOn(test.adapter, 'extract').mockImplementationOnce(async () => {
+      controller.abort(new Error('Queue job expired'));
+
+      return extraction;
+    });
+
+    await expect(test.sync.executeWithEvidence(source, controller.signal)).rejects.toThrow(
+      'Queue job expired',
+    );
+
+    const after = await test.repository.read();
+
+    expect(after.version).toBe(before.version);
+    expect(after.jobs).toEqual(before.jobs);
+    expect(after.runs.at(-1)?.status).toBe('failed');
+  });
 });

@@ -26,6 +26,8 @@ Input limits, ZIP preflight, streaming inflation, CRC/size checks, entity/extern
 
 Serve production worker headers from [_headers](../frontend/public/_headers) or the equivalent [reverse proxy configuration](DEPLOYMENT.md). Missing isolation headers fail closed to pasted text. The browser has resource bounds and termination, but no enforceable per-document 512 MiB process budget.
 
+Since 6 October, [the Docker frontend](DOCKER.md) serves the bundled parser with the same strict HEAD/GET policy. Backend ingestion and email run in separate containers; document file bytes continue to stay in the local browser. Container hosting does not add OCR, server uploads or support for unsupported document layouts.
+
 [PDF adapter/order](../frontend/src/features/resume/documents/pdf.ts), [DOCX adapter](../frontend/src/features/resume/documents/docx.ts), [shared model/limits](../frontend/src/features/resume/documents/model.ts), [synthetic fixtures/tests](../frontend/src/features/resume/documents/documents.test.ts), [session tests](../frontend/src/features/resume/documents/reader.test.ts).
 
 Run `pnpm --filter @jobbely/frontend test`. Tests cover equivalent single-column PDF/DOCX, column/header order, table rows, broken words, empty/image-only PDF, encrypted/damaged/oversized/page limits, malformed ZIP/XML, entry/output bounds, CRC, entities/external links, CSP preflight and cancellation/timeout. Browser checks must use both development and production preview because their script policies differ. Production deployment and independent security/load review remain separate checks.

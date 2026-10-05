@@ -46,7 +46,7 @@ Use `Ctrl+C` to stop the servers. Environment variables override `backend/.env`;
 2. Start the included development database:
 
    ```powershell
-   docker compose up -d --wait
+   docker compose up -d --wait postgres
    ```
 
    Compose exposes PostgreSQL only at `127.0.0.1:5432`. It uses the local development database/user/password `jobbely`, and persists data in a Docker volume.
@@ -99,16 +99,54 @@ The frontend development server proxies `/api` to port 3001. No frontend `.env` 
 
 ## Host the application
 
+### Run the app in Docker
+
+Docker can run the built frontend, API, migration job and PostgreSQL together:
+
+```powershell
+docker compose up -d --build --wait
+```
+
+Open **http://127.0.0.1:8080/**. Port 8080 keeps this stack separate from `pnpm dev`
+on 5173. The existing PostgreSQL volume is reused. The API has no published port;
+the frontend proxies `/api` under the same origin. PDF/DOCX parsing still happens
+locally in the browser, served as a bundled worker with the required isolation headers.
+
+Start the optional background workers independently:
+
+```powershell
+docker compose --profile ingestion up -d ingestion-worker
+docker compose --profile email up -d email-worker
+```
+
+The email worker requires `AUTH_CODE_SECRET`, `SMTP_HOST` and `SMTP_FROM` in
+`backend/.env`; API and email worker receive the same secret. Ingestion runs sequential
+Wave A → B → C syncs with automatic audits on startup and twice daily. Progress and
+evidence persist in `ingestion-data`; candidate sources remain partial. See
+[WAVE_REFRESH.md](docs/WAVE_REFRESH.md). To start both workers with the app after configuration:
+
+```powershell
+docker compose --profile ingestion --profile email up -d --build --wait
+```
+
+See [DOCKER.md](docs/DOCKER.md) for configuration, logs, refresh commands and restart
+steps. Stop with `docker compose --profile ingestion --profile email stop`; this
+preserves the database. Use the explicit `postgres` service when you want only the
+database for host-side development.
+
+### Deploy to a host
+
 For an existing PostgreSQL installation, apply `pnpm db:migrate`, then `pnpm features:backfill` before matching. Demo listings are excluded. Production PDF/DOCX reading requires the worker CSP headers in [DEPLOYMENT](docs/DEPLOYMENT.md); missing headers preserve pasted-text fallback.
 
 Host the built frontend as static files, run the backend as a persistent Node process, and provide PostgreSQL. Use a reverse proxy to serve the frontend and route `/api/` to the backend under the same HTTPS origin.
 
-| Component                      | Build/output                                            | Runtime                                     |
-| ------------------------------ | ------------------------------------------------------- | ------------------------------------------- |
-| Frontend                       | `frontend/dist/`                                        | Static hosting or reverse proxy             |
-| API                            | `backend/dist/` plus `backend/config/` and dependencies | `pnpm --filter @jobbely/backend run start`  |
-| Database                       | Versioned Prisma migrations                             | PostgreSQL with persistent storage          |
-| Ingestion worker, when enabled | Same backend build/config                               | From `backend/`: `node dist/worker/main.js` |
+| Component                      | Build/output                                            | Runtime                                              |
+| ------------------------------ | ------------------------------------------------------- | ---------------------------------------------------- |
+| Frontend                       | `frontend/dist/`                                        | Static hosting or reverse proxy                      |
+| API                            | `backend/dist/` plus `backend/config/` and dependencies | `pnpm --filter @jobbely/backend run start`           |
+| Database                       | Versioned Prisma migrations                             | PostgreSQL with persistent storage                   |
+| Ingestion worker, when enabled | Same backend build/config                               | From `backend/`: `node dist/worker/main.js`          |
+| Email worker, when configured  | Same backend build/config and SMTP secrets              | From `backend/`: `node dist/worker/account-email.js` |
 
 For a release, install and build from the repository root:
 
@@ -154,7 +192,7 @@ Sources in `backend/config/sources.json` are currently candidates with schedulin
 pnpm --filter @jobbely/backend run worker
 ```
 
-Schedules refresh enabled sources twice daily, staggered by minute in UTC. The API process does not start the worker. Validate scheduler retries/recovery before unattended operation; see [INGESTION.md](docs/INGESTION.md) and [SOURCES.md](docs/SOURCES.md).
+With `INGESTION_WAVE_SYNC=true` (the Docker worker default), the worker refreshes A → B → C sequentially and audits each employer automatically, on startup and at 00:00/12:00 UTC. `pnpm sync:waves` requests another cycle through the same exclusive queue. See [WAVE_REFRESH.md](docs/WAVE_REFRESH.md) for persistent progress reports and audit blockers. With wave mode disabled, schedules refresh only audited enabled sources twice daily, staggered by minute in UTC. The API process does not start the worker; see [INGESTION.md](docs/INGESTION.md) and [SOURCES.md](docs/SOURCES.md).
 
 ## Checks and troubleshooting
 

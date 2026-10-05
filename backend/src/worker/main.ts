@@ -1,5 +1,6 @@
 import { PgBoss } from 'pg-boss';
 import { bootstrap, config } from '../bootstrap.js';
+import { configureWaveRefreshQueue, waveRefreshQueue } from '../infrastructure/wave-queue.js';
 
 if (config.DATA_MODE !== 'postgres' || !config.DATABASE_URL) {
   throw new Error('Worker requires PostgreSQL configuration');
@@ -20,8 +21,33 @@ await boss.work('backfill-job-features', { localConcurrency: 1 }, async () => {
 
 await boss.schedule('backfill-job-features', '*/15 * * * *');
 
+if (config.INGESTION_WAVE_SYNC) {
+  await configureWaveRefreshQueue(boss);
+
+  await boss.work(waveRefreshQueue, { localConcurrency: 1 }, async (jobs) => {
+    for (const job of jobs) {
+      await dependencies.refreshWaves.execute(job.id, undefined, job.signal);
+    }
+  });
+
+  await boss.schedule(waveRefreshQueue, '0 */12 * * *', null, { tz: 'UTC' });
+  // Exclusive queue policy suppresses overlapping startup/cron/manual requests globally.
+  await boss.send(waveRefreshQueue);
+
+  for (const source of dependencies.sources) {
+    await boss.unschedule('sync-source', source.id);
+  }
+} else {
+  await boss.unschedule(waveRefreshQueue);
+}
+
 await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, async (jobs) => {
   for (const job of jobs) {
+    if (config.INGESTION_WAVE_SYNC) {
+      // Old per-source jobs must not compete with the ordered wave cycle.
+      continue;
+    }
+
     const source = dependencies.sources.find(
       (item) => item.id === job.data.sourceId && item.scheduled && item.auditStatus === 'verified',
     );
@@ -35,7 +61,9 @@ await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, as
   }
 });
 
-for (const [index, source] of dependencies.sources.filter((item) => item.scheduled).entries()) {
+for (const [index, source] of dependencies.sources
+  .filter((item) => item.scheduled && !config.INGESTION_WAVE_SYNC)
+  .entries()) {
   await boss.schedule(
     'sync-source',
     `${index % 60} */12 * * *`,
@@ -50,13 +78,18 @@ for (const [index, source] of dependencies.sources.filter((item) => item.schedul
   );
 }
 
-console.log('Worker ready; only audited enabled sources are scheduled.');
+console.log(
+  config.INGESTION_WAVE_SYNC
+    ? 'Worker ready; sequential A → B → C sync and automatic audits enabled.'
+    : 'Worker ready; only audited enabled sources are scheduled.',
+);
 
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.once(signal, () => {
     void boss
       .stop()
       .then(() => dependencies.closeFeatures())
+      .then(() => dependencies.closeAccounts())
       .then(() => dependencies.repository.close())
       .then(() => process.exit(0));
   });

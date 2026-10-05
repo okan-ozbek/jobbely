@@ -24,6 +24,8 @@ import { PasswordAccounts } from './application/accounts/password-accounts.js';
 import { PostgresPasswordAccounts } from './infrastructure/storage/password-accounts-postgres.js';
 import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
 import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
+import { RefreshWaves } from './application/refresh-waves.js';
+import { FileWaveAudits, FileWaveRefreshReports } from './infrastructure/audits/wave-refresh.js';
 
 export const config = z
   .object({
@@ -32,6 +34,10 @@ export const config = z
     PORT: z.coerce.number().int().min(1).max(65535).default(3001),
     HOST: z.string().default('127.0.0.1'),
     FRONTEND_ORIGIN: z.url().default('http://127.0.0.1:5173'),
+    INGESTION_WAVE_SYNC: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
     MATCH_CURSOR_SECRET: z.string().min(32).optional(),
     GITHUB_CLIENT_ID: z.string().min(1).optional(),
     GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
@@ -154,6 +160,17 @@ export async function bootstrap() {
       ? new PostgresPasswordAccounts(config.DATABASE_URL!)
       : undefined;
 
+  const sync = new SyncSource(
+    repository,
+    adapters,
+    htmlPreparation,
+    [new LabelMappingStrategy(), new TitleRuleStrategy()],
+    undefined,
+    new AuditedPostingValidation(companies, sources, adapters),
+  );
+
+  const backfill = new BackfillJobFeatures(features, htmlJobDocumentReader);
+
   return {
     companies,
     sources,
@@ -185,19 +202,20 @@ export async function bootstrap() {
       config.MATCH_CURSOR_SECRET,
       htmlJobDocumentReader,
     ),
-    backfill: new BackfillJobFeatures(features, htmlJobDocumentReader),
+    backfill,
+    refreshWaves: new RefreshWaves(
+      companies,
+      sources,
+      sync,
+      new FileWaveAudits(adapters),
+      new FileWaveRefreshReports(),
+      backfill,
+    ),
     closeFeatures: async () => {
       if (features instanceof PostgresJobFeatures) {
         await features.close();
       }
     },
-    sync: new SyncSource(
-      repository,
-      adapters,
-      htmlPreparation,
-      [new LabelMappingStrategy(), new TitleRuleStrategy()],
-      undefined,
-      new AuditedPostingValidation(companies, sources, adapters),
-    ),
+    sync,
   };
 }

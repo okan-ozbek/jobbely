@@ -212,4 +212,6 @@ Current limits include application-memory catalog queries, global publication se
 
 ## Implementation references
 
+[DOCKER.md](DOCKER.md) provides an implemented local Compose stack for the frontend, API, migration job, PostgreSQL and optional ingestion/email workers. Its Nginx configuration includes the document worker policy above. Use it for reproducible local hosting; public HTTPS, hosted secrets, edge admission and production operations remain deployment-specific gates.
+
 [Workspace scripts](../package.json), [backend commands](../backend/package.json), [bootstrap](../backend/src/bootstrap.ts), [API entry point](../backend/src/main.ts), [worker entry point](../backend/src/worker/main.ts), [frontend build config](../frontend/vite.config.ts), [migration config](../backend/prisma.config.ts), [local Compose](../compose.yaml), [backend environment example](../backend/.env.example), [frontend environment example](../frontend/.env.example).

@@ -88,8 +88,17 @@ function audit(
   html = `<a href="${posting.url}">Engineer</a>`,
   feed = extraction,
   auditPlan = plan,
+  snapshots?: ReadonlyMap<string, Extraction>,
 ) {
-  const adapter = { extract: async () => feed };
+  const adapter = {
+    extract: async () => {
+      if (snapshots) {
+        throw new Error('Automatic audit must not fetch this feed again');
+      }
+
+      return feed;
+    },
+  };
 
   return new SourceAuditor(
     company,
@@ -118,10 +127,20 @@ function audit(
       google: adapter,
     },
     () => now,
-  ).run('ignored/raw-evidence');
+  ).run('ignored/raw-evidence', undefined, snapshots);
 }
 
 describe('evidence-backed source audits', () => {
+  it('checks the exact imported snapshot without refetching, including failed-source gaps', async () => {
+    const passed = await audit(undefined, undefined, undefined, new Map([[source.id, extraction]]));
+    const failed = await audit(undefined, undefined, undefined, new Map());
+
+    expect(passed.blockers).toEqual([]);
+    expect(passed.report.sources[0]?.matchedCount).toBe(1);
+    expect(failed.report.sources[0]?.error).toContain('No successful snapshot');
+    expect(failed.blockers.length).toBeGreaterThan(0);
+  });
+
   it('passes reviewed, exhaustive exact identities and valid details', async () => {
     const { report, blockers } = await audit();
 

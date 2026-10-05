@@ -23,6 +23,8 @@ After claiming the lease, the use case selects the adapter, invokes its injected
 
 ## Commands and scheduling
 
+Since 6 October, [WAVE_REFRESH.md](WAVE_REFRESH.md) adds ordered A → B → C sync plus automatic employer audits. Docker ingestion opts into this mode; it requests one cycle on startup and at 00:00/12:00 UTC, suppresses overlaps globally and persists progress in `ingestion-data`. Candidate wave imports remain partial and do not change activation or closure eligibility. The per-source worker behavior below applies when `INGESTION_WAVE_SYNC` is disabled.
+
 From the repository root:
 
 ```sh

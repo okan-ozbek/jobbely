@@ -4,6 +4,10 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[WAVE_REFRESH.md](WAVE_REFRESH.md) records the automated A → B → C ingestion/audit cycle, exclusive queue, exact snapshot reuse, persisted progress and unchanged source verification/lifecycle gates.
+
+[DOCKER.md](DOCKER.md) records the implemented local container stack: static frontend, API, migration job, PostgreSQL and optional ingestion/email workers. The document parser remains in the browser and is served with its required isolation headers.
+
 [ACCOUNT_BILLING_PLAN.md](ACCOUNT_BILLING_PLAN.md) tracks five free resume matches, native and GitHub/LinkedIn sign-in, US$7.95 monthly Pro, Stripe and administration. [ACCOUNTS.md](ACCOUNTS.md) records the implemented account/session/dialog and draft-offer foundation. [EMAIL_ACCOUNTS.md](EMAIL_ACCOUNTS.md) records password registration, email verification/reset codes, durable admission and the separate SMTP queue worker. Paywall enforcement, Stripe, admin controls and analytics remain pending.
 
 [ANALYTICS_PLAN.md](ANALYTICS_PLAN.md) proposes admin audience, registration, observed DAU/WAU/MAU, funnel, retention, billing and health reporting, with explicit metric definitions, privacy/consent boundaries and aggregation checks. Analytics remains unimplemented.

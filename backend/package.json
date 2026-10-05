@@ -14,6 +14,7 @@
     "test": "vitest run",
     "export:openapi": "tsx src/cli/export-openapi.ts",
     "sync": "tsx src/cli/sync.ts",
+    "sync:waves": "tsx src/cli/sync-waves.ts",
     "audit": "tsx src/cli/audit-source.ts",
     "features:backfill": "tsx src/cli/backfill-features.ts",
     "matching:evaluate": "tsx src/cli/evaluate-matching.ts",

@@ -20,6 +20,12 @@ export class SyncSource {
   ) {}
 
   async execute(source: Source) {
+    return (await this.executeWithEvidence(source)).run;
+  }
+
+  async executeWithEvidence(source: Source, signal?: AbortSignal) {
+    signal?.throwIfAborted();
+
     const startedAt = this.clock().toISOString();
     const run = await this.repository.startRun(source, startedAt);
 
@@ -57,13 +63,20 @@ export class SyncSource {
 
     try {
       const extraction = await this.adapters[source.provider].extract(source);
+
+      signal?.throwIfAborted();
+
       const auditResponses = (await this.validation?.validate(source, extraction)) ?? [];
+
+      signal?.throwIfAborted();
 
       await renewal;
 
       if (leaseFailure) {
         throw leaseFailure;
       }
+
+      signal?.throwIfAborted();
 
       const ids = new Set<string>();
 
@@ -93,7 +106,7 @@ export class SyncSource {
         };
       });
 
-      return await this.repository.commitSnapshot({
+      const committed = await this.repository.commitSnapshot({
         source,
         runId: run.id,
         observedAt: this.clock().toISOString(),
@@ -102,6 +115,8 @@ export class SyncSource {
         excluded: extraction.excluded,
         enumerationComplete: extraction.enumerationComplete,
       });
+
+      return { run: committed, extraction };
     } catch (error) {
       await this.repository.failRun(
         run.id,

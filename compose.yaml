@@ -1,3 +1,22 @@
+x-backend: &backend
+  image: jobbely-backend:local
+  build:
+    context: .
+    target: backend
+  env_file:
+    - path: backend/.env
+      required: false
+  environment: &backend-environment
+    NODE_ENV: production
+    DATA_MODE: postgres
+    DATABASE_URL: postgresql://jobbely:jobbely@postgres:5432/jobbely
+    HOST: 0.0.0.0
+    PORT: 3001
+    FRONTEND_ORIGIN: ${JOBBELY_ORIGIN:-http://127.0.0.1:8080}
+  init: true
+  restart: unless-stopped
+  stop_grace_period: 45s
+
 services:
   postgres:
     image: postgres:17-alpine
@@ -13,5 +32,63 @@ services:
       test: ['CMD-SHELL', 'pg_isready -U jobbely']
       interval: 5s
       retries: 10
+  migrate:
+    <<: *backend
+    command: ['node', 'node_modules/prisma/build/index.js', 'migrate', 'deploy']
+    restart: 'no'
+    depends_on:
+      postgres:
+        condition: service_healthy
+  api:
+    <<: *backend
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3001/health/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      start_period: 20s
+      retries: 6
+  web:
+    image: jobbely-web:local
+    build:
+      context: .
+      target: web
+    ports:
+      - '127.0.0.1:${JOBBELY_PORT:-8080}:8080'
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1:8080/health']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+  ingestion-worker:
+    <<: *backend
+    profiles: ['ingestion']
+    command: ['node', 'dist/worker/main.js']
+    environment:
+      <<: *backend-environment
+      INGESTION_WAVE_SYNC: 'true'
+    volumes:
+      - ingestion-data:/app/backend/data
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  email-worker:
+    <<: *backend
+    profiles: ['email']
+    command: ['node', 'dist/worker/account-email.js']
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 volumes:
   postgres-data:
+  ingestion-data:
