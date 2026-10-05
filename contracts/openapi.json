@@ -2411,6 +2411,44 @@
                         }
                       }
                     },
+                    "skillTenureEstimates": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "skillId",
+                          "minimumMonths",
+                          "maximumMonths",
+                          "roleIds"
+                        ],
+                        "properties": {
+                          "skillId": {
+                            "maxLength": 100,
+                            "type": "string"
+                          },
+                          "minimumMonths": {
+                            "minimum": 0,
+                            "maximum": 600,
+                            "type": "integer"
+                          },
+                          "maximumMonths": {
+                            "minimum": 0,
+                            "maximum": 600,
+                            "type": "integer"
+                          },
+                          "roleIds": {
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "maxLength": 100,
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
                     "competencies": {
                       "type": "array",
                       "items": {

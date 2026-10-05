@@ -154,6 +154,20 @@ export const resumeAnalysisSchema = Type.Object({
   skills: Type.Array(signal),
   education: Type.Optional(educationSchema),
   skillTenure: Type.Optional(skillTenureSchema),
+  skillTenureEstimates: Type.Optional(
+    Type.Array(
+      Type.Object(
+        {
+          skillId: Type.String({ maxLength: 100 }),
+          minimumMonths: Type.Integer({ minimum: 0, maximum: 600 }),
+          maximumMonths: Type.Integer({ minimum: 0, maximum: 600 }),
+          roleIds: Type.Array(Type.String({ maxLength: 100 }), { maxItems: 100 }),
+        },
+        strict,
+      ),
+      { maxItems: 100 },
+    ),
+  ),
   competencies: Type.Array(signal),
   employment: Type.Array(
     Type.Object({

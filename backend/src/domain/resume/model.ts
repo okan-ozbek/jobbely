@@ -93,6 +93,12 @@ export interface ResumeAnalysis {
   location: ResumeLocation;
   education?: EducationClaim[];
   skillTenure?: SkillTenureClaim[];
+  skillTenureEstimates?: {
+    skillId: string;
+    minimumMonths: number;
+    maximumMonths: number;
+    roleIds: string[];
+  }[];
   experience: {
     professional: ExperienceRange;
     internships: ExperienceRange;

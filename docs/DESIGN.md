@@ -14,7 +14,7 @@ Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6f
 
 Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Shared searchable glass listboxes replace native select popups, retaining labels, keyboard navigation and visible focus. Catalog search keeps its original transparent background on focus and uses the search icon color as its focus cue without an added outline.
 
-Primary actions and glass dropdown triggers share the `--control-height` token (42px). Primary buttons use horizontal padding only, including the mobile composer, so Review my resume, Find matching jobs and the company application action share the same height. Longer wrapping labels may grow to stay readable.
+Primary actions, secondary review buttons and glass dropdown triggers share the `--control-height` token (42px). Primary buttons use horizontal padding only, including the mobile composer, so Review my resume, Find matching jobs and the company application action share the same height. Longer wrapping labels may grow to stay readable.
 
 ## Interaction invariants
 
@@ -29,6 +29,8 @@ Primary actions and glass dropdown triggers share the `--control-height` token (
 - Native labels, keyboard focus, skip navigation, responsive controls and reduced-motion support remain. Status never depends on color alone. Page transitions, disclosure height/opacity, result entrance and smooth scrolling provide brief feedback; reduced motion removes animation and smooth scrolling. Skeleton shimmer runs only during pending work.
 
 ## Implementation and verification
+
+Profile review places location and employment in one desktop column, alongside a combined education/skills panel. On narrow screens the columns stack. Each skill exposes duration and role origins on hover or keyboard focus; clicking opens a native modal editor with focus containment, Escape dismissal and editable years. Estimated role usage is labeled separately from resume claims and reviewed overrides. The redundant Experience by function panel is omitted; matching still uses reviewed role functions.
 
 [App](../frontend/src/App.tsx), [resume composer](../frontend/src/features/resume/ResumeWorkbench.tsx), [matching UI](../frontend/src/features/resume/ResumeMatches.tsx), [shared styles](../frontend/src/styles.css), [resume styles](../frontend/src/features/resume/resume.css), [browser metadata](../frontend/index.html).
 

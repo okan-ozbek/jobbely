@@ -1,63 +1,51 @@
 import { useState } from 'react';
-import { Sparkles, X } from 'lucide-react';
-import type { ResumeAnalysis } from '../../api/client.js';
+import { Sparkles } from 'lucide-react';
+import type { ResumeAnalysis, ResumeCorrections } from '../../api/client.js';
+import { SkillExperienceChip } from './SkillExperienceChip.js';
 
 export function SignalReview({
   signals,
   suggestions = [],
   add,
   remove,
+  analysis,
+  corrections,
+  correct,
+  pending,
 }: {
   signals: ResumeAnalysis['skills'];
   suggestions?: ResumeAnalysis['supportedSkills'];
   add: (name: string) => void;
   remove: (signal: ResumeAnalysis['skills'][number]) => void;
+  analysis: ResumeAnalysis;
+  corrections: ResumeCorrections;
+  correct: (changes: ResumeCorrections) => void;
+  pending: boolean;
 }) {
   const [name, setName] = useState('');
 
   return (
-    <section className="resume-panel skills-review">
+    <section className="skills-review">
       <div className="section-heading">
         <h2>
           Skills <span>{signals.length}</span>
         </h2>
       </div>
       <p className="small-note">
-        Keep what fits. Remove anything that doesn’t. <Sparkles size={12} /> marks an inferred
-        activity.
+        Hover for experience; click a skill to edit years. <Sparkles size={12} /> marks an inferred
+        activity. Role estimates assume use throughout employment; review before matching.
       </p>
       <div className="skill-chips">
         {signals.map((signal) => (
-          <span
-            className={`skill-chip ${signal.interpretation === 'interpreted' ? 'skill-chip-inferred' : ''}`}
+          <SkillExperienceChip
             key={signal.id}
-          >
-            {signal.interpretation === 'interpreted' && (
-              <Sparkles
-                size={12}
-                aria-label="Inferred activity"
-              />
-            )}
-            <span>{signal.name}</span>
-            {(signal.status === 'learning' ||
-              signal.status === 'negated' ||
-              signal.interpretation === 'ambiguous') && (
-              <small>
-                {signal.status === 'learning'
-                  ? 'Learning'
-                  : signal.status === 'negated'
-                    ? 'Denied'
-                    : 'Uncertain'}
-              </small>
-            )}
-            <button
-              type="button"
-              aria-label={`Remove ${signal.name} from skills`}
-              onClick={() => remove(signal)}
-            >
-              <X size={13} />
-            </button>
-          </span>
+            signal={signal}
+            pending={pending}
+            analysis={analysis}
+            corrections={corrections}
+            correct={correct}
+            remove={() => remove(signal)}
+          />
         ))}
         {signals.length === 0 && <p className="small-note">Add your skills below.</p>}
       </div>

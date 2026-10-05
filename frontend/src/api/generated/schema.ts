@@ -673,6 +673,12 @@ export interface operations {
                             skillId: string;
                             months: number;
                         }[];
+                        skillTenureEstimates?: {
+                            skillId: string;
+                            minimumMonths: number;
+                            maximumMonths: number;
+                            roleIds: string[];
+                        }[];
                         competencies: {
                             evidenceRefs?: {
                                 blockId: string;

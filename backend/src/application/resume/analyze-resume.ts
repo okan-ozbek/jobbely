@@ -9,7 +9,11 @@ import {
   hasEmploymentDates,
   recognizeEmployer,
 } from '../../domain/resume/employment.js';
-import { dateBounds, summarizeExperience } from '../../domain/resume/experience.js';
+import {
+  dateBounds,
+  summarizeExperience,
+  estimateSkillTenure,
+} from '../../domain/resume/experience.js';
 import type {
   EmployerIdentity,
   ResumeAnalysis,
@@ -293,8 +297,8 @@ export class AnalyzeResume {
       }
     }
 
-    return {
-      version: 'text-5',
+    const analysis: ResumeAnalysis = {
+      version: 'text-6',
       vocabularyVersion,
       analysisDate,
       document: { ...document, blocks },
@@ -326,5 +330,9 @@ export class AnalyzeResume {
       warnings,
       supportedSkills,
     };
+
+    analysis.skillTenureEstimates = estimateSkillTenure(analysis.skills, employment, analysisDate);
+
+    return analysis;
   }
 }

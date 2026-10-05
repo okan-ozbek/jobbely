@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { GlassSelect } from '../../components/GlassSelect.js';
 import type { ResumeAnalysis, ResumeCorrections } from '../../api/client.js';
@@ -19,15 +19,14 @@ export function QualificationReview({
   analysis,
   corrections,
   correct,
+  children,
 }: {
   analysis: ResumeAnalysis;
   corrections: ResumeCorrections;
   correct: (changes: ResumeCorrections) => void;
+  children: ReactNode;
 }) {
   const education = corrections.education ?? analysis.education ?? [];
-  const tenure = corrections.skillTenure ?? analysis.skillTenure ?? [];
-  const [skillId, setSkillId] = useState('');
-  const [years, setYears] = useState('');
 
   const nextDegree = (['bachelor', 'master', 'doctorate'] as const).find(
     (level) =>
@@ -51,8 +50,7 @@ export function QualificationReview({
     <section className="resume-panel qualification-review">
       <h2>Education & skill experience</h2>
       <p className="small-note">
-        Review degree level, subject and completion. Only explicit or reviewed years establish
-        experience in a particular skill.
+        Review your education, then check the experience behind each skill.
       </p>
       {education.map((degree, index) => (
         <div
@@ -116,7 +114,7 @@ export function QualificationReview({
       ))}
       <button
         type="button"
-        className="text-button"
+        className="resume-secondary-button"
         disabled={education.length >= 20 || !nextDegree}
         onClick={() =>
           nextDegree &&
@@ -128,109 +126,7 @@ export function QualificationReview({
       >
         Add a degree
       </button>
-      <h3>Skill experience</h3>
-      {tenure.map((claim) => (
-        <div
-          className="tenure-entry"
-          key={claim.skillId}
-        >
-          <span>
-            {analysis.supportedSkills.find((skill) => skill.id === claim.skillId)?.name ??
-              claim.skillId}
-          </span>
-          <label>
-            <span>Years</span>
-            <input
-              aria-label={`Years of experience in ${claim.skillId}`}
-              type="number"
-              min={0}
-              max={50}
-              step={0.25}
-              value={claim.months / 12}
-              onChange={(event) =>
-                correct({
-                  skillTenure: tenure.map((entry) =>
-                    entry.skillId === claim.skillId
-                      ? {
-                          ...entry,
-                          months: Math.round(
-                            Math.min(50, Math.max(0, Number(event.target.value))) * 12,
-                          ),
-                        }
-                      : entry,
-                  ),
-                })
-              }
-            />
-          </label>
-          <button
-            type="button"
-            className="qualification-remove"
-            aria-label={`Remove ${claim.skillId} experience`}
-            onClick={() =>
-              correct({ skillTenure: tenure.filter((entry) => entry.skillId !== claim.skillId) })
-            }
-          >
-            <X size={15} />
-          </button>
-        </div>
-      ))}
-      <form
-        className="tenure-add"
-        onSubmit={(event) => {
-          event.preventDefault();
-
-          if (!skillId || !years || Number(years) < 0 || Number(years) > 50) {
-            return;
-          }
-
-          correct({
-            skillTenure: [
-              ...tenure.filter((claim) => claim.skillId !== skillId),
-              { skillId, months: Math.round(Number(years) * 12) },
-            ],
-          });
-
-          setSkillId('');
-          setYears('');
-        }}
-      >
-        <GlassSelect
-          aria-label="Skill for experience"
-          value={skillId}
-          onValueChange={setSkillId}
-        >
-          <option value="">Choose a skill</option>
-          {analysis.supportedSkills.map((skill) => (
-            <option
-              key={skill.id}
-              value={skill.id}
-            >
-              {skill.name}
-            </option>
-          ))}
-        </GlassSelect>
-        <input
-          aria-label="Years in selected skill"
-          placeholder="Years"
-          type="number"
-          min={0}
-          max={50}
-          step={0.25}
-          value={years}
-          onChange={(event) => setYears(event.target.value)}
-        />
-        <button
-          type="submit"
-          disabled={!skillId || years === ''}
-        >
-          Add
-        </button>
-      </form>
-      <p className="small-note">
-        Use professional experience only. Concurrent work is counted once; using a skill during a
-        role does not establish its full duration. Also include the skill in your reviewed skills.
-      </p>
+      {children}
     </section>
   );
 }

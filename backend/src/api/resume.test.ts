@@ -44,7 +44,7 @@ describe('transient resume analysis API', () => {
     expect(response.headers['cache-control']).toBe('no-store');
 
     expect(response.json()).toMatchObject({
-      version: 'text-5',
+      version: 'text-6',
       analysisDate: '2026-10-01',
       experience: { professional: { minimumMonths: 36 } },
       skills: [{ id: 'typescript', status: 'work_evidenced' }],

@@ -28,7 +28,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [SEMANTICS.md](SEMANTICS.md)                     | Engineering concept packs, clause evidence, tool scopes and transient skill-discovery review           |
 | [STRUCTURED_MATCHING.md](STRUCTURED_MATCHING.md) | Job sections, logical resume blocks, qualification logic and bounded sentence provenance               |
 | [MATCHING.md](MATCHING.md)                       | Requirement evidence, explained scoring, freshness, pagination and optional employer context           |
-| [QUALIFICATIONS.md](QUALIFICATIONS.md)           | Reviewed degrees, explicit skill years, privacy bounds and contextual role relevance                   |
+| [QUALIFICATIONS.md](QUALIFICATIONS.md)           | Reviewed degrees, role-based skill estimates, privacy bounds and contextual role relevance             |
 | [JOB_FEATURES.md](JOB_FEATURES.md)               | Indexed public features, hash/version invalidation, replayable backfill and publication races          |
 | [RESUME_PRIVACY.md](RESUME_PRIVACY.md)           | Transient profiles, local worker CSP, resource bounds and private API handling                         |
 | [INGESTION.md](INGESTION.md)                     | Application-owned workflow, atomic publication, operator commands and PostgreSQL-backed scheduling     |

@@ -1,4 +1,5 @@
 import type { MatchInput, ResumeAnalysis } from '../../api/client.js';
+import { reviewedSkillTenure } from './skill-tenure.js';
 
 // Explicit allowlist: contact details and resume excerpts never enter matching requests.
 function claim({
@@ -58,7 +59,7 @@ export function matchProfile(analysis: ResumeAnalysis): MatchInput['profile'] {
       field,
       completion,
     })),
-    skillTenure: (analysis.skillTenure ?? []).map(({ skillId, months }) => ({ skillId, months })),
+    skillTenure: reviewedSkillTenure(analysis),
     skills: analysis.skills.map(claim),
     competencies: analysis.competencies.map(claim),
     employment: analysis.employment.map(

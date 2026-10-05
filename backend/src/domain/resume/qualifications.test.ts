@@ -29,7 +29,7 @@ describe('explicit education and skill duration claims', () => {
     },
   );
 
-  it('separates completed/in-progress degrees and does not create tenure from dated role keywords or related skills', () => {
+  it('keeps explicit duration claims separate from role estimates and related skills', () => {
     const result = new AnalyzeResume([], () => new Date('2026-10-01')).execute({
       text: 'Summary\n8 years of experience with Java.\nExperience\nOrion Labs — Software Engineer Jan 2016 – Dec 2025\nBuilt C++ services and Redis pipelines.\nEducation\nBSc in Computer Science 2015\nMasters in Mathematics expected 2027',
     });
@@ -40,6 +40,11 @@ describe('explicit education and skill duration claims', () => {
     ]);
 
     expect(result.skillTenure).toEqual([{ skillId: 'java', months: 96 }]);
+
+    expect(result.skillTenureEstimates).toEqual([
+      expect.objectContaining({ skillId: 'cpp', minimumMonths: 120, maximumMonths: 120 }),
+      expect.objectContaining({ skillId: 'redis', minimumMonths: 120, maximumMonths: 120 }),
+    ]);
   });
 
   it('does not accept ambiguous multi-tool duration claims or lower-case latency units', () => {

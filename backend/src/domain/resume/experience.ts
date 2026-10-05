@@ -1,4 +1,4 @@
-import type { ExperienceRange, ResumeEmployment } from './model.js';
+import type { ExperienceRange, ResumeEmployment, ResumeSignal, ResumeAnalysis } from './model.js';
 
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
@@ -123,4 +123,56 @@ export function summarizeExperience(entries: ResumeEmployment[], analysisDate: s
       ),
     })),
   };
+}
+
+/** Full-role usage estimates remain separate from explicit duration claims. */
+export function estimateSkillTenure(
+  signals: ResumeSignal[],
+  entries: ResumeEmployment[],
+  analysisDate: string,
+): NonNullable<ResumeAnalysis['skillTenureEstimates']> {
+  return signals
+    .flatMap((signal) => {
+      if (
+        signal.interpretation !== 'explicit' ||
+        signal.status === 'learning' ||
+        signal.status === 'negated' ||
+        signal.deniedFacets?.some((facet) => facet === 'usage' || facet === 'general') ||
+        signal.uncertainFacets?.some((facet) => facet === 'usage' || facet === 'general')
+      ) {
+        return [];
+      }
+
+      const roleIds = new Set(
+        (signal.evidenceRefs ?? [])
+          .filter(
+            (ref) =>
+              ref.source === 'employment' &&
+              ref.objectId === signal.id &&
+              ['performed', 'assisted', 'listed', 'reviewed'].includes(ref.assertion),
+          )
+          .flatMap((ref) => (ref.roleId ? [ref.roleId] : [])),
+      );
+
+      const roles = entries.filter(
+        (entry) =>
+          entry.kind === 'employment' &&
+          roleIds.has(entry.id) &&
+          experienceRange([entry], analysisDate).maximumMonths > 0,
+      );
+
+      const duration = experienceRange(roles, analysisDate);
+
+      return duration.maximumMonths > 0
+        ? [
+            {
+              skillId: signal.id,
+              minimumMonths: Math.min(600, duration.minimumMonths),
+              maximumMonths: Math.min(600, duration.maximumMonths),
+              roleIds: roles.map((role) => role.id),
+            },
+          ]
+        : [];
+    })
+    .slice(0, 100);
 }

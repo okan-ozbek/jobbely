@@ -34,14 +34,14 @@ export function EmploymentReview({
   add: () => void;
 }) {
   return (
-    <section className="resume-panel">
+    <section className="resume-panel employment-review">
       <div className="section-heading">
         <h2>
           Employment <span>{entries.length}</span>
         </h2>
         <button
           type="button"
-          className="resume-text-button"
+          className="resume-secondary-button"
           onClick={add}
         >
           Add a role

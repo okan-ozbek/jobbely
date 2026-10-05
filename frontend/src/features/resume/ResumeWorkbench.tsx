@@ -325,82 +325,69 @@ export function ResumeWorkbench({
               )}
               <div className="resume-layout">
                 <div className="resume-profile">
-                  <section className="resume-panel">
-                    <div className="section-heading">
-                      <h2>Current location</h2>
-                      <span className="resume-status">
-                        {analysis.location.status.replaceAll('_', ' ')}
-                      </span>
-                    </div>
-                    <label className="resume-location">
-                      <span>City and country</span>
-                      <input
-                        value={state.corrections.location ?? analysis.location.value}
-                        maxLength={200}
-                        placeholder="e.g. Amsterdam, Netherlands"
-                        onChange={(event) => state.correct({ location: event.target.value })}
-                      />
-                    </label>
-                    <p className="small-note">
-                      Confirm your current location. Work locations do not establish where you live
-                      or your work authorization.
-                    </p>
-                  </section>
+                  <div className="profile-employment-column">
+                    <section className="resume-panel">
+                      <div className="section-heading">
+                        <h2>Current location</h2>
+                        <span className="resume-status">
+                          {analysis.location.status.replaceAll('_', ' ')}
+                        </span>
+                      </div>
+                      <label className="resume-location">
+                        <span>City and country</span>
+                        <input
+                          value={state.corrections.location ?? analysis.location.value}
+                          maxLength={200}
+                          placeholder="e.g. Amsterdam, Netherlands"
+                          onChange={(event) => state.correct({ location: event.target.value })}
+                        />
+                      </label>
+                      <p className="small-note">
+                        Confirm your current location. Work locations do not establish where you
+                        live or your work authorization.
+                      </p>
+                    </section>
+                    <EmploymentReview
+                      entries={analysis.employment}
+                      corrections={state.corrections.employment ?? []}
+                      edit={state.editEmployment}
+                      add={state.addEmployment}
+                    />
+                  </div>
                   <QualificationReview
                     analysis={analysis}
                     corrections={state.corrections}
                     correct={state.correct}
-                  />
-                  <SignalReview
-                    signals={[...analysis.skills, ...analysis.competencies]}
-                    suggestions={analysis.supportedSkills}
-                    add={(name) =>
-                      state.addSignal(
-                        analysis.competencies.some(
-                          (item) => item.name.toLowerCase() === name.trim().toLowerCase(),
+                  >
+                    <SignalReview
+                      pending={state.loading || !!state.error}
+                      analysis={analysis}
+                      corrections={state.corrections}
+                      correct={state.correct}
+                      signals={[...analysis.skills, ...analysis.competencies]}
+                      suggestions={analysis.supportedSkills}
+                      add={(name) =>
+                        state.addSignal(
+                          analysis.competencies.some(
+                            (item) => item.name.toLowerCase() === name.trim().toLowerCase(),
+                          )
+                            ? 'competencies'
+                            : 'skills',
+                          name,
                         )
-                          ? 'competencies'
-                          : 'skills',
-                        name,
-                      )
-                    }
-                    remove={(signal) =>
-                      state.removeSignal(
-                        analysis.competencies.some((item) => item.id === signal.id)
-                          ? 'competencies'
-                          : 'skills',
-                        signal,
-                      )
-                    }
-                  />
+                      }
+                      remove={(signal) =>
+                        state.removeSignal(
+                          analysis.competencies.some((item) => item.id === signal.id)
+                            ? 'competencies'
+                            : 'skills',
+                          signal,
+                        )
+                      }
+                    />
+                  </QualificationReview>
                 </div>
               </div>
-              <EmploymentReview
-                entries={analysis.employment}
-                corrections={state.corrections.employment ?? []}
-                edit={state.editEmployment}
-                add={state.addEmployment}
-              />
-              {analysis.experience.relevant.length > 0 && (
-                <section className="resume-panel">
-                  <h2>Experience by function</h2>
-                  <div className="resume-relevant">
-                    {analysis.experience.relevant.map((item) => (
-                      <div key={item.category}>
-                        <span>{item.category.replaceAll('-', ' ')}</span>
-                        <strong>{formatDuration(item.duration)}</strong>
-                        {item.duration.unknownEntries > 0 && (
-                          <small>{item.duration.unknownEntries} undated role(s)</small>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <p className="small-note">
-                    Based on reviewed role functions, not years using every listed skill. Projects,
-                    volunteering and internships are excluded.
-                  </p>
-                </section>
-              )}
             </div>
           </Disclosure>
           <div

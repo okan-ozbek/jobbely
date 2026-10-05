@@ -166,8 +166,9 @@
 .resume-secondary-button {
   background: transparent;
   border: 1px solid var(--border);
-  padding: 10px 16px;
+  padding: 0 16px;
   white-space: nowrap;
+  min-height: var(--control-height);
 }
 .resume-workbench button:disabled {
   opacity: 0.45;
@@ -893,9 +894,62 @@
 }
 .resume-profile {
   display: grid;
-  grid-template-columns: minmax(240px, 0.6fr) minmax(0, 1.4fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: start;
   gap: 18px;
+}
+.profile-employment-column {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.profile-employment-column .resume-fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.skills-review {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.skill-chip .skill-experience-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border-radius: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.skill-chip .skill-experience-trigger:hover {
+  background: transparent;
+}
+.skill-experience-preview {
+  max-height: 260px;
+  overflow: auto;
+}
+.skill-experience-preview ul {
+  margin: 0;
+  padding-left: 16px;
+}
+.skill-experience-dialog {
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid white;
+  border-radius: 24px;
+  background: #f8f8ff;
+  color: var(--ink);
+  box-shadow: 0 14px 40px #34355b24;
+}
+.skill-experience-dialog::backdrop {
+  background: #292b4933;
+  backdrop-filter: blur(4px);
+}
+.skill-experience-dialog .section-heading {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 .profile-review > .disclosure-toggle {
   padding: 24px;
@@ -1100,16 +1154,16 @@
   }
 }
 
-.qualification-review h3 {
-  margin-top: 22px;
-  font-size: 14px;
-}
 .qualification-entry {
   display: grid;
-  grid-template-columns: 1fr 1.3fr 1fr auto;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
   align-items: end;
   gap: 10px;
   margin: 16px 0;
+}
+.qualification-entry label:nth-child(2) {
+  grid-column: 1 / -1;
+  grid-row: 2;
 }
 .qualification-entry label {
   min-width: 0;
@@ -1119,30 +1173,17 @@
   background: transparent;
   border-radius: 10px;
 }
-.tenure-entry {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 12px 0;
-}
-.tenure-entry > span {
-  flex: 1;
-}
-.tenure-entry input {
-  max-width: 100px;
-}
-.tenure-add {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 90px auto;
-  gap: 10px;
-  align-items: center;
-  margin-top: 16px;
-}
 @media (max-width: 650px) {
+  .profile-employment-column .resume-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .qualification-entry {
     grid-template-columns: minmax(0, 1fr);
     position: relative;
     padding-right: 34px;
+  }
+  .qualification-entry label:nth-child(2) {
+    grid-row: auto;
   }
   .qualification-entry .qualification-remove {
     position: absolute;

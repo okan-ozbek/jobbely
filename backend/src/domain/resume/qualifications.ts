@@ -114,8 +114,8 @@ export function detectEducation(lines: ResumeLine[], analysisDate: string): Educ
   return [...new Map(claims.map((claim) => [JSON.stringify(claim), claim])).values()].slice(0, 20);
 }
 
-// Only explicit duration claims establish tool tenure. A skill appearing under a dated role
-// does not establish that it was used for the whole role, and inferred relations never add years.
+// Explicit duration claims remain distinct from reviewable full-role usage estimates.
+// Skill relations never add years; the review flow must confirm estimated duration separately.
 export function detectSkillTenure(lines: ResumeLine[]): SkillTenureClaim[] {
   const claims: SkillTenureClaim[] = [];
 
