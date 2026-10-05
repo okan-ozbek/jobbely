@@ -1,5 +1,5 @@
 import { scrollToSection } from './components/motion.js';
-import { CoverageStatus } from './components/CoverageStatus.js';
+import { CompanyDirectory } from './components/CompanyDirectory.js';
 import { GlassSelect } from './components/GlassSelect.js';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowLeft, ArrowUpRight, CircleHelp, MapPin, Search, X } from 'lucide-react';
@@ -353,95 +353,15 @@ export function App() {
             )}
           </section>
         ) : view === 'companies' ? (
-          <section className="companies-section">
-            <div className="section-heading">
-              <h2>
-                Company directory <span>{companies.length}</span>
-              </h2>
-              <label className="directory-search">
-                <Search size={16} />
-                <input
-                  aria-label="Find a company"
-                  placeholder="Find a company"
-                  value={companySearch}
-                  onChange={(event) => setCompanySearch(event.target.value)}
-                />
-              </label>
-            </div>
-            {loading && companies.length === 0 && (
-              <div
-                className="empty-state"
-                role="status"
-              >
-                Loading companies…
-              </div>
-            )}
-            <div
-              className="company-grid"
-              aria-busy={loading}
-            >
-              {companies
-                .filter((company) =>
-                  company.name.toLowerCase().includes(companySearch.toLowerCase()),
-                )
-                .map((company) => (
-                  <article
-                    className="company-card"
-                    key={company.slug}
-                  >
-                    <div className="company-card-top">
-                      <a
-                        className="company-logo-link"
-                        href={company.careersUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Visit ${company.name} careers via logo`}
-                      >
-                        <CompanyLogo
-                          name={company.name}
-                          logoUrl={company.logoUrl}
-                        />
-                      </a>
-                      <a
-                        href={company.careersUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Visit ${company.name} careers`}
-                      >
-                        <ArrowUpRight size={18} />
-                      </a>
-                    </div>
-                    <div className="company-card-name">
-                      <h3>{company.name}</h3>
-                      <CoverageStatus company={company} />
-                    </div>
-                    <div className="company-card-bottom">
-                      <span>
-                        <strong>{company.jobs.toLocaleString()}</strong>{' '}
-                        {mode === 'demo' ? 'examples' : 'listings'}
-                      </span>
-                      <button
-                        aria-label={`View ${company.name} jobs`}
-                        onClick={() =>
-                          update({
-                            view: 'jobs',
-                            company: company.slug,
-                            job: null,
-                          })
-                        }
-                      >
-                        View jobs <ArrowUpRight size={14} />
-                      </button>
-                    </div>
-                  </article>
-                ))}
-            </div>
-            {!loading &&
-              !error &&
-              companies.filter((company) =>
-                company.name.toLowerCase().includes(companySearch.toLowerCase()),
-              ).length === 0 && <div className="empty-state">No companies match this search.</div>}
-          </section>
+          <CompanyDirectory
+            companies={companies}
+            loading={loading}
+            error={error}
+            mode={mode}
+            search={companySearch}
+            onSearch={setCompanySearch}
+            onOpenJobs={(slug) => update({ view: 'jobs', company: slug, job: null, from: null })}
+          />
         ) : (
           <section className="browse-section">
             <div className="search-controls">

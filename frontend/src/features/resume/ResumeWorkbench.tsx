@@ -212,7 +212,7 @@ export function ResumeWorkbench({
             {['databricks', 'apple', 'meta', 'figma', 'spotify'].map((slug) => (
               <img
                 key={slug}
-                src={`/logos/${slug}.${slug === 'meta' ? 'jpg' : 'png'}`}
+                src={`/logos/${slug}.svg`}
                 alt={
                   slug === 'databricks'
                     ? 'Databricks'

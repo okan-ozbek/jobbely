@@ -263,6 +263,22 @@ footer {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
+.company-directory-group {
+  margin-top: 30px;
+}
+.company-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 18px;
+  font-size: 17px;
+  font-weight: 500;
+}
+.company-group-heading span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+}
 .company-card {
   display: flex;
   flex-direction: column;
@@ -306,7 +322,6 @@ footer {
 .company-logo-link:hover .company-icon,
 .company-logo-link:focus-visible .company-icon {
   transform: translateY(-4px) rotate(-7deg) scale(1.08);
-  box-shadow: 0 8px 20px #6963c224;
 }
 .company-card-name {
   display: flex;
@@ -314,8 +329,11 @@ footer {
   gap: 8px;
   margin: 18px 0 24px;
 }
-.company-card-name h3 {
+.company-card .company-card-name h4 {
   margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 24px;
 }
 .coverage-status {
   position: relative;
@@ -355,16 +373,18 @@ footer {
   place-items: center;
   width: 52px;
   height: 52px;
-  padding: 9px;
-  border-radius: 16px;
-  background: white;
-  border: 1px solid #eceef4;
+  padding: 4px;
+  background: transparent;
+  border: 0;
   flex-shrink: 0;
 }
 .company-icon img {
   width: 100%;
-  height: 100%;
+  height: 44px;
   object-fit: contain;
+}
+.company-card .company-icon {
+  width: 88px;
 }
 .company-card h3 {
   font-size: 17px;

@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { checkSvgLogo } from './logo-assets.mjs';
 
 const registryPath = new URL('../backend/config/companies.json', import.meta.url);
 const manifestPath = new URL('../frontend/config/company-logos.json', import.meta.url);
@@ -20,6 +21,26 @@ for (let offset = 0; offset < companies.length; offset += 4) {
       try {
         if (!source?.sourceUrl) {
           throw new Error('No logo source configured');
+        }
+
+        // These curated vectors include reviewed geometry/background adjustments.
+        // Never replace them with favicons or silently publish upstream changes.
+        if (source.maintenance === 'manual-vector-review') {
+          const bytes = await readFile(
+            new URL(`../frontend/public${source.asset}`, import.meta.url),
+          );
+
+          checkSvgLogo(bytes, company.slug);
+
+          if (createHash('sha256').update(bytes).digest('hex') !== source.sha256) {
+            throw new Error(
+              'Reviewed SVG hash mismatch; update the source record after visual review',
+            );
+          }
+
+          console.log(`${company.slug}: preserved reviewed SVG (manual replacement)`);
+
+          return;
         }
 
         const response = await fetch(source.sourceUrl, { signal: AbortSignal.timeout(20_000) });

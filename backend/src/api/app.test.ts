@@ -41,7 +41,7 @@ describe('read API and contract', () => {
     );
 
     expect((await app.inject('/api/v1/companies/meta')).json()).toMatchObject({
-      logoUrl: '/logos/meta.jpg',
+      logoUrl: '/logos/meta.svg',
     });
 
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({

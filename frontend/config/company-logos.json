@@ -1,423 +1,598 @@
 {
   "meta": {
     "domain": "meta.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=meta.com&sz=128",
-    "asset": "/logos/meta.jpg",
-    "sha256": "0ee32bcff9179915f842e12c3d4351b4c8d5de63a96a9c1fbc0ef992f20c7498",
-    "fetchedAt": "2026-09-30T18:31:00.820Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/meta.svg",
+    "sourcePage": "https://www.meta.com",
+    "asset": "/logos/meta.svg",
+    "sha256": "975aff87f19021d866ee6a044a24f4d3417df537b05e844cbd6418556c182e3d",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "apple": {
     "domain": "apple.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=apple.com&sz=128",
-    "asset": "/logos/apple.png",
-    "sha256": "eb7f4b32c3d7492e9a0f47a27743924428009dc41d3605a0c59a98a154fc52ad",
-    "fetchedAt": "2026-09-30T18:31:00.789Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/apple.svg",
+    "sourcePage": "https://www.apple.com",
+    "asset": "/logos/apple.svg",
+    "sha256": "44f95515744773c02ea4e6b4fa34c3d0aed3635960949293b1e15aa5cc680159",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "netflix": {
     "domain": "netflix.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=netflix.com&sz=128",
-    "asset": "/logos/netflix.png",
-    "sha256": "330ddc5f685c74123ddaab4f2640f41df8ff65e58f8c374640e2aea5ec16b7dd",
-    "fetchedAt": "2026-09-30T18:31:00.862Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/netflix.svg",
+    "sourcePage": "https://brand.netflix.com/en/assets/logos",
+    "asset": "/logos/netflix.svg",
+    "sha256": "b33fc1f075691b01ef19e4eefb8e377c4a326ede6cd9c15d8a2a91396367f32e",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "google": {
     "domain": "google.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=google.com&sz=128",
-    "asset": "/logos/google.png",
-    "sha256": "07e659b8dad50a8dcd5cedea1f521c94530286826207524937337fb47f337085",
-    "fetchedAt": "2026-09-30T18:31:00.792Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/google.svg",
+    "sourcePage": "https://partnermarketinghub.withgoogle.com",
+    "asset": "/logos/google.svg",
+    "sha256": "60156f26885990fd7cc7fec486884d5a7b15d50e600b3416835f376e6838d6b7",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "amazon": {
     "domain": "amazon.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=amazon.com&sz=128",
-    "asset": "/logos/amazon.png",
-    "sha256": "7e67fb8e6c43002e09c7d363f3b158a716dc09f4043cc058bcc01b206bbd097d",
-    "fetchedAt": "2026-09-30T18:31:00.890Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/13.21.0/icons/amazon.svg",
+    "asset": "/logos/amazon.svg",
+    "sha256": "4ac5c3706665d1147e816900ebc1c3e144f517a7033a41ea126f2566e8e14f92",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "openai": {
     "domain": "openai.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=openai.com&sz=128",
-    "asset": "/logos/openai.png",
-    "sha256": "8dba942326ba6368c2670603c0ef1d2087fc2bf3ed992fed9d57b2ea69907ddf",
-    "fetchedAt": "2026-09-30T18:31:00.874Z"
+    "sourceUrl": "https://svgl.app/library/openai.svg",
+    "sourcePage": "https://openai.com/",
+    "asset": "/logos/openai.svg",
+    "sha256": "71eba8e11d265af0e3375ad610db95b4a5fedf9f07c40e5252e73942b8c5982e",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "anthropic": {
     "domain": "anthropic.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=anthropic.com&sz=128",
-    "asset": "/logos/anthropic.png",
-    "sha256": "f1d612cf8894e5f47da0e2db35a95d61fda3f33fc3ffa2785998ba2ecf78daab",
-    "fetchedAt": "2026-09-30T18:31:00.878Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/anthropic.svg",
+    "sourcePage": "https://www.anthropic.com",
+    "asset": "/logos/anthropic.svg",
+    "sha256": "ed85801f453d8cdca14078a757b70424d38b7744c2724747181078dd7368dac0",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "nvidia": {
     "domain": "nvidia.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=nvidia.com&sz=128",
-    "asset": "/logos/nvidia.png",
-    "sha256": "24c21375cca347d2f3e86b9bd27d7fdf4774ca7bd5d59482251723cb6dea82b0",
-    "fetchedAt": "2026-09-30T18:31:00.905Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/nvidia.svg",
+    "sourcePage": "https://www.nvidia.com/en-us",
+    "asset": "/logos/nvidia.svg",
+    "sha256": "37ca309ac911fd1ef84cae3dc92d4ff022de40eac796e6018d8c68557e71b437",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "amd": {
     "domain": "amd.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=amd.com&sz=128",
-    "asset": "/logos/amd.png",
-    "sha256": "4add9abf7e637b5422ceff3d9e8d74abd5b1c44992196bed40564da97227c998",
-    "fetchedAt": "2026-09-30T18:31:00.952Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/amd.svg",
+    "sourcePage": "https://www.amd.com",
+    "asset": "/logos/amd.svg",
+    "sha256": "ec1d5d88e8cf188c6e473f8c7ce611694b0da8dd7815aa256c81d935db4477e9",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "databricks": {
     "domain": "databricks.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=databricks.com&sz=128",
-    "asset": "/logos/databricks.png",
-    "sha256": "afeb47cf6637a5324ff1250e7c4b0386108b29551607b062823df74dc357d344",
-    "fetchedAt": "2026-09-30T18:31:00.919Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/databricks.svg",
+    "sourcePage": "https://www.databricks.com",
+    "asset": "/logos/databricks.svg",
+    "sha256": "52a700ac7923f37acfbfe8ab3f5f2b23a365c66ffc059f09eaae2e5553906092",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "booking": {
     "domain": "booking.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=booking.com&sz=128",
-    "asset": "/logos/booking.png",
-    "sha256": "477039637b3b702b01095559773bc34b3adb1cc70bdb4e4597aa80b9fdf939df",
-    "fetchedAt": "2026-09-30T18:31:00.957Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/bookingdotcom.svg",
+    "asset": "/logos/booking.svg",
+    "sha256": "8d2b5a2fac638ace9cad1c436e4a4f5c4a5fbe1005a87f67bbe83efec757145a",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Original B and dot paths retained with transparent counters; enclosing favicon square removed."
   },
   "snowflake": {
     "domain": "snowflake.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=snowflake.com&sz=128",
-    "asset": "/logos/snowflake.png",
-    "sha256": "06bc457cfa7bb0482ffc3b1ee8d128007667003e31c4315e032b5b8773895472",
-    "fetchedAt": "2026-09-30T18:31:00.940Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/snowflake.svg",
+    "sourcePage": "https://www.snowflake.com/brand-guidelines/",
+    "asset": "/logos/snowflake.svg",
+    "sha256": "6051261051216e9cad32f5d2315a42ec2d5fd8990c6a16cbd83797b9f7bdb676",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "airbnb": {
     "domain": "airbnb.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=airbnb.com&sz=128",
-    "asset": "/logos/airbnb.png",
-    "sha256": "eed2a5046184fc2ad03d946c8dad031df1945606894312f81245ab6f1cf6fa0b",
-    "fetchedAt": "2026-09-30T18:31:01.001Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/airbnb.svg",
+    "sourcePage": "https://www.airbnb.com",
+    "asset": "/logos/airbnb.svg",
+    "sha256": "bd742b3a0e7159d8a972f42f7359da3a27d9c956fda5c051250d58d93f3ff308",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "jane-street": {
     "domain": "janestreet.com",
-    "sourceUrl": "https://www.janestreet.com/assets/logo-icon-9e6fdb3acda4d55b6bd69fdbd70de6ee35c1e766594753226b6b144866872951.png",
-    "asset": "/logos/jane-street.png",
-    "sha256": "9e6fdb3acda4d55b6bd69fdbd70de6ee35c1e766594753226b6b144866872951",
-    "fetchedAt": "2026-09-30T18:31:01.303Z"
+    "sourceUrl": "https://www.janestreet.com/assets/logo-icon-b8a206838d61e9232dd7d2ae67f12b4f35a494ac9ad0a7e4b1456b482849c977.svg",
+    "sourcePage": "https://www.janestreet.com/assets/logo-icon-b8a206838d61e9232dd7d2ae67f12b4f35a494ac9ad0a7e4b1456b482849c977.svg",
+    "asset": "/logos/jane-street.svg",
+    "sha256": "70c5b8d29432a10d95e77574a67b4c13212422871dff3f25a08957952874274c",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Official mark; removed the white canvas rectangle, retained clipping geometry."
   },
   "radix-trading": {
     "domain": "radixtrading.co",
-    "sourceUrl": "https://cdn.theorg.com/83b9f674-91f9-4c6f-ba59-ebed114c4b5a_medium.jpg",
-    "sourcePage": "https://theorg.com/org/radix-trading",
-    "asset": "/logos/radix-trading.jpg",
-    "sha256": "c177db04e34baeed259704772972646986c0cab402a792c7861a951792672f59",
-    "fetchedAt": "2026-09-30T18:31:01.051Z"
+    "sourceUrl": "https://radixtrading.co/",
+    "sourcePage": "https://radixtrading.co/",
+    "asset": "/logos/radix-trading.svg",
+    "sha256": "9426bdf469ab83e42069a18711757c70f76a53d5570eb553c3fc6936c1ab3eb1",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Local text fallback using the official company name. No suitable official flat SVG was found; this is not an official vector logo."
   },
   "hrt": {
     "domain": "hudsonrivertrading.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=hudsonrivertrading.com&sz=128",
-    "asset": "/logos/hrt.png",
-    "sha256": "128d139b9350bd3e8dae05af16a6f0492cd8ce7567d65401829d03f1b7819f7e",
-    "fetchedAt": "2026-09-30T18:31:00.977Z"
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Hudson_River_Trading_Logo.svg",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Hudson%20River%20Trading%20Logo.svg",
+    "asset": "/logos/hrt.svg",
+    "sha256": "ce035478cc829dd197cb22c2a442b1b0253a232c2083d546bfe19084cb6c1d6c",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Original HRT lettering retained; orange enclosing plate removed for a flat transparent wordmark."
   },
   "five-rings": {
     "domain": "fiverings.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=fiverings.com&sz=128",
-    "asset": "/logos/five-rings.png",
-    "sha256": "edb8c4f058f066a231aa2da02d7a2fb9eb12c3b520b4763afe16a74210711a58",
-    "fetchedAt": "2026-09-30T18:31:01.321Z"
+    "sourceUrl": "https://fiverings.com/wp-content/themes/five-rings/img/FiveRings-logo.svg",
+    "asset": "/logos/five-rings.svg",
+    "sha256": "c435737e887a1fd9aa243d292898c0c3d52f8517ff40aa2be82e3d2b54160325",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "linkedin": {
     "domain": "linkedin.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=linkedin.com&sz=128",
-    "asset": "/logos/linkedin.png",
-    "sha256": "eda6fe05a8638d28efe6d27dd867cff3259854a02403e234c6a7677db5ad564a",
-    "fetchedAt": "2026-09-30T18:31:01.316Z"
+    "sourceUrl": "https://svgl.app/library/linkedin.svg",
+    "sourcePage": "https://www.linkedin.com/",
+    "asset": "/logos/linkedin.svg",
+    "sha256": "0007ac2b34505c82d7a1a2c66c90298f5169a37d9108d0489fd5aac0ffa6b537",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Original in lettering and dot retained; enclosing favicon tile removed."
   },
   "citadel": {
     "domain": "citadel.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=citadel.com&sz=128",
-    "asset": "/logos/citadel.png",
-    "sha256": "08c22cf1e0005592367c7749d4fa5231c303c5996401a753ddef3eec4e42232d",
-    "fetchedAt": "2026-09-30T18:31:01.317Z"
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/45/Citadel_LLC_Logo.svg",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Citadel%20LLC%20Logo.svg",
+    "asset": "/logos/citadel.svg",
+    "sha256": "7bbc1af933489bca2f397038fa0a78ec1c168b7c07fc4c3c3f96aa118c15f459",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "two-sigma": {
     "domain": "twosigma.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=twosigma.com&sz=128",
-    "asset": "/logos/two-sigma.png",
-    "sha256": "83c0638c40f9879c8f225d616898b49c37c42b113b6614b0baf7650fefc49533",
-    "fetchedAt": "2026-09-30T18:31:01.323Z"
+    "sourceUrl": "https://www.twosigma.com/wp-content/themes/tsmb/assets/public/img/logo-diamond.svg",
+    "sourcePage": "https://www.twosigma.com/wp-content/themes/tsmb/assets/public/img/logo-diamond.svg",
+    "asset": "/logos/two-sigma.svg",
+    "sha256": "514271a5d5900e8a674d32d401b0440dfe0cfabd21c69e711244c2283d8023fd",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Official diamond mark; white letter overlays removed so its compound path exposes transparent counters."
   },
   "headlands": {
     "domain": "headlandstech.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=headlandstech.com&sz=128",
-    "asset": "/logos/headlands.png",
-    "sha256": "209458f056c8862cbaa884148b7988b3dcf28c697025951044f39e9d1a5081a7",
-    "fetchedAt": "2026-09-30T18:31:01.349Z"
+    "sourceUrl": "https://www.headlandstech.com/img/headlands-tech-logo.svg?v=2.0.7",
+    "sourcePage": "https://www.headlandstech.com/img/headlands-tech-logo.svg?v=2.0.7",
+    "asset": "/logos/headlands.svg",
+    "sha256": "c3c1faca8b3c74def8cd0dbb1fff03caeab3cb1e8ee402ad1c6b8d58b861262f",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "optiver": {
     "domain": "optiver.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=optiver.com&sz=128",
-    "asset": "/logos/optiver.png",
-    "sha256": "f025456201c681ea9bd7718f03ac7c8da85dc404c6570fcc3e0a50eeb8aeed0e",
-    "fetchedAt": "2026-09-30T18:31:01.336Z"
+    "sourceUrl": "https://optiver.com/",
+    "sourcePage": "https://optiver.com/",
+    "asset": "/logos/optiver.svg",
+    "sha256": "3a17f188f294a7125a464e78b784effdef6c23e682fb3910a3898bc24695512f",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "figma": {
     "domain": "figma.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=figma.com&sz=128",
-    "asset": "/logos/figma.png",
-    "sha256": "f072e59a9c0fc36b5005ed541c0eb7d2f94ad9f3ef8204f8fe62f55cd01eaa98",
-    "fetchedAt": "2026-09-30T18:31:01.359Z"
+    "sourceUrl": "https://svgl.app/library/figma.svg",
+    "sourcePage": "https://www.figma.com/using-the-figma-brand/",
+    "asset": "/logos/figma.svg",
+    "sha256": "5bcdea3417293412845b8298fe357fce3b192e8ff112d9b3fef315bc5cd127f6",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "pinterest": {
     "domain": "pinterest.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=pinterest.com&sz=128",
-    "asset": "/logos/pinterest.png",
-    "sha256": "09a54dc5227a4c61eb143563895a045068af9b12444e5685f2e766bb01593561",
-    "fetchedAt": "2026-09-30T18:31:01.342Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/pinterest.svg",
+    "sourcePage": "https://business.pinterest.com/en/brand-guidelines",
+    "asset": "/logos/pinterest.svg",
+    "sha256": "15fb910c2581ab9e6d9bb41c6186d2dd51e1ab77a072c348c16b374a83ab8c9e",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "datadog": {
     "domain": "datadoghq.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=datadoghq.com&sz=128",
-    "asset": "/logos/datadog.png",
-    "sha256": "10d1c58d2fd63806d013242cde0a6b536437bd715377410808d9ef853bcbf68d",
-    "fetchedAt": "2026-09-30T18:31:01.369Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/datadog.svg",
+    "sourcePage": "https://www.datadoghq.com/about/resources",
+    "asset": "/logos/datadog.svg",
+    "sha256": "2809cdb21e11066bfc428ee43898cb3aba3789d5e71ee1f897cc745c86761926",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "dropbox": {
     "domain": "dropbox.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=dropbox.com&sz=128",
-    "asset": "/logos/dropbox.png",
-    "sha256": "ad716eb686f02bcfab436066fd3c8a5b44a7d09b56c588be9d8953425958c5df",
-    "fetchedAt": "2026-09-30T18:31:01.371Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/dropbox.svg",
+    "sourcePage": "https://www.dropbox.com/branding",
+    "asset": "/logos/dropbox.svg",
+    "sha256": "38722c48b209260ebe27747c7eca7c77b00a775c2177dbc54a5d91362abc8d09",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "uber": {
     "domain": "uber.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=uber.com&sz=128",
-    "asset": "/logos/uber.png",
-    "sha256": "00fccd2d5fd317a187d6ad03229884ae36016d4bf3bb48ce2ebb83ebb0fcecce",
-    "fetchedAt": "2026-09-30T18:31:01.372Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/uber.svg",
+    "sourcePage": "https://assets.uber.com/d/k4nuxdZ8MC7E/logos/collection/151",
+    "asset": "/logos/uber.svg",
+    "sha256": "2281bf5c986c668c7d2701aa34904a3608edfccc9007228a448680a16c6cbfbe",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "discord": {
     "domain": "discord.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=discord.com&sz=128",
-    "asset": "/logos/discord.png",
-    "sha256": "33cf3d76bd64c8b4f95ff68593095d9df63a6dac758a0434d1abea06ae1e7bbd",
-    "fetchedAt": "2026-09-30T18:31:01.372Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/discord.svg",
+    "sourcePage": "https://discord.com/branding",
+    "asset": "/logos/discord.svg",
+    "sha256": "716748e92aceb08cb35013d548715e250b2124a460466414af64654e840f3d47",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "coinbase": {
     "domain": "coinbase.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=coinbase.com&sz=128",
-    "asset": "/logos/coinbase.png",
-    "sha256": "5584cfbbb445f600acdf174a8afa8b937d839b1844b8a76f3f6ffd2453a38897",
-    "fetchedAt": "2026-09-30T18:31:01.402Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/coinbase.svg",
+    "sourcePage": "https://www.coinbase.com/press",
+    "asset": "/logos/coinbase.svg",
+    "sha256": "d3a5f8b98458c53706c45f7b18b69b0284ebc033bf5d748714aedc962a165b08",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "bloomberg": {
     "domain": "bloomberg.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=bloomberg.com&sz=128",
-    "asset": "/logos/bloomberg.png",
-    "sha256": "a967e0155d7a82a355b4400d958d3ae4c757dcf6f6b6f202fb97c35c3a32b5c8",
-    "fetchedAt": "2026-09-30T18:31:01.384Z"
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/56/Bloomberg_logo.svg",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Bloomberg%20logo.svg",
+    "asset": "/logos/bloomberg.svg",
+    "sha256": "bca9e61b1dd6c05b1ae7721a03f3034d5700b0982b012a896c8fec831d2012e7",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "slack": {
     "domain": "slack.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=slack.com&sz=128",
-    "asset": "/logos/slack.png",
-    "sha256": "9969989446edc2d8136e1d518a9a1dca46b6777f4b3172ec0800cc8edcce5fe0",
-    "fetchedAt": "2026-09-30T18:31:01.386Z"
+    "sourceUrl": "https://svgl.app/library/slack.svg",
+    "sourcePage": "https://www.slack.com",
+    "asset": "/logos/slack.svg",
+    "sha256": "29734796b3a85f9d0e03150d53142fab0b7f994ae80c7e3e1efd0bef52c12f5d",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "microsoft": {
     "domain": "microsoft.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=microsoft.com&sz=128",
-    "asset": "/logos/microsoft.png",
-    "sha256": "b6ba5811173dc31f3b64c874651217571d9ac7f7e5f2533db85eb8ee9ef33b35",
-    "fetchedAt": "2026-09-30T18:31:01.384Z"
+    "sourceUrl": "https://svgl.app/library/microsoft.svg",
+    "sourcePage": "https://www.microsoft.com/",
+    "asset": "/logos/microsoft.svg",
+    "sha256": "2849c3a8a691e34df89471f3c2df0dc2a1e9f99151e64466a84a26a7d4076ff1",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "stripe": {
     "domain": "stripe.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=stripe.com&sz=128",
-    "asset": "/logos/stripe.png",
-    "sha256": "9bfd1838ae9214d0f553ffb9bc703486529f747daaf8590f2741bc8ee76e8caa",
-    "fetchedAt": "2026-09-30T18:31:01.416Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/stripe.svg",
+    "sourcePage": "https://stripe.com/newsroom/information",
+    "asset": "/logos/stripe.svg",
+    "sha256": "890527195bff1b5c7441cf10bdc016ac4129171614534f5912d7008888c4fdf4",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "tesla": {
     "domain": "tesla.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=tesla.com&sz=128",
-    "asset": "/logos/tesla.png",
-    "sha256": "b4be4f01063591bf8e715388c3e798339f22fb5b7e1e20a504d5c7cad796d55d",
-    "fetchedAt": "2026-09-30T18:31:01.413Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/tesla.svg",
+    "sourcePage": "https://www.tesla.com/tesla-gallery",
+    "asset": "/logos/tesla.svg",
+    "sha256": "fb4b61baf673ab6d63884ed78b294566fce912de130e344e50999ede912e18e8",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "palantir": {
     "domain": "palantir.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=palantir.com&sz=128",
-    "asset": "/logos/palantir.png",
-    "sha256": "4635852d01b7e2ad0d2b6f5a6cce543a61ee8efe3acb9151b443bf451b9ec766",
-    "fetchedAt": "2026-09-30T18:31:01.420Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/palantir.svg",
+    "sourcePage": "https://github.com/palantir/conjure/blob/1b0d450dc52c4822b4c9d1da8c61ad7f78855fe5/docs/media/palantir-logo.svg",
+    "asset": "/logos/palantir.svg",
+    "sha256": "98bc1998e184f7a9e015c3089e96f0810956fdd4defbda3452eaa1261d7da982",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "spotify": {
     "domain": "spotify.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=spotify.com&sz=128",
-    "asset": "/logos/spotify.png",
-    "sha256": "221c12256905b791dc2268598bbff57aad8ddd1931fcc4e1559c7f6c87b32b8c",
-    "fetchedAt": "2026-09-30T18:31:01.412Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/spotify.svg",
+    "sourcePage": "https://developer.spotify.com/documentation/general/design-and-branding/#using-our-logo",
+    "asset": "/logos/spotify.svg",
+    "sha256": "d2cb55db0be10945e0fdc14686255c2bd445dbfe102e9e7f4cb608d7c0be917d",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "mongodb": {
     "domain": "mongodb.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=mongodb.com&sz=128",
-    "asset": "/logos/mongodb.png",
-    "sha256": "8476bc88b13f4161da7aea5e538cbff0d793ad55c02af6f941fcd1f263dfdb6d",
-    "fetchedAt": "2026-09-30T18:31:01.430Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/mongodb.svg",
+    "sourcePage": "https://www.mongodb.com/pressroom",
+    "asset": "/logos/mongodb.svg",
+    "sha256": "dac2aac5542f0ff660c86a33a2a99a7ad50c79106f59c20c43339db1d0ad800e",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "tiktok": {
     "domain": "tiktok.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=tiktok.com&sz=128",
-    "asset": "/logos/tiktok.png",
-    "sha256": "e421a9daf1ebd712bab3febecb1f93b765fbfc2b22d2c3b4231efe3203de2381",
-    "fetchedAt": "2026-09-30T18:31:01.434Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/tiktok.svg",
+    "sourcePage": "https://tiktok.com",
+    "asset": "/logos/tiktok.svg",
+    "sha256": "209dd1328abc1a59fda700a5c276bb6aa3f4396fd89fb480c54adfbcc0cbbd85",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "okta": {
     "domain": "okta.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=okta.com&sz=128",
-    "asset": "/logos/okta.png",
-    "sha256": "ef93cff20091aea6854ddd6a2f4176693728c28c4bce9757f45581a18f83d5c1",
-    "fetchedAt": "2026-09-30T18:31:01.436Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/okta.svg",
+    "sourcePage": "https://www.okta.com/press-room/media-assets/",
+    "asset": "/logos/okta.svg",
+    "sha256": "4f47b9f90dcd5c75515f340a1e134d40c252bbcf2ef9ccff9090b0d123d048da",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "salesforce": {
     "domain": "salesforce.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=salesforce.com&sz=128",
-    "asset": "/logos/salesforce.png",
-    "sha256": "abcc0840c906aef643ba63da8d2d3f1487a8324ccc6ea7f122dd06168099e586",
-    "fetchedAt": "2026-09-30T18:31:01.429Z"
+    "sourceUrl": "https://svgl.app/library/salesforce.svg",
+    "sourcePage": "https://www.salesforce.com",
+    "asset": "/logos/salesforce.svg",
+    "sha256": "aa6d730bbb164c2df9ab8355731a8b5c327b54640ae9f9a6a25527785dda5682",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "adobe": {
     "domain": "adobe.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=adobe.com&sz=128",
-    "asset": "/logos/adobe.png",
-    "sha256": "b490f3a28f0cb7a0af7c435a683ce6887e2f0a99354943c0892fa394b30835be",
-    "fetchedAt": "2026-09-30T18:31:01.470Z"
+    "sourceUrl": "https://svgl.app/library/adobe.svg",
+    "sourcePage": "https://www.adobe.com/",
+    "asset": "/logos/adobe.svg",
+    "sha256": "b99b41710adc839b62ac81e85ab769fd1433526b4270b11f6bf96a8f93184542",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "patreon": {
     "domain": "patreon.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=patreon.com&sz=128",
-    "asset": "/logos/patreon.png",
-    "sha256": "7b243381f54b208ce6a22b63b66c1b7b1a5f4b5caf4c865469c4d9f9b0cb6edb",
-    "fetchedAt": "2026-09-30T18:31:01.451Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/patreon.svg",
+    "sourcePage": "https://www.patreon.com/brand",
+    "asset": "/logos/patreon.svg",
+    "sha256": "9e03dda7be43e45a79c6764fff438caf3f0dff10032c6977dcd6a58b401d6f85",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "cloudflare": {
     "domain": "cloudflare.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=cloudflare.com&sz=128",
-    "asset": "/logos/cloudflare.png",
-    "sha256": "9cd748335f60c87cf5b70e53a76869162f908a906dc4043947516f063b27d2c3",
-    "fetchedAt": "2026-09-30T18:31:01.454Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/cloudflare.svg",
+    "sourcePage": "https://www.cloudflare.com/logo/",
+    "asset": "/logos/cloudflare.svg",
+    "sha256": "08de5aca62d14f5b0d7df2be4f4c9d709b6c715e530da8bcecfe5b28d6b851d2",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "zoom": {
     "domain": "zoom.us",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=zoom.us&sz=128",
-    "asset": "/logos/zoom.png",
-    "sha256": "16d249967f50e144a26c74dfff714844cca1c91c7e78ae1f30e083ff85c02434",
-    "fetchedAt": "2026-09-30T18:31:01.458Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/zoom.svg",
+    "sourcePage": "https://brand.zoom.us/media-library/",
+    "asset": "/logos/zoom.svg",
+    "sha256": "650e2680e8ae50705b6a9b18b7020a5b7c817d4518cac75e3d5f3ad19baff1f0",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "workday": {
     "domain": "workday.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=workday.com&sz=128",
-    "asset": "/logos/workday.png",
-    "sha256": "615adc2bb8bd91c4df61ab03312c9d7adfa4ee98d4777f259ad07a528012543e",
-    "fetchedAt": "2026-09-30T18:31:01.513Z"
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/96/Workday_2024_logo.svg",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Workday%202024%20logo.svg",
+    "asset": "/logos/workday.svg",
+    "sha256": "ae109eade4748653c83e7ef82bcf4fccf14429f5f6a4e1864fa90acc5d7d359f",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "github": {
     "domain": "github.com",
-    "sourceUrl": "https://github.com/fluidicon.png",
-    "asset": "/logos/github.png",
-    "sha256": "1bedd6a1948971f07970414717012503805309f25af0b2c542dbc3524b5880e9",
-    "fetchedAt": "2026-09-30T18:31:01.687Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg",
+    "sourcePage": "https://github.com/logos",
+    "asset": "/logos/github.svg",
+    "sha256": "abdb620acbc29daf281e1f616fe41f1a9376bcb76e5ccc5fcca0fe09224b38b1",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "gitlab": {
     "domain": "gitlab.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=gitlab.com&sz=128",
-    "asset": "/logos/gitlab.png",
-    "sha256": "85e85e66a46a1df46bd442782daf43567e5ce548103646c9ea5a7c4c953e9418",
-    "fetchedAt": "2026-09-30T18:31:01.499Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/gitlab.svg",
+    "sourcePage": "https://about.gitlab.com/press/press-kit/",
+    "asset": "/logos/gitlab.svg",
+    "sha256": "90958a5451c44efd40122757ba09d172fda1a8f7ab1a93142ad366ee521510e8",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "mozilla": {
     "domain": "mozilla.org",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=mozilla.org&sz=128",
-    "asset": "/logos/mozilla.png",
-    "sha256": "908089ea1d5fe668e6442da23cdc1bfb41b9fc68f0529c6cb8cf0d61bf8106b6",
-    "fetchedAt": "2026-09-30T18:31:01.488Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/mozilla.svg",
+    "sourcePage": "https://brand.mozilla.com/document/36",
+    "asset": "/logos/mozilla.svg",
+    "sha256": "71a923c95ace5ac7140f5fa6fdfbc15e2b2248e2f499c1433d28fde454e6f12b",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "paypal": {
     "domain": "paypal.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=paypal.com&sz=128",
-    "asset": "/logos/paypal.png",
-    "sha256": "e3850303cebe7f8a89ae58c425ff67407eda65e58e157d0ef40109caa24caa60",
-    "fetchedAt": "2026-09-30T18:31:01.730Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/paypal.svg",
+    "sourcePage": "https://www.paypal.com/us",
+    "asset": "/logos/paypal.svg",
+    "sha256": "e096d741910e1fa1dcfcfb48f67de6d3db6bc3cb409828a418c1d7331c9d9115",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "oracle": {
     "domain": "oracle.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=oracle.com&sz=128",
-    "asset": "/logos/oracle.png",
-    "sha256": "c20c4ae2ebd375a3262e14609f3cc9de36ea5ff0481b7c3fd5b9ebb0983a2460",
-    "fetchedAt": "2026-09-30T18:31:01.702Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/13.21.0/icons/oracle.svg",
+    "asset": "/logos/oracle.svg",
+    "sha256": "e18faa534d8342b392fd9fab3c226673c29df9592f71ab6116d662c350f9dea8",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "reddit": {
     "domain": "reddit.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=reddit.com&sz=128",
-    "asset": "/logos/reddit.png",
-    "sha256": "b8198132047e1c5b1c0d226b450484655b63c2fc28ec3cd8e74091d13fc0a607",
-    "fetchedAt": "2026-09-30T18:31:01.724Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/reddit.svg",
+    "sourcePage": "https://www.redditinc.com/brand",
+    "asset": "/logos/reddit.svg",
+    "sha256": "b0fdff084a1201402cd2a60583d05c0fc4121d12bdbc3d40923935c6a85c7b1e",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "x": {
     "domain": "x.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=x.com&sz=128",
-    "asset": "/logos/x.png",
-    "sha256": "181049a23035b5a810077d45f33f97cd7b498afd6cd213633bd7426c6b3ad430",
-    "fetchedAt": "2026-09-30T18:31:01.698Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/x.svg",
+    "sourcePage": "https://x.com",
+    "asset": "/logos/x.svg",
+    "sha256": "308af5d0e07d05ebf4e0cf450802626fff9cea6a3341a7b59faaa70dbb62724f",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "intel": {
     "domain": "intel.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=intel.com&sz=128",
-    "asset": "/logos/intel.png",
-    "sha256": "980a86e685569b5a066eb2e04d453841a15778647d8e84d27c26eeaa3017c254",
-    "fetchedAt": "2026-09-30T18:31:01.860Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/intel.svg",
+    "sourcePage": "https://www.intel.com/content/www/us/en/newsroom/resources/press-kits-intel-overview.html",
+    "asset": "/logos/intel.svg",
+    "sha256": "e7c1f86981b06aaf2943373c2fc026af1114e25983d3957f035f991187e71a34",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "ibm": {
     "domain": "ibm.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=ibm.com&sz=128",
-    "asset": "/logos/ibm.png",
-    "sha256": "002bf16e498f94efaf9a53d59ab1796fda6662675b7e1ee20e4681449babbd67",
-    "fetchedAt": "2026-09-30T18:31:01.756Z"
+    "sourceUrl": "https://svgl.app/library/ibm.svg",
+    "sourcePage": "https://www.ibm.com",
+    "asset": "/logos/ibm.svg",
+    "sha256": "b68f2d7e0cb1e0a7c09a54574402528be3b00bfdd4bb7710e85aec7a50efb6f2",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "jpmorgan": {
     "domain": "jpmorganchase.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=jpmorganchase.com&sz=128",
-    "asset": "/logos/jpmorgan.jpg",
-    "sha256": "cccf4caf8bcc1481b1dacfa56ffb85f9a129bf12e212f1e7de6583190493b4c0",
-    "fetchedAt": "2026-09-30T18:31:01.756Z"
+    "sourceUrl": "https://www.jpmorganchase.com/content/dam/jpmorganchase/images/logos/jpmc-logo.svg",
+    "sourcePage": "https://www.jpmorganchase.com/content/dam/jpmorganchase/images/logos/jpmc-logo.svg",
+    "asset": "/logos/jpmorgan.svg",
+    "sha256": "1096b1bad5cc065c627187c182bf5da62f6578e03c3170be9e6d4550df86b7cb",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "goldman-sachs": {
     "domain": "goldmansachs.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=goldmansachs.com&sz=128",
-    "asset": "/logos/goldman-sachs.png",
-    "sha256": "6a5a973d69e19c10b8991881ec4632fb5cf218de8832c1f6efc8c6956a2c988f",
-    "fetchedAt": "2026-09-30T18:31:01.881Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/goldmansachs.svg",
+    "sourcePage": "https://design.gs.com/brand/goldman-sachs-logo",
+    "asset": "/logos/goldman-sachs.svg",
+    "sha256": "cd92f898713d4348d53f7f73428a9be8b554f230093e6b91ba2ba1ace2a7a48c",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "abn-amro": {
     "domain": "abnamro.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=abnamro.com&sz=128",
-    "asset": "/logos/abn-amro.png",
-    "sha256": "74472e682110dd49df3f621dd951259644c9bfe104f75cb6a7723f1dbd749096",
-    "fetchedAt": "2026-09-30T18:31:01.901Z"
+    "sourceUrl": "https://images.ctfassets.net/1u811bvgvthc/1WdfhFEy0bKMxR8dlZqGNr/b75d47b937b7b48d814d371477904782/Logo-abn.svg",
+    "sourcePage": "https://images.ctfassets.net/1u811bvgvthc/1WdfhFEy0bKMxR8dlZqGNr/b75d47b937b7b48d814d371477904782/Logo-abn.svg",
+    "asset": "/logos/abn-amro.svg",
+    "sha256": "ac6abc2df89e3ee7caea79186742c2a6114105b22f05490534da9c77aff0ca0a",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "ing": {
     "domain": "ing.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=ing.com&sz=128",
-    "asset": "/logos/ing.png",
-    "sha256": "ecd4be588b43949cd2dbfecfc445025b3da1d6fc5c9b51ae8ddaeb052f7a1d53",
-    "fetchedAt": "2026-09-30T18:31:01.892Z"
+    "sourceUrl": "https://www.ing.com/webfiles/1788951119972/images/ing-logo.svg",
+    "sourcePage": "https://www.ing.com/webfiles/1788951119972/images/ing-logo.svg",
+    "asset": "/logos/ing.svg",
+    "sha256": "6e2a19f26018c591803ef5cc16de3790285a2ced061f62b054508cf394ff20be",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "riot-games": {
     "domain": "riotgames.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=riotgames.com&sz=128",
-    "asset": "/logos/riot-games.png",
-    "sha256": "0ffc2d9ee0ec193b2e9dede037003411ff31158aaeb440af6db47dc1aa79f528",
-    "fetchedAt": "2026-09-30T18:31:01.903Z"
+    "sourceUrl": "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/riotgames.svg",
+    "sourcePage": "https://www.riotgames.com/en/press",
+    "asset": "/logos/riot-games.svg",
+    "sha256": "74d93528f6224aa9d00b1a59b830f81add5e529db1ffb50fa4398333c22cf5c0",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   },
   "blizzard": {
     "domain": "blizzard.com",
-    "sourceUrl": "https://www.google.com/s2/favicons?domain=blizzard.com&sz=128",
-    "asset": "/logos/blizzard.png",
-    "sha256": "c7bf27d960e95e513bf0a057da70241cb928a86c13e635d05e77988cd36e4a90",
-    "fetchedAt": "2026-09-30T18:31:01.927Z"
+    "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/23/Blizzard_Entertainment_Logo_2015.svg",
+    "sourcePage": "https://commons.wikimedia.org/wiki/File:Blizzard%20Entertainment%20Logo%202015.svg",
+    "asset": "/logos/blizzard.svg",
+    "sha256": "28e85ad01b1c6e07dad854c659cae09ce59cbfbd2e9d84615deb7ef06ff07b39",
+    "reviewedAt": "2026-10-05",
+    "maintenance": "manual-vector-review",
+    "notes": "Reviewed flat vector; original paths retained."
   }
 }

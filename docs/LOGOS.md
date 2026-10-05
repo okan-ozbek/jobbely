@@ -1,14 +1,16 @@
 # Decision: local company logo assets
 
-**Status:** Implemented, 30 September 2026. All 60 target companies have downloaded logos.
+**Status:** Implemented, updated 5 October 2026. All 60 target companies use local SVGs: 59 sourced vectors and one explicitly documented text fallback.
 
 ## Decision and rationale
 
 Keep company logos in `frontend/public/logos/` and return their same-origin paths as `logoUrl` from the company API. The backend registry owns the association between company and asset; Vite and the production static host serve the files. Job rows, job details and the company directory share one `CompanyLogo` component.
 
-Most assets are company website icons downloaded from Google's public favicon cache using an explicitly selected company domain. GitHub and Jane Street use higher-resolution icons from their official sites. Radix Trading uses its logo from [The Org's company profile](https://theorg.com/org/radix-trading). These are compact brand marks rather than consistently sized wordmarks; source resolution varies.
+The directory uses reviewed, flat SVG marks from official company sites, Simple Icons, SVGL and Wikimedia Commons. AMD uses a vector wordmark; IBM uses its eight-bar text logo. Visible canvas backgrounds and favicon tiles are removed while preserving logo paths and transparent counters. Clipping rectangles and shapes belonging to the brand mark are retained. No raster image is embedded inside an SVG.
 
-The [source manifest](../frontend/config/company-logos.json) records the domain, download URL, optional source page, asset path, fetch timestamp and SHA-256. Logos identify their respective employers; third-party trademarks and source images retain their original ownership. Downloading an image does not assign a new license to it.
+Radix Trading's official site exposes its company name but no suitable flat SVG was found in this audit. Its local SVG renders that name as a simple text fallback, rather than reusing the previous unrelated-looking third-party image or a Radix UI mark. The manifest explicitly records this exception; it is not represented as an official vector logo.
+
+The [source manifest](../frontend/config/company-logos.json) records the domain, source URL, optional source page, asset path, review date, transformation notes, maintenance policy and SHA-256. Logos identify their respective employers; third-party trademarks and source images retain their original ownership. Downloading an image does not assign a new license to it.
 
 ## Invariants and fallback
 
@@ -18,10 +20,11 @@ The [source manifest](../frontend/config/company-logos.json) records the domain,
 - Failed company images switch to the same local N/A logo. The error handler does not repeatedly retry a failed fallback. Changes to the configured source can recover from an earlier failure.
 - Images use containment rather than stretching or cropping. Their wrapper reserves space, and their accessible text names the company or explains that its logo is unavailable.
 - Logos are presentation metadata. Changing one requires no database migration or ingestion run.
+- Directory marks have transparent wrappers and retain flat brand colors. The five home-page marks use a monochrome CSS filter; their shapes remain recognizable without a surrounding tile. Wide directory wordmarks receive more horizontal space without stretching.
 
 ## Maintenance and verification
 
-To add or replace a logo, review its source and add a manifest entry under the company slug. Run these commands from the root:
+To replace a vector, download and visually review its source, remove visible canvas backgrounds if needed, save it under the company slug and update the registry association and manifest hash/notes. Source URLs may refer to a page containing an inline SVG. Run these commands from the root:
 
 ```sh
 pnpm logos:fetch
@@ -30,9 +33,9 @@ pnpm logos:check
 pnpm check
 ```
 
-Fetching is an explicit maintenance command requiring network access. It downloads PNG/JPEG assets in batches of four with per-request timeouts, checks their signatures and size, updates registry paths and records hashes. A failed refresh preserves an existing configured asset and exits unsuccessfully. Inspect downloaded replacements before committing; a successful HTTP response alone does not prove brand identity. Do not use the downloader for unreviewed SVGs; the N/A SVG is maintained locally.
+`logos:fetch` preserves entries marked `manual-vector-review`, checking their local static content and hash. These assets need manual replacement because they may contain reviewed background or geometry adjustments; upstream changes must not silently overwrite them. Legacy raster entries still download in batches of four with per-request timeouts, signature/size checks and hash updates. A failed refresh preserves an existing configured asset and exits unsuccessfully. A successful HTTP response alone does not prove brand identity.
 
-`logos:check` is offline and part of `pnpm check`. It verifies that every configured asset and the fallback exist, that raster signatures match extensions, and that assets match their source records. API tests verify `logoUrl` survives response serialization. Browser verification should check directory, listing, detail and failed-image behavior.
+`logos:check` is offline and part of `pnpm check`. It verifies every configured path, source record and hash. Reviewed SVGs require a viewBox and reject active elements, embedded images, event handlers, document declarations and external resource references. This is a guard for curated static image assets, not a general-purpose XML sanitizer. Browser review checks rendering, transparency and brand identity; API tests verify `logoUrl` survives serialization.
 
 Production deployments must include Vite's copied `/logos` assets. Paths belong to the frontend origin even when `VITE_API_BASE_URL` points to a separate backend. Missing assets must return HTTP 404 rather than the SPA HTML document. See [DEPLOYMENT.md](DEPLOYMENT.md).
 

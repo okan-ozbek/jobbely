@@ -710,6 +710,7 @@
 .home-companies img {
   object-fit: contain;
   opacity: 1;
+  filter: brightness(0) saturate(100%);
 }
 .attached-file {
   display: flex;
@@ -821,7 +822,10 @@
   border-radius: 20px;
   border: 1px solid var(--border);
   background: #ffffffa6;
-  margin: 15px 0;
+  margin: 0;
+}
+.resume-workbench .match-list {
+  gap: 32px;
 }
 .resume-workbench .match-card h3 {
   font-weight: 500;

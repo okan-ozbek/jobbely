@@ -4,419 +4,419 @@
     "name": "Meta",
     "careersUrl": "https://www.metacareers.com/jobs/",
     "wave": "C",
-    "logoUrl": "/logos/meta.jpg"
+    "logoUrl": "/logos/meta.svg"
   },
   {
     "slug": "apple",
     "name": "Apple",
     "careersUrl": "https://jobs.apple.com/en-us/search",
     "wave": "C",
-    "logoUrl": "/logos/apple.png"
+    "logoUrl": "/logos/apple.svg"
   },
   {
     "slug": "netflix",
     "name": "Netflix",
     "careersUrl": "https://explore.jobs.netflix.net/careers",
     "wave": "C",
-    "logoUrl": "/logos/netflix.png"
+    "logoUrl": "/logos/netflix.svg"
   },
   {
     "slug": "google",
     "name": "Google",
     "careersUrl": "https://www.google.com/about/careers/applications/jobs/results/",
     "wave": "C",
-    "logoUrl": "/logos/google.png"
+    "logoUrl": "/logos/google.svg"
   },
   {
     "slug": "amazon",
     "name": "Amazon",
     "careersUrl": "https://www.amazon.jobs/en/search",
     "wave": "C",
-    "logoUrl": "/logos/amazon.png"
+    "logoUrl": "/logos/amazon.svg"
   },
   {
     "slug": "openai",
     "name": "OpenAI",
     "careersUrl": "https://openai.com/careers/search/",
     "wave": "A",
-    "logoUrl": "/logos/openai.png"
+    "logoUrl": "/logos/openai.svg"
   },
   {
     "slug": "anthropic",
     "name": "Anthropic",
     "careersUrl": "https://www.anthropic.com/careers",
     "wave": "A",
-    "logoUrl": "/logos/anthropic.png"
+    "logoUrl": "/logos/anthropic.svg"
   },
   {
     "slug": "nvidia",
     "name": "NVIDIA",
     "careersUrl": "https://www.nvidia.com/en-us/about-nvidia/careers/",
     "wave": "B",
-    "logoUrl": "/logos/nvidia.png"
+    "logoUrl": "/logos/nvidia.svg"
   },
   {
     "slug": "amd",
     "name": "AMD",
     "careersUrl": "https://careers.amd.com/careers-home",
     "wave": "B",
-    "logoUrl": "/logos/amd.png"
+    "logoUrl": "/logos/amd.svg"
   },
   {
     "slug": "databricks",
     "name": "Databricks",
     "careersUrl": "https://www.databricks.com/company/careers/open-positions",
     "wave": "B",
-    "logoUrl": "/logos/databricks.png"
+    "logoUrl": "/logos/databricks.svg"
   },
   {
     "slug": "booking",
     "name": "Booking.com",
     "careersUrl": "https://careers.booking.com/",
     "wave": "B",
-    "logoUrl": "/logos/booking.png"
+    "logoUrl": "/logos/booking.svg"
   },
   {
     "slug": "snowflake",
     "name": "Snowflake",
     "careersUrl": "https://careers.snowflake.com/us/en",
     "wave": "B",
-    "logoUrl": "/logos/snowflake.png"
+    "logoUrl": "/logos/snowflake.svg"
   },
   {
     "slug": "airbnb",
     "name": "Airbnb",
     "careersUrl": "https://careers.airbnb.com/positions/",
     "wave": "B",
-    "logoUrl": "/logos/airbnb.png"
+    "logoUrl": "/logos/airbnb.svg"
   },
   {
     "slug": "jane-street",
     "name": "Jane Street",
     "careersUrl": "https://www.janestreet.com/join-jane-street/open-roles/",
     "wave": "C",
-    "logoUrl": "/logos/jane-street.png"
+    "logoUrl": "/logos/jane-street.svg"
   },
   {
     "slug": "radix-trading",
     "name": "Radix Trading",
     "careersUrl": "https://radixtrading.co/",
     "wave": "A",
-    "logoUrl": "/logos/radix-trading.jpg"
+    "logoUrl": "/logos/radix-trading.svg"
   },
   {
     "slug": "hrt",
     "name": "Hudson River Trading",
     "careersUrl": "https://www.hudsonrivertrading.com/careers/",
     "wave": "B",
-    "logoUrl": "/logos/hrt.png"
+    "logoUrl": "/logos/hrt.svg"
   },
   {
     "slug": "five-rings",
     "name": "Five Rings",
     "careersUrl": "https://fiverings.com/careers/",
     "wave": "A",
-    "logoUrl": "/logos/five-rings.png"
+    "logoUrl": "/logos/five-rings.svg"
   },
   {
     "slug": "linkedin",
     "name": "LinkedIn",
     "careersUrl": "https://careers.linkedin.com/",
     "wave": "B",
-    "logoUrl": "/logos/linkedin.png"
+    "logoUrl": "/logos/linkedin.svg"
   },
   {
     "slug": "citadel",
     "name": "Citadel",
     "careersUrl": "https://www.citadel.com/careers/open-opportunities/",
     "wave": "C",
-    "logoUrl": "/logos/citadel.png"
+    "logoUrl": "/logos/citadel.svg"
   },
   {
     "slug": "two-sigma",
     "name": "Two Sigma",
     "careersUrl": "https://www.twosigma.com/careers/",
     "wave": "C",
-    "logoUrl": "/logos/two-sigma.png"
+    "logoUrl": "/logos/two-sigma.svg"
   },
   {
     "slug": "headlands",
     "name": "Headlands Technologies",
     "careersUrl": "https://www.headlandstech.com/careers/",
     "wave": "A",
-    "logoUrl": "/logos/headlands.png"
+    "logoUrl": "/logos/headlands.svg"
   },
   {
     "slug": "optiver",
     "name": "Optiver",
     "careersUrl": "https://www.optiver.com/join-us/jobs/",
     "wave": "B",
-    "logoUrl": "/logos/optiver.png"
+    "logoUrl": "/logos/optiver.svg"
   },
   {
     "slug": "figma",
     "name": "Figma",
     "careersUrl": "https://www.figma.com/careers/",
     "wave": "A",
-    "logoUrl": "/logos/figma.png"
+    "logoUrl": "/logos/figma.svg"
   },
   {
     "slug": "pinterest",
     "name": "Pinterest",
     "careersUrl": "https://www.pinterestcareers.com/",
     "wave": "B",
-    "logoUrl": "/logos/pinterest.png"
+    "logoUrl": "/logos/pinterest.svg"
   },
   {
     "slug": "datadog",
     "name": "Datadog",
     "careersUrl": "https://careers.datadoghq.com/all-jobs/",
     "wave": "B",
-    "logoUrl": "/logos/datadog.png"
+    "logoUrl": "/logos/datadog.svg"
   },
   {
     "slug": "dropbox",
     "name": "Dropbox",
     "careersUrl": "https://www.dropbox.jobs/en/jobs/",
     "wave": "B",
-    "logoUrl": "/logos/dropbox.png"
+    "logoUrl": "/logos/dropbox.svg"
   },
   {
     "slug": "uber",
     "name": "Uber",
     "careersUrl": "https://www.uber.com/global/en/careers/list/",
     "wave": "C",
-    "logoUrl": "/logos/uber.png"
+    "logoUrl": "/logos/uber.svg"
   },
   {
     "slug": "discord",
     "name": "Discord",
     "careersUrl": "https://discord.com/careers",
     "wave": "A",
-    "logoUrl": "/logos/discord.png"
+    "logoUrl": "/logos/discord.svg"
   },
   {
     "slug": "coinbase",
     "name": "Coinbase",
     "careersUrl": "https://www.coinbase.com/careers/positions",
     "wave": "B",
-    "logoUrl": "/logos/coinbase.png"
+    "logoUrl": "/logos/coinbase.svg"
   },
   {
     "slug": "bloomberg",
     "name": "Bloomberg",
     "careersUrl": "https://careers.bloomberg.com/",
     "wave": "C",
-    "logoUrl": "/logos/bloomberg.png"
+    "logoUrl": "/logos/bloomberg.svg"
   },
   {
     "slug": "slack",
     "name": "Slack",
     "careersUrl": "https://slack.com/careers",
     "wave": "B",
-    "logoUrl": "/logos/slack.png"
+    "logoUrl": "/logos/slack.svg"
   },
   {
     "slug": "microsoft",
     "name": "Microsoft",
     "careersUrl": "https://careers.microsoft.com/",
     "wave": "D",
-    "logoUrl": "/logos/microsoft.png"
+    "logoUrl": "/logos/microsoft.svg"
   },
   {
     "slug": "stripe",
     "name": "Stripe",
     "careersUrl": "https://stripe.com/careers/search",
     "wave": "B",
-    "logoUrl": "/logos/stripe.png"
+    "logoUrl": "/logos/stripe.svg"
   },
   {
     "slug": "tesla",
     "name": "Tesla",
     "careersUrl": "https://www.tesla.com/careers/search/",
     "wave": "C",
-    "logoUrl": "/logos/tesla.png"
+    "logoUrl": "/logos/tesla.svg"
   },
   {
     "slug": "palantir",
     "name": "Palantir",
     "careersUrl": "https://www.palantir.com/careers/",
     "wave": "A",
-    "logoUrl": "/logos/palantir.png"
+    "logoUrl": "/logos/palantir.svg"
   },
   {
     "slug": "spotify",
     "name": "Spotify",
     "careersUrl": "https://www.lifeatspotify.com/jobs",
     "wave": "B",
-    "logoUrl": "/logos/spotify.png"
+    "logoUrl": "/logos/spotify.svg"
   },
   {
     "slug": "mongodb",
     "name": "MongoDB",
     "careersUrl": "https://www.mongodb.com/company/careers",
     "wave": "B",
-    "logoUrl": "/logos/mongodb.png"
+    "logoUrl": "/logos/mongodb.svg"
   },
   {
     "slug": "tiktok",
     "name": "TikTok",
     "careersUrl": "https://lifeattiktok.com/search",
     "wave": "C",
-    "logoUrl": "/logos/tiktok.png"
+    "logoUrl": "/logos/tiktok.svg"
   },
   {
     "slug": "okta",
     "name": "Okta",
     "careersUrl": "https://www.okta.com/company/careers/",
     "wave": "B",
-    "logoUrl": "/logos/okta.png"
+    "logoUrl": "/logos/okta.svg"
   },
   {
     "slug": "salesforce",
     "name": "Salesforce",
     "careersUrl": "https://www.salesforce.com/company/careers/",
     "wave": "B",
-    "logoUrl": "/logos/salesforce.png"
+    "logoUrl": "/logos/salesforce.svg"
   },
   {
     "slug": "adobe",
     "name": "Adobe",
     "careersUrl": "https://careers.adobe.com/us/en",
     "wave": "B",
-    "logoUrl": "/logos/adobe.png"
+    "logoUrl": "/logos/adobe.svg"
   },
   {
     "slug": "patreon",
     "name": "Patreon",
     "careersUrl": "https://www.patreon.com/careers",
     "wave": "B",
-    "logoUrl": "/logos/patreon.png"
+    "logoUrl": "/logos/patreon.svg"
   },
   {
     "slug": "cloudflare",
     "name": "Cloudflare",
     "careersUrl": "https://www.cloudflare.com/careers/",
     "wave": "B",
-    "logoUrl": "/logos/cloudflare.png"
+    "logoUrl": "/logos/cloudflare.svg"
   },
   {
     "slug": "zoom",
     "name": "Zoom",
     "careersUrl": "https://careers.zoom.us/jobs/search",
     "wave": "B",
-    "logoUrl": "/logos/zoom.png"
+    "logoUrl": "/logos/zoom.svg"
   },
   {
     "slug": "workday",
     "name": "Workday",
     "careersUrl": "https://www.workday.com/en-us/company/careers/open-positions.html",
     "wave": "B",
-    "logoUrl": "/logos/workday.png"
+    "logoUrl": "/logos/workday.svg"
   },
   {
     "slug": "github",
     "name": "GitHub",
     "careersUrl": "https://www.github.careers/careers-home",
     "wave": "B",
-    "logoUrl": "/logos/github.png"
+    "logoUrl": "/logos/github.svg"
   },
   {
     "slug": "gitlab",
     "name": "GitLab",
     "careersUrl": "https://about.gitlab.com/jobs/all-jobs/",
     "wave": "B",
-    "logoUrl": "/logos/gitlab.png"
+    "logoUrl": "/logos/gitlab.svg"
   },
   {
     "slug": "mozilla",
     "name": "Mozilla",
     "careersUrl": "https://www.mozilla.org/en-US/careers/listings/",
     "wave": "A",
-    "logoUrl": "/logos/mozilla.png"
+    "logoUrl": "/logos/mozilla.svg"
   },
   {
     "slug": "paypal",
     "name": "PayPal",
     "careersUrl": "https://careers.pypl.com/home/",
     "wave": "B",
-    "logoUrl": "/logos/paypal.png"
+    "logoUrl": "/logos/paypal.svg"
   },
   {
     "slug": "oracle",
     "name": "Oracle",
     "careersUrl": "https://www.oracle.com/careers/",
     "wave": "D",
-    "logoUrl": "/logos/oracle.png"
+    "logoUrl": "/logos/oracle.svg"
   },
   {
     "slug": "reddit",
     "name": "Reddit",
     "careersUrl": "https://redditinc.com/careers",
     "wave": "A",
-    "logoUrl": "/logos/reddit.png"
+    "logoUrl": "/logos/reddit.svg"
   },
   {
     "slug": "x",
     "name": "X (Twitter)",
     "careersUrl": "https://careers.x.com/",
     "wave": "D",
-    "logoUrl": "/logos/x.png"
+    "logoUrl": "/logos/x.svg"
   },
   {
     "slug": "intel",
     "name": "Intel",
     "careersUrl": "https://jobs.intel.com/",
     "wave": "B",
-    "logoUrl": "/logos/intel.png"
+    "logoUrl": "/logos/intel.svg"
   },
   {
     "slug": "ibm",
     "name": "IBM",
     "careersUrl": "https://www.ibm.com/careers",
     "wave": "D",
-    "logoUrl": "/logos/ibm.png"
+    "logoUrl": "/logos/ibm.svg"
   },
   {
     "slug": "jpmorgan",
     "name": "JPMorgan Chase",
     "careersUrl": "https://www.jpmorganchase.com/careers",
     "wave": "D",
-    "logoUrl": "/logos/jpmorgan.jpg"
+    "logoUrl": "/logos/jpmorgan.svg"
   },
   {
     "slug": "goldman-sachs",
     "name": "Goldman Sachs",
     "careersUrl": "https://www.goldmansachs.com/careers",
     "wave": "D",
-    "logoUrl": "/logos/goldman-sachs.png"
+    "logoUrl": "/logos/goldman-sachs.svg"
   },
   {
     "slug": "abn-amro",
     "name": "ABN AMRO",
     "careersUrl": "https://www.werkenbijabnamro.nl/en/vacancies",
     "wave": "D",
-    "logoUrl": "/logos/abn-amro.png"
+    "logoUrl": "/logos/abn-amro.svg"
   },
   {
     "slug": "ing",
     "name": "ING",
     "careersUrl": "https://careers.ing.com/en",
     "wave": "B",
-    "logoUrl": "/logos/ing.png"
+    "logoUrl": "/logos/ing.svg"
   },
   {
     "slug": "riot-games",
     "name": "Riot Games",
     "careersUrl": "https://www.riotgames.com/en/work-with-us/jobs",
     "wave": "B",
-    "logoUrl": "/logos/riot-games.png"
+    "logoUrl": "/logos/riot-games.svg"
   },
   {
     "slug": "blizzard",
     "name": "Blizzard Entertainment",
     "careersUrl": "https://careers.blizzard.com/global/en",
     "wave": "B",
-    "logoUrl": "/logos/blizzard.png"
+    "logoUrl": "/logos/blizzard.svg"
   }
 ]

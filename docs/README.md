@@ -40,7 +40,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 | [API.md](API.md)                                 | Fastify/TypeBox, generated OpenAPI contract, catalog queries, pagination and health routes            |
 | [FRONTEND.md](FRONTEND.md)                       | React/Vite, API-only dependency, animated navigation, compact profile review and cancellable requests |
 | [DESIGN.md](DESIGN.md)                           | Resume-first glass UI, four-column company grid, typography, responsive and accessible interactions   |
-| [LOGOS.md](LOGOS.md)                             | Local company assets, source records, API paths and the shared N/A fallback                           |
+| [LOGOS.md](LOGOS.md)                             | Reviewed transparent SVGs, source records, manual vector maintenance and the shared N/A fallback      |
 | [SOURCES.md](SOURCES.md)                         | Company/source separation, explicit audit status, scheduling gate and coverage signals                |
 | [AUDITING.md](AUDITING.md)                       | Official-ID reconciliation, policy evidence, reviewed scope, activation and verified refresh guards   |
 | [QUALITY.md](QUALITY.md)                         | Strict types, dependency checks, behavioral tests and separate integration/live-source gates          |

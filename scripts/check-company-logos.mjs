@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
+import { checkSvgLogo } from './logo-assets.mjs';
 
 const companies = JSON.parse(
   await readFile(new URL('../backend/config/companies.json', import.meta.url), 'utf8'),
@@ -30,6 +31,13 @@ for (const company of companies) {
     source.sha256,
     `Logo content changed without updating its source record: ${company.slug}`,
   );
+
+  if (company.logoUrl.endsWith('.svg')) {
+    assert.equal(source.maintenance, 'manual-vector-review', `Unreviewed vector: ${company.slug}`);
+    checkSvgLogo(bytes, company.slug);
+
+    continue;
+  }
 
   const png = bytes.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex'));
   const jpeg = bytes.subarray(0, 3).equals(Buffer.from('ffd8ff', 'hex'));
