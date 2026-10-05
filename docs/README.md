@@ -6,6 +6,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 [ACCOUNTS_BILLING_PLAN.md](ACCOUNTS_BILLING_PLAN.md) proposes guest access to five resume matches, managed registration/login, monthly paid tiers, server-enforced entitlements, Stripe Checkout/Portal/webhook handling and an admin dashboard for company/job removal and versioned pricing. Accounts, payments and admin controls remain unimplemented.
 
+[ANALYTICS_PLAN.md](ANALYTICS_PLAN.md) proposes admin audience, registration, observed DAU/WAU/MAU, funnel, retention, billing and health reporting, with explicit metric definitions, privacy/consent boundaries and aggregation checks. Analytics remains unimplemented.
+
 [SEMANTIC_EXPERIMENTS.md](SEMANTIC_EXPERIMENTS.md) records the first implemented foundation: requirement/evidence contracts, pure coverage algebra, reproducible development evaluation and a pinned local-model public-job shadow adapter. Live recommendations still use the deterministic policy.
 
 [RESUME_MATCHING_REWORK.md](RESUME_MATCHING_REWORK.md) is the proposed implementation roadmap from 4 October 2026: current-code findings, backend-hosted semantic models, evidence comparison, coverage percentages, evaluation gates and phased migration. It supersedes the remaining sequences in the older matching proposals; the implementation references below still describe the current deterministic behavior.

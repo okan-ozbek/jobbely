@@ -102,11 +102,13 @@ Reconcile active/pending/past-due subscriptions periodically and on the authenti
 
 ## Admin dashboard
 
-Provide a private `/admin` area with Companies, Jobs, Pricing tiers and Activity views. Each view has search/filter controls, current state, a before/after preview for changes and clear success/failure feedback. Public signup or a paid subscription never grants administrator access. Admins receive no access to candidate resumes or transient profiles.
+Provide a private `/admin` area with Companies, Jobs, Pricing tiers, Analytics and Activity views. Activity is the admin audit trail; Analytics reports audience/product/billing aggregates defined in [ANALYTICS_PLAN](ANALYTICS_PLAN.md), including registered accounts, observed DAU/WAU/MAU, conversion, retention and subscription metrics. Each management view has search/filter controls, current state, a before/after preview for changes and clear success/failure feedback. Public signup or a paid subscription never grants administrator access. Admins receive no access to candidate resumes or transient profiles.
 
 ### Permissions and audit trail
 
 Use server-owned grants for `catalog.manage` and `pricing.manage`. A catalog editor can moderate companies/jobs; a billing administrator can manage pricing; an operator may grant both. Provision the first administrator through an audited operator-only setup command tied to a verified identity, with no public bootstrap endpoint or self-assigned role. Role management in the dashboard is outside v1.
+
+Add independent `analytics.read` and `billing.analytics.read` grants for aggregate usage and revenue views. Managing listings or prices does not automatically grant reporting access; no grant exposes a candidate profile or raw analytics export.
 
 Admin access requires MFA through the selected identity provider. A recent MFA challenge is required for publishing a price/tier change or bulk removal; email-code login alone is insufficient. Recheck grant and session validity on every admin API request, require CSRF protection for mutations, and revoke access promptly when a grant is removed. Hiding navigation is not authorization. Follow [OWASP authorization guidance](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html).
 
@@ -160,6 +162,8 @@ Admin additions are `AdminGrant` (verified user, permission, revocation), `Compa
 
 No resume/profile/history table is introduced. Invoice/card/address data stays with Stripe except the minimum identifiers needed for reconciliation. Define account, session and event retention and deletion before launch; do not promise erasure of records Stripe must retain. Stripe stores no candidate input. Existing local-worker and private matching protections remain required.
 
+Optional analytics introduces minimal consented activity/journey records and aggregates, separately documented in [ANALYTICS_PLAN](ANALYTICS_PLAN.md). This measures product usage rather than storing profiles; approve its privacy/retention boundary before enabling collection.
+
 Proposed public contracts, subject to generated OpenAPI types during implementation:
 
 - `POST /api/v1/auth/email/start`, `POST /api/v1/auth/email/verify`, `POST /api/v1/auth/logout`: bounded managed-code flow and application session lifecycle.
@@ -170,6 +174,7 @@ Proposed public contracts, subject to generated OpenAPI types during implementat
 - `/api/v1/admin/companies` and `/api/v1/admin/jobs`: permission-checked search/list, detail and visibility updates with a reason and expected revision. Use explicit moderation actions rather than destructive record deletion.
 - `/api/v1/admin/plans`: permission-checked draft/edit/publish/retire actions; publication has a durable operation ID and recoverable status.
 - `GET /api/v1/admin/activity`: authorized, bounded audit-history reads; no public audit feed.
+- `/api/v1/admin/analytics/*`: permission-checked aggregate audience, funnel, revenue and health reports governed by [ANALYTICS_PLAN](ANALYTICS_PLAN.md).
 - Existing matching routes: enforce tier limits, add explicit access metadata and preview receipt, and return typed authentication/upgrade errors for protected operations.
 
 Keep billing SDK records out of public responses and avoid altering ranking payloads unnecessarily. Regenerate contracts after schema changes. Read [JOB_FEATURES](JOB_FEATURES.md) before adding entitlement-related snapshot/cursor checks so concurrent public-feature changes still produce the existing stale-result response.
@@ -182,7 +187,8 @@ Keep billing SDK records out of public responses and avoid altering ranking payl
 4. **Stripe sandbox end-to-end.** Implement Customer/Checkout/Portal adapters, durable inbox, access projection and reconciliation. Verify payment, extra authentication, async pending/failure, duplicate clicks, webhook replay/reordering, renewal failure/recovery, cancellation, refunds and disputes with synthetic identities and Stripe test fixtures/test clocks.
 5. **Integrated upgrade UX.** Keep the original resume tab alive through inline signup and separate Checkout, unlock after server verification, and test desktop/mobile/tab discard. Paid pagination and detail comparison must stop after logout, expiry or downgrade. All private state stays out of storage, URLs, telemetry and Stripe metadata.
 6. **Admin dashboard.** Deliver Companies/Jobs moderation, Pricing tiers drafts/publication/retirement and Activity. Verify hidden content disappears from every public surface, remains hidden after import/backfill and restores correctly. Exercise concurrent removals/ranking, stale edits, unauthorized users, catalog-editor attempts to change prices, MFA expiry, revoked grants, duplicate price publication, external/local partial failure, old Checkout completion and grandfathered subscribers.
-7. **Production readiness.** Dedicated PostgreSQL concurrency tests, required billing worker, secrets/HTTPS/proxy policy, alerts and reconciliation runbook, email configuration, sandbox/live separation, administrator recovery and operator refund/cancellation procedure. Run root `pnpm check`, API authorization tests and browser journeys before release.
+7. **Analytics.** Deliver authoritative account/billing counts first, then observed DAU/WAU/MAU, consented audience/funnel/retention and operational health as sequenced in [ANALYTICS_PLAN](ANALYTICS_PLAN.md). Verify privacy exclusions, metric definitions, consent coverage, aggregation/deletion and reporting permissions.
+8. **Production readiness.** Dedicated PostgreSQL concurrency tests, required billing/analytics workers, secrets/HTTPS/proxy policy, alerts and reconciliation runbook, email configuration, sandbox/live separation, administrator recovery and operator refund/cancellation procedure. Run root `pnpm check`, API authorization tests and browser journeys before release.
 
 Required security regressions include forged/tampered preview receipts, caller-selected `limit=50`, old paid cursors after downgrade, arbitrary-job comparison, another user's Portal/Checkout ID, spoofed Checkout success, invalid webhook signatures, duplicate/out-of-order events, downtime recovery, session fixation and redirect misuse. Verify absence of protected records in browser network responses, not just rendered cards. Preserve matching scores across Free/Pro for the same job/profile.
 
