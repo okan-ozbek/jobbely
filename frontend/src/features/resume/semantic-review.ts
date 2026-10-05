@@ -9,6 +9,12 @@ export function coverageLabel(decision: JobMatchResponse['skills'][number]['deci
   }[decision];
 }
 
+export function orderedSkillEvidence(skills: JobMatchResponse['comparison']['skills']) {
+  const priority = { full: 0, partial: 1, suggested: 2, none: 3 };
+
+  return skills.toSorted((left, right) => priority[left.decision] - priority[right.decision]);
+}
+
 export function reviewQuestions(skills: JobMatchResponse['comparison']['skills']) {
   const seen = new Set<string>();
 

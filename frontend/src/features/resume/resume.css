@@ -54,11 +54,37 @@
   font-weight: 400;
   margin: 0 0 12px;
 }
-.job-profile-comparison .resume-checkbox {
+.comparison-heading {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 12px 0;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.comparison-heading h2 {
+  margin: 0;
+}
+.comparison-heading .resume-status {
+  white-space: nowrap;
+}
+.comparison-source summary {
+  cursor: pointer;
+}
+.match-explanation > .disclosure-toggle {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #ffffff80;
+  font-size: 14px;
+  font-weight: 500;
+}
+.match-explanation > .disclosure-toggle:hover {
+  background: #ffffffb0;
+}
+.match-explanation > .disclosure-toggle > svg {
+  width: 23px;
+  height: 23px;
+  color: var(--signal-text);
 }
 .match-evidence {
   padding-left: 20px;
@@ -813,7 +839,8 @@
   border-radius: 12px;
   background: #ffffff99;
 }
-.resume-workbench .resume-status {
+.resume-workbench .resume-status,
+.comparison-heading .resume-status {
   border-radius: 20px;
   background: #efedf8;
   color: #68618d;
@@ -900,8 +927,12 @@
 }
 .profile-employment-column {
   display: grid;
-  gap: 18px;
+  gap: 12px;
   min-width: 0;
+  padding: 16px 0;
+}
+.profile-employment-column > .resume-panel {
+  margin: 0;
 }
 .profile-employment-column .resume-fields {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -950,6 +981,18 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+}
+.skill-duration-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+  padding: 0;
+  border: 0;
+}
+.skill-duration-inputs legend {
+  margin-bottom: 12px;
+  font-size: 13px;
 }
 .profile-review > .disclosure-toggle {
   padding: 24px;

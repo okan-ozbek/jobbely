@@ -30,7 +30,7 @@ Primary actions, secondary review buttons and glass dropdown triggers share the 
 
 ## Implementation and verification
 
-Profile review places location and employment in one desktop column, alongside a combined education/skills panel. On narrow screens the columns stack. Each skill exposes duration and role origins on hover or keyboard focus; clicking opens a native modal editor with focus containment, Escape dismissal and editable years. Estimated role usage is labeled separately from resume claims and reviewed overrides. The redundant Experience by function panel is omitted; matching still uses reviewed role functions.
+Profile review places location and employment in one desktop column, alongside a combined education/skills panel. On narrow screens the columns stack. Each skill exposes duration and role origins on hover or keyboard focus; clicking opens a native modal editor with focus containment, Escape dismissal and separate whole-number years/months inputs. Months range from 0 to 11; total reviewed duration remains bounded to 600 months. Location and employment panels have a 12px gap without stacked panel margins. Estimated role usage is labeled separately from resume claims and reviewed overrides. The redundant Experience by function panel is omitted; matching still uses reviewed role functions.
 
 [App](../frontend/src/App.tsx), [resume composer](../frontend/src/features/resume/ResumeWorkbench.tsx), [matching UI](../frontend/src/features/resume/ResumeMatches.tsx), [shared styles](../frontend/src/styles.css), [resume styles](../frontend/src/features/resume/resume.css), [browser metadata](../frontend/index.html).
 

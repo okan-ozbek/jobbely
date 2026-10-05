@@ -1,5 +1,25 @@
 import type { ResumeAnalysis } from '../../api/client.js';
 
+export function skillDurationMonths(years: string, months: string): number | null {
+  if (!years.trim() || !months.trim()) {
+    return null;
+  }
+
+  const yearCount = Number(years);
+  const monthCount = Number(months);
+  const total = yearCount * 12 + monthCount;
+
+  return Number.isInteger(yearCount) &&
+    Number.isInteger(monthCount) &&
+    yearCount >= 0 &&
+    yearCount <= 50 &&
+    monthCount >= 0 &&
+    monthCount <= 11 &&
+    total <= 600
+    ? total
+    : null;
+}
+
 /** Only exact, directly evidenced role estimates become reviewed years on submission. */
 export function reviewedSkillTenure(analysis: ResumeAnalysis) {
   const estimates = (analysis.skillTenureEstimates ?? [])

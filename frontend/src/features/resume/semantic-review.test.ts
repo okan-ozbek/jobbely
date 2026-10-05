@@ -1,7 +1,32 @@
 import { expect, it } from 'vitest';
-import { coverageLabel, mergeReview, reviewQuestions } from './semantic-review.js';
+import {
+  coverageLabel,
+  mergeReview,
+  orderedSkillEvidence,
+  reviewQuestions,
+} from './semantic-review.js';
 import { matchProfile } from './match-profile.js';
 import type { JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
+
+it('orders skill evidence by coverage while preserving ties and the original response', () => {
+  const skills = [
+    { decision: 'none', names: ['Missing'] },
+    { decision: 'full', names: ['Direct first'] },
+    { decision: 'suggested', names: ['Suggested'] },
+    { decision: 'partial', names: ['Related'] },
+    { decision: 'full', names: ['Direct second'] },
+  ] as JobMatchResponse['comparison']['skills'];
+
+  expect(orderedSkillEvidence(skills).map((skill) => skill.names[0])).toEqual([
+    'Direct first',
+    'Direct second',
+    'Related',
+    'Suggested',
+    'Missing',
+  ]);
+
+  expect(skills[0]!.decision).toBe('none');
+});
 
 it('caps relevant questions at five, deduplicates scopes, and keeps full/partial labels distinct', () => {
   const skills = Array.from({ length: 10 }, (_, index) => ({

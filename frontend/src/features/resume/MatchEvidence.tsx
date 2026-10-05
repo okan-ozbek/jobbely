@@ -1,4 +1,4 @@
-import { coverageLabel } from './semantic-review.js';
+import { coverageLabel, orderedSkillEvidence } from './semantic-review.js';
 import type { JobMatchResponse, ResumeAnalysis } from '../../api/client.js';
 
 type Comparison = JobMatchResponse['comparison'];
@@ -30,7 +30,7 @@ export function MatchEvidence({
         </p>
       )}
       <ul className="match-evidence">
-        {comparison.skills.map((skill, index) => (
+        {orderedSkillEvidence(comparison.skills).map((skill, index) => (
           <li key={index}>
             <strong className={`confidence-${skill.confidence}`}>
               {skill.names.join(' or ')} · {coverageLabel(skill.decision)}

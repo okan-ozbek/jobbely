@@ -1,7 +1,26 @@
 import { expect, it } from 'vitest';
-import { reviewedSkillTenure } from './skill-tenure.js';
+import { reviewedSkillTenure, skillDurationMonths } from './skill-tenure.js';
 import { matchProfile } from './match-profile.js';
 import type { ResumeAnalysis } from '../../api/client.js';
+
+it('preserves individual months and enforces whole-number duration bounds', () => {
+  expect(skillDurationMonths('0', '7')).toBe(7);
+  expect(skillDurationMonths('2', '6')).toBe(30);
+  expect(skillDurationMonths('0', '0')).toBe(0);
+  expect(skillDurationMonths('50', '0')).toBe(600);
+
+  for (const [years, months] of [
+    ['', '7'],
+    ['1', ''],
+    ['0.5', '0'],
+    ['1', '12'],
+    ['50', '1'],
+    ['-1', '0'],
+    ['1', '-1'],
+  ]) {
+    expect(skillDurationMonths(years!, months!)).toBeNull();
+  }
+});
 
 function profile(changes: Partial<ResumeAnalysis> = {}): ResumeAnalysis {
   return {

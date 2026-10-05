@@ -214,7 +214,10 @@ export function ResumeMatches({
                   <br />
                   {item.coverage}
                 </p>
-                <Disclosure summary="Why this result">
+                <Disclosure
+                  summary="Why this result"
+                  className="match-explanation"
+                >
                   <ConfidenceLegend />
                   <MatchEvidence
                     comparison={item}

@@ -22,7 +22,6 @@ export function JobProfileComparison({
   } | null>(null);
 
   const [error, setError] = useState('');
-  const [highlight, setHighlight] = useState(true);
 
   useEffect(() => {
     setResponse(null);
@@ -57,7 +56,15 @@ export function JobProfileComparison({
         className="job-profile-comparison"
         aria-label="Resume comparison"
       >
-        <h2>Your resume against this role</h2>
+        <div className="comparison-heading">
+          <h2>Your resume against this role</h2>
+          {data && (
+            <span className="resume-status">
+              {data.comparison.band === 'review' ? 'Needs review' : data.comparison.band} ·{' '}
+              {data.comparison.baseScore}% match
+            </span>
+          )}
+        </div>
         {!analysis ? (
           <>
             <p>
@@ -84,25 +91,24 @@ export function JobProfileComparison({
             ) : (
               <>
                 <p className="small-note">
-                  {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}. Match{' '}
-                  {data.comparison.baseScore}%.
-                  {data.comparison.band === 'review'
-                    ? ' This reading needs review.'
-                    : ` Fit: ${data.comparison.band}.`}{' '}
-                  Evidence completeness {data.comparison.completeness}% ·{' '}
-                  {data.comparison.unresolvedRequirements} unresolved requirement(s).
+                  {data.comparison.completeness}% evidence · {data.comparison.requiredGaps} required
+                  gaps · {data.comparison.unresolvedRequirements} to review
                 </p>
-                <label className="resume-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={highlight}
-                    onChange={(event) => setHighlight(event.target.checked)}
-                  />
-                  Highlight recognized skills and activities
-                </label>
-                <p className="small-note">
-                  Hover, focus or tap a highlighted skill to see why it matches.
-                </p>
+                <details className="comparison-source small-note">
+                  <summary>
+                    {data.recommendationEligible
+                      ? 'Available for matching'
+                      : 'Description comparison only'}{' '}
+                    · Source checked{' '}
+                    {new Date(data.lastSeenAt).toLocaleDateString(undefined, {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </summary>
+                  <p>
+                    {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}.
+                  </p>
+                </details>
               </>
             )}
           </>
@@ -112,7 +118,7 @@ export function JobProfileComparison({
         html={job.descriptionHtml}
         data={data}
         analysis={analysis}
-        highlight={highlight}
+        highlight
       />
     </div>
   );

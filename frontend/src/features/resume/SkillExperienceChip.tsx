@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Sparkles, X } from 'lucide-react';
 import type { ResumeAnalysis, ResumeCorrections } from '../../api/client.js';
+import { skillDurationMonths } from './skill-tenure.js';
 
 function duration(months: number) {
   const years = Math.floor(months / 12);
@@ -33,6 +34,7 @@ export function SkillExperienceChip({
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [rect, setRect] = useState<DOMRect | null>(null);
   const [years, setYears] = useState('');
+  const [months, setMonths] = useState('');
   const tenure = corrections.skillTenure ?? analysis.skillTenure ?? [];
   const claim = tenure.find((entry) => entry.skillId === signal.id);
   const estimate = analysis.skillTenureEstimates?.find((entry) => entry.skillId === signal.id);
@@ -44,12 +46,8 @@ export function SkillExperienceChip({
       ? `${duration(estimate.minimumMonths)}${estimate.minimumMonths === estimate.maximumMonths ? '' : `–${duration(estimate.maximumMonths)}`} · Estimated`
       : 'Experience not provided';
 
-  const canSave =
-    years.trim() !== '' &&
-    Number.isFinite(Number(years)) &&
-    Number(years) >= 0 &&
-    Number(years) <= 50 &&
-    (!!claim || tenure.length < 100);
+  const enteredMonths = skillDurationMonths(years, months);
+  const canSave = enteredMonths !== null && (!!claim || tenure.length < 100);
 
   const show = () => {
     clearTimeout(hideTimer.current);
@@ -102,13 +100,14 @@ export function SkillExperienceChip({
           onClick={() => {
             setRect(null);
 
-            setYears(
-              claim
-                ? String(Number((claim.months / 12).toFixed(4)))
-                : estimate?.minimumMonths === estimate?.maximumMonths && estimate
-                  ? String(Number((estimate.minimumMonths / 12).toFixed(4)))
-                  : '',
-            );
+            const initialMonths =
+              claim?.months ??
+              (estimate && estimate.minimumMonths === estimate.maximumMonths
+                ? estimate.minimumMonths
+                : null);
+
+            setYears(initialMonths === null ? '' : String(Math.floor(initialMonths / 12)));
+            setMonths(initialMonths === null ? '' : String(initialMonths % 12));
 
             dialog.current!.showModal();
           }}
@@ -188,14 +187,14 @@ export function SkillExperienceChip({
             onSubmit={(event) => {
               event.preventDefault();
 
-              if (!canSave) {
+              if (!canSave || enteredMonths === null) {
                 return;
               }
 
               correct({
                 skillTenure: [
                   ...tenure.filter((entry) => entry.skillId !== signal.id),
-                  { skillId: signal.id, months: Math.round(Number(years) * 12) },
+                  { skillId: signal.id, months: enteredMonths },
                 ],
               });
 
@@ -220,17 +219,33 @@ export function SkillExperienceChip({
                 this skill for only part of a role.
               </p>
             )}
-            <label>
-              <span>Professional experience in years</span>
-              <input
-                type="number"
-                min={0}
-                max={50}
-                step="any"
-                value={years}
-                onChange={(event) => setYears(event.target.value)}
-              />
-            </label>
+            <fieldset className="skill-duration-inputs">
+              <legend>Professional experience</legend>
+              <label>
+                <span>Years</span>
+                <input
+                  type="number"
+                  min={0}
+                  max={50}
+                  step={1}
+                  inputMode="numeric"
+                  value={years}
+                  onChange={(event) => setYears(event.target.value)}
+                />
+              </label>
+              <label>
+                <span>Months</span>
+                <input
+                  type="number"
+                  min={0}
+                  max={Number(years) === 50 ? 0 : 11}
+                  step={1}
+                  inputMode="numeric"
+                  value={months}
+                  onChange={(event) => setMonths(event.target.value)}
+                />
+              </label>
+            </fieldset>
             <p className="small-note">
               Use 0 to record no experience. Projects, learning and internships are excluded.
             </p>
