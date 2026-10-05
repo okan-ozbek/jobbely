@@ -220,6 +220,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [HTTP](docs/HTTP.md): network policy and retries.
 - [SECURITY](docs/SECURITY.md): trust boundaries and HTML preparation.
 - [API](docs/API.md): public contract, query behavior and pagination.
+- [ACCOUNTS_BILLING_PLAN](docs/ACCOUNTS_BILLING_PLAN.md): proposed registration/login, five free matches, monthly Pro access and Stripe payment lifecycle.
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
 - [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.
 - [LOGOS](docs/LOGOS.md): local company logos, provenance, refresh commands and N/A fallback.
@@ -229,7 +230,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [FORMATTING](docs/FORMATTING.md): readable Prettier style, ESLint fixes and editor defaults.
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.
 
-Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts, in-app job applications, paid data providers and AI classification are outside the initial scope.
+Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. Accounts and subscriptions are a proposed next increment in [ACCOUNTS_BILLING_PLAN](docs/ACCOUNTS_BILLING_PLAN.md), beyond the original MVP scope. In-app job applications, paid data providers and AI classification remain outside the initial scope.
 
 Resume matching interprets reviewed engineering activities through a 239-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.
 

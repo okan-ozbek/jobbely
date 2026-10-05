@@ -21,6 +21,9 @@ const financialCompanies = new Set([
   'ing',
 ]);
 
+const gamingCompanies = new Set(['riot-games', 'blizzard']);
+const aiCompanies = new Set(['openai', 'anthropic', 'databricks', 'palantir']);
+
 export function CompanyDirectory({
   companies,
   loading,
@@ -46,12 +49,27 @@ export function CompanyDirectory({
     {
       name: 'Big tech',
       id: 'big-tech',
-      companies: filtered.filter((company) => !financialCompanies.has(company.slug)),
+      companies: filtered.filter(
+        (company) =>
+          !financialCompanies.has(company.slug) &&
+          !gamingCompanies.has(company.slug) &&
+          !aiCompanies.has(company.slug),
+      ),
     },
     {
-      name: 'Quant & banking',
-      id: 'quant-banking',
+      name: 'Quant',
+      id: 'quant',
       companies: filtered.filter((company) => financialCompanies.has(company.slug)),
+    },
+    {
+      name: 'Gaming',
+      id: 'gaming',
+      companies: filtered.filter((company) => gamingCompanies.has(company.slug)),
+    },
+    {
+      name: 'AI',
+      id: 'ai',
+      companies: filtered.filter((company) => aiCompanies.has(company.slug)),
     },
   ];
 

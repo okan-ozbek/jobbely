@@ -10,7 +10,7 @@ The UI searches stored jobs, filters by company/function/workplace, opens full s
 
 `CompanyLogo` renders local assets from each company's API-provided `logoUrl` in the directory, job rows and details. Missing/failed images use a local N/A asset. Source records, maintenance and fallback rules live in [LOGOS.md](LOGOS.md).
 
-[CompanyDirectory](../frontend/src/components/CompanyDirectory.tsx) groups the 60 employers into Big tech (47) and Quant & banking (13), with a shared company-name search that hides empty groups. Group membership is presentation-only and does not change registry identifiers, source coverage or matching. Directory SVGs retain flat brand colors on transparent wrappers; home marks retain brand colors at 65% opacity.
+[CompanyDirectory](../frontend/src/components/CompanyDirectory.tsx) groups the 60 employers into Big tech (41), Quant (13, including banking), Gaming (2) and AI (4), with a shared company-name search that hides empty groups. Gaming contains Riot Games and Blizzard; AI contains OpenAI, Anthropic, Databricks and Palantir. Group membership is presentation-only and does not change registry identifiers, source coverage or matching. Directory SVGs retain flat brand colors on transparent wrappers; home marks retain brand colors at 65% opacity.
 
 The 4 October redesign defaults to a centered resume composer with a translucent glass interface, soft lavender/blue gradients and locally hosted DM Sans. Companies is the header navigation action; its directory now uses four columns on wide screens. Existing catalog/detail routes remain accessible from company cards and matches. Visual tokens, responsive layouts and accessibility rules are recorded in [DESIGN.md](DESIGN.md).
 
