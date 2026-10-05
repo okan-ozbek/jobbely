@@ -14,6 +14,8 @@ Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6f
 
 Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Shared searchable glass listboxes replace native select popups, retaining labels, keyboard navigation and visible focus. Catalog search keeps its original transparent background on focus and uses the search icon color as its focus cue without an added outline.
 
+Primary actions and glass dropdown triggers share the `--control-height` token (42px). Primary buttons use horizontal padding only, including the mobile composer, so Review my resume, Find matching jobs and the company application action share the same height. Longer wrapping labels may grow to stay readable.
+
 ## Interaction invariants
 
 - The initial home page contains one single-line-height, resizable composer, concise privacy/format guidance and a transparent company-logo row with softer brand colors. A selected file replaces the raw text input and attachment action. Corrections, compact combined skill/competency chips, degrees, skill years, roles and experience live behind an animated profile-review disclosure; raw reading and evidence previews are omitted. Matching uses a compact function dropdown and action row, stacked on mobile. Find matching jobs confirms the current profile; pending analysis disables it, and edits invalidate prior confirmation/results.

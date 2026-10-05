@@ -835,9 +835,6 @@
 .match-controls {
   margin-top: 20px;
 }
-.match-controls .primary-button {
-  min-height: 42px;
-}
 @media (max-width: 650px) {
   .match-controls > label,
   .match-controls .primary-button {
@@ -865,8 +862,7 @@
     gap: 4px;
   }
   .composer-actions .primary-button {
-    padding: 12px;
-    font-size: 11px;
+    padding: 0 12px;
     gap: 5px;
   }
   .resume-workbench .attach-button {
