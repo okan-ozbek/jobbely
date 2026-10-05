@@ -26,6 +26,9 @@ import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
 import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
 import { RefreshWaves } from './application/refresh-waves.js';
 import { FileWaveAudits, FileWaveRefreshReports } from './infrastructure/audits/wave-refresh.js';
+import { PostgresCoverage } from './infrastructure/storage/coverage-postgres.js';
+import { loadAuditPlans } from './infrastructure/audits/registry.js';
+import { configurationHash } from './infrastructure/audits/model.js';
 
 export const config = z
   .object({
@@ -131,6 +134,22 @@ export async function bootstrap() {
 
   const adapters = createAdapters(http);
 
+  const coverage =
+    config.DATA_MODE === 'postgres'
+      ? new PostgresCoverage(
+          config.DATABASE_URL!,
+          new Map(
+            loadAuditPlans().map((plan) => [
+              plan.companySlug,
+              configurationHash(
+                plan,
+                sources.filter((source) => source.companySlug === plan.companySlug),
+              ),
+            ]),
+          ),
+        )
+      : undefined;
+
   const accountRepository =
     config.DATA_MODE === 'postgres' ? new PostgresAccounts(config.DATABASE_URL!) : undefined;
 
@@ -191,7 +210,7 @@ export async function bootstrap() {
       await accountRepository?.close();
       await passwordRepository?.close();
     },
-    catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE),
+    catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE, undefined, coverage),
     resume: new AnalyzeResume(companies),
     matcher: new MatchJobs(
       features,
@@ -207,11 +226,13 @@ export async function bootstrap() {
       companies,
       sources,
       sync,
-      new FileWaveAudits(adapters),
+      new FileWaveAudits(adapters, coverage),
       new FileWaveRefreshReports(),
       backfill,
     ),
     closeFeatures: async () => {
+      await coverage?.close();
+
       if (features instanceof PostgresJobFeatures) {
         await features.close();
       }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ApiError, listCategories, listCompanies, listJobs, listFacets } from '../api/client.js';
 import type { Company, Job, JobsQuery } from '../api/client.js';
 
-export function useJobCatalog(query: JobsQuery) {
+export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [categories, setCategories] = useState<{ slug: string; name: string }[]>([]);
 
@@ -89,6 +89,45 @@ export function useJobCatalog(query: JobsQuery) {
       window.clearTimeout(timeout);
     };
   }, [query, retry]);
+
+  useEffect(() => {
+    if (!refreshCoverage) {
+      return;
+    }
+
+    let controller: AbortController | undefined;
+
+    const updateCoverage = () => {
+      if (document.hidden) {
+        return;
+      }
+
+      controller?.abort();
+      controller = new AbortController();
+
+      const signal = controller.signal;
+
+      void listCompanies(signal)
+        .then((next) => {
+          if (!signal.aborted) {
+            setCompanies(next);
+          }
+        })
+        .catch(() => {
+          // Keep the directory usable during a temporary background refresh failure.
+        });
+    };
+
+    const timer = window.setInterval(updateCoverage, 60_000);
+
+    document.addEventListener('visibilitychange', updateCoverage);
+
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener('visibilitychange', updateCoverage);
+      controller?.abort();
+    };
+  }, [refreshCoverage]);
 
   const loadMore = async () => {
     if (!current || !nextCursor || loading || loadingMore) {

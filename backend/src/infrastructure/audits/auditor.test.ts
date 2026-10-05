@@ -85,10 +85,11 @@ const extraction: Extraction = {
 };
 
 function audit(
-  html = `<a href="${posting.url}">Engineer</a>`,
+  html: string | ((url: string) => string) = `<a href="${posting.url}">Engineer</a>`,
   feed = extraction,
   auditPlan = plan,
   snapshots?: ReadonlyMap<string, Extraction>,
+  automaticCoverage = false,
 ) {
   const adapter = {
     extract: async () => {
@@ -107,7 +108,7 @@ function audit(
     {
       get: async (url) => ({
         url,
-        body: url.endsWith('/terms') ? policyBody : html,
+        body: url.endsWith('/terms') ? policyBody : typeof html === 'function' ? html(url) : html,
         robotsUrl: 'https://example.com/robots.txt',
         robotsBody: 'User-agent: *\nAllow: /',
         fetchedAt: now.toISOString(),
@@ -127,8 +128,86 @@ function audit(
       google: adapter,
     },
     () => now,
-  ).run('ignored/raw-evidence', undefined, snapshots);
+  ).run('ignored/raw-evidence', undefined, snapshots, automaticCoverage);
 }
+
+describe('automatic technical coverage', () => {
+  const pending = auditPlanSchema.parse({
+    ...plan,
+    scope: { ...plan.scope, status: 'pending' },
+    access: { ...plan.access, status: 'pending', display: 'pending' },
+    pages: plan.pages.map((page) => ({ ...page, complete: false })),
+  });
+
+  it('verifies exact official identities without manual approvals, while keeping access unapproved', async () => {
+    const result = await audit(undefined, extraction, pending, undefined, true);
+
+    expect(result.technicalBlockers).toEqual([]);
+
+    expect(result.blockers.some((reason) => reason.includes('access review is pending'))).toBe(
+      true,
+    );
+
+    expect(() => assertAuditEvidence(result.report, pending, [source], now)).toThrow();
+  });
+
+  it('automatically follows same-origin pagination and compares the full inventory', async () => {
+    const feed = {
+      ...extraction,
+      postings: [
+        posting,
+        {
+          ...posting,
+          sourcePostingId: '2',
+          url: posting.url.replace('/1', '/2'),
+          applyUrl: posting.applyUrl.replace('/1', '/2'),
+        },
+      ],
+    };
+
+    const result = await audit(
+      (url) =>
+        url.endsWith('?page=2')
+          ? `<a href="${posting.url.replace('/1', '/2')}">Engineer two</a>`
+          : `<a href="${posting.url}">Engineer</a><a rel="next" href="?page=2">Next</a>`,
+      feed,
+      pending,
+      undefined,
+      true,
+    );
+
+    expect(result.technicalBlockers).toEqual([]);
+    expect(result.report.sources[0]?.matchedCount).toBe(2);
+    expect(result.report.pages).toHaveLength(2);
+  });
+
+  it.each([
+    ['interactive pagination', `<a href="${posting.url}">Engineer</a><button>Load more</button>`],
+    ['missing official job', '<a href="https://job-boards.greenhouse.io/example/jobs/2">Other</a>'],
+    [
+      'new unconfigured board',
+      `<a href="${posting.url}">Engineer</a><a href="https://jobs.lever.co/other">More jobs</a>`,
+    ],
+    ['empty JavaScript shell', '<div id="app"></div>'],
+  ])('withholds verification for %s', async (_name, html) => {
+    expect(
+      (await audit(html, extraction, pending, undefined, true)).technicalBlockers.length,
+    ).toBeGreaterThan(0);
+  });
+
+  it('does not verify a filtered inventory even when its IDs happen to match', async () => {
+    const filtered = {
+      ...pending,
+      pages: [{ ...pending.pages[0]!, url: `${company.careersUrl}?country=NL` }],
+    };
+
+    expect(
+      (await audit(undefined, extraction, filtered, undefined, true)).technicalBlockers.some(
+        (reason) => reason.includes('Filtered'),
+      ),
+    ).toBe(true);
+  });
+});
 
 describe('evidence-backed source audits', () => {
   it('checks the exact imported snapshot without refetching, including failed-source gaps', async () => {

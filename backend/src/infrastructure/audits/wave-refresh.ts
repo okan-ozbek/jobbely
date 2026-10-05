@@ -1,6 +1,7 @@
 import { mkdir, rename, writeFile } from 'node:fs/promises';
 import type { Company, Extraction, Provider, Source } from '../../domain/model.js';
 import type { SourceAdapter } from '../../ports/ingestion.js';
+import type { CoverageAssessment, CoverageRepository } from '../../ports/coverage.js';
 import type {
   WaveAudits,
   WaveRefreshReport,
@@ -47,6 +48,7 @@ export class FileWaveRefreshReports implements WaveRefreshReports {
 export class FileWaveAudits implements WaveAudits {
   constructor(
     private readonly adapters: Readonly<Record<Provider, SourceAdapter>>,
+    private readonly coverage?: CoverageRepository,
     private readonly directory = new URL('../../../data/wave-sync/', import.meta.url),
   ) {}
 
@@ -55,6 +57,7 @@ export class FileWaveAudits implements WaveAudits {
     company: Company,
     sources: Source[],
     snapshots: ReadonlyMap<string, Extraction>,
+    sourceRunIds: ReadonlyMap<string, string>,
   ) {
     const plan = loadAuditPlans().find((entry) => entry.companySlug === company.slug);
 
@@ -77,19 +80,64 @@ export class FileWaveAudits implements WaveAudits {
     const artifactDirectory = `data/wave-sync/${runId}/${company.slug}/`;
     const reportPath = `${artifactDirectory}report.json`;
 
-    const { report, rawPages, blockers } = await auditor.run(
+    const { report, rawPages, technicalBlockers } = await auditor.run(
       artifactDirectory,
       undefined,
       snapshots,
+      true,
     );
+
+    for (const source of sources) {
+      if (!sourceRunIds.has(source.id)) {
+        technicalBlockers.push(`No imported run for ${source.id}`);
+      }
+    }
+
+    const reviewAge = Date.now() - Date.parse(plan.access.reviewedAt ?? '');
+
+    const accessApproved =
+      plan.access.status === 'approved' &&
+      reviewAge >= 0 &&
+      reviewAge <= 30 * 24 * 60 * 60_000 &&
+      ['private_full_descriptions', 'public_full_descriptions'].includes(plan.access.display) &&
+      plan.access.evidenceUrls.every((url) =>
+        report.policies.some(
+          (policy) =>
+            policy.url === url &&
+            !policy.error &&
+            plan.access.reviewedDocuments.some(
+              (document) => document.url === url && document.sha256 === policy.textSha256,
+            ),
+        ),
+      );
+
+    const assessment: CoverageAssessment = {
+      companySlug: company.slug,
+      configurationHash: report.configurationHash,
+      checkedAt: report.observedAt,
+      status: technicalBlockers.length ? 'partial' : 'verified',
+      sourceRunIds: Object.fromEntries(sourceRunIds),
+      blockers: technicalBlockers,
+      accessStatus: accessApproved
+        ? 'approved'
+        : plan.access.status === 'pending'
+          ? 'unreviewed'
+          : 'blocked',
+    };
 
     // Feed evidence is already stored atomically with its successful source run.
     await atomicJson(new URL('raw-pages.json', directory), rawPages);
-    await atomicJson(new URL('report.json', directory), report);
+
+    await atomicJson(new URL('report.json', directory), {
+      ...report,
+      technicalCoverage: assessment,
+    });
+
+    await this.coverage?.save(assessment);
 
     return {
-      status: blockers.length ? ('blocked' as const) : ('passed' as const),
-      blockers,
+      status: technicalBlockers.length ? ('blocked' as const) : ('passed' as const),
+      blockers: technicalBlockers,
       reportPath,
     };
   }

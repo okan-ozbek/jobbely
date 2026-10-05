@@ -53,6 +53,8 @@ Public errors use code/message without internal traces. Unexpected failures retu
 
 ## Changes and limits
 
+Company responses now expose optional `verification` metadata: automatic technical result (`verified`, `partial`, `pending`), check time, bounded blockers and independent access-review status. Coverage reads fresh database evidence; response fields exclude source run IDs and configuration hashes. See [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md).
+
 Run `pnpm contracts` after route/schema changes, then type-check frontend consumers. Generated artifacts are [OpenAPI JSON](../contracts/openapi.json) and [frontend types](../frontend/src/api/generated/schema.ts). The build regenerates them. There is no runtime Swagger UI route implemented.
 
 Catalog search/facets/pagination currently operate in memory over a consistent repository snapshot. Move execution into indexed database queries while preserving contract semantics before broad ingestion. Public authentication/rate limiting and projection of smaller listing summaries are future work.

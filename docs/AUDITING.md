@@ -13,6 +13,8 @@ legal terms, approve employer scope, bypass challenges, or enable incomplete sou
 
 ## Commands
 
+[AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) now removes manual scope/access approval and `complete` flags from the technical badge path. The wave worker automatically traverses supported pagination and stores a separate technical result tied to imported run IDs. This document's review/activation commands retain their stronger access and removal-policy role; they are no longer required to show a passing coverage checkmark.
+
 [WAVE_REFRESH.md](WAVE_REFRESH.md) now automates audit execution after each employer's source refresh within the ordered A/B/C worker cycle. It checks the exact imported snapshots and saves progress/evidence without separate manual audit commands. Reports do not invent scope/access approvals or auto-activate candidate sources; the activation CLI below remains a separate gate.
 
 ```powershell

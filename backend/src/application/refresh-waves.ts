@@ -70,6 +70,7 @@ export class RefreshWaves {
           };
 
           const snapshots = new Map<string, Extraction>();
+          const sourceRunIds = new Map<string, string>();
 
           waveReport.companies.push(companyReport);
 
@@ -96,6 +97,7 @@ export class RefreshWaves {
               const result = await this.sync.executeWithEvidence(source, signal);
 
               snapshots.set(source.id, result.extraction);
+              sourceRunIds.set(source.id, result.run.id);
 
               companyReport.sources.push({
                 source: source.id,
@@ -124,7 +126,13 @@ export class RefreshWaves {
           await this.reports.save(report);
 
           try {
-            companyReport.audit = await this.audits.verify(id, company, sources, snapshots);
+            companyReport.audit = await this.audits.verify(
+              id,
+              company,
+              sources,
+              snapshots,
+              sourceRunIds,
+            );
           } catch (error) {
             companyReport.audit = {
               status: 'failed',

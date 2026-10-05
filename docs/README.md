@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) records automatic technical verification, pagination, persisted run/configuration-bound results and live checkmarks. Access/display review and legacy removal activation remain separate from technical coverage.
+
 [WAVE_REFRESH.md](WAVE_REFRESH.md) records the automated A → B → C ingestion/audit cycle, exclusive queue, exact snapshot reuse, persisted progress and unchanged source verification/lifecycle gates.
 
 [DOCKER.md](DOCKER.md) records the implemented local container stack: static frontend, API, migration job, PostgreSQL and optional ingestion/email workers. The document parser remains in the browser and is served with its required isolation headers.

@@ -109,6 +109,7 @@ describe('sequential wave refresh and automatic audits', () => {
       companies[2],
       [sources[2]],
       new Map([['a', extraction]]),
+      new Map([['a', 'run-a']]),
     ]);
 
     expect(sources).toEqual(before);

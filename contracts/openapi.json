@@ -820,6 +820,71 @@
                         "type": "string",
                         "nullable": true
                       },
+                      "verification": {
+                        "type": "object",
+                        "required": [
+                          "status",
+                          "checkedAt",
+                          "accessStatus",
+                          "blockers"
+                        ],
+                        "properties": {
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "verified"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "partial"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "pending"
+                                ]
+                              }
+                            ]
+                          },
+                          "checkedAt": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "accessStatus": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "approved"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "unreviewed"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "blocked"
+                                ]
+                              }
+                            ]
+                          },
+                          "blockers": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
                       "sources": {
                         "type": "array",
                         "items": {
@@ -954,6 +1019,71 @@
                     "lastCheckedAt": {
                       "type": "string",
                       "nullable": true
+                    },
+                    "verification": {
+                      "type": "object",
+                      "required": [
+                        "status",
+                        "checkedAt",
+                        "accessStatus",
+                        "blockers"
+                      ],
+                      "properties": {
+                        "status": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "verified"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "partial"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "pending"
+                              ]
+                            }
+                          ]
+                        },
+                        "checkedAt": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "accessStatus": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "approved"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "unreviewed"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "blocked"
+                              ]
+                            }
+                          ]
+                        },
+                        "blockers": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     },
                     "sources": {
                       "type": "array",

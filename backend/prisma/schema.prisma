@@ -19,6 +19,12 @@ model SourceLease {
   expiresAt DateTime
 }
 
+model CompanyCoverage {
+  companySlug String @id
+  checkedAt DateTime
+  payload Json
+}
+
 model Run {
   id String @id
   sourceId String

@@ -654,6 +654,12 @@ export interface operations {
                         status: "not_onboarded" | "partial" | "stale" | "blocked" | "healthy" | "demo";
                         jobs: number;
                         lastCheckedAt: string | null;
+                        verification?: {
+                            status: "verified" | "partial" | "pending";
+                            checkedAt: string | null;
+                            accessStatus: "approved" | "unreviewed" | "blocked";
+                            blockers: string[];
+                        };
                         sources: {
                             id: string;
                             provider: string;
@@ -692,6 +698,12 @@ export interface operations {
                         status: "not_onboarded" | "partial" | "stale" | "blocked" | "healthy" | "demo";
                         jobs: number;
                         lastCheckedAt: string | null;
+                        verification?: {
+                            status: "verified" | "partial" | "pending";
+                            checkedAt: string | null;
+                            accessStatus: "approved" | "unreviewed" | "blocked";
+                            blockers: string[];
+                        };
                         sources: {
                             id: string;
                             provider: string;

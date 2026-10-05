@@ -4,6 +4,8 @@
 
 ## Choice and rationale
 
+Update on 6 October: [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) adds automatic technical verification and live badge updates through PostgreSQL. Wave audit outcomes now use those technical checks; full traditional review findings remain in each artifact. No activation command or manually approved traversal flag is required for the coverage checkmark. Registry/access/removal gates described below remain separate.
+
 Run one durable cycle in the order Wave A → Wave B → Wave C. Within each wave, process employers and each configured board sequentially, audit each employer using its successful imported snapshots, then update matching features before advancing to the next wave. The workflow automates invoking and recording the audit; an operator no longer needs to run separate sync and audit commands for each cohort.
 
 The Docker ingestion worker opts into automatic cohort refresh with `INGESTION_WAVE_SYNC=true`. This is the user's explicitly requested automation of the same configured candidate-board imports previously available through wave CLI commands. Candidate snapshots remain partial/investigative and cannot close missing jobs. Individual source `scheduled` flags and `auditStatus` remain unchanged; a successful feed fetch does not establish employer-wide coverage or justify marking a pending review approved.

@@ -28,6 +28,7 @@ export class SourceAuditor {
     artifactDirectory: string,
     existing?: { source: Source; extraction: Extraction },
     snapshots?: ReadonlyMap<string, Extraction>,
+    automaticCoverage = false,
   ) {
     const report: AuditReport = {
       version: 1,
@@ -43,6 +44,13 @@ export class SourceAuditor {
 
     const rawPages: OfficialSnapshot[] = [];
     const rawResponses: RawResponse[] = [];
+    const technicalBlockers: string[] = [];
+
+    const technicalIssue = (reason: string) => {
+      technicalBlockers.push(reason);
+      report.blockers.push(reason);
+    };
+
     const inventories = new Map<string, Set<string>>();
     const officialBoards = new Set<string>();
 
@@ -74,6 +82,13 @@ export class SourceAuditor {
     for (const channel of this.plan.channels) {
       if (channel.disposition === 'pending') {
         report.blockers.push(`Unresolved hiring channel: ${channel.url}`);
+
+        if (
+          !channel.sourceIds.length ||
+          channel.sourceIds.some((id) => !this.sources.some((source) => source.id === id))
+        ) {
+          technicalBlockers.push(`Unconnected hiring channel: ${channel.url}`);
+        }
       }
 
       if (
@@ -81,7 +96,7 @@ export class SourceAuditor {
         (!channel.sourceIds.length ||
           channel.sourceIds.some((id) => !this.sources.some((source) => source.id === id)))
       ) {
-        report.blockers.push(`Included channel lacks a configured source: ${channel.url}`);
+        technicalIssue(`Included channel lacks a configured source: ${channel.url}`);
       }
     }
 
@@ -132,7 +147,16 @@ export class SourceAuditor {
       );
     }
 
-    for (const page of this.plan.pages) {
+    const listingPagesToCheck = this.plan.pages.map((page) => ({ ...page }));
+    const seenPages = new Set<string>();
+
+    for (const page of listingPagesToCheck) {
+      if (seenPages.has(page.url)) {
+        continue;
+      }
+
+      seenPages.add(page.url);
+
       const pageReport: AuditReport['pages'][number] = {
         url: page.url,
         sha256: '',
@@ -163,9 +187,31 @@ export class SourceAuditor {
         }
 
         if (page.role === 'listings') {
+          if (
+            automaticCoverage &&
+            [...new URL(page.url).searchParams.keys()].some((key) =>
+              /^(?:country|location|region|department|search|query|keyword|q)$/i.test(key),
+            )
+          ) {
+            technicalIssue(
+              `Filtered official inventory cannot establish complete coverage: ${page.url}`,
+            );
+          }
+
           for (const next of inspected.paginationHints) {
-            if (!this.plan.pages.some((entry) => entry.role === 'listings' && entry.url === next)) {
-              report.blockers.push(`Untraversed official pagination on ${page.url}: ${next}`);
+            if (
+              !listingPagesToCheck.some((entry) => entry.role === 'listings' && entry.url === next)
+            ) {
+              if (
+                automaticCoverage &&
+                !next.startsWith('interactive:') &&
+                new URL(next).origin === new URL(page.url).origin &&
+                listingPagesToCheck.length < 50
+              ) {
+                listingPagesToCheck.push({ ...page, url: next });
+              } else {
+                technicalIssue(`Untraversed official pagination on ${page.url}: ${next}`);
+              }
             }
           }
         }
@@ -183,7 +229,7 @@ export class SourceAuditor {
           );
 
           if (!configuredBoards.has(board) && !excluded) {
-            report.blockers.push(`Unregistered board discovered: ${board} on ${page.url}`);
+            technicalIssue(`Unregistered board discovered: ${board} on ${page.url}`);
           }
         }
 
@@ -213,7 +259,7 @@ export class SourceAuditor {
         pageReport.error =
           error instanceof Error ? error.message : 'Official page inspection failed';
 
-        report.blockers.push(`${page.url}: ${pageReport.error}`);
+        technicalIssue(`${page.url}: ${pageReport.error}`);
       }
 
       report.pages.push(pageReport);
@@ -222,7 +268,7 @@ export class SourceAuditor {
     for (const source of existing ? [existing.source] : this.sources) {
       const officialIds = inventories.get(source.id) ?? new Set<string>();
 
-      const listingPages = this.plan.pages.filter(
+      const listingPages = listingPagesToCheck.filter(
         (page) => page.role === 'listings' && page.sourceIds.includes(source.id),
       );
 
@@ -241,7 +287,9 @@ export class SourceAuditor {
           listingPages.length > 0 &&
           (officialIds.size > 0 ||
             listingPages.every((page) => explicitlyEmptyPages.has(page.url))) &&
-          listingPages.every((page) => page.complete && successfulPages.has(page.url)),
+          listingPages.every(
+            (page) => (automaticCoverage || page.complete) && successfulPages.has(page.url),
+          ),
         officiallyLinked: officialBoards.has(`${source.provider}:${source.board}`),
         feedHashes: [],
         samples: [],
@@ -327,7 +375,13 @@ export class SourceAuditor {
       report.sources.push(result);
     }
 
-    return { report, rawPages, rawResponses, blockers: auditBlockers(report) };
+    return {
+      report,
+      rawPages,
+      rawResponses,
+      blockers: auditBlockers(report),
+      technicalBlockers: auditBlockers({ ...report, blockers: technicalBlockers, policies: [] }),
+    };
   }
 }
 

@@ -91,6 +91,28 @@ export function registerMatchingRoutes(
         },
       },
     },
-    (request) => matcher.execute(request.body),
+    async (request) => {
+      const [result, companies] = await Promise.all([
+        matcher.execute(request.body),
+        catalog.coverage(),
+      ]);
+
+      return {
+        ...result,
+        items: result.items.map((item) => {
+          const company = companies.find((entry) => entry.slug === item.job.companySlug);
+
+          return {
+            ...item,
+            coverage:
+              company?.status === 'healthy'
+                ? 'Coverage verified against the checked official hiring inventory'
+                : company?.status === 'demo'
+                  ? 'Sample source; synthetic listings'
+                  : 'Partial coverage; automatic verification has not passed for the latest sources',
+          };
+        }),
+      };
+    },
   );
 }

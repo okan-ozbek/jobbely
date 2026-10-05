@@ -50,6 +50,7 @@ export interface WaveAudits {
     company: Company,
     sources: Source[],
     snapshots: ReadonlyMap<string, Extraction>,
+    sourceRunIds: ReadonlyMap<string, string>,
   ): Promise<WaveCompanyAudit>;
 }
 

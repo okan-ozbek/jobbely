@@ -26,14 +26,16 @@ The audit CLI preserves timestamped raw artifacts in ignored local data and upda
 
 ## Coverage signals
 
-| Status          | Current rule                                                                     |
-| --------------- | -------------------------------------------------------------------------------- |
-| `not_onboarded` | No configured source                                                             |
-| `partial`       | Configured, but audit/success requirements not all met                           |
-| `blocked`       | Any source's latest run failed                                                   |
-| `stale`         | A successful complete observation is older than 36 hours                         |
-| `healthy`       | Every source verified and its latest run succeeded, complete and not quarantined |
-| `demo`          | Synthetic-mode override for configured companies                                 |
+Since 6 October, [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) supersedes manual verification for the coverage badge. The worker publishes technical assessments to PostgreSQL, and the API grants or withdraws **Coverage verified** automatically from current configuration-bound evidence and exact imported runs. Candidate registry flags do not prevent a passing technical checkmark; access approval and absence-based closure keep their separate gates. The older activation procedure above remains available for those stronger policies.
+
+| Status          | Current rule                                                                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `not_onboarded` | No configured source                                                                                                                                                |
+| `partial`       | Configured, but audit/success requirements not all met                                                                                                              |
+| `blocked`       | Any source's latest run failed                                                                                                                                      |
+| `stale`         | A successful complete observation is older than 36 hours                                                                                                            |
+| `healthy`       | Fresh automatic coverage audit matches all latest complete, non-quarantined successful runs; legacy fully reviewed sources also qualify without an automatic result |
+| `demo`          | Synthetic-mode override for configured companies                                                                                                                    |
 
 Company `lastCheckedAt` is the oldest successful complete check across its configured sources, and is null when any source lacks one. Latest failure takes precedence over stale/healthy signals. The directory communicates audit state rather than claiming all 60 employers are complete.
 

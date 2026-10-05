@@ -12,6 +12,8 @@ Wave C replaces sequential row writes with bounded batches: 250 postings per par
 
 ## Records and evidence
 
+The 6 October [automatic coverage](AUTOMATIC_COVERAGE.md) increment adds `CompanyCoverage`: current configuration-bound technical evidence and source run IDs shared by API/worker clients. Monotonic atomic upserts prevent older audits overwriting newer outcomes. This is public job-source metadata, not candidate/account data, and does not replace source registry or lifecycle records.
+
 Resume matching adds a public `JobFeature` projection and feature-generation counter. Hash/version joins invalidate changed postings immediately; bounded backfill publishes under the shared ingestion lock. Candidate profiles are never stored. Indexes, transaction/race rules and commands are documented in [JOB_FEATURES](JOB_FEATURES.md).
 
 | Record           | Purpose                                                                          |

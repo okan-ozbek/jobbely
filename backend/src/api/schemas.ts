@@ -56,6 +56,16 @@ export const companySchema = Type.Object({
   ),
   jobs: Type.Integer(),
   lastCheckedAt: nullableString,
+  verification: Type.Optional(
+    Type.Object({
+      status: Type.Union(['verified', 'partial', 'pending'].map((value) => Type.Literal(value))),
+      checkedAt: nullableString,
+      accessStatus: Type.Union(
+        ['approved', 'unreviewed', 'blocked'].map((value) => Type.Literal(value)),
+      ),
+      blockers: Type.Array(Type.String()),
+    }),
+  ),
   sources: Type.Array(
     Type.Object({
       id: Type.String(),

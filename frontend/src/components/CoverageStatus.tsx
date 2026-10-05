@@ -12,7 +12,7 @@ const coverage = {
   },
   partial: {
     label: 'Partial coverage',
-    explanation: 'A source is connected, but complete employer coverage has not been verified.',
+    explanation: 'Connected sources have not yet passed the automatic official-inventory checks.',
     icon: Info,
   },
   stale: {
@@ -28,9 +28,9 @@ const coverage = {
     icon: AlertCircle,
   },
   healthy: {
-    label: 'Full coverage',
+    label: 'Coverage verified',
     explanation:
-      'Connected sources have verified scope and a successful complete refresh under the current source checks.',
+      'Connected sources match the checked official hiring inventory and have a recent complete refresh. Verification covers the configured hiring channels.',
     icon: CheckCircle2,
   },
   demo: {
@@ -116,10 +116,15 @@ export function CoverageStatus({ company }: { company: Company }) {
             <strong>{item.label}</strong>
             <span>{item.explanation}</span>
             <small>
-              {company.lastCheckedAt
-                ? `Last complete check: ${new Date(company.lastCheckedAt).toLocaleString()}`
-                : 'Awaiting a complete source check.'}
+              {company.verification?.checkedAt
+                ? `Automatic audit: ${new Date(company.verification.checkedAt).toLocaleString()}`
+                : company.lastCheckedAt
+                  ? `Last complete check: ${new Date(company.lastCheckedAt).toLocaleString()}`
+                  : 'Awaiting a complete source check.'}
             </small>
+            {company.status === 'partial' && company.verification?.blockers[0] && (
+              <small>{company.verification.blockers[0]}</small>
+            )}
           </span>,
           document.body,
         )}

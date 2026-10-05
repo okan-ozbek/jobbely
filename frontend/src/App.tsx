@@ -108,7 +108,7 @@ export function App() {
     error,
     loadMore,
     refresh,
-  } = useJobCatalog(query);
+  } = useJobCatalog(query, view === 'companies');
 
   const { selected, detailError } = useJobDetail(selectedId);
 

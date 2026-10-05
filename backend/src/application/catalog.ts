@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { Company, Dataset, Job, Source } from '../domain/model.js';
 import type { JobRepository } from '../ports/ingestion.js';
+import type { CoverageAssessment, CoverageRepository } from '../ports/coverage.js';
 import {
   catalogLocations,
   catalogCountryName,
@@ -78,6 +79,7 @@ export class JobCatalog {
     private readonly sources: Source[],
     private readonly mode: 'demo' | 'postgres',
     private readonly clock: () => Date = () => new Date(),
+    private readonly coverageRepository?: CoverageRepository,
   ) {}
 
   async jobs(query: JobQuery) {
@@ -207,11 +209,18 @@ export class JobCatalog {
 
   async coverage() {
     const dataset = await this.repository.read();
+    const assessments = (await this.coverageRepository?.read()) ?? [];
 
-    return this.companies.map((company) => this.companyCoverage(company, dataset));
+    return this.companies.map((company) =>
+      this.companyCoverage(
+        company,
+        dataset,
+        assessments.find((assessment) => assessment.companySlug === company.slug),
+      ),
+    );
   }
 
-  private companyCoverage(company: Company, dataset: Dataset) {
+  private companyCoverage(company: Company, dataset: Dataset, assessment?: CoverageAssessment) {
     const sources = this.sources.filter((source) => source.companySlug === company.slug);
 
     const latestRuns = sources.map(
@@ -234,6 +243,24 @@ export class JobCatalog {
     let status: 'not_onboarded' | 'partial' | 'stale' | 'blocked' | 'healthy' | 'demo' =
       'not_onboarded';
 
+    const assessmentAge = assessment
+      ? this.clock().getTime() - Date.parse(assessment.checkedAt)
+      : Infinity;
+
+    const assessmentCurrent =
+      !!assessment &&
+      assessmentAge >= 0 &&
+      assessmentAge <= 36 * 60 * 60_000 &&
+      sources.length > 0 &&
+      Object.keys(assessment.sourceRunIds).length === sources.length &&
+      sources.every(
+        (source, index) =>
+          latestRuns[index]?.id === assessment.sourceRunIds[source.id] &&
+          latestRuns[index]?.status === 'succeeded' &&
+          latestRuns[index]?.enumerationComplete &&
+          !latestRuns[index]?.removalsQuarantined,
+      );
+
     if (sources.length) {
       status = 'partial';
 
@@ -246,7 +273,9 @@ export class JobCatalog {
       ) {
         status = 'stale';
       } else if (
-        sources.every((source) => source.auditStatus === 'verified') &&
+        (assessment
+          ? assessmentCurrent && assessment.status === 'verified'
+          : sources.every((source) => source.auditStatus === 'verified')) &&
         latestRuns.every(
           (run) =>
             run?.status === 'succeeded' && run.enumerationComplete && !run.removalsQuarantined,
@@ -277,6 +306,14 @@ export class JobCatalog {
         scheduled: source.scheduled,
         lastRunStatus: latestRuns[index]?.status ?? null,
       })),
+      verification: {
+        status: assessmentCurrent ? assessment!.status : ('pending' as const),
+        checkedAt: assessment?.checkedAt ?? null,
+        accessStatus: assessmentCurrent ? assessment!.accessStatus : ('unreviewed' as const),
+        blockers: assessmentCurrent
+          ? assessment!.blockers.slice(0, 10)
+          : ['Awaiting an automatic audit of the latest source runs.'],
+      },
     };
   }
 }

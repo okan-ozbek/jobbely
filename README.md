@@ -188,6 +188,8 @@ Raw audit evidence goes to ignored, timestamped `backend/data/audits/` directori
 
 Sources in `backend/config/sources.json` are currently candidates with scheduling disabled. After the company passes its audit, `audit --company <slug> --activate` can verify its sources and enable schedules; manually setting the flags without passing evidence is rejected. Restart affected processes and run the separate development worker:
 
+The **Coverage verified** badge now uses [automatic technical assessments](docs/AUTOMATIC_COVERAGE.md), independently of those legacy activation flags. The wave worker grants/revokes it from official-inventory matching, supported pagination and fresh imported runs, without manual approval or restart. Access/display review and absence-based closure remain separate policies.
+
 ```powershell
 pnpm --filter @jobbely/backend run worker
 ```
