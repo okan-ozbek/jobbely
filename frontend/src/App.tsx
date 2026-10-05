@@ -9,6 +9,7 @@ import { useLocationQuery } from './hooks/useLocationQuery.js';
 import { useJobCatalog } from './hooks/useJobCatalog.js';
 import { useJobDetail } from './hooks/useJobDetail.js';
 import { CompanyLogo } from './components/CompanyLogo.js';
+import { formatLocation } from './components/format-location.js';
 import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
 import { useResumeAnalysis } from './features/resume/useResumeAnalysis.js';
 import { JobProfileComparison } from './features/resume/JobProfileComparison.js';
@@ -276,7 +277,7 @@ export function App() {
                     <div className="job-meta">
                       <span>
                         <MapPin size={14} />
-                        {selected.locations.join(' · ') || 'Location not specified'}
+                        {formatLocation(selected.locations.join(' · ')) || 'Location not specified'}
                       </span>
                       <span>{workplaceNames[selected.workplace]}</span>
                     </div>
@@ -532,7 +533,7 @@ export function App() {
                       <div className="job-meta">
                         <span>
                           <MapPin size={13} />
-                          {job.locations.join(' · ') || 'Location not specified'}
+                          {formatLocation(job.locations.join(' · ')) || 'Location not specified'}
                         </span>
                         <span className="meta-dot">·</span>
                         <span>{workplaceNames[job.workplace]}</span>

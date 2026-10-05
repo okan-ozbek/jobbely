@@ -2,6 +2,7 @@ import { GlassSelect } from '../../components/GlassSelect.js';
 import { useEffect, useRef, useState } from 'react';
 import { matchResume } from '../../api/client.js';
 import { CompanyLogo } from '../../components/CompanyLogo.js';
+import { formatLocation } from '../../components/format-location.js';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend, MatchEvidence } from './MatchEvidence.js';
@@ -229,7 +230,7 @@ export function ResumeMatches({
                     comparison={item}
                     analysis={analysis}
                   />
-                  <p>{item.location}</p>
+                  <p>{formatLocation(item.location)}</p>
                   {item.employerAdjustment.reasons.map((value, index) => (
                     <p
                       className="small-note"
