@@ -23,7 +23,6 @@ export function ResumeMatches({
   openJob: (id: string) => void;
   onReviewed: (analysis: ResumeAnalysis | null) => void;
 }) {
-  const [reviewed, setReviewed] = useState(false);
   const [category, setCategory] = useState('auto');
   const inferred = inferMatchingFunction(analysis);
   const selectedCategory = category === 'auto' ? (inferred?.id ?? '') : category;
@@ -36,7 +35,6 @@ export function ResumeMatches({
 
   useEffect(() => {
     request.current?.abort();
-    setReviewed(false);
     onReviewed(null);
     setResult(null);
     setLoading(false);
@@ -46,6 +44,14 @@ export function ResumeMatches({
   }, [analysis, pending, category, onReviewed]);
 
   const find = async (more = false) => {
+    if (pending || loading) {
+      return;
+    }
+
+    if (!more) {
+      onReviewed(analysis);
+    }
+
     request.current?.abort();
 
     const controller = new AbortController();
@@ -98,12 +104,8 @@ export function ResumeMatches({
     >
       <div className="section-heading">
         <h2 id="matches-heading">Your job matches</h2>
-        <span className="resume-status">Based on your profile</span>
       </div>
-      <p className="small-note">
-        Check your profile above, then find roles that fit. Match scores describe the evidence in
-        your resume; they don’t predict hiring decisions.
-      </p>
+      <p className="small-note">Find roles using your reviewed profile.</p>
       <div className="match-controls">
         <label>
           Function
@@ -128,29 +130,17 @@ export function ResumeMatches({
             ))}
           </GlassSelect>
         </label>
-      </div>
-      <label className="resume-checkbox">
-        <input
-          type="checkbox"
-          checked={reviewed}
-          disabled={pending}
-          onChange={(event) => {
-            setReviewed(event.target.checked);
-            onReviewed(event.target.checked ? analysis : null);
+        <button
+          className="primary-button"
+          type="button"
+          disabled={pending || loading}
+          onClick={() => {
+            void find();
           }}
-        />
-        I’ve reviewed my skills, education, experience and location.
-      </label>
-      <button
-        className="primary-button"
-        type="button"
-        disabled={!reviewed || pending || loading}
-        onClick={() => {
-          void find();
-        }}
-      >
-        {loading ? 'Comparing requirements…' : 'Find matching jobs'}
-      </button>
+        >
+          {loading ? 'Finding matches…' : 'Find matching jobs'}
+        </button>
+      </div>
       {error && (
         <p
           role="alert"
@@ -175,7 +165,7 @@ export function ResumeMatches({
             {result.evaluated.toLocaleString()} jobs evaluated ·{' '}
             {result.unenriched.toLocaleString()} awaiting requirement analysis · fresh within{' '}
             {result.freshnessHours} hours. {result.excludedSources} sources excluded by availability
-            checks.
+            checks. Scores describe resume evidence, not hiring predictions.
           </p>
           {result.items.length === 0 && (
             <div className="empty-state">

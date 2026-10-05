@@ -28,7 +28,7 @@ Location extraction uses the header, not former work locations. Ambiguous/missin
 
 ## Matching and state
 
-The candidate explicitly confirms review before matching. [Matching](MATCHING.md) sends only allowlisted claims/dates/location, recomputes tenure and returns requirement evidence, gaps, comparisons, uncertainty, source coverage and freshness. Optional same-employer/function continuity is capped and cannot override gaps. Closed/demo/stale/missing/failed-source jobs are excluded.
+Clicking Find matching jobs confirms the current profile for matching and description comparisons; there is no separate review checkbox. [Matching](MATCHING.md) sends only allowlisted claims/dates/location, recomputes tenure and returns requirement evidence, gaps, comparisons, uncertainty, source coverage and freshness. Optional same-employer/function continuity is capped and cannot override gaps. Closed/demo/stale/missing/failed-source jobs are excluded.
 
 State lives only in the current tab. Analysis corrections debounce by 350 ms and abort superseded requests. Editing the profile/preferences invalidates recommendations, review confirmation and pagination; pending/error analysis cannot be matched. Clear cancels document and network work. See [privacy](RESUME_PRIVACY.md).
 

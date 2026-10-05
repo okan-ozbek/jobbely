@@ -10,7 +10,7 @@
 
 The 5 October [qualification policy](QUALIFICATIONS.md) extends comparison with reviewed degrees, explicit skill years and at most five contextual responsibility points. Analysis is `text-5`, public features `requirements-15:concepts-3:clauses-2:job-document-1` and scoring `score-5:relations-3`. This supersedes the earlier unassessed-degree policy below; authorization and language remain review items.
 
-Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → explicit review confirmation → recommendations → original description/application.
+Match a reviewed structured profile against features extracted from stored public descriptions. No AI, external profile enrichment, saved candidate record or provider request occurs during matching. The first complete flow is pasted/file-extracted text → analysis → corrections → Find matching jobs (confirms the current profile) → recommendations → original description/application.
 
 The strict request contains only skill and optional competency IDs/statuses/facets/interpretation and bounded evidence references, employment employer/function/kind/relationship/dates, degree level/field/completion, explicit reviewed skill months, current location/status and analysis date. It excludes full document text, institution/contact fields and resume excerpts. Career tenure is recomputed on the server; submitted career totals and recognized employer IDs are not accepted.
 

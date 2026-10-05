@@ -444,13 +444,16 @@
 }
 .match-controls {
   display: flex;
-  gap: 2rem;
-  align-items: center;
+  gap: 12px;
+  align-items: flex-end;
   flex-wrap: wrap;
 }
-.match-controls > label:not(.resume-checkbox) {
+.match-controls > label {
   display: grid;
   gap: 0.5rem;
+  flex: 1;
+  min-width: 220px;
+  max-width: 340px;
 }
 .match-controls select {
   padding: 0.65rem;
@@ -709,8 +712,7 @@
 }
 .home-companies img {
   object-fit: contain;
-  opacity: 1;
-  filter: brightness(0) saturate(100%);
+  opacity: 0.65;
 }
 .attached-file {
   display: flex;
@@ -831,17 +833,19 @@
   font-weight: 500;
 }
 .match-controls {
-  margin-bottom: 15px;
+  margin-top: 20px;
 }
-.match-controls > details {
-  flex: 1;
-  font-size: 12px;
-  color: var(--muted);
-}
-.match-controls > details summary {
-  padding: 12px 0;
+.match-controls .primary-button {
+  min-height: 42px;
 }
 @media (max-width: 650px) {
+  .match-controls > label,
+  .match-controls .primary-button {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: auto;
+  }
   .resume-start {
     padding: 45px 0 30px;
     min-height: calc(100dvh - 160px);

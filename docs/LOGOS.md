@@ -20,7 +20,7 @@ The [source manifest](../frontend/config/company-logos.json) records the domain,
 - Failed company images switch to the same local N/A logo. The error handler does not repeatedly retry a failed fallback. Changes to the configured source can recover from an earlier failure.
 - Images use containment rather than stretching or cropping. Their wrapper reserves space, and their accessible text names the company or explains that its logo is unavailable.
 - Logos are presentation metadata. Changing one requires no database migration or ingestion run.
-- Directory marks have transparent wrappers and retain flat brand colors. The five home-page marks use a monochrome CSS filter; their shapes remain recognizable without a surrounding tile. Wide directory wordmarks receive more horizontal space without stretching.
+- Directory marks have transparent wrappers and retain flat brand colors. The five home-page marks retain brand colors at 65% opacity, without a surrounding tile. Wide directory wordmarks receive more horizontal space without stretching.
 
 ## Maintenance and verification
 
