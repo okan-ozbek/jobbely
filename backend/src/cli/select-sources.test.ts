@@ -66,6 +66,7 @@ describe('manual sync source selection', () => {
       'atlassian',
       'shopify',
       'hubspot',
+      'servicenow',
     ]);
 
     expect(

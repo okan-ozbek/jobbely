@@ -1,6 +1,6 @@
 # Decision: local company logo assets
 
-**Status:** Implemented, updated 6 October 2026. All 63 target companies use local SVGs: 59 sourced vectors, one explicitly documented text fallback, and the shared N/A fallback for Atlassian, Shopify and HubSpot pending vector review.
+**Status:** Implemented, updated 6 October 2026. All 64 target companies use local SVGs: 59 sourced vectors, one explicitly documented text fallback, and the shared N/A fallback for Atlassian, Shopify, HubSpot and ServiceNow pending vector review.
 
 ## Decision and rationale
 

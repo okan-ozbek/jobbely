@@ -439,5 +439,12 @@
     "careersUrl": "https://www.hubspot.com/careers/jobs",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "servicenow",
+    "name": "ServiceNow",
+    "careersUrl": "https://careers.servicenow.com/jobs/",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

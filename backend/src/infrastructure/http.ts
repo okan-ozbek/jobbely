@@ -3,6 +3,7 @@ import type { RawResponse } from '../domain/model.js';
 
 const allowedHosts = new Set([
   'boards-api.greenhouse.io',
+  'api.smartrecruiters.com',
   'api.ashbyhq.com',
   'api.lever.co',
   'api.eu.lever.co',
@@ -83,6 +84,17 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
 
     const nativePaths: Record<string, boolean> = {
+      'api.smartrecruiters.com':
+        format === 'json' &&
+        !parsed.hash &&
+        (parsed.pathname === '/v1/companies/ServiceNow/postings'
+          ? parsed.searchParams.size === 3 &&
+            parsed.searchParams.get('limit') === '100' &&
+            /^\d{1,5}$/.test(parsed.searchParams.get('offset') ?? '') &&
+            Number(parsed.searchParams.get('offset')) <= 10_000 &&
+            parsed.searchParams.get('destination') === 'PUBLIC'
+          : /^\/v1\/companies\/ServiceNow\/postings\/\d{1,30}$/.test(parsed.pathname) &&
+            !parsed.search),
       'www.shopify.com':
         format === 'html' &&
         /^\/careers(?:\/[a-z0-9-]+_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/.test(

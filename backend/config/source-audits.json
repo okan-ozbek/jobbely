@@ -2158,5 +2158,69 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "servicenow",
+    "scope": {
+      "status": "pending",
+      "notes": "Public SmartRecruiters ServiceNow board observed. Main official careers pages return HTTP 403 challenges to automated requests. Independent inventory reconciliation and separate Moveworks/contractor channels remain pending.",
+      "evidenceUrls": [
+        "https://careers.servicenow.com/jobs/",
+        "https://careers.smartrecruiters.com/servicenow"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Public Posting API observed without credentials; employer access and full-description display review remain pending. Main careers challenges are not bypassed.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": [
+        "https://www.servicenow.com/terms-of-use.html",
+        "https://developers.smartrecruiters.com/docs/authentication"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://careers.servicenow.com/jobs/",
+        "disposition": "included",
+        "sourceIds": ["servicenow"],
+        "reason": "Main employer inventory; currently challenged for automated audit retrieval."
+      },
+      {
+        "url": "https://careers.smartrecruiters.com/servicenow",
+        "disposition": "included",
+        "sourceIds": ["servicenow"],
+        "reason": "Public hosted employer board and documented public API; independent hosted pagination and attribution review remain pending."
+      },
+      {
+        "url": "https://www.moveworks.com/us/en/company/careers",
+        "disposition": "pending",
+        "sourceIds": [],
+        "reason": "Official careers navigation names a separate Moveworks hiring channel; employer/group scope and deduplication require review."
+      },
+      {
+        "url": "https://servicenow.willhire.co/",
+        "disposition": "pending",
+        "sourceIds": [],
+        "reason": "Official careers navigation names Magnit contractor positions; hiring-channel and employer scope remain unresolved."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.servicenow.com/jobs/",
+        "role": "listings",
+        "sourceIds": ["servicenow"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://careers.smartrecruiters.com/servicenow",
+        "role": "listings",
+        "sourceIds": ["servicenow"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

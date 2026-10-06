@@ -1,6 +1,6 @@
 # Decision: Wave C priority native sources
 
-**Status:** Original five priorities configured, with Atlassian, Shopify and HubSpot added as backlog expansions on 6 October 2026. Netflix fully imported; Apple/Amazon full imports blocked by live inventory inconsistencies; Meta/Google access-blocked; Atlassian description-blocked. Shopify's implementation and live results are recorded separately. HubSpot is configured behind an unavailable-source gate. Original evidence recorded 1 October 2026, Europe/Amsterdam.
+**Status:** Original five priorities configured, with Atlassian, Shopify, HubSpot and ServiceNow added as backlog expansions on 6 October 2026. Netflix fully imported; Apple/Amazon full imports blocked by live inventory inconsistencies; Meta/Google access-blocked; Atlassian description-blocked. Shopify's implementation and live results are recorded separately. HubSpot is configured behind an unavailable-source gate. Original evidence recorded 1 October 2026, Europe/Amsterdam.
 
 ## Scope and rationale
 
@@ -53,7 +53,7 @@ pnpm --filter @jobbely/backend run sync --company netflix
 pnpm --filter @jobbely/backend run sync --company apple
 ```
 
-Wave C commands select the original five priorities plus [Atlassian](ATLASSIAN.md), [Shopify](SHOPIFY.md) and [HubSpot](HUBSPOT.md), added from the 500-company backlog on 6 October 2026. They do not select every planned Wave C employer. Sync continues after source failures and returns a nonzero exit code for blockers. All eight remain candidate and unscheduled, with pending scope/access plans. Atlassian's native aggregate currently lacks a required job description and cannot publish a complete snapshot. Shopify reads public listing/detail hydration while independent visible-inventory coverage remains pending. HubSpot currently fails explicitly because its public careers service returned listing/detail errors; no collector or jobs were published. Retrieval alone does not approve full-description display, scheduling, closure or worldwide employer completeness. Restart running API/worker processes after registry changes. See [AUDITING.md](AUDITING.md).
+Wave C commands select the original five priorities plus [Atlassian](ATLASSIAN.md), [Shopify](SHOPIFY.md), [HubSpot](HUBSPOT.md) and [ServiceNow](SERVICENOW.md), added from the 500-company backlog on 6 October 2026. They do not select every planned Wave C employer. Sync continues after source failures and returns a nonzero exit code for blockers. All nine remain candidate and unscheduled, with pending scope/access plans. Atlassian's native aggregate currently lacks a required job description and cannot publish a complete snapshot. Shopify reads public listing/detail hydration while independent visible-inventory coverage remains pending. HubSpot currently fails explicitly because its public careers service returned listing/detail errors; no collector or jobs were published. ServiceNow adds public SmartRecruiters pagination and full detail hydration, with independent scope/access/coverage still pending. Retrieval alone does not approve full-description display, scheduling, closure or worldwide employer completeness. Restart running API/worker processes after registry changes. See [AUDITING.md](AUDITING.md).
 
 ## Implementation and verification
 

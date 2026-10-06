@@ -85,6 +85,18 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     return { board: `greenhouse:${parts[0]}`, id: parts[1] === 'jobs' ? (parts[2] ?? null) : null };
   }
 
+  if (['jobs.smartrecruiters.com', 'careers.smartrecruiters.com'].includes(url.hostname)) {
+    const board = parts[0].toLowerCase() === 'servicenow' ? 'ServiceNow' : parts[0];
+
+    return {
+      board: `smartrecruiters:${board}`,
+      id:
+        url.hostname === 'jobs.smartrecruiters.com' && parts.length === 2
+          ? (parts[1]?.match(/^(\d+)(?:-[^/]+)?$/)?.[1] ?? null)
+          : null,
+    };
+  }
+
   if (['jobs.lever.co', 'jobs.eu.lever.co'].includes(url.hostname) && parts[0]) {
     return { board: `lever:${parts[0]}`, id: parts[1] && parts[1] !== 'apply' ? parts[1] : null };
   }

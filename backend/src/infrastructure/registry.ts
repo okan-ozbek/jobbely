@@ -31,6 +31,7 @@ const sourceSchema = z
       'atlassian',
       'shopify',
       'hubspot',
+      'smartrecruiters',
       'meta',
       'google',
     ]),
@@ -58,7 +59,15 @@ const sourceSchema = z
       });
     }
 
-    const nativeEndpoints: Record<string, { board: string; endpoint: string }> = {
+    const nativeEndpoints: Record<
+      string,
+      { board: string; endpoint: string; companySlug?: string }
+    > = {
+      smartrecruiters: {
+        board: 'ServiceNow',
+        companySlug: 'servicenow',
+        endpoint: 'https://api.smartrecruiters.com/v1/companies/ServiceNow/postings',
+      },
       hubspot: { board: 'hubspot', endpoint: 'https://wtcfns.hubspot.com/careers/graphql' },
       shopify: { board: 'shopify', endpoint: 'https://www.shopify.com/careers' },
       atlassian: {
@@ -79,7 +88,7 @@ const sourceSchema = z
       if (
         source.endpoint !== native.endpoint ||
         source.board !== native.board ||
-        source.companySlug !== native.board
+        source.companySlug !== (native.companySlug ?? native.board)
       ) {
         context.addIssue({ code: 'custom', message: 'Invalid native employer endpoint or board' });
       }

@@ -407,10 +407,20 @@ export function officialHosts(company: Company, plan: AuditPlan): Set<string> {
     'xboxgaming.wd1.myworkdayjobs.com',
     'jobs.booking.com',
     'www.linkedin.com',
+    'careers.smartrecruiters.com',
+    'jobs.smartrecruiters.com',
+    'developers.smartrecruiters.com',
   ]);
 
   if (company.slug === 'hubspot' && new URL(company.careersUrl).hostname === 'www.hubspot.com') {
     trusted.add('legal.hubspot.com');
+  }
+
+  if (
+    company.slug === 'servicenow' &&
+    new URL(company.careersUrl).hostname === 'careers.servicenow.com'
+  ) {
+    trusted.add('www.servicenow.com');
   }
 
   for (const url of [...plan.pages.map((page) => page.url), ...plan.access.evidenceUrls]) {

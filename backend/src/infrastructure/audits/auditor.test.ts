@@ -129,12 +129,38 @@ function audit(
       atlassian: adapter,
       shopify: adapter,
       hubspot: adapter,
+      smartrecruiters: adapter,
     },
     () => now,
   ).run('ignored/raw-evidence', undefined, snapshots, automaticCoverage);
 }
 
 describe('automatic technical coverage', () => {
+  it('scopes ServiceNow policy hosting to the official employer and permits public ATS evidence', () => {
+    const employer = {
+      ...company,
+      slug: 'servicenow',
+      careersUrl: 'https://careers.servicenow.com/jobs/',
+    };
+
+    const auditPlan = auditPlanSchema.parse({
+      ...plan,
+      companySlug: employer.slug,
+      pages: [{ ...plan.pages[0]!, url: employer.careersUrl }],
+      access: {
+        ...plan.access,
+        evidenceUrls: [
+          'https://www.servicenow.com/terms-of-use.html',
+          'https://developers.smartrecruiters.com/docs/authentication',
+        ],
+      },
+    });
+
+    expect(officialHosts(employer, auditPlan).has('www.servicenow.com')).toBe(true);
+    expect(officialHosts(employer, auditPlan).has('jobs.smartrecruiters.com')).toBe(true);
+    expect(() => officialHosts(company, auditPlan)).toThrow('not an official employer');
+  });
+
   it('allows HubSpot legal evidence only for the registered official employer', () => {
     const hubspot = {
       ...company,

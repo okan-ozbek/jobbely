@@ -67,6 +67,7 @@ function setup(validation?: PostingValidation) {
     atlassian: adapter,
     shopify: adapter,
     hubspot: adapter,
+    smartrecruiters: adapter,
   };
 
   return {

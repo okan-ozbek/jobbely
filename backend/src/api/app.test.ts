@@ -60,6 +60,12 @@ describe('read API and contract', () => {
       logoUrl: '/logos/default.svg',
     });
 
+    expect((await app.inject('/api/v1/companies/servicenow')).json()).toMatchObject({
+      name: 'ServiceNow',
+      careersUrl: 'https://careers.servicenow.com/jobs/',
+      logoUrl: '/logos/default.svg',
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

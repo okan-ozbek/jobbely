@@ -30,6 +30,8 @@ Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netfl
 
 [Shopify](SHOPIFY.md) permits only HTML GET requests on `www.shopify.com/careers` and canonical title-slug/posting-UUID detail paths. Queries, fragments, `.data`, search/portal routes and application requests remain outside the fetch allowlist. HTML size, pacing, retry and timeout limits are shared with Apple. The original application URL is preserved as an outbound link and never fetched by ingestion.
 
+[ServiceNow](SERVICENOW.md) adds JSON GET access only to `api.smartrecruiters.com/v1/companies/ServiceNow/postings`, with exactly `limit=100`, a bounded numeric `offset` and `destination=PUBLIC`, and numeric detail paths without queries. Internal postings, filtered searches, configuration/candidate/application endpoints, POST, HTML, fragments and other company boards are rejected. Official auditing separately permits SmartRecruiters hosted boards/documentation and scopes `www.servicenow.com` policy evidence to ServiceNow's official careers host.
+
 ## Tradeoffs and extension points
 
 [HubSpot](HUBSPOT.md) remains outside the ingestion fetch allowlist behind an explicit unavailable-source gate. Its audit can retrieve `legal.hubspot.com` only when the company is `hubspot` with the official `www.hubspot.com` careers host. This permits policy evidence collection, not access/display approval or GraphQL collection.

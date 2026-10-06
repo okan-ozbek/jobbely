@@ -438,5 +438,14 @@
     "endpoint": "https://wtcfns.hubspot.com/careers/graphql",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "servicenow",
+    "companySlug": "servicenow",
+    "provider": "smartrecruiters",
+    "board": "ServiceNow",
+    "endpoint": "https://api.smartrecruiters.com/v1/companies/ServiceNow/postings",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

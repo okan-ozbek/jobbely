@@ -11,6 +11,7 @@ export type Provider =
   | 'atlassian'
   | 'shopify'
   | 'hubspot'
+  | 'smartrecruiters'
   | 'meta'
   | 'google';
 
