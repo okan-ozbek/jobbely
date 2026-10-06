@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[MISTRAL_AI.md](MISTRAL_AI.md) records current Ashby source discovery, safe dotted board support, scoped legal evidence and 208 imported vacancies with independent coverage/access/display review still pending.
+
 [VERCEL.md](VERCEL.md) records public Greenhouse reuse, native official posting-ID reconciliation and 83 imported vacancies, separating verified technical coverage from pending scope/access/display reviews.
 
 [NOTION.md](NOTION.md) records public Ashby reuse, 133 imported vacancies and matching official IDs, with technical verification separate from pending scope/access/display reviews.
@@ -18,7 +20,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 [HUBSPOT.md](HUBSPOT.md) records the unavailable public careers service and explicit candidate failure gate; no HubSpot jobs have been imported.
 
-[TECH_COMPANIES_500.md](TECH_COMPANIES_500.md) tracks a global 500-employer technology shortlist for one-company-at-a-time onboarding, with a [JSON backlog](TECH_COMPANIES_500.json), current registry matches, discovery-evidence levels and a suggested next-ten queue. [ATLASSIAN.md](ATLASSIAN.md) records the first candidate integration and its missing-description import blocker. [SHOPIFY.md](SHOPIFY.md) records the second native integration, full public detail hydration and independent visible-inventory coverage limits; source approvals remain pending.
+[TECH_COMPANIES_500.md](TECH_COMPANIES_500.md) tracks a global 500-employer technology shortlist for one-company-at-a-time onboarding, with a [JSON backlog](TECH_COMPANIES_500.json), current registry matches, discovery-evidence levels and a ordered onboarding queue. [ATLASSIAN.md](ATLASSIAN.md) records the first candidate integration and its missing-description import blocker. [SHOPIFY.md](SHOPIFY.md) records the second native integration, full public detail hydration and independent visible-inventory coverage limits; source approvals remain pending.
 
 [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) records automatic technical verification, pagination, persisted run/configuration-bound results and live checkmarks. Access/display review and legacy removal activation remain separate from technical coverage.
 

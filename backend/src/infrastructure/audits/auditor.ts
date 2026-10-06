@@ -416,6 +416,10 @@ export function officialHosts(company: Company, plan: AuditPlan): Set<string> {
     trusted.add('legal.hubspot.com');
   }
 
+  if (company.slug === 'mistral-ai' && new URL(company.careersUrl).hostname === 'mistral.ai') {
+    trusted.add('legal.mistral.ai');
+  }
+
   if (
     company.slug === 'servicenow' &&
     new URL(company.careersUrl).hostname === 'careers.servicenow.com'

@@ -3,6 +3,8 @@ import type { Source } from '../../domain/model.js';
 import type { JsonTransport, SourceAdapter } from '../../ports/ingestion.js';
 import { decode, httpsUrl, text, vacancyExcluded, workplace } from './schemas.js';
 
+export const ashbyBoardPattern = /^[a-zA-Z0-9_-]+(?:\.[a-zA-Z0-9_-]+)*$/;
+
 const responseSchema = z.object({
   apiVersion: z.string(),
   jobs: z.array(

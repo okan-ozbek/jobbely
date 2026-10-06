@@ -59,6 +59,10 @@ descriptions. These reports intentionally do not claim that inaccessible pages a
   approved access review must reference the current document hashes and explicitly allow this
   application's full-description display. Changed or unavailable documents block approval.
 
+### Dotted Ashby boards
+
+[Mistral AI](MISTRAL_AI.md) officially links to Ashby board `mistral.ai`. Registry and official identity parsing share an Ashby-only pattern allowing nonempty dot-separated identifier segments. Slashes, URL escapes, empty segments, queries and dotted board names on other providers remain invalid. The linked board establishes association; embedded provider data and a JavaScript shell do not establish a visible inventory or zero vacancies.
+
 ### Vercel native posting identities
 
 [Vercel](VERCEL.md) uses native `vercel.com/careers/<slug>-<numeric-id>` links whose IDs match its Greenhouse board. The identity parser recognizes this exact host and detail path, including an optional trailing slash. Visible links establish posting enumeration; embedded URLs remain board discovery only. Duplicate links are deduplicated by ID, and equal titles never merge different postings. Other hosts and malformed/application paths cannot supply Vercel posting IDs.

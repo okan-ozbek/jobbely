@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import type { Company, Source } from '../domain/model.js';
 import { requireVerifiedEvidence } from './audits/registry.js';
+import { ashbyBoardPattern } from './adapters/ashby.js';
 
 const companySchema = z.object({
   slug: z.string(),
@@ -36,7 +37,7 @@ const sourceSchema = z
       'meta',
       'google',
     ]),
-    board: z.string().regex(/^[a-zA-Z0-9_-]+$/),
+    board: z.string(),
     auditStatus: z.enum(['candidate', 'verified']),
     scheduled: z.boolean(),
     endpoint: z.url().optional(),
@@ -53,6 +54,14 @@ const sourceSchema = z
       .optional(),
   })
   .superRefine((source, context) => {
+    const boardPattern = source.provider === 'ashby' ? ashbyBoardPattern : /^[a-zA-Z0-9_-]+$/;
+
+    if (!boardPattern.test(source.board)) {
+      context.addIssue({ code: 'custom', message: 'Invalid provider board identifier' });
+
+      return;
+    }
+
     if (source.provider !== 'icims' && (source.postingHosts || source.employerFilter)) {
       context.addIssue({
         code: 'custom',

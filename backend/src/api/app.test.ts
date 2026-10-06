@@ -107,6 +107,15 @@ describe('read API and contract', () => {
       ],
     });
 
+    expect((await app.inject('/api/v1/companies/mistral-ai')).json()).toMatchObject({
+      name: 'Mistral AI',
+      careersUrl: 'https://mistral.ai/careers/',
+      logoUrl: '/logos/default.svg',
+      sources: [
+        { id: 'mistral-ai', provider: 'ashby', auditStatus: 'candidate', scheduled: false },
+      ],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

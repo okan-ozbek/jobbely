@@ -36,6 +36,8 @@ Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netfl
 
 [ASML](ASML.md) stays outside the ingestion destination allowlist behind a full-description publication/source gate. Official auditing can capture its own careers page, robots and terms through the existing employer host allowance; this does not approve description display or identify a functioning ATS feed.
 
+[Mistral AI](MISTRAL_AI.md) reuses the existing Ashby ingestion host. Official auditing permits `legal.mistral.ai` only for company `mistral-ai` with careers host `mistral.ai`, to capture directly linked policy evidence. No other employer gains that host, and canonical URLs are requested directly without following redirects.
+
 ## Tradeoffs and extension points
 
 [HubSpot](HUBSPOT.md) remains outside the ingestion fetch allowlist behind an explicit unavailable-source gate. Its audit can retrieve `legal.hubspot.com` only when the company is `hubspot` with the official `www.hubspot.com` careers host. This permits policy evidence collection, not access/display approval or GraphQL collection.

@@ -137,6 +137,34 @@ function audit(
 }
 
 describe('automatic technical coverage', () => {
+  it('limits Mistral legal evidence to its registered official employer', () => {
+    const employer = { ...company, slug: 'mistral-ai', careersUrl: 'https://mistral.ai/careers/' };
+
+    const auditPlan = auditPlanSchema.parse({
+      ...plan,
+      companySlug: employer.slug,
+      pages: [{ ...plan.pages[0]!, url: employer.careersUrl }],
+      access: {
+        ...plan.access,
+        evidenceUrls: ['https://legal.mistral.ai/terms/applicant-privacy-policy/'],
+      },
+    });
+
+    expect(officialHosts(employer, auditPlan).has('legal.mistral.ai')).toBe(true);
+    expect(() => officialHosts(company, auditPlan)).toThrow('not an official employer');
+
+    expect(() => officialHosts({ ...employer, careersUrl: company.careersUrl }, auditPlan)).toThrow(
+      'not an official employer',
+    );
+
+    expect(() =>
+      officialHosts(employer, {
+        ...auditPlan,
+        access: { ...auditPlan.access, evidenceUrls: ['https://unrelated.example/policy'] },
+      }),
+    ).toThrow('not an official employer');
+  });
+
   it('scopes Adyen policy hosting to its official employer without granting unrelated hosts', () => {
     const employer = {
       ...company,
@@ -550,6 +578,29 @@ describe('evidence-backed source audits', () => {
 });
 
 describe('official identity reconciliation', () => {
+  it('recognizes dotted Ashby boards without treating script data as visible job inventory', () => {
+    const page = { ...plan.pages[0]!, url: 'https://mistral.ai/careers/' };
+
+    const result = inspectOfficialPage(
+      '<a href="https://jobs.ashbyhq.com/mistral.ai">Apply now</a>' +
+        '<script>{"url":"https://jobs.ashbyhq.com/mistral.ai/posting-id"}</script>',
+      page,
+      [],
+    );
+
+    expect([...result.boards]).toEqual(['ashby:mistral.ai']);
+    expect(result.ids.size).toBe(0);
+
+    expect(officialIdentity('https://jobs.ashbyhq.com/mistral.ai/posting-id/application')).toEqual({
+      board: 'ashby:mistral.ai',
+      id: 'posting-id',
+    });
+
+    expect(officialIdentity('https://jobs.ashbyhq.com/mistral..ai/posting-id')).toBeNull();
+    expect(officialIdentity('https://job-boards.greenhouse.io/mistral.ai/jobs/123')).toBeNull();
+    expect(officialIdentity('https://jobs.lever.co/mistral.ai/posting-id')).toBeNull();
+  });
+
   it('maps visible Vercel native IDs without counting embedded links or trusting other hosts', () => {
     const page = { ...plan.pages[0]!, url: 'https://vercel.com/careers' };
     const vercel = { ...source, id: 'vercel', companySlug: 'vercel', board: 'vercel' };

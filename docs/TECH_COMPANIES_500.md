@@ -1,6 +1,6 @@
 # 500 technology employers: integration backlog
 
-**Status:** Discovery and onboarding backlog; seven employer collection integrations implemented and HubSpot/ASML configured with explicit blockers. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs, [ServiceNow](SERVICENOW.md) imported 705 vacancies, [Adyen](ADYEN.md) imported 228 vacancies and [Canva](CANVA.md) imported 127 vacancies, all with independent coverage still partial; [HubSpot](HUBSPOT.md) has no usable current feed and [ASML](ASML.md) awaits permitted description display and current source verification.
+**Status:** Discovery and onboarding backlog; eight employer collection integrations implemented and HubSpot/ASML configured with explicit blockers. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs, [ServiceNow](SERVICENOW.md) imported 705 vacancies, [Adyen](ADYEN.md) imported 228 vacancies and [Canva](CANVA.md) imported 127 vacancies, all with independent coverage still partial; [HubSpot](HUBSPOT.md) has no usable current feed and [ASML](ASML.md) awaits permitted description display and current source verification.
 
 ## Purpose and selection
 
@@ -8,17 +8,17 @@ Build Jobbely employer coverage one company at a time using a global shortlist o
 
 Some entries are separately scoped employer brands within a larger group, such as GitHub, LinkedIn and Slack. There are 500 named targets, not a claim of 500 independent parent groups. Confirm shared-board membership and avoid duplicate requisitions when onboarding related employers. Technology-enabled fintech, health, commerce and mobility businesses are intentionally included; traditional banks and quantitative trading firms remain in the existing registry but are outside this shortlist.
 
-The companion [JSON backlog](TECH_COMPANIES_500.json) carries proposed target slugs, discovery-evidence levels, existing planning waves/provider settings, the suggested-next queue and scope-review notes. Preserve its target slugs once adopted. The app does not load this file. The runtime [company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json) and their stable IDs retain their existing ownership.
+The companion [JSON backlog](TECH_COMPANIES_500.json) carries proposed target slugs, discovery-evidence levels, existing planning waves/provider settings, the ordered onboarding queue and scope-review notes. Preserve its target slugs once adopted. The app does not load this file. The runtime [company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json) and their stable IDs retain their existing ownership.
 
 ## Current registry snapshot
 
-The runtime registry now has **69 companies** and **58 source boards**. Of this shortlist:
+The runtime registry now has **70 companies** and **59 source boards**. Of this shortlist:
 
 | State             | Count | Meaning                                                                                                                        |
 | ----------------- | ----: | ------------------------------------------------------------------------------------------------------------------------------ |
-| Source configured |    49 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
+| Source configured |    50 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
 | Registered only   |     8 | Existing company slug with no configured source. Existing A–D planning assignments, including Wave D deferrals, still apply.   |
-| New candidate     |   443 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
+| New candidate     |   442 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
 
 The 12 existing finance/trading employers outside this tech shortlist are retained: Jane Street, Radix Trading, Hudson River Trading, Five Rings, Citadel, Two Sigma, Headlands Technologies, Optiver, JPMorgan Chase, Goldman Sachs, ABN AMRO, ING. This backlog does not replace the original MVP cohort or its coverage commitments. Registry counts are a 6 October snapshot; recompute them after future integrations.
 
@@ -39,9 +39,11 @@ Start discovery in this order, then adjust for source access, employer scope, ad
 | 9     | Vercel     | [Careers](https://vercel.com/careers)                | Adds developer infrastructure with a focused employer scope.                   |
 | 10    | Mistral AI | [Careers](https://mistral.ai/careers/)               | Adds a prominent European AI employer.                                         |
 
-These ten careers pages were readable through the web research tool on 6 October 2026. Observing a careers page does not verify its full inventory, API/provider, pagination, description availability, access permission or adapter compatibility. For existing configured employers, resolving their documented blockers and auditing coverage is a separate stream of work.
+Cohere is proposed next from the AI-model employer category; its [homepage seed](https://cohere.com/) has not yet been researched for this integration.
 
-Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. [HubSpot](HUBSPOT.md) is configured behind an explicit failure gate: its public listing and detail service returned GraphQL 404 errors, so no vacancies were imported. [ServiceNow](SERVICENOW.md) imported 705 vacancies with full SmartRecruiters details after excluding one non-vacancy entry. Its exact-run audit remains partial because the official inventory could not be read and additional channels are unresolved; access/display reviews remain pending and the source stays candidate and unscheduled. [Adyen](ADYEN.md) imported 228 vacancies using the existing public Greenhouse adapter. Its exact-run audit matched 50 visible IDs and kept technical coverage partial because interactive hosted-board pagination left 178 feed IDs unmatched. Access/display reviews remain pending; the source stays candidate and unscheduled. [ASML](ASML.md) is registered behind a full-description publication/source gate. Its terms require prior written consent for republication, no permitted complete source has been established, and no vacancies were imported. [Canva](CANVA.md) imported 127 vacancies with full descriptions and matching job features through public SmartRecruiters, including complete advertisement-field and authoritative detail-label handling. Independent official coverage and access/display review remain pending. [Notion](NOTION.md) imported 133 vacancies with full descriptions and matching features through Ashby. Its exact-run technical audit matched every official posting ID, while scope/access/display reviews remain pending and the source stays candidate/unscheduled. [Vercel](VERCEL.md) imported 83 vacancies with full descriptions and matching features through Greenhouse. Its exact-run technical audit matched all native official posting IDs; scope/access/display reviews remain pending and the source stays candidate/unscheduled. Mistral AI is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
+The first ten careers pages were readable through the web research tool on 6 October 2026. Observing a careers page does not verify its full inventory, API/provider, pagination, description availability, access permission or adapter compatibility. For existing configured employers, resolving their documented blockers and auditing coverage is a separate stream of work.
+
+Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. [HubSpot](HUBSPOT.md) is configured behind an explicit failure gate: its public listing and detail service returned GraphQL 404 errors, so no vacancies were imported. [ServiceNow](SERVICENOW.md) imported 705 vacancies with full SmartRecruiters details after excluding one non-vacancy entry. Its exact-run audit remains partial because the official inventory could not be read and additional channels are unresolved; access/display reviews remain pending and the source stays candidate and unscheduled. [Adyen](ADYEN.md) imported 228 vacancies using the existing public Greenhouse adapter. Its exact-run audit matched 50 visible IDs and kept technical coverage partial because interactive hosted-board pagination left 178 feed IDs unmatched. Access/display reviews remain pending; the source stays candidate and unscheduled. [ASML](ASML.md) is registered behind a full-description publication/source gate. Its terms require prior written consent for republication, no permitted complete source has been established, and no vacancies were imported. [Canva](CANVA.md) imported 127 vacancies with full descriptions and matching job features through public SmartRecruiters, including complete advertisement-field and authoritative detail-label handling. Independent official coverage and access/display review remain pending. [Notion](NOTION.md) imported 133 vacancies with full descriptions and matching features through Ashby. Its exact-run technical audit matched every official posting ID, while scope/access/display reviews remain pending and the source stays candidate/unscheduled. [Vercel](VERCEL.md) imported 83 vacancies with full descriptions and matching features through Greenhouse. Its exact-run technical audit matched all native official posting IDs; scope/access/display reviews remain pending and the source stays candidate/unscheduled. [Mistral AI](MISTRAL_AI.md) imported 208 vacancies with full descriptions and matching features from its current Ashby board. Its official landing page links to the board, whose HTML does not enumerate visible posting IDs, so technical coverage remains partial and scope/access/display reviews pending. The first ten queue targets have now been processed, including their unresolved blockers. Cohere is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
 
 ## One-company completion procedure
 
@@ -212,33 +214,33 @@ Within each sector, the rows provide a discovery link and the current local regi
 
 ### AI models and AI applications
 
-|   # | Company            | Discovery entry point                           | Registry state | Existing slug | Configured providers |
-| --: | ------------------ | ----------------------------------------------- | -------------- | ------------- | -------------------- |
-| 101 | Mistral AI         | [Careers observed](https://mistral.ai/careers/) | New candidate  | —             | —                    |
-| 102 | Cohere             | [Homepage seed](https://cohere.com/)            | New candidate  | —             | —                    |
-| 103 | Hugging Face       | [Homepage seed](https://huggingface.co/)        | New candidate  | —             | —                    |
-| 104 | Perplexity         | [Homepage seed](https://perplexity.ai/)         | New candidate  | —             | —                    |
-| 105 | Anysphere (Cursor) | [Homepage seed](https://cursor.com/)            | New candidate  | —             | —                    |
-| 106 | Replit             | [Homepage seed](https://replit.com/)            | New candidate  | —             | —                    |
-| 107 | Lovable            | [Homepage seed](https://lovable.dev/)           | New candidate  | —             | —                    |
-| 108 | ElevenLabs         | [Homepage seed](https://elevenlabs.io/)         | New candidate  | —             | —                    |
-| 109 | Runway             | [Homepage seed](https://runwayml.com/)          | New candidate  | —             | —                    |
-| 110 | Synthesia          | [Homepage seed](https://synthesia.io/)          | New candidate  | —             | —                    |
-| 111 | HeyGen             | [Homepage seed](https://heygen.com/)            | New candidate  | —             | —                    |
-| 112 | Midjourney         | [Homepage seed](https://midjourney.com/)        | New candidate  | —             | —                    |
-| 113 | Stability AI       | [Homepage seed](https://stability.ai/)          | New candidate  | —             | —                    |
-| 114 | Luma AI            | [Homepage seed](https://lumalabs.ai/)           | New candidate  | —             | —                    |
-| 115 | Pika               | [Homepage seed](https://pika.art/)              | New candidate  | —             | —                    |
-| 116 | Character.AI       | [Homepage seed](https://character.ai/)          | New candidate  | —             | —                    |
-| 117 | Scale AI           | [Homepage seed](https://scale.com/)             | New candidate  | —             | —                    |
-| 118 | Glean              | [Homepage seed](https://glean.com/)             | New candidate  | —             | —                    |
-| 119 | Harvey             | [Homepage seed](https://harvey.ai/)             | New candidate  | —             | —                    |
-| 120 | Sierra             | [Homepage seed](https://sierra.ai/)             | New candidate  | —             | —                    |
-| 121 | Writer             | [Homepage seed](https://writer.com/)            | New candidate  | —             | —                    |
-| 122 | Jasper             | [Homepage seed](https://jasper.ai/)             | New candidate  | —             | —                    |
-| 123 | DeepL              | [Homepage seed](https://deepl.com/)             | New candidate  | —             | —                    |
-| 124 | Together AI        | [Homepage seed](https://together.ai/)           | New candidate  | —             | —                    |
-| 125 | Fireworks AI       | [Homepage seed](https://fireworks.ai/)          | New candidate  | —             | —                    |
+|   # | Company            | Discovery entry point                           | Registry state    | Existing slug | Configured providers |
+| --: | ------------------ | ----------------------------------------------- | ----------------- | ------------- | -------------------- |
+| 101 | Mistral AI         | [Careers observed](https://mistral.ai/careers/) | Source configured | C             | ashby                |
+| 102 | Cohere             | [Homepage seed](https://cohere.com/)            | New candidate     | —             | —                    |
+| 103 | Hugging Face       | [Homepage seed](https://huggingface.co/)        | New candidate     | —             | —                    |
+| 104 | Perplexity         | [Homepage seed](https://perplexity.ai/)         | New candidate     | —             | —                    |
+| 105 | Anysphere (Cursor) | [Homepage seed](https://cursor.com/)            | New candidate     | —             | —                    |
+| 106 | Replit             | [Homepage seed](https://replit.com/)            | New candidate     | —             | —                    |
+| 107 | Lovable            | [Homepage seed](https://lovable.dev/)           | New candidate     | —             | —                    |
+| 108 | ElevenLabs         | [Homepage seed](https://elevenlabs.io/)         | New candidate     | —             | —                    |
+| 109 | Runway             | [Homepage seed](https://runwayml.com/)          | New candidate     | —             | —                    |
+| 110 | Synthesia          | [Homepage seed](https://synthesia.io/)          | New candidate     | —             | —                    |
+| 111 | HeyGen             | [Homepage seed](https://heygen.com/)            | New candidate     | —             | —                    |
+| 112 | Midjourney         | [Homepage seed](https://midjourney.com/)        | New candidate     | —             | —                    |
+| 113 | Stability AI       | [Homepage seed](https://stability.ai/)          | New candidate     | —             | —                    |
+| 114 | Luma AI            | [Homepage seed](https://lumalabs.ai/)           | New candidate     | —             | —                    |
+| 115 | Pika               | [Homepage seed](https://pika.art/)              | New candidate     | —             | —                    |
+| 116 | Character.AI       | [Homepage seed](https://character.ai/)          | New candidate     | —             | —                    |
+| 117 | Scale AI           | [Homepage seed](https://scale.com/)             | New candidate     | —             | —                    |
+| 118 | Glean              | [Homepage seed](https://glean.com/)             | New candidate     | —             | —                    |
+| 119 | Harvey             | [Homepage seed](https://harvey.ai/)             | New candidate     | —             | —                    |
+| 120 | Sierra             | [Homepage seed](https://sierra.ai/)             | New candidate     | —             | —                    |
+| 121 | Writer             | [Homepage seed](https://writer.com/)            | New candidate     | —             | —                    |
+| 122 | Jasper             | [Homepage seed](https://jasper.ai/)             | New candidate     | —             | —                    |
+| 123 | DeepL              | [Homepage seed](https://deepl.com/)             | New candidate     | —             | —                    |
+| 124 | Together AI        | [Homepage seed](https://together.ai/)           | New candidate     | —             | —                    |
+| 125 | Fireworks AI       | [Homepage seed](https://fireworks.ai/)          | New candidate     | —             | —                    |
 
 ### Cybersecurity and identity
 

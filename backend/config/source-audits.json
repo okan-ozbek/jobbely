@@ -2443,5 +2443,56 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "mistral-ai",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers HTML links to the public Ashby mistral.ai board, observed with 208 listed postings during discovery. The official landing page lists no individual posting identities and the hosted board requires JavaScript; independent worldwide inventory and employer/entity/channel scope remain unverified. The legacy Lever board returns 404 and its API is empty; it is not a current source.",
+      "evidenceUrls": ["https://mistral.ai/careers/", "https://jobs.ashbyhq.com/mistral.ai"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Public Ashby Posting API and official applicant/privacy/legal-center pages are accessible without credentials. Automated retrieval and full-description display review remain pending. Canonical policy URLs are requested directly; redirects, JavaScript and credentials are not used. API availability and privacy notices do not approve advertisement republication.",
+      "evidenceUrls": [
+        "https://legal.mistral.ai/terms/get-started/",
+        "https://legal.mistral.ai/terms/applicant-privacy-policy/",
+        "https://legal.mistral.ai/terms/privacy-policy/?language=en-US",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://mistral.ai/careers/",
+        "disposition": "included",
+        "sourceIds": ["mistral-ai"],
+        "reason": "Official careers landing page explicitly links to the current Ashby mistral.ai board; independent employer scope and complete visible inventory remain pending."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/mistral.ai",
+        "disposition": "included",
+        "sourceIds": ["mistral-ai"],
+        "reason": "Current official-linked public board; hosted HTML is a JavaScript shell and cannot prove zero vacancies or exhaustive independent enumeration."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://mistral.ai/careers/",
+        "role": "discovery",
+        "sourceIds": ["mistral-ai"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/mistral.ai",
+        "role": "listings",
+        "sourceIds": ["mistral-ai"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

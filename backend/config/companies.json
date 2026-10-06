@@ -481,5 +481,12 @@
     "careersUrl": "https://vercel.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "mistral-ai",
+    "name": "Mistral AI",
+    "careersUrl": "https://mistral.ai/careers/",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

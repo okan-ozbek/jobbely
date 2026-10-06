@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { Extraction, Source } from '../../domain/model.js';
 import type { AuditPlan } from './model.js';
 import { atlassianPortalHosts } from '../adapters/atlassian.js';
+import { ashbyBoardPattern } from '../adapters/ashby.js';
 
 export interface OfficialIdentity {
   board: string;
@@ -19,13 +20,14 @@ export function officialIdentity(value: string): OfficialIdentity | null {
   }
 
   const parts = url.pathname.split('/').filter(Boolean);
+  const boardPattern = url.hostname === 'jobs.ashbyhq.com' ? ashbyBoardPattern : /^[a-zA-Z0-9_-]+$/;
 
   if (
     !['https:', 'http:'].includes(url.protocol) ||
     url.username ||
     url.password ||
     !parts[0] ||
-    !/^[a-zA-Z0-9_-]+$/.test(parts[0])
+    !boardPattern.test(parts[0])
   ) {
     return null;
   }

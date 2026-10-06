@@ -489,5 +489,13 @@
     "board": "vercel",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "mistral-ai",
+    "companySlug": "mistral-ai",
+    "provider": "ashby",
+    "board": "mistral.ai",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]
