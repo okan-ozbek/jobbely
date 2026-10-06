@@ -460,5 +460,12 @@
     "careersUrl": "https://www.asml.com/en/careers/find-your-job",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "canva",
+    "name": "Canva",
+    "careersUrl": "https://www.lifeatcanva.com/en/jobs/",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

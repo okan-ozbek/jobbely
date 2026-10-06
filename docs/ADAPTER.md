@@ -36,6 +36,8 @@ For an existing provider, add a candidate entry to the registry and audit it. Fo
 
 [ASML](ASML.md) uses the existing explicit failure adapter until permitted full-description display and a complete compatible source are established. Its native provider/endpoint identify a candidate gate, not a working collector or a verified Workday board.
 
+[Canva](CANVA.md) reuses SmartRecruiters. Its complete advertisement is observed in `companyDescription` when the role field is empty; all textual sections remain preserved. Canva detail department/function/employment labels are authoritative because summaries can label contract roles Full-time. ServiceNow retains its separate role-field and metadata validation. Complete summary rechecks and employer/identity/link gates remain enforced.
+
 Detailed enterprise invariants and source assignments live in [WAVE_B.md](WAVE_B.md). Other custom boards and scraping remain planned extensions. No universal scraper, browser extraction adapter or MCP dependency is implemented.
 
 Wave C's first batch adds Apple structured public HTML, Netflix Eightfold JSON and native Amazon JSON adapters, plus explicit Meta/Google access gates. See [WAVE_C.md](WAVE_C.md) for identity, traversal and completeness rules. Apple's parser decodes literal JSON without executing upstream scripts; native adapters preserve the same extraction port and classification boundary.

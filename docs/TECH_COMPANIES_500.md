@@ -1,6 +1,6 @@
 # 500 technology employers: integration backlog
 
-**Status:** Discovery and onboarding backlog; four employer collection integrations implemented and HubSpot/ASML configured with explicit blockers. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs, [ServiceNow](SERVICENOW.md) imported 705 vacancies and [Adyen](ADYEN.md) imported 228 vacancies, all with independent coverage still partial; [HubSpot](HUBSPOT.md) has no usable current feed and [ASML](ASML.md) awaits permitted description display and current source verification.
+**Status:** Discovery and onboarding backlog; five employer collection integrations implemented and HubSpot/ASML configured with explicit blockers. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs, [ServiceNow](SERVICENOW.md) imported 705 vacancies, [Adyen](ADYEN.md) imported 228 vacancies and [Canva](CANVA.md) imported 127 vacancies, all with independent coverage still partial; [HubSpot](HUBSPOT.md) has no usable current feed and [ASML](ASML.md) awaits permitted description display and current source verification.
 
 ## Purpose and selection
 
@@ -12,13 +12,13 @@ The companion [JSON backlog](TECH_COMPANIES_500.json) carries proposed target sl
 
 ## Current registry snapshot
 
-The runtime registry now has **66 companies** and **55 source boards**. Of this shortlist:
+The runtime registry now has **67 companies** and **56 source boards**. Of this shortlist:
 
 | State             | Count | Meaning                                                                                                                        |
 | ----------------- | ----: | ------------------------------------------------------------------------------------------------------------------------------ |
-| Source configured |    46 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
+| Source configured |    47 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
 | Registered only   |     8 | Existing company slug with no configured source. Existing A–D planning assignments, including Wave D deferrals, still apply.   |
-| New candidate     |   446 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
+| New candidate     |   445 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
 
 The 12 existing finance/trading employers outside this tech shortlist are retained: Jane Street, Radix Trading, Hudson River Trading, Five Rings, Citadel, Two Sigma, Headlands Technologies, Optiver, JPMorgan Chase, Goldman Sachs, ABN AMRO, ING. This backlog does not replace the original MVP cohort or its coverage commitments. Registry counts are a 6 October snapshot; recompute them after future integrations.
 
@@ -41,7 +41,7 @@ Start discovery in this order, then adjust for source access, employer scope, ad
 
 These ten careers pages were readable through the web research tool on 6 October 2026. Observing a careers page does not verify its full inventory, API/provider, pagination, description availability, access permission or adapter compatibility. For existing configured employers, resolving their documented blockers and auditing coverage is a separate stream of work.
 
-Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. [HubSpot](HUBSPOT.md) is configured behind an explicit failure gate: its public listing and detail service returned GraphQL 404 errors, so no vacancies were imported. [ServiceNow](SERVICENOW.md) imported 705 vacancies with full SmartRecruiters details after excluding one non-vacancy entry. Its exact-run audit remains partial because the official inventory could not be read and additional channels are unresolved; access/display reviews remain pending and the source stays candidate and unscheduled. [Adyen](ADYEN.md) imported 228 vacancies using the existing public Greenhouse adapter. Its exact-run audit matched 50 visible IDs and kept technical coverage partial because interactive hosted-board pagination left 178 feed IDs unmatched. Access/display reviews remain pending; the source stays candidate and unscheduled. [ASML](ASML.md) is registered behind a full-description publication/source gate. Its terms require prior written consent for republication, no permitted complete source has been established, and no vacancies were imported. Canva is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
+Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. [HubSpot](HUBSPOT.md) is configured behind an explicit failure gate: its public listing and detail service returned GraphQL 404 errors, so no vacancies were imported. [ServiceNow](SERVICENOW.md) imported 705 vacancies with full SmartRecruiters details after excluding one non-vacancy entry. Its exact-run audit remains partial because the official inventory could not be read and additional channels are unresolved; access/display reviews remain pending and the source stays candidate and unscheduled. [Adyen](ADYEN.md) imported 228 vacancies using the existing public Greenhouse adapter. Its exact-run audit matched 50 visible IDs and kept technical coverage partial because interactive hosted-board pagination left 178 feed IDs unmatched. Access/display reviews remain pending; the source stays candidate and unscheduled. [ASML](ASML.md) is registered behind a full-description publication/source gate. Its terms require prior written consent for republication, no permitted complete source has been established, and no vacancies were imported. [Canva](CANVA.md) imported 127 vacancies with full descriptions and matching job features through public SmartRecruiters, including complete advertisement-field and authoritative detail-label handling. Independent official coverage and access/display review remain pending. Notion is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
 
 ## One-company completion procedure
 
@@ -512,33 +512,33 @@ Within each sector, the rows provide a discovery link and the current local regi
 
 ### Asia-Pacific internet and software
 
-|   # | Company            | Discovery entry point                               | Registry state | Existing slug | Configured providers |
-| --: | ------------------ | --------------------------------------------------- | -------------- | ------------- | -------------------- |
-| 351 | Baidu              | [Homepage seed](https://baidu.com/)                 | New candidate  | —             | —                    |
-| 352 | NetEase            | [Homepage seed](https://netease.com/)               | New candidate  | —             | —                    |
-| 353 | Kuaishou           | [Homepage seed](https://kuaishou.com/)              | New candidate  | —             | —                    |
-| 354 | Bilibili           | [Homepage seed](https://bilibili.com/)              | New candidate  | —             | —                    |
-| 355 | Weibo              | [Homepage seed](https://weibo.com/)                 | New candidate  | —             | —                    |
-| 356 | Naver              | [Homepage seed](https://navercorp.com/)             | New candidate  | —             | —                    |
-| 357 | Kakao              | [Homepage seed](https://kakaocorp.com/)             | New candidate  | —             | —                    |
-| 358 | LY Corporation     | [Homepage seed](https://lycorp.co.jp/)              | New candidate  | —             | —                    |
-| 359 | CyberAgent         | [Homepage seed](https://cyberagent.co.jp/)          | New candidate  | —             | —                    |
-| 360 | GMO Internet Group | [Homepage seed](https://gmo.jp/)                    | New candidate  | —             | —                    |
-| 361 | Rakus              | [Homepage seed](https://rakus.co.jp/)               | New candidate  | —             | —                    |
-| 362 | Mercari            | [Homepage seed](https://mercari.com/)               | New candidate  | —             | —                    |
-| 363 | SmartNews          | [Homepage seed](https://smartnews.com/)             | New candidate  | —             | —                    |
-| 364 | freee              | [Homepage seed](https://freee.co.jp/)               | New candidate  | —             | —                    |
-| 365 | Money Forward      | [Homepage seed](https://moneyforward.com/)          | New candidate  | —             | —                    |
-| 366 | Sansan             | [Homepage seed](https://sansan.com/)                | New candidate  | —             | —                    |
-| 367 | Appier             | [Homepage seed](https://appier.com/)                | New candidate  | —             | —                    |
-| 368 | Preferred Networks | [Homepage seed](https://preferred.jp/)              | New candidate  | —             | —                    |
-| 369 | Canva              | [Careers observed](https://www.lifeatcanva.com/en/) | New candidate  | —             | —                    |
-| 370 | Xendit             | [Homepage seed](https://xendit.co/)                 | New candidate  | —             | —                    |
-| 371 | BrowserStack       | [Homepage seed](https://browserstack.com/)          | New candidate  | —             | —                    |
-| 372 | Traveloka          | [Homepage seed](https://traveloka.com/)             | New candidate  | —             | —                    |
-| 373 | Carsome            | [Homepage seed](https://carsome.my/)                | New candidate  | —             | —                    |
-| 374 | Lazada             | [Homepage seed](https://lazada.com/)                | New candidate  | —             | —                    |
-| 375 | Bukalapak          | [Homepage seed](https://bukalapak.com/)             | New candidate  | —             | —                    |
+|   # | Company            | Discovery entry point                                    | Registry state    | Existing slug | Configured providers |
+| --: | ------------------ | -------------------------------------------------------- | ----------------- | ------------- | -------------------- |
+| 351 | Baidu              | [Homepage seed](https://baidu.com/)                      | New candidate     | —             | —                    |
+| 352 | NetEase            | [Homepage seed](https://netease.com/)                    | New candidate     | —             | —                    |
+| 353 | Kuaishou           | [Homepage seed](https://kuaishou.com/)                   | New candidate     | —             | —                    |
+| 354 | Bilibili           | [Homepage seed](https://bilibili.com/)                   | New candidate     | —             | —                    |
+| 355 | Weibo              | [Homepage seed](https://weibo.com/)                      | New candidate     | —             | —                    |
+| 356 | Naver              | [Homepage seed](https://navercorp.com/)                  | New candidate     | —             | —                    |
+| 357 | Kakao              | [Homepage seed](https://kakaocorp.com/)                  | New candidate     | —             | —                    |
+| 358 | LY Corporation     | [Homepage seed](https://lycorp.co.jp/)                   | New candidate     | —             | —                    |
+| 359 | CyberAgent         | [Homepage seed](https://cyberagent.co.jp/)               | New candidate     | —             | —                    |
+| 360 | GMO Internet Group | [Homepage seed](https://gmo.jp/)                         | New candidate     | —             | —                    |
+| 361 | Rakus              | [Homepage seed](https://rakus.co.jp/)                    | New candidate     | —             | —                    |
+| 362 | Mercari            | [Homepage seed](https://mercari.com/)                    | New candidate     | —             | —                    |
+| 363 | SmartNews          | [Homepage seed](https://smartnews.com/)                  | New candidate     | —             | —                    |
+| 364 | freee              | [Homepage seed](https://freee.co.jp/)                    | New candidate     | —             | —                    |
+| 365 | Money Forward      | [Homepage seed](https://moneyforward.com/)               | New candidate     | —             | —                    |
+| 366 | Sansan             | [Homepage seed](https://sansan.com/)                     | New candidate     | —             | —                    |
+| 367 | Appier             | [Homepage seed](https://appier.com/)                     | New candidate     | —             | —                    |
+| 368 | Preferred Networks | [Homepage seed](https://preferred.jp/)                   | New candidate     | —             | —                    |
+| 369 | Canva              | [Careers observed](https://www.lifeatcanva.com/en/jobs/) | Source configured | C             | smartrecruiters      |
+| 370 | Xendit             | [Homepage seed](https://xendit.co/)                      | New candidate     | —             | —                    |
+| 371 | BrowserStack       | [Homepage seed](https://browserstack.com/)               | New candidate     | —             | —                    |
+| 372 | Traveloka          | [Homepage seed](https://traveloka.com/)                  | New candidate     | —             | —                    |
+| 373 | Carsome            | [Homepage seed](https://carsome.my/)                     | New candidate     | —             | —                    |
+| 374 | Lazada             | [Homepage seed](https://lazada.com/)                     | New candidate     | —             | —                    |
+| 375 | Bukalapak          | [Homepage seed](https://bukalapak.com/)                  | New candidate     | —             | —                    |
 
 ### Gaming and interactive entertainment
 

@@ -37,6 +37,13 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     };
   }
 
+  if (url.hostname === 'www.lifeatcanva.com' && /^\/en\/jobs(?:\/|$)/.test(url.pathname)) {
+    return {
+      board: 'smartrecruiters:Canva',
+      id: url.pathname.match(/^\/en\/jobs\/(\d{1,30})\/[^/]+\/?$/)?.[1] ?? null,
+    };
+  }
+
   if (url.hostname === 'www.shopify.com' && /^\/careers(?:\/|$)/.test(url.pathname)) {
     const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
     const pathId = url.pathname.match(/_([0-9a-f-]{36})$/)?.[1];
@@ -86,7 +93,8 @@ export function officialIdentity(value: string): OfficialIdentity | null {
   }
 
   if (['jobs.smartrecruiters.com', 'careers.smartrecruiters.com'].includes(url.hostname)) {
-    const board = parts[0].toLowerCase() === 'servicenow' ? 'ServiceNow' : parts[0];
+    const knownBoards: Record<string, string> = { servicenow: 'ServiceNow', canva: 'Canva' };
+    const board = knownBoards[parts[0].toLowerCase()] ?? parts[0];
 
     return {
       board: `smartrecruiters:${board}`,

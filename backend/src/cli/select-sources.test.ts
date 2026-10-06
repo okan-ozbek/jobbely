@@ -69,6 +69,7 @@ describe('manual sync source selection', () => {
       'servicenow',
       'adyen',
       'asml',
+      'canva',
     ]);
 
     expect(

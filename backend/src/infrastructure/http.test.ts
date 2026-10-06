@@ -6,40 +6,43 @@ afterEach(() => vi.useRealTimers());
 const url = 'https://boards-api.greenhouse.io/v1/boards/test/jobs';
 
 describe('bounded transport', () => {
-  it('allows only ServiceNow PUBLIC posting lists and numeric details on SmartRecruiters', async () => {
-    const fetcher = vi
-      .fn<typeof fetch>()
-      .mockImplementation(
-        async () => new Response('{}', { headers: { 'content-type': 'application/json' } }),
-      );
+  it.each(['ServiceNow', 'Canva'])(
+    'allows only PUBLIC posting lists and numeric details for %s',
+    async (board) => {
+      const fetcher = vi
+        .fn<typeof fetch>()
+        .mockImplementation(
+          async () => new Response('{}', { headers: { 'content-type': 'application/json' } }),
+        );
 
-    const http = new PublicJsonTransport(fetcher, 0);
-    const endpoint = 'https://api.smartrecruiters.com/v1/companies/ServiceNow/postings';
+      const http = new PublicJsonTransport(fetcher, 0);
+      const endpoint = `https://api.smartrecruiters.com/v1/companies/${board}/postings`;
 
-    await http.get(`${endpoint}?limit=100&offset=0&destination=PUBLIC`);
-    await http.get(`${endpoint}/123`);
+      await http.get(`${endpoint}?limit=100&offset=0&destination=PUBLIC`);
+      await http.get(`${endpoint}/123`);
 
-    for (const target of [
-      endpoint,
-      `${endpoint}?limit=100&offset=0&destination=INTERNAL`,
-      `${endpoint}?limit=100&offset=0&destination=INTERNAL_OR_PUBLIC`,
-      `${endpoint}?limit=100&offset=0&destination=PUBLIC&q=engineer`,
-      `${endpoint}?limit=100&offset=0&destination=PUBLIC&destination=PUBLIC`,
-      `${endpoint}?limit=100&offset=10001&destination=PUBLIC`,
-      `${endpoint}/123/configuration`,
-      `${endpoint}/123/candidates`,
-      `${endpoint}/123?sourceId=tracking`,
-      `${endpoint}/123#fragment`,
-      'https://api.smartrecruiters.com/v1/companies/Other/postings/123',
-      'https://api.smartrecruiters.com/jobs/123',
-    ]) {
-      await expect(http.get(target)).rejects.toThrow(/native career routes/);
-    }
+      for (const target of [
+        endpoint,
+        `${endpoint}?limit=100&offset=0&destination=INTERNAL`,
+        `${endpoint}?limit=100&offset=0&destination=INTERNAL_OR_PUBLIC`,
+        `${endpoint}?limit=100&offset=0&destination=PUBLIC&q=engineer`,
+        `${endpoint}?limit=100&offset=0&destination=PUBLIC&destination=PUBLIC`,
+        `${endpoint}?limit=100&offset=10001&destination=PUBLIC`,
+        `${endpoint}/123/configuration`,
+        `${endpoint}/123/candidates`,
+        `${endpoint}/123?sourceId=tracking`,
+        `${endpoint}/123#fragment`,
+        'https://api.smartrecruiters.com/v1/companies/Other/postings/123',
+        'https://api.smartrecruiters.com/jobs/123',
+      ]) {
+        await expect(http.get(target)).rejects.toThrow(/native career routes/);
+      }
 
-    await expect(http.post(`${endpoint}/123`, {})).rejects.toThrow(/read-only/);
-    await expect(http.getHtml(`${endpoint}/123`)).rejects.toThrow(/native career routes/);
-    expect(fetcher).toHaveBeenCalledTimes(2);
-  });
+      await expect(http.post(`${endpoint}/123`, {})).rejects.toThrow(/read-only/);
+      await expect(http.getHtml(`${endpoint}/123`)).rejects.toThrow(/native career routes/);
+      expect(fetcher).toHaveBeenCalledTimes(2);
+    },
+  );
 
   it('limits Shopify to unfiltered public listing/detail HTML without application or data requests', async () => {
     const fetcher = vi.fn<typeof fetch>().mockImplementation(

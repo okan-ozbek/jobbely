@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Source } from '../../domain/model.js';
 import { SmartRecruitersAdapter } from './smartrecruiters.js';
 import { officialIdentity } from '../audits/reconcile.js';
+import { loadRegistry } from '../registry.js';
 
 const endpoint = 'https://api.smartrecruiters.com/v1/companies/ServiceNow/postings';
 
@@ -88,6 +89,111 @@ function transport(
 }
 
 describe('SmartRecruiters public postings', () => {
+  it.each([
+    'complete',
+    'employment_label',
+    'function_label',
+    'empty',
+    'foreign_summary',
+    'foreign_detail',
+    'changed_inventory',
+    'changed_summary_label',
+    'changed_location',
+    'foreign_link',
+  ])('validates Canva whole-advertisement layout and identity: %s', async (mode) => {
+    const canva = loadRegistry().sources.find((entry) => entry.id === 'canva')!;
+
+    const advertisement =
+      '<p>Build design tools.</p><p>Required TypeScript skills.</p><p>Benefits and salary conditions.</p>';
+
+    const company = { identifier: 'Canva' };
+    const header = { ...summary('1'), company, ref: `${canva.endpoint}/1` };
+    let pass = 0;
+
+    const http = {
+      get: vi.fn(async (url: string) => {
+        const isDetail = new URL(url).pathname.endsWith('/1');
+
+        if (!isDetail) {
+          pass++;
+        }
+
+        return {
+          url,
+          fetchedAt: '2026-10-06T12:00:00.000Z',
+          body: isDetail
+            ? {
+                ...detail('1'),
+                ...header,
+                company: mode === 'foreign_detail' ? { identifier: 'ServiceNow' } : company,
+                typeOfEmployment:
+                  mode === 'employment_label' ? { label: 'Contract' } : header.typeOfEmployment,
+                function:
+                  mode === 'function_label' ? { label: 'Customer Support' } : header.function,
+                location: mode === 'changed_location' ? { city: 'Paris' } : header.location,
+                postingUrl:
+                  mode === 'foreign_link'
+                    ? 'https://jobs.smartrecruiters.com/Other/1-engineer'
+                    : 'https://jobs.smartrecruiters.com/Canva/1-engineer',
+                applyUrl: 'https://jobs.smartrecruiters.com/Canva/1-engineer?oga=true',
+                jobAd: {
+                  sections: {
+                    companyDescription: {
+                      title: 'Company Description',
+                      text: mode === 'empty' ? '<script>bad()</script>' : advertisement,
+                    },
+                    jobDescription: { title: 'Job Description', text: '' },
+                    qualifications: { title: 'Qualifications', text: '' },
+                    additionalInformation: { title: 'Additional Information', text: '' },
+                  },
+                },
+              }
+            : {
+                offset: 0,
+                limit: 100,
+                totalFound: 1,
+                content: [
+                  {
+                    ...header,
+                    company: mode === 'foreign_summary' ? { identifier: 'ServiceNow' } : company,
+                    name: mode === 'changed_inventory' && pass > 1 ? 'Changed role' : header.name,
+                    function:
+                      mode === 'changed_summary_label' && pass > 1
+                        ? { label: 'Changed' }
+                        : header.function,
+                  },
+                ],
+              },
+        };
+      }),
+    };
+
+    if (!['complete', 'employment_label', 'function_label'].includes(mode)) {
+      await expect(new SmartRecruitersAdapter(http).extract(canva)).rejects.toThrow();
+
+      return;
+    }
+
+    const result = await new SmartRecruitersAdapter(http).extract(canva);
+
+    expect(result).toMatchObject({ enumerationComplete: true, excluded: 0 });
+    expect(result.rawResponses).toHaveLength(3);
+    expect(result.postings[0]?.descriptionHtml).toContain(advertisement);
+    expect(result.postings[0]?.sourcePostingId).toBe('1');
+
+    expect(result.postings[0]?.departments).toEqual([
+      mode === 'function_label' ? 'Customer Support' : 'Engineering',
+    ]);
+
+    expect(result.postings[0]?.employment).toBe(
+      mode === 'employment_label' ? 'Contract' : 'Full-time',
+    );
+
+    expect(result.postings[0]?.applyUrl).toBe(
+      'https://jobs.smartrecruiters.com/Canva/1-engineer?oga=true',
+    );
+  });
+
   it('traverses every page, hydrates every detail and rechecks the complete identity inventory', async () => {
     const http = transport();
     const result = await new SmartRecruitersAdapter(http).extract(source);
@@ -172,6 +278,8 @@ describe('SmartRecruiters public postings', () => {
     'wrong_id',
     'wrong_uuid',
     'changed_name',
+    'changed_function',
+    'changed_employment',
     'private',
     'inactive',
     'foreign_link',
@@ -195,6 +303,10 @@ describe('SmartRecruiters public postings', () => {
           return { ...job, uuid: summary('999').uuid };
         case 'changed_name':
           return { ...job, name: 'Changed title' };
+        case 'changed_function':
+          return { ...job, function: { label: 'Sales' } };
+        case 'changed_employment':
+          return { ...job, typeOfEmployment: { label: 'Contract' } };
         case 'private':
           return { ...job, visibility: 'INTERNAL' };
         case 'inactive':
@@ -369,6 +481,20 @@ describe('SmartRecruiters public postings', () => {
   });
 
   it('recognizes hosted board case variants and immutable numeric posting IDs', () => {
+    expect(officialIdentity('https://www.lifeatcanva.com/en/jobs/123/engineer/')).toEqual({
+      board: 'smartrecruiters:Canva',
+      id: '123',
+    });
+
+    expect(
+      officialIdentity('https://www.lifeatcanva.com/en/jobs/123/engineer/apply')?.id,
+    ).toBeNull();
+
+    expect(officialIdentity('https://jobs.smartrecruiters.com/canva/123-title')).toEqual({
+      board: 'smartrecruiters:Canva',
+      id: '123',
+    });
+
     expect(
       officialIdentity('https://jobs.smartrecruiters.com/servicenow/123-title?oga=true'),
     ).toEqual({ board: 'smartrecruiters:ServiceNow', id: '123' });

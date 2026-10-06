@@ -2314,5 +2314,57 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "canva",
+    "scope": {
+      "status": "pending",
+      "notes": "Public SmartRecruiters Canva board observed with 127 postings during discovery. Official careers HTML returned a challenge to Jobbely. Independent worldwide inventory, board attribution and related employer/entity scope remain unverified; counts alone do not establish coverage.",
+      "evidenceUrls": [
+        "https://www.lifeatcanva.com/en/jobs/",
+        "https://careers.smartrecruiters.com/Canva"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "The documented public Posting API requires no credentials. Official careers/privacy pages were challenged; automated retrieval and full-description display reviews remain pending. No challenge is bypassed, and public API access is not publication approval.",
+      "evidenceUrls": [
+        "https://www.lifeatcanva.com/en/privacy-policy/",
+        "https://developers.smartrecruiters.com/docs/authentication"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.lifeatcanva.com/en/jobs/",
+        "disposition": "included",
+        "sourceIds": ["canva"],
+        "reason": "Main official worldwide inventory; automated retrieval challenged during discovery."
+      },
+      {
+        "url": "https://careers.smartrecruiters.com/Canva",
+        "disposition": "included",
+        "sourceIds": ["canva"],
+        "reason": "Public Canva hosted board and Posting API; independent association and traversal review remain pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.lifeatcanva.com/en/jobs/",
+        "role": "listings",
+        "sourceIds": ["canva"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://careers.smartrecruiters.com/Canva",
+        "role": "listings",
+        "sourceIds": ["canva"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

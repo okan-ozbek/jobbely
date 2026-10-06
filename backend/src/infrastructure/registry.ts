@@ -60,15 +60,28 @@ const sourceSchema = z
       });
     }
 
+    if (source.provider === 'smartrecruiters') {
+      const boards: Record<string, string> = { servicenow: 'ServiceNow', canva: 'Canva' };
+      const board = boards[source.companySlug];
+
+      if (
+        !board ||
+        source.board !== board ||
+        source.endpoint !== `https://api.smartrecruiters.com/v1/companies/${board}/postings`
+      ) {
+        context.addIssue({
+          code: 'custom',
+          message: 'Invalid public SmartRecruiters employer board',
+        });
+      }
+
+      return;
+    }
+
     const nativeEndpoints: Record<
       string,
       { board: string; endpoint: string; companySlug?: string }
     > = {
-      smartrecruiters: {
-        board: 'ServiceNow',
-        companySlug: 'servicenow',
-        endpoint: 'https://api.smartrecruiters.com/v1/companies/ServiceNow/postings',
-      },
       hubspot: { board: 'hubspot', endpoint: 'https://wtcfns.hubspot.com/careers/graphql' },
       asml: { board: 'asml', endpoint: 'https://www.asml.com/en/careers/find-your-job' },
       shopify: { board: 'shopify', endpoint: 'https://www.shopify.com/careers' },

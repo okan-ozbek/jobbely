@@ -87,13 +87,13 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
       'api.smartrecruiters.com':
         format === 'json' &&
         !parsed.hash &&
-        (parsed.pathname === '/v1/companies/ServiceNow/postings'
+        (/^\/v1\/companies\/(?:ServiceNow|Canva)\/postings$/.test(parsed.pathname)
           ? parsed.searchParams.size === 3 &&
             parsed.searchParams.get('limit') === '100' &&
             /^\d{1,5}$/.test(parsed.searchParams.get('offset') ?? '') &&
             Number(parsed.searchParams.get('offset')) <= 10_000 &&
             parsed.searchParams.get('destination') === 'PUBLIC'
-          : /^\/v1\/companies\/ServiceNow\/postings\/\d{1,30}$/.test(parsed.pathname) &&
+          : /^\/v1\/companies\/(?:ServiceNow|Canva)\/postings\/\d{1,30}$/.test(parsed.pathname) &&
             !parsed.search),
       'www.shopify.com':
         format === 'html' &&

@@ -464,5 +464,14 @@
     "endpoint": "https://www.asml.com/en/careers/find-your-job",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "canva",
+    "companySlug": "canva",
+    "provider": "smartrecruiters",
+    "board": "Canva",
+    "endpoint": "https://api.smartrecruiters.com/v1/companies/Canva/postings",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

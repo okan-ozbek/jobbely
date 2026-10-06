@@ -75,7 +75,7 @@ function escaped(value: string): string {
   return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 }
 
-function metadata(value: unknown) {
+function metadata(value: unknown, compareLabels = true) {
   const job = header.parse(value);
 
   return {
@@ -85,9 +85,9 @@ function metadata(value: unknown) {
     company: job.company.identifier,
     releasedDate: job.releasedDate ?? null,
     location: job.location,
-    department: job.department?.label ?? null,
-    function: job.function?.label ?? null,
-    typeOfEmployment: job.typeOfEmployment?.label ?? null,
+    department: compareLabels ? (job.department?.label ?? null) : null,
+    function: compareLabels ? (job.function?.label ?? null) : null,
+    typeOfEmployment: compareLabels ? (job.typeOfEmployment?.label ?? null) : null,
   };
 }
 
@@ -192,7 +192,13 @@ export class SmartRecruitersAdapter implements SourceAdapter {
     for (const job of jobs.values()) {
       const detail = decode(detailSchema, (await request(job.ref)).body);
 
-      if (JSON.stringify(metadata(detail)) !== JSON.stringify(metadata(job))) {
+      // Canva's summary labels can differ; detail supplies its native function/employment labels.
+      const compareLabels = source.board !== 'Canva';
+
+      if (
+        JSON.stringify(metadata(detail, compareLabels)) !==
+        JSON.stringify(metadata(job, compareLabels))
+      ) {
         throw new Error(`SmartRecruiters detail metadata changed for posting ${job.id}`);
       }
 
@@ -214,7 +220,13 @@ export class SmartRecruitersAdapter implements SourceAdapter {
 
       const sections = detail.jobAd.sections;
 
-      if (!htmlPreparation.prepare(sections.jobDescription.text).text) {
+      // Canva publishes the complete role in this section, despite its generic native label.
+      const roleHtml =
+        source.board === 'Canva' && !htmlPreparation.prepare(sections.jobDescription.text).text
+          ? (sections.companyDescription?.text ?? '')
+          : sections.jobDescription.text;
+
+      if (!htmlPreparation.prepare(roleHtml).text) {
         throw new Error(`SmartRecruiters posting ${job.id} has no readable role description`);
       }
 

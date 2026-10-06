@@ -82,6 +82,15 @@ describe('read API and contract', () => {
       sources: [{ id: 'asml', provider: 'asml', auditStatus: 'candidate', scheduled: false }],
     });
 
+    expect((await app.inject('/api/v1/companies/canva')).json()).toMatchObject({
+      name: 'Canva',
+      careersUrl: 'https://www.lifeatcanva.com/en/jobs/',
+      logoUrl: '/logos/default.svg',
+      sources: [
+        { id: 'canva', provider: 'smartrecruiters', auditStatus: 'candidate', scheduled: false },
+      ],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,
