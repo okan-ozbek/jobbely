@@ -69,6 +69,7 @@ function setup(validation?: PostingValidation) {
     hubspot: adapter,
     asml: adapter,
     smartrecruiters: adapter,
+    workable: adapter,
   };
 
   return {

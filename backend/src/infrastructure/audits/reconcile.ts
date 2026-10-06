@@ -125,6 +125,18 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     };
   }
 
+  if (url.hostname === 'apply.workable.com' && !url.port && !url.search && !url.hash) {
+    if (url.pathname === '/huggingface/' || url.pathname === '/huggingface/jobs.md') {
+      return { board: 'workable:huggingface', id: null };
+    }
+
+    const id =
+      url.pathname.match(/^\/(?:huggingface\/)?j\/([A-F0-9]{10})(?:\/apply)?\/?$/)?.[1] ??
+      url.pathname.match(/^\/huggingface\/jobs\/view\/([A-F0-9]{10})\.md$/)?.[1];
+
+    return id ? { board: 'workable:huggingface', id } : null;
+  }
+
   if (/^[a-z0-9-]+\.wd\d+\.myworkdayjobs\.com$/.test(url.hostname)) {
     const siteIndex = /^[a-z]{2}-[A-Z]{2}$/.test(parts[0]) ? 1 : 0;
     const site = parts[siteIndex];
@@ -228,7 +240,50 @@ export function inspectOfficialPage(
   page: AuditPlan['pages'][number],
   sources: Source[],
 ) {
-  const document = load(body);
+  const markdownInventory = page.url === 'https://apply.workable.com/huggingface/jobs.md';
+  const document = load(markdownInventory ? '' : body);
+
+  if (markdownInventory) {
+    if (!body.startsWith('# Hugging Face — All Open Positions\n')) {
+      throw new Error('Unrecognized Workable published inventory');
+    }
+
+    const rows = body
+      .split('\n')
+      .filter((line) => line.startsWith('| ') && !line.startsWith('| Title |'));
+
+    if (!rows.length) {
+      throw new Error(
+        'Workable Markdown has no explicit vacancy rows; empty inventory is unverified',
+      );
+    }
+
+    const seen = new Set<string>();
+
+    for (const row of rows) {
+      const cells = row
+        .split('|')
+        .slice(1, -1)
+        .map((cell) => cell.trim());
+
+      const link = cells[6]?.match(
+        /^\[View\]\((https:\/\/apply\.workable\.com\/huggingface\/jobs\/view\/[A-F0-9]{10}\.md)\)$/,
+      )?.[1];
+
+      if (cells.length !== 7 || !cells[0] || !link) {
+        throw new Error('Malformed Workable Markdown inventory row');
+      }
+
+      if (seen.has(link)) {
+        throw new Error('Workable Markdown repeats a posting identity');
+      }
+
+      seen.add(link);
+
+      document('body').append(document('<a></a>').attr('href', link).text(cells[0]));
+    }
+  }
+
   const ids = new Map<string, Set<string>>();
   const boards = new Set<string>();
   const links = new Set<string>();

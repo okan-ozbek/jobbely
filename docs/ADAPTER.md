@@ -20,6 +20,8 @@ The Adapter pattern isolates upstream differences. Bootstrap selects the provide
 
 An adapter validates every received item with Zod before publishing a result. Missing required fields fail the run. Optional information can remain unknown; a missing remote flag does not imply on-site work. Employment labels are currently source strings, with `unknown` for absence. Ashby falls back to its job URL when the feed omits an ID.
 
+[Hugging Face](HUGGING_FACE.md) introduces public Workable widget support limited to the observed huggingface account. The adapter validates employer attribution, unique shortcodes, native detail/application links and full readable descriptions, then rechecks the complete published aggregate for drift. It preserves source labels and date-only publication dates, displays only country for hidden office locations, and excludes the employer-specific Wild Card open application. No private API or application request is used.
+
 ## Invariants and extension procedure
 
 Preserve source IDs, original department labels, locations, advertised dates where mapped, URLs and full descriptions. `enumerationComplete` proves traversal of this board, not complete employer scope. Adapters neither classify functions nor close jobs. Generic non-vacancy exclusions are explicit and counted.

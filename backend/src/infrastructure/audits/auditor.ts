@@ -2,6 +2,7 @@ import type { Company, Extraction, Provider, RawResponse, Source } from '../../d
 import type { SourceAdapter } from '../../ports/ingestion.js';
 import { htmlPreparation } from '../html.js';
 import { vacancyExcluded } from '../adapters/schemas.js';
+import { workableVacancyExcluded } from '../adapters/workable.js';
 import { auditBlockers, configurationHash, hash } from './model.js';
 import type { AuditPlan, AuditReport } from './model.js';
 import type { OfficialPageTransport } from './official-http.js';
@@ -245,7 +246,14 @@ export class SourceAuditor {
             const ids = inventories.get(sourceId) ?? new Set<string>();
 
             for (const id of inspected.ids.get(key) ?? []) {
-              if (!vacancyExcluded(inspected.titles.get(`${key}:${id}`) ?? '')) {
+              const title = inspected.titles.get(`${key}:${id}`) ?? '';
+
+              const excluded =
+                source.provider === 'workable'
+                  ? workableVacancyExcluded(source.board, title)
+                  : vacancyExcluded(title);
+
+              if (!excluded) {
                 ids.add(id);
               }
             }
@@ -393,6 +401,9 @@ export function officialHosts(company: Company, plan: AuditPlan): Set<string> {
     'jobs.lever.co',
     'jobs.eu.lever.co',
     'jobs.ashbyhq.com',
+    'apply.workable.com',
+    'help.workable.com',
+    'www.workable.com',
     'docs.greenhouse.io',
     'developers.ashbyhq.com',
     'github.com',

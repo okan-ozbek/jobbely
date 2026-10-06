@@ -505,5 +505,13 @@
     "board": "cohere",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "hugging-face",
+    "companySlug": "hugging-face",
+    "provider": "workable",
+    "board": "huggingface",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

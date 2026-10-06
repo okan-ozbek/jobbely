@@ -13,6 +13,7 @@ export type Provider =
   | 'hubspot'
   | 'asml'
   | 'smartrecruiters'
+  | 'workable'
   | 'meta'
   | 'google';
 

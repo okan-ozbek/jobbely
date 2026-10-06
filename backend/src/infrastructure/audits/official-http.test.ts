@@ -16,6 +16,35 @@ function transport(robots: string, status = 200) {
 }
 
 describe('bounded official-site transport', () => {
+  it('accepts Markdown only for the exact public Workable inventory, retaining robots and request limits', async () => {
+    const fetcher = vi.fn<typeof fetch>(async (url) =>
+      String(url).endsWith('/robots.txt')
+        ? new Response('User-agent: *\nAllow: /', { headers: { 'content-type': 'text/plain' } })
+        : new Response('# Synthetic inventory', {
+            headers: { 'content-type': 'text/markdown; charset=utf-8' },
+          }),
+    );
+
+    const client = new OfficialPageTransport(
+      new Set(['apply.workable.com']),
+      fetcher,
+      resolvePublic,
+      0,
+    );
+
+    const url = 'https://apply.workable.com/huggingface/jobs.md';
+
+    expect((await client.get(url)).body).toBe('# Synthetic inventory');
+
+    await expect(client.get('https://apply.workable.com/other/jobs.md')).rejects.toThrow(
+      'content type',
+    );
+
+    await expect(client.get(url + '?country=FR')).rejects.toThrow('content type');
+    expect(fetcher.mock.calls[1]?.[1]?.redirect).toBe('error');
+    expect(fetcher.mock.calls[1]?.[1]?.headers).toMatchObject({ Accept: 'text/markdown' });
+  });
+
   it('rejects private, loopback, mapped and non-address destinations but accepts real public IPv4/IPv6', () => {
     for (const address of [
       '127.0.0.1',

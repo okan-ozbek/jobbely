@@ -6,6 +6,36 @@ afterEach(() => vi.useRealTimers());
 const url = 'https://boards-api.greenhouse.io/v1/boards/test/jobs';
 
 describe('bounded transport', () => {
+  it('allows only the Hugging Face public Workable widget with complete descriptions', async () => {
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockImplementation(
+        async () => new Response('{}', { headers: { 'content-type': 'application/json' } }),
+      );
+
+    const http = new PublicJsonTransport(fetcher, 0);
+    const endpoint = 'https://apply.workable.com/api/v1/widget/accounts/huggingface';
+
+    await http.get(endpoint + '?details=true');
+
+    for (const target of [
+      endpoint,
+      endpoint + '?details=false',
+      endpoint + '?details=true&department=Engineering',
+      endpoint + '?details=true&details=true',
+      endpoint + '?details=true#filtered',
+      endpoint.replace('huggingface', 'other') + '?details=true',
+      'https://apply.workable.com/api/v3/accounts/huggingface/jobs',
+      'https://apply.workable.com/j/ABCDEF1234/apply',
+    ]) {
+      await expect(http.get(target)).rejects.toThrow(/native career routes/);
+    }
+
+    await expect(http.getHtml(endpoint + '?details=true')).rejects.toThrow(/native career routes/);
+    await expect(http.post(endpoint + '?details=true', {})).rejects.toThrow(/read-only/);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   it.each(['ServiceNow', 'Canva'])(
     'allows only PUBLIC posting lists and numeric details for %s',
     async (board) => {

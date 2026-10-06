@@ -150,6 +150,7 @@ export class OfficialPageTransport {
         this.nextRequest.set(parsed.hostname, Date.now() + this.intervalMs);
 
         const remaining = this.deadline - Date.now();
+        const markdownInventory = url === 'https://apply.workable.com/huggingface/jobs.md';
 
         if (remaining <= 0) {
           throw new Error('Official-site audit elapsed-time budget exhausted');
@@ -160,7 +161,11 @@ export class OfficialPageTransport {
           signal: AbortSignal.timeout(Math.min(30_000, remaining)),
           headers: {
             'User-Agent': userAgent,
-            Accept: robots ? 'text/plain' : 'text/html,application/javascript',
+            Accept: robots
+              ? 'text/plain'
+              : markdownInventory
+                ? 'text/markdown'
+                : 'text/html,application/javascript',
           },
         });
 
@@ -178,7 +183,15 @@ export class OfficialPageTransport {
 
         const contentType = response.headers.get('content-type') ?? '';
 
-        if (!(robots ? /text\/plain/i : /text\/html|javascript/i).test(contentType)) {
+        if (
+          !(
+            robots
+              ? /text\/plain/i
+              : markdownInventory
+                ? /^text\/markdown(?:;|$)/i
+                : /text\/html|javascript/i
+          ).test(contentType)
+        ) {
           await response.body.cancel();
 
           throw new Error(`Unexpected official-site content type: ${contentType}`);

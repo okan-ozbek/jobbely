@@ -13,6 +13,7 @@ import { IcimsAdapter } from './icims.js';
 import { LeverAdapter } from './lever.js';
 import { LinkedInAdapter } from './linkedin.js';
 import { WorkdayAdapter } from './workday.js';
+import { WorkableAdapter } from './workable.js';
 
 export function createAdapters(
   http: JsonSearchTransport & HtmlTransport,
@@ -30,6 +31,7 @@ export function createAdapters(
     atlassian: new AtlassianAdapter(http),
     shopify: new ShopifyAdapter(http),
     smartrecruiters: new SmartRecruitersAdapter(http),
+    workable: new WorkableAdapter(http),
     hubspot: new RestrictedAdapter(
       'HubSpot integration blocked: its public careers listing and detail service returned GraphQL 404: Not Found during discovery on 6 October 2026. No usable complete vacancy feed has been established. Recheck the official source and resolve access review before implementing collection; this failure does not mean zero vacancies.',
     ),

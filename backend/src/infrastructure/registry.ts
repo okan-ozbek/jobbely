@@ -34,6 +34,7 @@ const sourceSchema = z
       'hubspot',
       'asml',
       'smartrecruiters',
+      'workable',
       'meta',
       'google',
     ]),
@@ -82,6 +83,18 @@ const sourceSchema = z
           code: 'custom',
           message: 'Invalid public SmartRecruiters employer board',
         });
+      }
+
+      return;
+    }
+
+    if (source.provider === 'workable') {
+      if (
+        source.board !== 'huggingface' ||
+        source.companySlug !== 'hugging-face' ||
+        source.endpoint
+      ) {
+        context.addIssue({ code: 'custom', message: 'Invalid public Workable employer board' });
       }
 
       return;

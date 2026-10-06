@@ -133,6 +133,8 @@ Enterprise source endpoint, canonical host aliases and employer membership rules
 
 The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix URLs establish posting identity through their public posting numbers, with an explicit `PIPE-` mapping for Apple's managed retail records. Meta and Google remain access-blocked. Native search pagination/HTML collection still needs reviewed official traversal before activation can pass. See [WAVE_C.md](WAVE_C.md).
 
+[Hugging Face](HUGGING_FACE.md) adds a bounded parser for its explicitly advertised Workable jobs.md all-open-positions table. Official transport accepts Markdown only at that exact URL, retaining robots, DNS, timeout, size and redirect checks. Native titles/shortcodes are reconciled without executing scripts; malformed, duplicate or unproven empty rows fail inspection. Wild Card is excluded consistently from collection and official inventory. This exact-run technical verification remains separate from pending employer scope/access/display review.
+
 ## Tradeoffs and limits
 
 - Plans are explicit, operator-reviewed source configuration, not a universal autonomous crawler.

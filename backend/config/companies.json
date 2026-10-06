@@ -495,5 +495,12 @@
     "careersUrl": "https://cohere.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "hugging-face",
+    "name": "Hugging Face",
+    "careersUrl": "https://huggingface.co/",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

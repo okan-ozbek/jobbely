@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "companySlug": "hugging-face",
+  "observedAt": "2026-10-06T17:15:56.226Z",
+  "configurationHash": "43244f4c2c87ae1ca8e6c8fde94450599b108b260eb9198f02cd31ea88f3306c",
+  "artifactDirectory": "data/wave-sync/hugging-face-onboarding-2026-10-06T17-15-52-620Z/hugging-face/",
+  "blockers": [
+    "scope review is pending: Official Hugging Face homepage links to Workable huggingface. The provider explicitly advertises an all-open-positions Markdown inventory with six entries, including one Wild Card open application excluded from vacancy publication. Employer/entity/channel scope review remains pending.",
+    "access review is pending: Public Workable widget and explicitly advertised Markdown inventory are accessible without credentials; robots allow these requests. Employer automated-retrieval and full-description display review remain pending. Hugging Face terms reserve proprietary materials and public repository licenses do not establish recruitment advertisement rights; provider widget documentation and API availability are not employer approval."
+  ],
+  "policies": [
+    {
+      "url": "https://huggingface.co/terms-of-service",
+      "textSha256": "6120cf30cf194f4623c3e978597316b0a6b72c4fd0006ac7f2a5b9f1627f19f1",
+      "rawSha256": "45be6919184469431c047814d555245a4b587aacf4c9d06356047bad0aec65a2",
+      "robotsUrl": "https://huggingface.co/robots.txt",
+      "robotsSha256": "045c12bc2b5f1820752a5c149d2c96030ecfb8f32c42dd034cead715be277193",
+      "error": null
+    },
+    {
+      "url": "https://huggingface.co/privacy",
+      "textSha256": "4895a4305fb7fd10491fff8606bde289728ba4ee66442f2e9e1b04d45c86c19d",
+      "rawSha256": "493b0c65be1c456f28ec1df4ede253223ab7da51727845a83beee0562464db88",
+      "robotsUrl": "https://huggingface.co/robots.txt",
+      "robotsSha256": "045c12bc2b5f1820752a5c149d2c96030ecfb8f32c42dd034cead715be277193",
+      "error": null
+    },
+    {
+      "url": "https://www.workable.com/privacy",
+      "textSha256": "2c3c76a48191cdb73c210af30f15c0bfab9c8a6539771e9bde00b26b056c6ce4",
+      "rawSha256": "f26c3c2c7be13c7d320843e4b744e032f478deb0873aac4af4e152d45eedcf7a",
+      "robotsUrl": "https://www.workable.com/robots.txt",
+      "robotsSha256": "f0c9e4c2b69c8c18391d23d221c91dae5f6031dffec7808a0d7749128fdbf53e",
+      "error": null
+    },
+    {
+      "url": "https://help.workable.com/hc/en-us/articles/115012801727-How-to-embed-jobs-on-your-website-job-widget",
+      "textSha256": "1ef1ecd35a505519739e614633005a63a1c1855c06d2891fa4ca5bc0f77ad96c",
+      "rawSha256": "1ca82a7290ccde91d7b3d7b3e9a8d189acf2b43ce75935c925d5db501745e093",
+      "robotsUrl": "https://help.workable.com/robots.txt",
+      "robotsSha256": "56f64d326ed1fabf2b427ecdae309e9bac80bcb116bc1f4bb75f6ea3482152e0",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://huggingface.co/",
+      "sha256": "5f6b3b948899fc3d12cd73812dd77f59d1ce670c97b985b3a522e34cead07493",
+      "robotsUrl": "https://huggingface.co/robots.txt",
+      "robotsSha256": "045c12bc2b5f1820752a5c149d2c96030ecfb8f32c42dd034cead715be277193",
+      "links": ["https://apply.workable.com/huggingface/"],
+      "discoveredBoards": ["workable:huggingface"],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://apply.workable.com/huggingface/jobs.md",
+      "sha256": "d10fb4fdf161a53f4f7b3f132ca19d73c5ece536d4f2a113b84e21aefeed19fe",
+      "robotsUrl": "https://apply.workable.com/robots.txt",
+      "robotsSha256": "3594bfb0ec0bbfce844cf6ab5cd2aac430e784f3fb1581e5c8f74066b6997df7",
+      "links": [
+        "https://apply.workable.com/huggingface/jobs/view/0BD8C06DB3.md",
+        "https://apply.workable.com/huggingface/jobs/view/19A136F8E2.md",
+        "https://apply.workable.com/huggingface/jobs/view/81B46579FE.md",
+        "https://apply.workable.com/huggingface/jobs/view/9E2A4C02C7.md",
+        "https://apply.workable.com/huggingface/jobs/view/DB4D7C0EC8.md",
+        "https://apply.workable.com/huggingface/jobs/view/F88446C814.md"
+      ],
+      "discoveredBoards": ["workable:huggingface"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "hugging-face",
+      "feedCount": 5,
+      "officialCount": 5,
+      "excludedCount": 1,
+      "matchedCount": 5,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": true,
+      "officiallyLinked": true,
+      "feedHashes": [
+        "38a31b0d6911dc73d87b84dea53bf893922a5c97d1ba0367405de3f70e251caa",
+        "38a31b0d6911dc73d87b84dea53bf893922a5c97d1ba0367405de3f70e251caa"
+      ],
+      "samples": [
+        {
+          "id": "81B46579FE",
+          "title": "Open-Source Machine Learning Engineer - EMEA Remote",
+          "url": "https://apply.workable.com/j/81B46579FE",
+          "applyUrl": "https://apply.workable.com/j/81B46579FE/apply"
+        },
+        {
+          "id": "19A136F8E2",
+          "title": "Open-Source Machine Learning Engineer - US Remote",
+          "url": "https://apply.workable.com/j/19A136F8E2",
+          "applyUrl": "https://apply.workable.com/j/19A136F8E2/apply"
+        },
+        {
+          "id": "9E2A4C02C7",
+          "title": "Senior Machine Learning Engineer, Voice Agents - EMEA Remote",
+          "url": "https://apply.workable.com/j/9E2A4C02C7",
+          "applyUrl": "https://apply.workable.com/j/9E2A4C02C7/apply"
+        }
+      ],
+      "error": null
+    }
+  ],
+  "technicalCoverage": {
+    "companySlug": "hugging-face",
+    "configurationHash": "43244f4c2c87ae1ca8e6c8fde94450599b108b260eb9198f02cd31ea88f3306c",
+    "checkedAt": "2026-10-06T17:15:56.226Z",
+    "status": "verified",
+    "sourceRunIds": {
+      "hugging-face": "e33a8b28-d9eb-40cf-aea0-21f42a07ca68"
+    },
+    "blockers": [],
+    "accessStatus": "unreviewed"
+  }
+}

@@ -123,6 +123,15 @@ describe('read API and contract', () => {
       sources: [{ id: 'cohere', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
     });
 
+    expect((await app.inject('/api/v1/companies/hugging-face')).json()).toMatchObject({
+      name: 'Hugging Face',
+      careersUrl: 'https://huggingface.co/',
+      logoUrl: '/logos/default.svg',
+      sources: [
+        { id: 'hugging-face', provider: 'workable', auditStatus: 'candidate', scheduled: false },
+      ],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

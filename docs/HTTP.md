@@ -6,6 +6,8 @@
 
 Provider adapters use the `JsonTransport` port. `PublicJsonTransport` owns request policy so pacing, retry and destination rules do not diverge between adapters. Fake transports make provider tests deterministic.
 
+[Hugging Face](HUGGING_FACE.md) adds only the public GET widget at https://apply.workable.com/api/v1/widget/accounts/huggingface?details=true. The route requires exactly that account and complete-description query; other accounts, filters, duplicate parameters, fragments, private APIs, HTML requests and writes are rejected. Shared pacing, byte limits, retries and redirect rejection remain unchanged.
+
 ## Implemented policy
 
 | Concern            | Behavior                                                                                                                               |

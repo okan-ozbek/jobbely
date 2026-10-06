@@ -131,6 +131,7 @@ function audit(
       hubspot: adapter,
       asml: adapter,
       smartrecruiters: adapter,
+      workable: adapter,
     },
     () => now,
   ).run('ignored/raw-evidence', undefined, snapshots, automaticCoverage);

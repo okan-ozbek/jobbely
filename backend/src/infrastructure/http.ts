@@ -5,6 +5,7 @@ const allowedHosts = new Set([
   'boards-api.greenhouse.io',
   'api.smartrecruiters.com',
   'api.ashbyhq.com',
+  'apply.workable.com',
   'api.lever.co',
   'api.eu.lever.co',
   'nvidia.wd5.myworkdayjobs.com',
@@ -84,6 +85,12 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
 
     const nativePaths: Record<string, boolean> = {
+      'apply.workable.com':
+        format === 'json' &&
+        parsed.pathname === '/api/v1/widget/accounts/huggingface' &&
+        parsed.searchParams.size === 1 &&
+        parsed.searchParams.get('details') === 'true' &&
+        !parsed.hash,
       'api.smartrecruiters.com':
         format === 'json' &&
         !parsed.hash &&

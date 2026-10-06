@@ -2545,5 +2545,56 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "hugging-face",
+    "scope": {
+      "status": "pending",
+      "notes": "Official Hugging Face homepage links to Workable huggingface. The provider explicitly advertises an all-open-positions Markdown inventory with six entries, including one Wild Card open application excluded from vacancy publication. Employer/entity/channel scope review remains pending.",
+      "evidenceUrls": ["https://huggingface.co/", "https://apply.workable.com/huggingface/"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Public Workable widget and explicitly advertised Markdown inventory are accessible without credentials; robots allow these requests. Employer automated-retrieval and full-description display review remain pending. Hugging Face terms reserve proprietary materials and public repository licenses do not establish recruitment advertisement rights; provider widget documentation and API availability are not employer approval.",
+      "evidenceUrls": [
+        "https://huggingface.co/terms-of-service",
+        "https://huggingface.co/privacy",
+        "https://www.workable.com/privacy",
+        "https://help.workable.com/hc/en-us/articles/115012801727-How-to-embed-jobs-on-your-website-job-widget"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://huggingface.co/",
+        "disposition": "included",
+        "sourceIds": ["hugging-face"],
+        "reason": "Official employer homepage explicitly links to the Workable account; community organization JOIN-US is not an employer careers source."
+      },
+      {
+        "url": "https://apply.workable.com/huggingface/",
+        "disposition": "included",
+        "sourceIds": ["hugging-face"],
+        "reason": "Official-linked account advertises public llms.txt and jobs.md all-open-positions inventory; native shortcodes identify vacancies."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://huggingface.co/",
+        "role": "discovery",
+        "sourceIds": ["hugging-face"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://apply.workable.com/huggingface/jobs.md",
+        "role": "listings",
+        "sourceIds": ["hugging-face"],
+        "complete": true,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]
