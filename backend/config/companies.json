@@ -453,5 +453,12 @@
     "careersUrl": "https://careers.adyen.com/vacancies",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "asml",
+    "name": "ASML",
+    "careersUrl": "https://www.asml.com/en/careers/find-your-job",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

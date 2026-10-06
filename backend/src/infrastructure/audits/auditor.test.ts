@@ -129,6 +129,7 @@ function audit(
       atlassian: adapter,
       shopify: adapter,
       hubspot: adapter,
+      asml: adapter,
       smartrecruiters: adapter,
     },
     () => now,

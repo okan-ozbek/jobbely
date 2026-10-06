@@ -2281,5 +2281,38 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "asml",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers search observed as a client-rendered shell. No complete current inventory, descriptions, employer/group scope or compatible ATS board has been established. A guessed legacy Workday entry returned HTTP 404 and is not configured as a usable source.",
+      "evidenceUrls": ["https://www.asml.com/en/careers/find-your-job"]
+    },
+    "access": {
+      "status": "blocked",
+      "notes": "Published ASML terms restrict copying/republication of website material without prior written consent. No such permission or authorized feed with full-description display rights is established for Jobbely. This is a full-description publication gate, not a claim that all public browsing is prohibited.",
+      "display": "blocked",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://www.asml.com/en/terms-of-use"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.asml.com/en/careers/find-your-job",
+        "disposition": "included",
+        "sourceIds": ["asml"],
+        "reason": "Observed official entry point, registered behind an explicit full-description publication gate; collection is not implemented."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.asml.com/en/careers/find-your-job",
+        "role": "listings",
+        "sourceIds": ["asml"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

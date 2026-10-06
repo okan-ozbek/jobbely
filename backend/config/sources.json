@@ -455,5 +455,14 @@
     "board": "adyen",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "asml",
+    "companySlug": "asml",
+    "provider": "asml",
+    "board": "asml",
+    "endpoint": "https://www.asml.com/en/careers/find-your-job",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

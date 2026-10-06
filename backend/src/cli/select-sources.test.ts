@@ -68,6 +68,7 @@ describe('manual sync source selection', () => {
       'hubspot',
       'servicenow',
       'adyen',
+      'asml',
     ]);
 
     expect(

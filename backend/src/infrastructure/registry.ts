@@ -31,6 +31,7 @@ const sourceSchema = z
       'atlassian',
       'shopify',
       'hubspot',
+      'asml',
       'smartrecruiters',
       'meta',
       'google',
@@ -69,6 +70,7 @@ const sourceSchema = z
         endpoint: 'https://api.smartrecruiters.com/v1/companies/ServiceNow/postings',
       },
       hubspot: { board: 'hubspot', endpoint: 'https://wtcfns.hubspot.com/careers/graphql' },
+      asml: { board: 'asml', endpoint: 'https://www.asml.com/en/careers/find-your-job' },
       shopify: { board: 'shopify', endpoint: 'https://www.shopify.com/careers' },
       atlassian: {
         board: 'atlassian',

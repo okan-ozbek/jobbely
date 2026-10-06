@@ -67,6 +67,7 @@ function setup(validation?: PostingValidation) {
     atlassian: adapter,
     shopify: adapter,
     hubspot: adapter,
+    asml: adapter,
     smartrecruiters: adapter,
   };
 
@@ -97,6 +98,32 @@ function setup(validation?: PostingValidation) {
 }
 
 describe('source synchronization', () => {
+  it('records ASML publication as blocked without changing prior listings or absence counters', async () => {
+    const test = setup();
+    const source = loadRegistry().sources.find((entry) => entry.id === 'asml')!;
+
+    await test.sync.execute(source);
+
+    const before = await test.repository.read();
+    const http = { get: vi.fn(), post: vi.fn(), getHtml: vi.fn() };
+
+    const sync = new SyncSource(test.repository, createAdapters(http), htmlPreparation, [
+      new LabelMappingStrategy(),
+    ]);
+
+    await expect(sync.execute(source)).rejects.toThrow('ASML full-description publication blocked');
+
+    const after = await test.repository.read();
+
+    expect(after.version).toBe(before.version);
+    expect(after.jobs).toEqual(before.jobs);
+    expect(after.runs.at(-1)).toMatchObject({ sourceId: 'asml', status: 'failed' });
+    expect(source).toMatchObject({ auditStatus: 'candidate', scheduled: false });
+    expect(http.get).not.toHaveBeenCalled();
+    expect(http.post).not.toHaveBeenCalled();
+    expect(http.getHtml).not.toHaveBeenCalled();
+  });
+
   it('records HubSpot as failed while preserving prior listings and publication version', async () => {
     const test = setup();
     const hubspot = loadRegistry().sources.find((item) => item.id === 'hubspot')!;

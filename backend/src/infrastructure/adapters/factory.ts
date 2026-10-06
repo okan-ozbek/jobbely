@@ -33,6 +33,9 @@ export function createAdapters(
     hubspot: new RestrictedAdapter(
       'HubSpot integration blocked: its public careers listing and detail service returned GraphQL 404: Not Found during discovery on 6 October 2026. No usable complete vacancy feed has been established. Recheck the official source and resolve access review before implementing collection; this failure does not mean zero vacancies.',
     ),
+    asml: new RestrictedAdapter(
+      'ASML full-description publication blocked: its published terms require prior written consent to copy or republish website material. No permission or authorized feed with full-description display rights is established for Jobbely. Resolve that permission and verify the current source before implementing collection; this failure does not mean zero vacancies.',
+    ),
     meta: new RestrictedAdapter(
       'Meta integration blocked: its published robots policy requires express written permission for automated collection. Configure an authorized employer feed before extraction.',
     ),

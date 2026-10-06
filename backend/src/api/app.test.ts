@@ -75,6 +75,13 @@ describe('read API and contract', () => {
       ],
     });
 
+    expect((await app.inject('/api/v1/companies/asml')).json()).toMatchObject({
+      name: 'ASML',
+      careersUrl: 'https://www.asml.com/en/careers/find-your-job',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'asml', provider: 'asml', auditStatus: 'candidate', scheduled: false }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

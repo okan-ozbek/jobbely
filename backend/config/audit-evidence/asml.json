@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "companySlug": "asml",
+  "observedAt": "2026-10-06T14:08:17.772Z",
+  "configurationHash": "28b971fb390ca01a9f19701faf9af1935a64bee5d71ee26744da985f7f131993",
+  "artifactDirectory": "data/wave-sync/asml-onboarding-2026-10-06T14-08-15-699Z/asml/",
+  "blockers": [
+    "scope review is pending: Official careers search observed as a client-rendered shell. No complete current inventory, descriptions, employer/group scope or compatible ATS board has been established. A guessed legacy Workday entry returned HTTP 404 and is not configured as a usable source.",
+    "access review is blocked: Published ASML terms restrict copying/republication of website material without prior written consent. No such permission or authorized feed with full-description display rights is established for Jobbely. This is a full-description publication gate, not a claim that all public browsing is prohibited."
+  ],
+  "policies": [
+    {
+      "url": "https://www.asml.com/en/terms-of-use",
+      "textSha256": "62eb51aa7237d0358b6c077e6fbeb53aeceed0682392889da8a1a6263490687e",
+      "rawSha256": "12d383add22c96af9f6e26915c817d0a3d52cc508e5aa9fc243db71b610cbf89",
+      "robotsUrl": "https://www.asml.com/robots.txt",
+      "robotsSha256": "d3a271f1982bfc7f7ce4add5a875b13748827fbee7bb0c5fcd06c6e1ae12bcaf",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://www.asml.com/en/careers/find-your-job",
+      "sha256": "b3765a4126486a91bc4229149c276fbb3800612bc00fbad954db445dc5694427",
+      "robotsUrl": "https://www.asml.com/robots.txt",
+      "robotsSha256": "d3a271f1982bfc7f7ce4add5a875b13748827fbee7bb0c5fcd06c6e1ae12bcaf",
+      "links": [
+        "https://www.asml.com/en/careers",
+        "https://www.asml.com/en/careers/find-your-job",
+        "https://www.asml.com/en/careers/find-your-job#content",
+        "https://www.asml.com/en/careers/interview-tips",
+        "https://www.asml.com/en/careers/job-alert-subscription",
+        "https://www.asml.com/en/careers/saved-jobs",
+        "https://www.asml.com/en/careers/students-new-graduates",
+        "https://www.asml.com/en/careers/students-new-graduates/china",
+        "https://www.asml.com/en/careers/students-new-graduates/early-career-programs",
+        "https://www.asml.com/en/careers/students-new-graduates/netherlands",
+        "https://www.asml.com/en/careers/students-new-graduates/south-korea",
+        "https://www.asml.com/en/careers/students-new-graduates/taiwan",
+        "https://www.asml.com/en/careers/students-new-graduates/us",
+        "https://www.asml.com/en/careers/teams",
+        "https://www.asml.com/en/careers/technical-fields",
+        "https://www.asml.com/en/careers/working-at-asml",
+        "https://www.asml.com/en/careers/working-at-asml/china",
+        "https://www.asml.com/en/careers/working-at-asml/germany",
+        "https://www.asml.com/en/careers/working-at-asml/japan",
+        "https://www.asml.com/en/careers/working-at-asml/netherlands",
+        "https://www.asml.com/en/careers/working-at-asml/south-korea",
+        "https://www.asml.com/en/careers/working-at-asml/taiwan",
+        "https://www.asml.com/en/careers/working-at-asml/united-states"
+      ],
+      "discoveredBoards": [],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "asml",
+      "feedCount": 0,
+      "officialCount": 0,
+      "excludedCount": 0,
+      "matchedCount": 0,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": false,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": false,
+      "feedHashes": [],
+      "samples": [],
+      "error": "No successful snapshot from this refresh; source was not re-fetched"
+    }
+  ],
+  "technicalCoverage": {
+    "companySlug": "asml",
+    "configurationHash": "28b971fb390ca01a9f19701faf9af1935a64bee5d71ee26744da985f7f131993",
+    "checkedAt": "2026-10-06T14:08:17.772Z",
+    "status": "partial",
+    "sourceRunIds": {},
+    "blockers": [
+      "asml: No successful snapshot from this refresh; source was not re-fetched",
+      "asml: feed traversal incomplete",
+      "asml: official listing traversal not reviewed",
+      "asml: no official employer link to this board",
+      "No imported run for asml"
+    ],
+    "accessStatus": "blocked"
+  }
+}

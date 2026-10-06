@@ -34,6 +34,8 @@ Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netfl
 
 [Adyen](ADYEN.md) reuses the existing Greenhouse JSON destination and request policy. Official auditing permits `www.adyen.com` policy evidence only for company `adyen` with the official `careers.adyen.com` careers host; it grants no new ingestion host or access approval.
 
+[ASML](ASML.md) stays outside the ingestion destination allowlist behind a full-description publication/source gate. Official auditing can capture its own careers page, robots and terms through the existing employer host allowance; this does not approve description display or identify a functioning ATS feed.
+
 ## Tradeoffs and extension points
 
 [HubSpot](HUBSPOT.md) remains outside the ingestion fetch allowlist behind an explicit unavailable-source gate. Its audit can retrieve `legal.hubspot.com` only when the company is `hubspot` with the official `www.hubspot.com` careers host. This permits policy evidence collection, not access/display approval or GraphQL collection.

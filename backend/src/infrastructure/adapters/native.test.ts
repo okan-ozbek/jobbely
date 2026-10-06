@@ -5,6 +5,7 @@ import { AppleAdapter, applePageData } from './apple.js';
 import { EightfoldAdapter } from './eightfold.js';
 import { createAdapters } from './factory.js';
 import { officialIdentity, resolveOfficialIds } from '../audits/reconcile.js';
+import { loadRegistry } from '../registry.js';
 
 const source = (provider: Source['provider'], board: string, endpoint: string): Source => ({
   id: board,
@@ -407,6 +408,19 @@ describe('priority native integrations', () => {
         scheduled: false,
       }),
     ).rejects.toThrow(/GraphQL 404: Not Found.*does not mean zero vacancies/);
+
+    expect(http.get).not.toHaveBeenCalled();
+    expect(http.post).not.toHaveBeenCalled();
+    expect(http.getHtml).not.toHaveBeenCalled();
+  });
+
+  it('blocks ASML full-description publication without fetching or claiming zero vacancies', async () => {
+    const http = { get: vi.fn(), post: vi.fn(), getHtml: vi.fn() };
+    const source = loadRegistry().sources.find((entry) => entry.id === 'asml')!;
+
+    await expect(createAdapters(http).asml.extract(source)).rejects.toThrow(
+      /prior written consent.*does not mean zero vacancies/,
+    );
 
     expect(http.get).not.toHaveBeenCalled();
     expect(http.post).not.toHaveBeenCalled();
