@@ -180,3 +180,7 @@ Live findings belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md), not a permanent co
 ## Ashby talent forms
 
 [Supabase](SUPABASE.md) links 51 specific vacancy UUIDs and a separate future-opportunity Talent Community form. Ashby `/board/form/<slug>` URLs identify the board for discovery but carry no posting identity. The reserved form segment must not become a phantom job ID or exclude the board’s real vacancies. Original job/application URLs and feed IDs remain unchanged. A synthetic regression verifies form-only discovery and mixed form/job/application links with exact identity reconciliation. Employer scope/access/display review remains separate from the technical match.
+
+## Linear native UUIDs and board alias
+
+[Linear](LINEAR.md) exposes visible `/careers/<uuid>` links on exact HTTPS host `linear.app`. Identity parsing requires a full lowercase UUID without credentials, custom ports, queries, fragments or extra segments; a trailing slash is accepted. Native identities map to the case-preserved Ashby `Linear` board. Hosted metadata advertises `linear`, whose public feed was observed with identical identities, descriptions and metadata; only this explicit alias is mapped, preserving other board spellings and original stored URLs. Visible links establish inventory while scripts establish discovery only. Seven regional IDs remain unreconciled despite same-title counterparts; title/location grouping never proves identity equivalence. Three synthetic tests cover visibility, invalid URLs, regional gaps and alias boundaries.

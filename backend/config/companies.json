@@ -551,5 +551,12 @@
     "careersUrl": "https://supabase.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "linear",
+    "name": "Linear",
+    "careersUrl": "https://linear.app/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

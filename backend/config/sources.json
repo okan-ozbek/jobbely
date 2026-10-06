@@ -569,5 +569,13 @@
     "board": "supabase",
     "auditStatus": "candidate",
     "scheduled": true
+  },
+  {
+    "id": "linear",
+    "companySlug": "linear",
+    "provider": "ashby",
+    "board": "Linear",
+    "auditStatus": "candidate",
+    "scheduled": true
   }
 ]

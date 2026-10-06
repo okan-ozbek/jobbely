@@ -579,6 +579,85 @@ describe('evidence-backed source audits', () => {
 });
 
 describe('official identity reconciliation', () => {
+  it('maps visible Linear UUIDs without merging regions or treating script data as inventory', () => {
+    const first = '11111111-1111-4111-8111-111111111111';
+    const second = '22222222-2222-4222-8222-222222222222';
+    const embedded = '33333333-3333-4333-8333-333333333333';
+    const page = { ...plan.pages[0]!, url: 'https://linear.app/careers' };
+
+    const result = inspectOfficialPage(
+      `<a href="/careers/${first}">Engineer</a>` +
+        `<a href="/careers/${second}/">Engineer</a>` +
+        `<a href="/careers/${second}">Read more</a>` +
+        `<script>{"url":"https://jobs.ashbyhq.com/Linear/${embedded}"}</script>`,
+      page,
+      [],
+    );
+
+    expect([...result.ids.get('ashby:Linear')!]).toEqual([first, second]);
+    expect([...result.boards]).toEqual(['ashby:Linear']);
+
+    expect(
+      compareIdentities([first, second, embedded], [...result.ids.get('ashby:Linear')!]),
+    ).toEqual({
+      matchedCount: 2,
+      missingFromFeed: [],
+      missingFromOfficial: [embedded],
+    });
+
+    expect(officialIdentity(`https://linear.app/careers/${first}/`)).toEqual({
+      board: 'ashby:Linear',
+      id: first,
+    });
+  });
+
+  it('rejects foreign hosts and noncanonical Linear career identity URLs', () => {
+    const detail = '/careers/11111111-1111-4111-8111-111111111111';
+
+    for (const url of [
+      `https://example.com${detail}`,
+      `https://www.linear.app${detail}`,
+      `http://linear.app${detail}`,
+      `https://linear.app:8443${detail}`,
+      `https://user@linear.app${detail}`,
+      `https://linear.app${detail}?region=Europe`,
+      `https://linear.app${detail}#apply`,
+      `https://linear.app${detail}/application`,
+      `https://linear.app${detail}/engineer`,
+      'https://linear.app/careers',
+      'https://linear.app/careers/111111',
+      'https://linear.app/careers/11111111-1111-4111-8111-11111111111g',
+    ]) {
+      expect(officialIdentity(url), url).toBeNull();
+    }
+  });
+
+  it('reconciles the observed Linear board alias without folding other board spellings', () => {
+    const id = '11111111-1111-4111-8111-111111111111';
+
+    for (const board of ['Linear', 'linear']) {
+      expect(officialIdentity(`https://jobs.ashbyhq.com/${board}/${id}/application`)).toEqual({
+        board: 'ashby:Linear',
+        id,
+      });
+    }
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/LINEAR/${id}`)).toEqual({
+      board: 'ashby:LINEAR',
+      id,
+    });
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/constructor/${id}`)).toEqual({
+      board: 'ashby:constructor',
+      id,
+    });
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/Perplexity/${id}`)).toEqual({
+      board: 'ashby:Perplexity',
+      id,
+    });
+  });
+
   it('keeps Ashby talent forms as board discovery without inventing vacancy identities', () => {
     const id = '11111111-1111-4111-8111-111111111111';
     const page = { ...plan.pages[0]!, url: 'https://example.com/careers' };

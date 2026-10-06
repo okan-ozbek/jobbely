@@ -2991,5 +2991,67 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "linear",
+    "scope": {
+      "status": "pending",
+      "notes": "Official Linear careers exposes 24 full posting UUID links matching the public Ashby Linear board. That feed contains 31 listed jobs; seven North America posting IDs have same-title Europe/London counterparts in the visible inventory but remain distinct vacancies and independently unreconciled. Do not collapse IDs by title or treat grouped regional labels as reviewed identity equivalence. Employer worldwide legal-entity scope and regional coverage review remain pending.",
+      "evidenceUrls": [
+        "https://linear.app/careers",
+        "https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b",
+        "https://jobs.ashbyhq.com/Linear"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer retrieval and full-description display permission remain unverified. Terms and Acceptable Use Policy are effective 9 June 2026; AUP includes service automated-access restrictions and extraction outside published APIs. Privacy is effective 17 March 2025. Captured policies and public Ashby API documentation are unreviewed evidence; their service context does not establish permission for career republication. No employer consent, reviewer or approved document hashes are invented. Existing explicit blocked plans and candidate closure gates remain unchanged.",
+      "evidenceUrls": [
+        "https://linear.app/terms",
+        "https://linear.app/privacy",
+        "https://linear.app/legal/aup",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://linear.app/careers",
+        "disposition": "included",
+        "sourceIds": ["linear"],
+        "reason": "Official employer inventory uses 24 full native UUID links; employer public hydration/detail identifies case-preserved Ashby board Linear."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/Linear",
+        "disposition": "included",
+        "sourceIds": ["linear"],
+        "reason": "Official employer career data identifies this public Ashby board, with 31 listed jobs. Seven regional posting identities remain outside visible official inventory."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://linear.app/careers",
+        "role": "listings",
+        "sourceIds": ["linear"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b",
+        "role": "discovery",
+        "sourceIds": ["linear"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/Linear",
+        "role": "discovery",
+        "sourceIds": ["linear"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

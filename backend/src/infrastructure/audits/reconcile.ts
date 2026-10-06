@@ -63,6 +63,16 @@ export function officialIdentity(value: string): OfficialIdentity | null {
       : null;
   }
 
+  if (url.hostname === 'linear.app') {
+    const id = url.pathname.match(
+      /^\/careers\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/,
+    )?.[1];
+
+    return url.protocol === 'https:' && !url.port && !url.search && !url.hash && id
+      ? { board: 'ashby:Linear', id }
+      : null;
+  }
+
   if (url.hostname === 'www.shopify.com' && /^\/careers(?:\/|$)/.test(url.pathname)) {
     const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
     const pathId = url.pathname.match(/_([0-9a-f-]{36})$/)?.[1];
@@ -129,7 +139,12 @@ export function officialIdentity(value: string): OfficialIdentity | null {
   }
 
   if (url.hostname === 'jobs.ashbyhq.com' && parts[0]) {
-    const board = parts[0] === 'ElevenLabs' ? 'elevenlabs' : parts[0];
+    const aliases = new Map([
+      ['ElevenLabs', 'elevenlabs'],
+      ['linear', 'Linear'],
+    ]);
+
+    const board = aliases.get(parts[0]) ?? parts[0];
 
     return {
       board: `ashby:${board}`,
