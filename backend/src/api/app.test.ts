@@ -98,6 +98,15 @@ describe('read API and contract', () => {
       sources: [{ id: 'notion', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
     });
 
+    expect((await app.inject('/api/v1/companies/vercel')).json()).toMatchObject({
+      name: 'Vercel',
+      careersUrl: 'https://vercel.com/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [
+        { id: 'vercel', provider: 'greenhouse', auditStatus: 'candidate', scheduled: false },
+      ],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

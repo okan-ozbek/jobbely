@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Company, Extraction, Source } from '../../domain/model.js';
 import { SourceAuditor, officialHosts } from './auditor.js';
 import { assertAuditEvidence, auditPlanSchema, hash } from './model.js';
-import { compareIdentities, inspectOfficialPage } from './reconcile.js';
+import { compareIdentities, inspectOfficialPage, officialIdentity } from './reconcile.js';
 
 const now = new Date('2026-09-30T12:00:00.000Z');
 
@@ -550,6 +550,31 @@ describe('evidence-backed source audits', () => {
 });
 
 describe('official identity reconciliation', () => {
+  it('maps visible Vercel native IDs without counting embedded links or trusting other hosts', () => {
+    const page = { ...plan.pages[0]!, url: 'https://vercel.com/careers' };
+    const vercel = { ...source, id: 'vercel', companySlug: 'vercel', board: 'vercel' };
+
+    const result = inspectOfficialPage(
+      '<a href="/careers/account-executive-majors-apac-5841911004">Account Executive</a>' +
+        '<a href="/careers/account-executive-6136160004">Account Executive</a>' +
+        '<a href="/careers/account-executive-6136160004">Read more</a>' +
+        '<script>{"url":"https://vercel.com/careers/engineer-123"}</script>',
+      page,
+      [vercel],
+    );
+
+    expect([...result.ids.get('greenhouse:vercel')!]).toEqual(['5841911004', '6136160004']);
+    expect([...result.boards]).toEqual(['greenhouse:vercel']);
+    expect(officialIdentity('https://example.com/careers/engineer-123')).toBeNull();
+    expect(officialIdentity('https://vercel.com/careers/engineer-no-id')?.id).toBeNull();
+    expect(officialIdentity('https://vercel.com/careers/engineer-123/application')?.id).toBeNull();
+
+    expect(officialIdentity('https://vercel.com/careers/engineer-123/')).toEqual({
+      board: 'greenhouse:vercel',
+      id: '123',
+    });
+  });
+
   it('withholds completion for an enabled icon-only next-page button', () => {
     const result = inspectOfficialPage(
       '<button aria-label="Next page" aria-disabled="false"><svg></svg></button>',

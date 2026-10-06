@@ -71,6 +71,7 @@ describe('manual sync source selection', () => {
       'asml',
       'canva',
       'notion',
+      'vercel',
     ]);
 
     expect(

@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[VERCEL.md](VERCEL.md) records public Greenhouse reuse, native official posting-ID reconciliation and 83 imported vacancies, separating verified technical coverage from pending scope/access/display reviews.
+
 [NOTION.md](NOTION.md) records public Ashby reuse, 133 imported vacancies and matching official IDs, with technical verification separate from pending scope/access/display reviews.
 
 [CANVA.md](CANVA.md) records public SmartRecruiters reuse, Canva advertisement/summary layout compatibility and challenged independent official coverage.

@@ -2402,5 +2402,46 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "vercel",
+    "scope": {
+      "status": "pending",
+      "notes": "Official unfiltered careers HTML exposes 83 native posting links whose numeric IDs match the public Greenhouse vercel board. A sampled native detail embeds its matching Greenhouse absolute_url. Current technical reconciliation and worldwide employer/entity/channel scope need independent review; matching counts do not approve group-wide scope.",
+      "evidenceUrls": [
+        "https://vercel.com/careers",
+        "https://vercel.com/careers/account-executive-commercial-6136160004"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Public Greenhouse content API and official careers and privacy notices are accessible without credentials. Automated retrieval and full-description display reviews remain pending; public endpoint availability does not approve advertisement republication. Policy evidence uses canonical nonredirecting URLs.",
+      "evidenceUrls": [
+        "https://vercel.com/legal/terms",
+        "https://vercel.com/legal/privacy-notice",
+        "https://vercel.com/legal/job-applicant-privacy-notice",
+        "https://docs.greenhouse.io/job-board.html"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://vercel.com/careers",
+        "disposition": "included",
+        "sourceIds": ["vercel"],
+        "reason": "Official worldwide careers inventory uses native URLs with the same immutable Greenhouse posting IDs. Broader employer/entity scope review remains pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://vercel.com/careers",
+        "role": "listings",
+        "sourceIds": ["vercel"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

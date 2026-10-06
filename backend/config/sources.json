@@ -481,5 +481,13 @@
     "board": "notion",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "vercel",
+    "companySlug": "vercel",
+    "provider": "greenhouse",
+    "board": "vercel",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

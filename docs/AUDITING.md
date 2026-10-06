@@ -59,6 +59,10 @@ descriptions. These reports intentionally do not claim that inaccessible pages a
   approved access review must reference the current document hashes and explicitly allow this
   application's full-description display. Changed or unavailable documents block approval.
 
+### Vercel native posting identities
+
+[Vercel](VERCEL.md) uses native `vercel.com/careers/<slug>-<numeric-id>` links whose IDs match its Greenhouse board. The identity parser recognizes this exact host and detail path, including an optional trailing slash. Visible links establish posting enumeration; embedded URLs remain board discovery only. Duplicate links are deduplicated by ID, and equal titles never merge different postings. Other hosts and malformed/application paths cannot supply Vercel posting IDs.
+
 ### Legitimate location variants
 
 The default comparison requires exact posting IDs. Mozilla's official page selects one posting

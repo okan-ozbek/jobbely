@@ -40,6 +40,8 @@ For an existing provider, add a candidate entry to the registry and audit it. Fo
 
 [Notion](NOTION.md) reuses the existing Ashby version-1 full-description aggregate, preserving native posting identities and primary/secondary locations. Its exact-run audit matches every observed official ID; technical verification does not activate candidate scheduling or resolve access/display review.
 
+[Vercel](VERCEL.md) reuses Greenhouse full-content enumeration. Its native careers URLs carry the same numeric posting IDs; the audit recognizes only the exact employer host and careers detail path, using visible links for inventory and embedded URLs for board discovery. No additional ingestion host is allowed.
+
 Detailed enterprise invariants and source assignments live in [WAVE_B.md](WAVE_B.md). Other custom boards and scraping remain planned extensions. No universal scraper, browser extraction adapter or MCP dependency is implemented.
 
 Wave C's first batch adds Apple structured public HTML, Netflix Eightfold JSON and native Amazon JSON adapters, plus explicit Meta/Google access gates. See [WAVE_C.md](WAVE_C.md) for identity, traversal and completeness rules. Apple's parser decodes literal JSON without executing upstream scripts; native adapters preserve the same extraction port and classification boundary.

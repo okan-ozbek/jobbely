@@ -44,6 +44,13 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     };
   }
 
+  if (url.hostname === 'vercel.com' && /^\/careers(?:\/|$)/.test(url.pathname)) {
+    return {
+      board: 'greenhouse:vercel',
+      id: url.pathname.match(/^\/careers\/[a-z0-9]+(?:-[a-z0-9]+)*-(\d{1,30})\/?$/)?.[1] ?? null,
+    };
+  }
+
   if (url.hostname === 'www.shopify.com' && /^\/careers(?:\/|$)/.test(url.pathname)) {
     const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
     const pathId = url.pathname.match(/_([0-9a-f-]{36})$/)?.[1];
