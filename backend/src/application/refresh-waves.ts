@@ -26,6 +26,7 @@ export class RefreshWaves {
     id: string,
     selected: readonly RefreshWave[] = ['A', 'B', 'C'],
     signal?: AbortSignal,
+    options: { scheduledOnly?: boolean } = {},
   ) {
     const report: WaveRefreshReport = {
       id,
@@ -63,6 +64,10 @@ export class RefreshWaves {
 
           const sources = this.sources.filter((source) => source.companySlug === company.slug);
 
+          if (options.scheduledOnly && !sources.some((source) => source.scheduled)) {
+            continue;
+          }
+
           const companyReport: (typeof waveReport.companies)[number] = {
             company: company.slug,
             sources: [],
@@ -88,7 +93,9 @@ export class RefreshWaves {
             continue;
           }
 
-          for (const source of sources) {
+          for (const source of sources.filter(
+            (source) => !options.scheduledOnly || source.scheduled,
+          )) {
             signal?.throwIfAborted();
             report.current = { wave, company: company.slug, source: source.id, stage: 'sync' };
             await this.reports.save(report);

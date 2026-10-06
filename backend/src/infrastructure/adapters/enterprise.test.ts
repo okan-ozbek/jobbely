@@ -349,7 +349,7 @@ describe('iCIMS public employer feeds', () => {
 });
 
 describe('Wave B wiring and audit gates', () => {
-  it('accounts for all 31 companies without silently enabling them', () => {
+  it('accounts for all 31 scheduled candidates without granting audit verification', () => {
     const { companies, sources } = loadRegistry();
     const plans = loadAuditPlans();
     const wave = companies.filter((company) => company.wave === 'B');
@@ -363,7 +363,7 @@ describe('Wave B wiring and audit gates', () => {
       expect(
         sources
           .filter((entry) => entry.companySlug === company.slug)
-          .every((entry) => entry.auditStatus === 'candidate' && !entry.scheduled),
+          .every((entry) => entry.auditStatus === 'candidate' && entry.scheduled),
       ).toBe(true);
     }
   });

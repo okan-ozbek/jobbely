@@ -6,9 +6,9 @@
 
 Update on 6 October: [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) adds automatic technical verification and live badge updates through PostgreSQL. Wave audit outcomes now use those technical checks; full traditional review findings remain in each artifact. No activation command or manually approved traversal flag is required for the coverage checkmark. Registry/access/removal gates described below remain separate.
 
-Run one durable cycle in the order Wave A → Wave B → Wave C. Within each wave, process employers and each configured board sequentially, audit each employer using its successful imported snapshots, then update matching features before advancing to the next wave. The workflow automates invoking and recording the audit; an operator no longer needs to run separate sync and audit commands for each cohort.
+Run one durable cycle in the order Wave A → Wave B → Wave C. Within each automatic wave, process enabled employers and scheduled boards sequentially, audit each employer using its successful imported snapshots, then update matching features before advancing to the next wave. The workflow automates invoking and recording the audit; an operator no longer needs to run separate sync and audit commands for each cohort.
 
-The Docker ingestion worker opts into automatic cohort refresh with `INGESTION_WAVE_SYNC=true`. This is the user's explicitly requested automation of the same configured candidate-board imports previously available through wave CLI commands. Candidate snapshots remain partial/investigative and cannot close missing jobs. Individual source `scheduled` flags and `auditStatus` remain unchanged; a successful feed fetch does not establish employer-wide coverage or justify marking a pending review approved.
+The Docker ingestion worker opts into automatic cohort refresh with `INGESTION_WAVE_SYNC=true`. This is the user's explicitly requested automation of the same configured candidate-board imports previously available through wave CLI commands. Candidate snapshots remain partial/investigative and cannot close missing jobs. After the explicit all-source scheduling request, all 63 `scheduled` flags are true, automatic cycles honor these flags, and `auditStatus` remains candidate; see [SCHEDULING.md](SCHEDULING.md). a successful feed fetch does not establish employer-wide coverage or justify marking a pending review approved.
 
 ## Cycle and failure behavior
 
@@ -27,7 +27,7 @@ The `exclusive` pg-boss policy provides cross-client overlap prevention. Source 
 
 Queue cancellation is passed through the application workflow and checked before starting more network work and before source publication. An in-flight provider request/traversal does not yet support immediate transport cancellation, but cannot publish its snapshot after the job is aborted. Source lease/crash recovery and external network budgets retain their existing limits. A cancelled/retried cycle starts again from A; per-employer checkpoint resume is deferred, and imports remain idempotent.
 
-Automatic wave mode unschedules legacy per-source cron entries and ignores their queued jobs to avoid parallel full-wave and per-source traversals. Host workers with wave mode disabled retain the prior verified-source scheduling behavior. Do not run differently configured ingestion replicas against the same database; they have conflicting scheduling policies.
+Automatic wave mode unschedules legacy per-source cron entries and ignores their queued jobs to avoid parallel full-wave and per-source traversals. Host workers with wave mode disabled schedule enabled candidates as well as verified sources, while retaining publication and lifecycle gates. Worker startup also removes disabled/orphaned per-source schedules. Do not run differently configured ingestion replicas against the same database; they have conflicting scheduling policies.
 
 Progress and reports live under `backend/data/wave-sync/` for host workers and `/app/backend/data/wave-sync/` in Docker:
 

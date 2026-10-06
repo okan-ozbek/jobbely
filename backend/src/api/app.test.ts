@@ -70,16 +70,14 @@ describe('read API and contract', () => {
       name: 'Adyen',
       careersUrl: 'https://careers.adyen.com/vacancies',
       logoUrl: '/logos/default.svg',
-      sources: [
-        { id: 'adyen', provider: 'greenhouse', auditStatus: 'candidate', scheduled: false },
-      ],
+      sources: [{ id: 'adyen', provider: 'greenhouse', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/companies/asml')).json()).toMatchObject({
       name: 'ASML',
       careersUrl: 'https://www.asml.com/en/careers/find-your-job',
       logoUrl: '/logos/default.svg',
-      sources: [{ id: 'asml', provider: 'asml', auditStatus: 'candidate', scheduled: false }],
+      sources: [{ id: 'asml', provider: 'asml', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/companies/canva')).json()).toMatchObject({
@@ -87,7 +85,7 @@ describe('read API and contract', () => {
       careersUrl: 'https://www.lifeatcanva.com/en/jobs/',
       logoUrl: '/logos/default.svg',
       sources: [
-        { id: 'canva', provider: 'smartrecruiters', auditStatus: 'candidate', scheduled: false },
+        { id: 'canva', provider: 'smartrecruiters', auditStatus: 'candidate', scheduled: true },
       ],
     });
 
@@ -95,7 +93,7 @@ describe('read API and contract', () => {
       name: 'Notion',
       careersUrl: 'https://www.notion.com/careers',
       logoUrl: '/logos/default.svg',
-      sources: [{ id: 'notion', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
+      sources: [{ id: 'notion', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/companies/vercel')).json()).toMatchObject({
@@ -103,7 +101,7 @@ describe('read API and contract', () => {
       careersUrl: 'https://vercel.com/careers',
       logoUrl: '/logos/default.svg',
       sources: [
-        { id: 'vercel', provider: 'greenhouse', auditStatus: 'candidate', scheduled: false },
+        { id: 'vercel', provider: 'greenhouse', auditStatus: 'candidate', scheduled: true },
       ],
     });
 
@@ -111,16 +109,14 @@ describe('read API and contract', () => {
       name: 'Mistral AI',
       careersUrl: 'https://mistral.ai/careers/',
       logoUrl: '/logos/default.svg',
-      sources: [
-        { id: 'mistral-ai', provider: 'ashby', auditStatus: 'candidate', scheduled: false },
-      ],
+      sources: [{ id: 'mistral-ai', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/companies/cohere')).json()).toMatchObject({
       name: 'Cohere',
       careersUrl: 'https://cohere.com/careers',
       logoUrl: '/logos/default.svg',
-      sources: [{ id: 'cohere', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
+      sources: [{ id: 'cohere', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/companies/hugging-face')).json()).toMatchObject({
@@ -128,7 +124,7 @@ describe('read API and contract', () => {
       careersUrl: 'https://huggingface.co/',
       logoUrl: '/logos/default.svg',
       sources: [
-        { id: 'hugging-face', provider: 'workable', auditStatus: 'candidate', scheduled: false },
+        { id: 'hugging-face', provider: 'workable', auditStatus: 'candidate', scheduled: true },
       ],
     });
 
@@ -136,16 +132,14 @@ describe('read API and contract', () => {
       name: 'Perplexity',
       careersUrl: 'https://www.perplexity.ai/hub/careers',
       logoUrl: '/logos/default.svg',
-      sources: [
-        { id: 'perplexity', provider: 'ashby', auditStatus: 'candidate', scheduled: false },
-      ],
+      sources: [{ id: 'perplexity', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/companies/anysphere')).json()).toMatchObject({
       name: 'Anysphere (Cursor)',
       careersUrl: 'https://cursor.com/careers',
       logoUrl: '/logos/default.svg',
-      sources: [{ id: 'anysphere', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
+      sources: [{ id: 'anysphere', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({

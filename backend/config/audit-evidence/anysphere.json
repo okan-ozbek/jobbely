@@ -1,12 +1,12 @@
 {
   "version": 1,
   "companySlug": "anysphere",
-  "observedAt": "2026-10-06T17:36:52.140Z",
-  "configurationHash": "fb35d802e9a5a3411381797e2c2d6004b6a5c25cacd97696d48b9b244f9b4184",
-  "artifactDirectory": "data/wave-sync/anysphere-onboarding-2026-10-06T17-36-48-988Z/anysphere/",
+  "observedAt": "2026-10-06T17:45:44.498Z",
+  "configurationHash": "fec3dfb766e7bbe4b84c4583af2a3ffb4221680b95c7778ef08651b1e0876b08",
+  "artifactDirectory": "data/wave-sync/anysphere-onboarding-2026-10-06T17-45-40-593Z/anysphere/",
   "blockers": [
     "scope review is pending: Official Cursor careers HTML exposes 132 native vacancy links and embeds the Ashby cursor board with 132 UUIDs. The public aggregate also advertises 132 listed postings. Native title slugs are not immutable Ashby identities; independent per-posting mapping, worldwide employer/entity/channel scope and traversal review remain pending.",
-    "access review is blocked: Cursor terms dated 3 September 2026 define the Service to include its website and section 1.5(viii) restricts harvesting, scraping or extracting Service data. Full-description collection/display authorization has not been established for this employer. Register the public Ashby source behind the existing candidate publication gate; policy/feed accessibility and embedded board metadata do not approve employer access or republication."
+    "access review is pending: The application owner explicitly authorized Cursor local import/display on 6 October 2026 after the initial publication block. Employer automated-retrieval and full-description display permission remain unverified. Captured terms dated 3 September 2026 include section 1.5(viii) extraction restrictions; no employer consent, reviewer or approved document records are invented. Public Ashby availability and robots accessibility alone do not approve access/display. Scheduling is separately enabled by the application owner; coverage and closure gates remain unchanged."
   ],
   "policies": [
     {
@@ -28,7 +28,7 @@
     {
       "url": "https://developers.ashbyhq.com/docs/public-job-posting-api",
       "textSha256": "1de2ba2ad464e0c6a82ad61678643c608a0de642532a546ee44f964d64039c8a",
-      "rawSha256": "36a61704705eba9546d7f1159fabfe47bf13429bbbdab8ce0cc6d905d3454f41",
+      "rawSha256": "15274c855953e4774da48b4ebc35d74fb22f2f286aaef52cd78b329dcde37d97",
       "robotsUrl": "https://developers.ashbyhq.com/robots.txt",
       "robotsSha256": "50c39ea8fd67b9268bd9ed2496c7354c8ca38065b26313ae387197029d52b0a7",
       "error": null
@@ -447,7 +447,7 @@
     },
     {
       "url": "https://jobs.ashbyhq.com/cursor",
-      "sha256": "d01f53e1861a28c8cf0b63c24f30481cbf0446ba1d15673e91d97d03edccf000",
+      "sha256": "24e950a0491e0d36742b3f8f9f9c70c3682d55414947be0d7f162190ca7682da",
       "robotsUrl": "https://jobs.ashbyhq.com/robots.txt",
       "robotsSha256": "d3ccab98eafadd5f808f9622b93f8176c2f89845489a5f6a949b9792d6b1431d",
       "links": [],
@@ -629,15 +629,16 @@
   ],
   "technicalCoverage": {
     "companySlug": "anysphere",
-    "configurationHash": "fb35d802e9a5a3411381797e2c2d6004b6a5c25cacd97696d48b9b244f9b4184",
-    "checkedAt": "2026-10-06T17:36:52.140Z",
+    "configurationHash": "fec3dfb766e7bbe4b84c4583af2a3ffb4221680b95c7778ef08651b1e0876b08",
+    "checkedAt": "2026-10-06T17:45:44.498Z",
     "status": "partial",
-    "sourceRunIds": {},
+    "sourceRunIds": {
+      "anysphere": "c525421c-bf55-4fb5-b613-29d448cf1274"
+    },
     "blockers": [
       "anysphere: official listing traversal not reviewed",
-      "anysphere: 132 feed IDs absent from official inventory",
-      "No imported run for anysphere"
+      "anysphere: 132 feed IDs absent from official inventory"
     ],
-    "accessStatus": "blocked"
+    "accessStatus": "unreviewed"
   }
 }

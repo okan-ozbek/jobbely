@@ -5,7 +5,7 @@ import { selectSources } from './select-sources.js';
 const { companies, sources } = loadRegistry();
 
 describe('manual sync source selection', () => {
-  it('selects all ten Wave A companies and both Radix boards without enabling scheduling', () => {
+  it('selects all ten Wave A companies and both Radix boards with scheduling independent of verification', () => {
     const matching = selectSources(companies, sources, { wave: 'A' });
 
     expect(new Set(matching.map((source) => source.companySlug))).toEqual(
@@ -31,7 +31,9 @@ describe('manual sync source selection', () => {
         .map((source) => source.board),
     ).toEqual(['radixuniversity', 'radixexperienced']);
 
-    expect(matching.every((source) => !source.scheduled)).toBe(true);
+    expect(matching.every((source) => source.scheduled && source.auditStatus === 'candidate')).toBe(
+      true,
+    );
   });
 
   it('selects every source for an individual company', () => {
@@ -54,7 +56,7 @@ describe('manual sync source selection', () => {
     expect(selectSources(companies, scheduled, { 'all-enabled': true })).toEqual([scheduled[0]]);
   });
 
-  it('selects the Wave C priorities and backlog expansions without enabling them', () => {
+  it('selects the scheduled Wave C priorities and backlog expansions without verifying them', () => {
     const matching = selectSources(companies, sources, { wave: 'C' });
 
     expect(matching.map((source) => source.companySlug)).toEqual([
@@ -79,9 +81,9 @@ describe('manual sync source selection', () => {
       'anysphere',
     ]);
 
-    expect(
-      matching.every((source) => source.auditStatus === 'candidate' && !source.scheduled),
-    ).toBe(true);
+    expect(matching.every((source) => source.auditStatus === 'candidate' && source.scheduled)).toBe(
+      true,
+    );
   });
 
   it('keeps the seven deferred Wave D employers registered without configuring sources', () => {
@@ -115,9 +117,16 @@ describe('manual sync source selection', () => {
       { wave: 'A', 'all-enabled': true },
       { wave: 'E' },
       { company: 'missing' },
-      { 'all-enabled': true },
     ]) {
       expect(() => selectSources(companies, sources, selection)).toThrow();
     }
+
+    expect(() =>
+      selectSources(
+        companies,
+        sources.map((source) => ({ ...source, scheduled: false })),
+        { 'all-enabled': true },
+      ),
+    ).toThrow('No matching sources');
   });
 });

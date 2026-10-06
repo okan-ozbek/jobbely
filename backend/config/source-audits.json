@@ -2658,10 +2658,10 @@
       "evidenceUrls": ["https://cursor.com/careers", "https://jobs.ashbyhq.com/cursor"]
     },
     "access": {
-      "status": "blocked",
-      "display": "blocked",
+      "status": "pending",
+      "display": "pending",
       "reviewedDocuments": [],
-      "notes": "Cursor terms dated 3 September 2026 define the Service to include its website and section 1.5(viii) restricts harvesting, scraping or extracting Service data. Full-description collection/display authorization has not been established for this employer. Register the public Ashby source behind the existing candidate publication gate; policy/feed accessibility and embedded board metadata do not approve employer access or republication.",
+      "notes": "The application owner explicitly authorized Cursor local import/display on 6 October 2026 after the initial publication block. Employer automated-retrieval and full-description display permission remain unverified. Captured terms dated 3 September 2026 include section 1.5(viii) extraction restrictions; no employer consent, reviewer or approved document records are invented. Public Ashby availability and robots accessibility alone do not approve access/display. Scheduling is separately enabled by the application owner; coverage and closure gates remain unchanged.",
       "evidenceUrls": [
         "https://cursor.com/terms-of-service",
         "https://cursor.com/privacy",

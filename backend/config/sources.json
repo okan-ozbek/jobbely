@@ -5,7 +5,7 @@
     "provider": "ashby",
     "board": "openai",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "anthropic",
@@ -13,7 +13,7 @@
     "provider": "greenhouse",
     "board": "anthropic",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "figma",
@@ -21,7 +21,7 @@
     "provider": "greenhouse",
     "board": "figma",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "discord",
@@ -29,7 +29,7 @@
     "provider": "greenhouse",
     "board": "discord",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "discordinternational",
@@ -37,7 +37,7 @@
     "provider": "greenhouse",
     "board": "discordinternational",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "internationaleor",
@@ -45,7 +45,7 @@
     "provider": "greenhouse",
     "board": "internationaleor",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "reddit",
@@ -53,7 +53,7 @@
     "provider": "greenhouse",
     "board": "reddit",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "palantir",
@@ -61,7 +61,7 @@
     "provider": "lever",
     "board": "palantir",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "fiveringsllc",
@@ -69,7 +69,7 @@
     "provider": "greenhouse",
     "board": "fiveringsllc",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "radixuniversity",
@@ -77,7 +77,7 @@
     "provider": "greenhouse",
     "board": "radixuniversity",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "radixexperienced",
@@ -85,7 +85,7 @@
     "provider": "greenhouse",
     "board": "radixexperienced",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "headlandstechnologiesllc",
@@ -93,7 +93,7 @@
     "provider": "greenhouse",
     "board": "headlandstechnologiesllc",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "mozilla",
@@ -101,7 +101,7 @@
     "provider": "greenhouse",
     "board": "mozilla",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "databricks",
@@ -109,7 +109,7 @@
     "provider": "greenhouse",
     "board": "databricks",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "airbnb",
@@ -117,7 +117,7 @@
     "provider": "greenhouse",
     "board": "airbnb",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "hrt",
@@ -125,7 +125,7 @@
     "provider": "greenhouse",
     "board": "wehrtyou",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "optiver",
@@ -133,7 +133,7 @@
     "provider": "greenhouse",
     "board": "optiverus",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "pinterest",
@@ -141,7 +141,7 @@
     "provider": "greenhouse",
     "board": "pinterest",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "datadog",
@@ -149,7 +149,7 @@
     "provider": "greenhouse",
     "board": "datadog",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "dropbox",
@@ -157,7 +157,7 @@
     "provider": "greenhouse",
     "board": "dropbox",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "coinbase",
@@ -165,7 +165,7 @@
     "provider": "greenhouse",
     "board": "coinbase",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "stripe",
@@ -173,7 +173,7 @@
     "provider": "greenhouse",
     "board": "stripe",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "mongodb",
@@ -181,7 +181,7 @@
     "provider": "greenhouse",
     "board": "mongodb",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "okta",
@@ -189,7 +189,7 @@
     "provider": "greenhouse",
     "board": "okta",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "cloudflare",
@@ -197,7 +197,7 @@
     "provider": "greenhouse",
     "board": "cloudflare",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "gitlab",
@@ -205,7 +205,7 @@
     "provider": "greenhouse",
     "board": "gitlab",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "riot-games",
@@ -213,7 +213,7 @@
     "provider": "greenhouse",
     "board": "riotgames",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "snowflake",
@@ -221,7 +221,7 @@
     "provider": "ashby",
     "board": "snowflake",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "patreon",
@@ -229,7 +229,7 @@
     "provider": "ashby",
     "board": "patreon",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "spotify",
@@ -237,7 +237,7 @@
     "provider": "lever",
     "board": "spotify",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "nvidia",
@@ -245,7 +245,7 @@
     "provider": "workday",
     "board": "NVIDIAExternalCareerSite",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://nvidia.wd5.myworkdayjobs.com/wday/cxs/nvidia/NVIDIAExternalCareerSite/jobs"
   },
   {
@@ -254,7 +254,7 @@
     "provider": "workday",
     "board": "External_Career_Site",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/External_Career_Site/jobs"
   },
   {
@@ -263,7 +263,7 @@
     "provider": "workday",
     "board": "Slack",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/Slack/jobs"
   },
   {
@@ -272,7 +272,7 @@
     "provider": "workday",
     "board": "external_experienced",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://adobe.wd5.myworkdayjobs.com/wday/cxs/adobe/external_experienced/jobs"
   },
   {
@@ -281,7 +281,7 @@
     "provider": "workday",
     "board": "Workday",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://workday.wd5.myworkdayjobs.com/wday/cxs/workday/Workday/jobs"
   },
   {
@@ -290,7 +290,7 @@
     "provider": "workday",
     "board": "jobs",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://paypal.wd1.myworkdayjobs.com/wday/cxs/paypal/jobs/jobs"
   },
   {
@@ -299,7 +299,7 @@
     "provider": "workday",
     "board": "External",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://intel.wd1.myworkdayjobs.com/wday/cxs/intel/External/jobs"
   },
   {
@@ -308,7 +308,7 @@
     "provider": "workday",
     "board": "ICSGBLCOR",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://ing.wd3.myworkdayjobs.com/wday/cxs/ing/ICSGBLCOR/jobs"
   },
   {
@@ -317,7 +317,7 @@
     "provider": "workday",
     "board": "Zoom",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://zoom.wd5.myworkdayjobs.com/wday/cxs/zoom/Zoom/jobs"
   },
   {
@@ -326,7 +326,7 @@
     "provider": "workday",
     "board": "Blizzard_External_Careers",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://xboxgaming.wd1.myworkdayjobs.com/wday/cxs/xboxgaming/Blizzard_External_Careers/jobs"
   },
   {
@@ -335,7 +335,7 @@
     "provider": "icims",
     "board": "amd",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://careers.amd.com/api/jobs"
   },
   {
@@ -344,7 +344,7 @@
     "provider": "icims",
     "board": "workingatbooking",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://jobs.booking.com/api/jobs",
     "employerFilter": {
       "field": "brand",
@@ -357,7 +357,7 @@
     "provider": "icims",
     "board": "githubinc",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://www.github.careers/api/jobs",
     "postingHosts": ["githubinc.jibeapply.com"]
   },
@@ -367,7 +367,7 @@
     "provider": "linkedin",
     "board": "1337",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "meta",
@@ -375,7 +375,7 @@
     "provider": "meta",
     "board": "meta",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "apple",
@@ -383,7 +383,7 @@
     "provider": "apple",
     "board": "apple",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://jobs.apple.com/en-us/search"
   },
   {
@@ -392,7 +392,7 @@
     "provider": "eightfold",
     "board": "netflix",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://explore.jobs.netflix.net/api/apply/v2/jobs"
   },
   {
@@ -401,7 +401,7 @@
     "provider": "google",
     "board": "google",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "amazon",
@@ -409,7 +409,7 @@
     "provider": "amazon",
     "board": "amazon",
     "auditStatus": "candidate",
-    "scheduled": false,
+    "scheduled": true,
     "endpoint": "https://www.amazon.jobs/en/search.json"
   },
   {
@@ -419,7 +419,7 @@
     "board": "atlassian",
     "endpoint": "https://www.atlassian.com/endpoint/careers/listings",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "shopify",
@@ -428,7 +428,7 @@
     "board": "shopify",
     "endpoint": "https://www.shopify.com/careers",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "hubspot",
@@ -437,7 +437,7 @@
     "board": "hubspot",
     "endpoint": "https://wtcfns.hubspot.com/careers/graphql",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "servicenow",
@@ -446,7 +446,7 @@
     "board": "ServiceNow",
     "endpoint": "https://api.smartrecruiters.com/v1/companies/ServiceNow/postings",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "adyen",
@@ -454,7 +454,7 @@
     "provider": "greenhouse",
     "board": "adyen",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "asml",
@@ -463,7 +463,7 @@
     "board": "asml",
     "endpoint": "https://www.asml.com/en/careers/find-your-job",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "canva",
@@ -472,7 +472,7 @@
     "board": "Canva",
     "endpoint": "https://api.smartrecruiters.com/v1/companies/Canva/postings",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "notion",
@@ -480,7 +480,7 @@
     "provider": "ashby",
     "board": "notion",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "vercel",
@@ -488,7 +488,7 @@
     "provider": "greenhouse",
     "board": "vercel",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "mistral-ai",
@@ -496,7 +496,7 @@
     "provider": "ashby",
     "board": "mistral.ai",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "cohere",
@@ -504,7 +504,7 @@
     "provider": "ashby",
     "board": "cohere",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "hugging-face",
@@ -512,7 +512,7 @@
     "provider": "workable",
     "board": "huggingface",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "perplexity",
@@ -520,7 +520,7 @@
     "provider": "ashby",
     "board": "Perplexity",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   },
   {
     "id": "anysphere",
@@ -528,6 +528,6 @@
     "provider": "ashby",
     "board": "cursor",
     "auditStatus": "candidate",
-    "scheduled": false
+    "scheduled": true
   }
 ]

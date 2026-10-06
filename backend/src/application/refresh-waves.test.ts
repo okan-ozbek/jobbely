@@ -87,6 +87,52 @@ function setup() {
 }
 
 describe('sequential wave refresh and automatic audits', () => {
+  it('refreshes scheduled candidates and skips disabled employers in automatic cycles', async () => {
+    const test = setup();
+    const registry = sources.map((source) => ({ ...source, scheduled: source.id !== 'b' }));
+
+    const report = await test.create(registry).execute('automatic', undefined, undefined, {
+      scheduledOnly: true,
+    });
+
+    expect(test.events).toEqual([
+      'sync:a',
+      'audit:a',
+      'backfill',
+      'backfill',
+      'sync:c',
+      'audit:c',
+      'backfill',
+    ]);
+
+    expect(report.waves[1]?.companies).toEqual([]);
+    expect(registry.every((source) => source.auditStatus === 'candidate')).toBe(true);
+  });
+
+  it('audits all company boards while excluding disabled boards from automatic imports', async () => {
+    const test = setup();
+    const enabled = { ...sources[2]!, scheduled: true };
+    const disabled = { ...sources[2]!, id: 'a-disabled', board: 'disabled' };
+
+    await test.create([enabled, disabled]).execute('automatic', ['A'], undefined, {
+      scheduledOnly: true,
+    });
+
+    expect(test.sync.executeWithEvidence.mock.calls.map(([source]) => source.id)).toEqual(['a']);
+    expect(test.audits.verify.mock.calls[0]?.[2]).toEqual([enabled, disabled]);
+    expect(test.audits.verify.mock.calls[0]?.[3]).toEqual(new Map([['a', extraction]]));
+    expect(test.audits.verify.mock.calls[0]?.[4]).toEqual(new Map([['a', 'run-a']]));
+  });
+
+  it('does not import or audit disabled sources in automatic cycles', async () => {
+    const test = setup();
+
+    await test.create().execute('automatic', undefined, undefined, { scheduledOnly: true });
+
+    expect(test.sync.executeWithEvidence).not.toHaveBeenCalled();
+    expect(test.audits.verify).not.toHaveBeenCalled();
+  });
+
   it('awaits A then B then C, reuses successful snapshots and preserves registry verification', async () => {
     const test = setup();
     const before = structuredClone(sources);

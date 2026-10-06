@@ -2,7 +2,7 @@
 
 **Status:** Implemented, 30 September 2026.
 
-[Anysphere (Cursor)](ANYSPHERE.md) reuses Ashby board `cursor`, discovered in official careers hydration. Its current access/display plan blocks candidate publication; public feed extraction does not authorize stored description display.
+[Anysphere (Cursor)](ANYSPHERE.md) reuses Ashby board `cursor`, discovered in official careers hydration. Its local import/display was explicitly authorized by the application owner; employer permission remains unreviewed and independent identity coverage partial.
 
 ## Decision and rationale
 

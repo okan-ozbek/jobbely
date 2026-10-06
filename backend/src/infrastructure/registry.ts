@@ -193,10 +193,6 @@ export function loadRegistry(options: { validateAudits?: boolean } = {}): {
     if (!companies.some((company) => company.slug === source.companySlug)) {
       throw new Error(`Unknown company: ${source.companySlug}`);
     }
-
-    if (source.scheduled && source.auditStatus !== 'verified') {
-      throw new Error(`Unaudited source cannot be scheduled: ${source.id}`);
-    }
   }
 
   if (options.validateAudits !== false) {

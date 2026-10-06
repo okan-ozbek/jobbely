@@ -26,19 +26,26 @@ if (config.INGESTION_WAVE_SYNC) {
 
   await boss.work(waveRefreshQueue, { localConcurrency: 1 }, async (jobs) => {
     for (const job of jobs) {
-      await dependencies.refreshWaves.execute(job.id, undefined, job.signal);
+      await dependencies.refreshWaves.execute(job.id, undefined, job.signal, {
+        scheduledOnly: true,
+      });
     }
   });
 
   await boss.schedule(waveRefreshQueue, '0 */12 * * *', null, { tz: 'UTC' });
   // Exclusive queue policy suppresses overlapping startup/cron/manual requests globally.
   await boss.send(waveRefreshQueue);
-
-  for (const source of dependencies.sources) {
-    await boss.unschedule('sync-source', source.id);
-  }
 } else {
   await boss.unschedule(waveRefreshQueue);
+}
+
+for (const schedule of await boss.getSchedules('sync-source')) {
+  if (
+    config.INGESTION_WAVE_SYNC ||
+    !dependencies.sources.some((source) => source.id === schedule.key && source.scheduled)
+  ) {
+    await boss.unschedule('sync-source', schedule.key);
+  }
 }
 
 await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, async (jobs) => {
@@ -49,11 +56,11 @@ await boss.work<{ sourceId: string }>('sync-source', { localConcurrency: 1 }, as
     }
 
     const source = dependencies.sources.find(
-      (item) => item.id === job.data.sourceId && item.scheduled && item.auditStatus === 'verified',
+      (item) => item.id === job.data.sourceId && item.scheduled,
     );
 
     if (!source) {
-      throw new Error('Scheduled source is not enabled and audited');
+      throw new Error('Scheduled source is not enabled');
     }
 
     await dependencies.sync.execute(source);
@@ -81,7 +88,7 @@ for (const [index, source] of dependencies.sources
 console.log(
   config.INGESTION_WAVE_SYNC
     ? 'Worker ready; sequential A → B → C sync and automatic audits enabled.'
-    : 'Worker ready; only audited enabled sources are scheduled.',
+    : 'Worker ready; enabled sources are scheduled; audit and publication gates remain active.',
 );
 
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {

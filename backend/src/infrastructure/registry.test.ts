@@ -10,7 +10,7 @@ vi.mock('node:fs', async (original) => ({
 
 afterEach(() => vi.resetAllMocks());
 
-function registry(board: string, provider = 'ashby') {
+function registry(board: string, provider = 'ashby', scheduled = false) {
   vi.mocked(readFileSync)
     .mockReturnValueOnce(
       JSON.stringify([
@@ -25,15 +25,24 @@ function registry(board: string, provider = 'ashby') {
           provider,
           board,
           auditStatus: 'candidate',
-          scheduled: false,
+          scheduled,
         },
       ]),
     );
 
-  return loadRegistry({ validateAudits: false });
+  return loadRegistry();
 }
 
 describe('provider board identifiers', () => {
+  it('accepts scheduled candidates without fabricating verification or approval evidence', () => {
+    expect(registry('example', 'ashby', true).sources[0]).toMatchObject({
+      auditStatus: 'candidate',
+      scheduled: true,
+    });
+
+    expect(readFileSync).toHaveBeenCalledTimes(2);
+  });
+
   it('preserves dotted Ashby names as a single configured board identifier', () => {
     expect(registry('example.ai').sources[0]?.board).toBe('example.ai');
   });

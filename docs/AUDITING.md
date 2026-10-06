@@ -13,6 +13,8 @@ legal terms, approve employer scope, bypass challenges, or enable incomplete sou
 
 ## Commands
 
+Scheduling is now independent of verification after explicit application-owner authorization: [SCHEDULING.md](SCHEDULING.md). The activation commands below still require stronger audit/access evidence and govern verified status and removal eligibility.
+
 [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) now removes manual scope/access approval and `complete` flags from the technical badge path. The wave worker automatically traverses supported pagination and stores a separate technical result tied to imported run IDs. This document's review/activation commands retain their stronger access and removal-policy role; they are no longer required to show a passing coverage checkmark.
 
 [WAVE_REFRESH.md](WAVE_REFRESH.md) now automates audit execution after each employer's source refresh within the ordered A/B/C worker cycle. It checks the exact imported snapshots and saves progress/evidence without separate manual audit commands. Reports do not invent scope/access approvals or auto-activate candidate sources; the activation CLI below remains a separate gate.
@@ -152,7 +154,7 @@ The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix 
   checks are not connection-pinned; deployment egress controls remain recommended. Official HTML
   requests have no automatic retries; 403/429 are not bypassed.
 - Candidate imports are not subject to the verified inventory guard, but explicit blocked access/display plans prevent their publication. No source is approved merely
-  by setting a JSON flag, and no source has been activated for verified scheduling while its audit still has blockers. Cohere local import/display was explicitly authorized by the application owner; it remains a pending, unscheduled candidate rather than a verified source.
+  by setting a JSON flag, and no source has been activated for verified scheduling while its audit still has blockers. Cohere and Cursor local import/display were explicitly authorized by the application owner; employer review remains pending. The later all-source scheduling request enables candidate refresh attempts through [SCHEDULING.md](SCHEDULING.md), without changing verification, employer approvals or closure.
 - Source state requires process restart, and expired/missing evidence prevents normal startup with
   verified configuration. Restore valid evidence or explicitly downgrade the source before restart.
 

@@ -119,7 +119,7 @@ describe('source synchronization', () => {
     expect(after.version).toBe(before.version);
     expect(after.jobs).toEqual(before.jobs);
     expect(after.runs.at(-1)).toMatchObject({ sourceId: 'asml', status: 'failed' });
-    expect(source).toMatchObject({ auditStatus: 'candidate', scheduled: false });
+    expect(source).toMatchObject({ auditStatus: 'candidate', scheduled: true });
     expect(http.get).not.toHaveBeenCalled();
     expect(http.post).not.toHaveBeenCalled();
     expect(http.getHtml).not.toHaveBeenCalled();
@@ -145,7 +145,7 @@ describe('source synchronization', () => {
     expect(after.version).toBe(before.version);
     expect(after.jobs).toEqual(before.jobs);
     expect(after.runs.at(-1)).toMatchObject({ sourceId: 'hubspot', status: 'failed' });
-    expect(hubspot).toMatchObject({ auditStatus: 'candidate', scheduled: false });
+    expect(hubspot).toMatchObject({ auditStatus: 'candidate', scheduled: true });
     expect(http.get).not.toHaveBeenCalled();
     expect(http.post).not.toHaveBeenCalled();
   });
@@ -281,7 +281,7 @@ describe('source synchronization', () => {
 
     await test.sync.execute(source);
     test.records([posting('1'), posting('2'), posting('3')]);
-    await test.sync.execute({ ...source, auditStatus: 'candidate' });
+    await test.sync.execute({ ...source, auditStatus: 'candidate', scheduled: true });
     test.partial();
     await test.sync.execute(source);
 
