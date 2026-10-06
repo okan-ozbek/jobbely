@@ -6,6 +6,37 @@ afterEach(() => vi.useRealTimers());
 const url = 'https://boards-api.greenhouse.io/v1/boards/test/jobs';
 
 describe('bounded transport', () => {
+  it('limits Shopify to unfiltered public listing/detail HTML without application or data requests', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(
+      async () =>
+        new Response('<html>public careers data</html>', {
+          headers: { 'content-type': 'text/html' },
+        }),
+    );
+
+    const http = new PublicJsonTransport(fetcher, 0);
+    const endpoint = 'https://www.shopify.com/careers';
+    const detail = `${endpoint}/software-engineer_00000000-0000-4000-8000-000000000001`;
+
+    await http.getHtml(endpoint);
+    await http.getHtml(detail);
+
+    for (const target of [
+      `${endpoint}?ashby_jid=00000000-0000-4000-8000-000000000001`,
+      `${endpoint}?country=US`,
+      `${endpoint}/search?query=engineer`,
+      `${endpoint}.data`,
+      `${endpoint}/portal/apply`,
+      `${endpoint}#filtered`,
+    ]) {
+      await expect(http.getHtml(target)).rejects.toThrow(/native career routes/);
+    }
+
+    await expect(http.get(endpoint)).rejects.toThrow(/native career routes/);
+    await expect(http.post(endpoint, {})).rejects.toThrow(/native career routes/);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+  });
+
   it('allows only the complete read-only Atlassian feed', async () => {
     const fetcher = vi
       .fn<typeof fetch>()

@@ -63,6 +63,7 @@ function setup(validation?: PostingValidation) {
     meta: adapter,
     google: adapter,
     atlassian: adapter,
+    shopify: adapter,
   };
 
   return {

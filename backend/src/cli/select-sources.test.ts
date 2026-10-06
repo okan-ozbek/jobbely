@@ -64,6 +64,7 @@ describe('manual sync source selection', () => {
       'google',
       'amazon',
       'atlassian',
+      'shopify',
     ]);
 
     expect(

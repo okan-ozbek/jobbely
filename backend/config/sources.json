@@ -420,5 +420,14 @@
     "endpoint": "https://www.atlassian.com/endpoint/careers/listings",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "shopify",
+    "companySlug": "shopify",
+    "provider": "shopify",
+    "board": "shopify",
+    "endpoint": "https://www.shopify.com/careers",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

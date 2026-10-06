@@ -1,6 +1,6 @@
 # Decision: Wave C priority native sources
 
-**Status:** Original five priorities configured, with Atlassian added as a native backlog expansion on 6 October 2026. Netflix fully imported; Apple/Amazon full imports blocked by live inventory inconsistencies; Meta/Google access-blocked; Atlassian description-blocked. Original evidence recorded 1 October 2026, Europe/Amsterdam.
+**Status:** Original five priorities configured, with Atlassian and Shopify added as native backlog expansions on 6 October 2026. Netflix fully imported; Apple/Amazon full imports blocked by live inventory inconsistencies; Meta/Google access-blocked; Atlassian description-blocked. Shopify's implementation and live results are recorded separately. Original evidence recorded 1 October 2026, Europe/Amsterdam.
 
 ## Scope and rationale
 
@@ -53,7 +53,7 @@ pnpm --filter @jobbely/backend run sync --company netflix
 pnpm --filter @jobbely/backend run sync --company apple
 ```
 
-Wave C commands select the original five priorities plus [Atlassian](ATLASSIAN.md), added from the 500-company backlog on 6 October 2026. They do not select every planned Wave C employer. Sync continues after source failures and returns a nonzero exit code for blockers. All six remain candidate and unscheduled, with pending scope/access plans. Atlassian's native aggregate currently lacks a required job description and cannot publish a complete snapshot. Retrieval alone does not approve full-description display, scheduling, closure or worldwide employer completeness. Restart running API/worker processes after registry changes. See [AUDITING.md](AUDITING.md).
+Wave C commands select the original five priorities plus [Atlassian](ATLASSIAN.md) and [Shopify](SHOPIFY.md), added from the 500-company backlog on 6 October 2026. They do not select every planned Wave C employer. Sync continues after source failures and returns a nonzero exit code for blockers. All seven remain candidate and unscheduled, with pending scope/access plans. Atlassian's native aggregate currently lacks a required job description and cannot publish a complete snapshot. Shopify reads public listing/detail hydration while independent visible-inventory coverage remains pending. Retrieval alone does not approve full-description display, scheduling, closure or worldwide employer completeness. Restart running API/worker processes after registry changes. See [AUDITING.md](AUDITING.md).
 
 ## Implementation and verification
 

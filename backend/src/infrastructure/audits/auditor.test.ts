@@ -127,6 +127,7 @@ function audit(
       meta: adapter,
       google: adapter,
       atlassian: adapter,
+      shopify: adapter,
     },
     () => now,
   ).run('ignored/raw-evidence', undefined, snapshots, automaticCoverage);
@@ -453,6 +454,7 @@ describe('evidence-backed source audits', () => {
         meta: adapter,
         google: adapter,
         atlassian: adapter,
+        shopify: adapter,
       },
       () => now,
     );

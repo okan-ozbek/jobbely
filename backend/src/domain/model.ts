@@ -9,6 +9,7 @@ export type Provider =
   | 'amazon'
   | 'eightfold'
   | 'atlassian'
+  | 'shopify'
   | 'meta'
   | 'google';
 

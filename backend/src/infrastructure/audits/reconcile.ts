@@ -37,6 +37,18 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     };
   }
 
+  if (url.hostname === 'www.shopify.com' && /^\/careers(?:\/|$)/.test(url.pathname)) {
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    const pathId = url.pathname.match(/_([0-9a-f-]{36})$/)?.[1];
+    const queryId = url.searchParams.get('ashby_jid');
+
+    if ((queryId && !uuid.test(queryId)) || (pathId && queryId && pathId !== queryId)) {
+      return null;
+    }
+
+    return { board: 'shopify:shopify', id: pathId && uuid.test(pathId) ? pathId : queryId };
+  }
+
   if (Object.values(atlassianPortalHosts).includes(url.hostname)) {
     return {
       board: 'atlassian:atlassian',

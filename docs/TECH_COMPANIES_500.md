@@ -1,6 +1,6 @@
 # 500 technology employers: integration backlog
 
-**Status:** Discovery and onboarding backlog; first candidate integration implemented. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is configured but its full import is blocked by a missing upstream description.
+**Status:** Discovery and onboarding backlog; two new candidate integrations implemented. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs with independent coverage still partial.
 
 ## Purpose and selection
 
@@ -12,13 +12,13 @@ The companion [JSON backlog](TECH_COMPANIES_500.json) carries proposed target sl
 
 ## Current registry snapshot
 
-The runtime registry now has **61 companies** and **50 source boards**. Of this shortlist:
+The runtime registry now has **62 companies** and **51 source boards**. Of this shortlist:
 
 | State             | Count | Meaning                                                                                                                        |
 | ----------------- | ----: | ------------------------------------------------------------------------------------------------------------------------------ |
-| Source configured |    41 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
+| Source configured |    42 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
 | Registered only   |     8 | Existing company slug with no configured source. Existing A–D planning assignments, including Wave D deferrals, still apply.   |
-| New candidate     |   451 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
+| New candidate     |   450 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
 
 The 12 existing finance/trading employers outside this tech shortlist are retained: Jane Street, Radix Trading, Hudson River Trading, Five Rings, Citadel, Two Sigma, Headlands Technologies, Optiver, JPMorgan Chase, Goldman Sachs, ABN AMRO, ING. This backlog does not replace the original MVP cohort or its coverage commitments. Registry counts are a 6 October snapshot; recompute them after future integrations.
 
@@ -41,7 +41,7 @@ Start discovery in this order, then adjust for source access, employer scope, ad
 
 These ten careers pages were readable through the web research tool on 6 October 2026. Observing a careers page does not verify its full inventory, API/provider, pagination, description availability, access permission or adapter compatibility. For existing configured employers, resolving their documented blockers and auditing coverage is a separate stream of work.
 
-Atlassian now has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. Coverage and access/display reviews remain pending. Shopify is the next discovery target. See [the integration decision and verification](ATLASSIAN.md).
+Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. HubSpot is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
 
 ## One-company completion procedure
 
@@ -302,33 +302,33 @@ Within each sector, the rows provide a discovery link and the current local regi
 
 ### Payments, commerce and financial infrastructure
 
-|   # | Company             | Discovery entry point                               | Registry state | Existing slug | Configured providers |
-| --: | ------------------- | --------------------------------------------------- | -------------- | ------------- | -------------------- |
-| 176 | Shopify             | [Careers observed](https://www.shopify.com/careers) | New candidate  | —             | —                    |
-| 177 | BigCommerce         | [Homepage seed](https://bigcommerce.com/)           | New candidate  | —             | —                    |
-| 178 | Wix                 | [Homepage seed](https://wix.com/)                   | New candidate  | —             | —                    |
-| 179 | Squarespace         | [Homepage seed](https://squarespace.com/)           | New candidate  | —             | —                    |
-| 180 | VTEX                | [Homepage seed](https://vtex.com/)                  | New candidate  | —             | —                    |
-| 181 | commercetools       | [Homepage seed](https://commercetools.com/)         | New candidate  | —             | —                    |
-| 182 | Commerce Layer      | [Homepage seed](https://commercelayer.io/)          | New candidate  | —             | —                    |
-| 183 | Mirakl              | [Homepage seed](https://mirakl.com/)                | New candidate  | —             | —                    |
-| 184 | Lightspeed Commerce | [Homepage seed](https://lightspeedhq.com/)          | New candidate  | —             | —                    |
-| 185 | Toast               | [Homepage seed](https://toasttab.com/)              | New candidate  | —             | —                    |
-| 186 | BILL                | [Homepage seed](https://bill.com/)                  | New candidate  | —             | —                    |
-| 187 | Fiserv              | [Homepage seed](https://fiserv.com/)                | New candidate  | —             | —                    |
-| 188 | FIS                 | [Homepage seed](https://fisglobal.com/)             | New candidate  | —             | —                    |
-| 189 | Global Payments     | [Homepage seed](https://globalpayments.com/)        | New candidate  | —             | —                    |
-| 190 | ACI Worldwide       | [Homepage seed](https://aciworldwide.com/)          | New candidate  | —             | —                    |
-| 191 | Shift4              | [Homepage seed](https://shift4.com/)                | New candidate  | —             | —                    |
-| 192 | Worldline           | [Homepage seed](https://worldline.com/)             | New candidate  | —             | —                    |
-| 193 | Euronet Worldwide   | [Homepage seed](https://euronetworldwide.com/)      | New candidate  | —             | —                    |
-| 194 | Remitly             | [Homepage seed](https://remitly.com/)               | New candidate  | —             | —                    |
-| 195 | dLocal              | [Homepage seed](https://dlocal.com/)                | New candidate  | —             | —                    |
-| 196 | Payoneer            | [Homepage seed](https://payoneer.com/)              | New candidate  | —             | —                    |
-| 197 | Rapyd               | [Homepage seed](https://rapyd.net/)                 | New candidate  | —             | —                    |
-| 198 | Razorpay            | [Homepage seed](https://razorpay.com/)              | New candidate  | —             | —                    |
-| 199 | Cashfree Payments   | [Homepage seed](https://cashfree.com/)              | New candidate  | —             | —                    |
-| 200 | PhonePe             | [Homepage seed](https://phonepe.com/)               | New candidate  | —             | —                    |
+|   # | Company             | Discovery entry point                               | Registry state    | Existing slug | Configured providers |
+| --: | ------------------- | --------------------------------------------------- | ----------------- | ------------- | -------------------- |
+| 176 | Shopify             | [Careers observed](https://www.shopify.com/careers) | Source configured | C             | shopify              |
+| 177 | BigCommerce         | [Homepage seed](https://bigcommerce.com/)           | New candidate     | —             | —                    |
+| 178 | Wix                 | [Homepage seed](https://wix.com/)                   | New candidate     | —             | —                    |
+| 179 | Squarespace         | [Homepage seed](https://squarespace.com/)           | New candidate     | —             | —                    |
+| 180 | VTEX                | [Homepage seed](https://vtex.com/)                  | New candidate     | —             | —                    |
+| 181 | commercetools       | [Homepage seed](https://commercetools.com/)         | New candidate     | —             | —                    |
+| 182 | Commerce Layer      | [Homepage seed](https://commercelayer.io/)          | New candidate     | —             | —                    |
+| 183 | Mirakl              | [Homepage seed](https://mirakl.com/)                | New candidate     | —             | —                    |
+| 184 | Lightspeed Commerce | [Homepage seed](https://lightspeedhq.com/)          | New candidate     | —             | —                    |
+| 185 | Toast               | [Homepage seed](https://toasttab.com/)              | New candidate     | —             | —                    |
+| 186 | BILL                | [Homepage seed](https://bill.com/)                  | New candidate     | —             | —                    |
+| 187 | Fiserv              | [Homepage seed](https://fiserv.com/)                | New candidate     | —             | —                    |
+| 188 | FIS                 | [Homepage seed](https://fisglobal.com/)             | New candidate     | —             | —                    |
+| 189 | Global Payments     | [Homepage seed](https://globalpayments.com/)        | New candidate     | —             | —                    |
+| 190 | ACI Worldwide       | [Homepage seed](https://aciworldwide.com/)          | New candidate     | —             | —                    |
+| 191 | Shift4              | [Homepage seed](https://shift4.com/)                | New candidate     | —             | —                    |
+| 192 | Worldline           | [Homepage seed](https://worldline.com/)             | New candidate     | —             | —                    |
+| 193 | Euronet Worldwide   | [Homepage seed](https://euronetworldwide.com/)      | New candidate     | —             | —                    |
+| 194 | Remitly             | [Homepage seed](https://remitly.com/)               | New candidate     | —             | —                    |
+| 195 | dLocal              | [Homepage seed](https://dlocal.com/)                | New candidate     | —             | —                    |
+| 196 | Payoneer            | [Homepage seed](https://payoneer.com/)              | New candidate     | —             | —                    |
+| 197 | Rapyd               | [Homepage seed](https://rapyd.net/)                 | New candidate     | —             | —                    |
+| 198 | Razorpay            | [Homepage seed](https://razorpay.com/)              | New candidate     | —             | —                    |
+| 199 | Cashfree Payments   | [Homepage seed](https://cashfree.com/)              | New candidate     | —             | —                    |
+| 200 | PhonePe             | [Homepage seed](https://phonepe.com/)               | New candidate     | —             | —                    |
 
 ### Consumer platforms and marketplaces
 

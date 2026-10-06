@@ -4,7 +4,7 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
-[TECH_COMPANIES_500.md](TECH_COMPANIES_500.md) tracks a global 500-employer technology shortlist for one-company-at-a-time onboarding, with a [JSON backlog](TECH_COMPANIES_500.json), current registry matches, discovery-evidence levels and a suggested next-ten queue. [ATLASSIAN.md](ATLASSIAN.md) records the first implemented candidate integration and its missing-description import blocker; source approvals remain pending.
+[TECH_COMPANIES_500.md](TECH_COMPANIES_500.md) tracks a global 500-employer technology shortlist for one-company-at-a-time onboarding, with a [JSON backlog](TECH_COMPANIES_500.json), current registry matches, discovery-evidence levels and a suggested next-ten queue. [ATLASSIAN.md](ATLASSIAN.md) records the first candidate integration and its missing-description import blocker. [SHOPIFY.md](SHOPIFY.md) records the second native integration, full public detail hydration and independent visible-inventory coverage limits; source approvals remain pending.
 
 [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) records automatic technical verification, pagination, persisted run/configuration-bound results and live checkmarks. Access/display review and legacy removal activation remain separate from technical coverage.
 

@@ -22,6 +22,7 @@ const allowedHosts = new Set([
   'explore.jobs.netflix.net',
   'jobs.apple.com',
   'www.atlassian.com',
+  'www.shopify.com',
 ]);
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -82,6 +83,13 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
 
     const nativePaths: Record<string, boolean> = {
+      'www.shopify.com':
+        format === 'html' &&
+        /^\/careers(?:\/[a-z0-9-]+_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?$/.test(
+          parsed.pathname,
+        ) &&
+        !parsed.search &&
+        !parsed.hash,
       'www.atlassian.com':
         format === 'json' &&
         parsed.pathname === '/endpoint/careers/listings' &&
@@ -97,7 +105,7 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
 
     if (
       nativePaths[parsed.hostname] === false ||
-      (format === 'html' && parsed.hostname !== 'jobs.apple.com')
+      (format === 'html' && !['jobs.apple.com', 'www.shopify.com'].includes(parsed.hostname))
     ) {
       throw new Error('Destination is outside the read-only native career routes');
     }

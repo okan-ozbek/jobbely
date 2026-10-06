@@ -29,6 +29,7 @@ const sourceSchema = z
       'amazon',
       'eightfold',
       'atlassian',
+      'shopify',
       'meta',
       'google',
     ]),
@@ -57,6 +58,7 @@ const sourceSchema = z
     }
 
     const nativeEndpoints: Record<string, { board: string; endpoint: string }> = {
+      shopify: { board: 'shopify', endpoint: 'https://www.shopify.com/careers' },
       atlassian: {
         board: 'atlassian',
         endpoint: 'https://www.atlassian.com/endpoint/careers/listings',

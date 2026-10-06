@@ -2092,5 +2092,38 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "shopify",
+    "scope": {
+      "status": "pending",
+      "notes": "Public HTML embeds the complete published/listed posting array, while initial visible links expose a subset. Independent visible inventory reconciliation, early-career channels and employer-wide scope remain pending.",
+      "evidenceUrls": ["https://www.shopify.com/careers"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Public careers HTML observed; automated access and full-description display review remain pending.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://www.shopify.com/legal/terms"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.shopify.com/careers",
+        "disposition": "included",
+        "sourceIds": ["shopify"],
+        "reason": "Official employer SSR listing and public posting details. Full employer scope and separate early-career program review remain pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.shopify.com/careers",
+        "role": "listings",
+        "sourceIds": ["shopify"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

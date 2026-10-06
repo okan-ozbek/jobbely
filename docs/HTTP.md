@@ -28,6 +28,8 @@ Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netfl
 
 [Atlassian](ATLASSIAN.md) permits only JSON GET requests to `https://www.atlassian.com/endpoint/careers/listings`, without query parameters or fragments. Other paths, HTML requests and POSTs remain rejected. Validating outbound employer/application links does not authorize transport requests to its iCIMS application portals.
 
+[Shopify](SHOPIFY.md) permits only HTML GET requests on `www.shopify.com/careers` and canonical title-slug/posting-UUID detail paths. Queries, fragments, `.data`, search/portal routes and application requests remain outside the fetch allowlist. HTML size, pacing, retry and timeout limits are shared with Apple. The original application URL is preserved as an outbound link and never fetched by ingestion.
+
 ## Tradeoffs and extension points
 
 Official-site auditing uses a separate HTML/policy transport with employer/ATS/documentation

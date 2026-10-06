@@ -425,5 +425,12 @@
     "careersUrl": "https://www.atlassian.com/company/careers/all-jobs",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "shopify",
+    "name": "Shopify",
+    "careersUrl": "https://www.shopify.com/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]
