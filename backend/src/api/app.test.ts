@@ -91,6 +91,13 @@ describe('read API and contract', () => {
       ],
     });
 
+    expect((await app.inject('/api/v1/companies/notion')).json()).toMatchObject({
+      name: 'Notion',
+      careersUrl: 'https://www.notion.com/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'notion', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

@@ -70,6 +70,7 @@ describe('manual sync source selection', () => {
       'adyen',
       'asml',
       'canva',
+      'notion',
     ]);
 
     expect(

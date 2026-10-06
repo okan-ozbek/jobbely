@@ -473,5 +473,13 @@
     "endpoint": "https://api.smartrecruiters.com/v1/companies/Canva/postings",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "notion",
+    "companySlug": "notion",
+    "provider": "ashby",
+    "board": "notion",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

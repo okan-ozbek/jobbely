@@ -2366,5 +2366,41 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "notion",
+    "scope": {
+      "status": "pending",
+      "notes": "Official unfiltered careers HTML links to 133 distinct postings on the public Ashby notion board during discovery. Independent current ID reconciliation and worldwide employer/entity/channel scope still require verification; linked board availability is not group-wide scope approval.",
+      "evidenceUrls": ["https://www.notion.com/careers", "https://jobs.ashbyhq.com/notion"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Public Ashby Posting API and official careers/robots/privacy pages are accessible without credentials. Automated retrieval and full-description display review remain pending. The legacy Terms & privacy link redirects to an app.notion.com document and is not followed by the audit; the captured privacy policy and API documentation do not approve advertisement republication.",
+      "evidenceUrls": [
+        "https://www.notion.com/trust/privacy-policy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.notion.com/careers",
+        "disposition": "included",
+        "sourceIds": ["notion"],
+        "reason": "Official worldwide careers inventory explicitly links to the public Ashby notion board. Employer/entity scope approval remains pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.notion.com/careers",
+        "role": "listings",
+        "sourceIds": ["notion"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]
