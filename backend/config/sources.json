@@ -545,5 +545,13 @@
     "board": "lovable",
     "auditStatus": "candidate",
     "scheduled": true
+  },
+  {
+    "id": "elevenlabs",
+    "companySlug": "elevenlabs",
+    "provider": "ashby",
+    "board": "elevenlabs",
+    "auditStatus": "candidate",
+    "scheduled": true
   }
 ]

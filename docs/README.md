@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[ELEVENLABS.md](ELEVENLABS.md) records public Ashby reuse, native UUID/case-alias reconciliation, 137 imported jobs and exact-run technical coverage, retaining pending employer review and enabled schedules.
+
 [LOVABLE.md](LOVABLE.md) records official-detail-linked Ashby reuse, 80 jobs with native compensation, exact-run evidence and scheduled refreshes, with independent inventory and employer reviews pending.
 
 [REPLIT.md](REPLIT.md) records official-linked Ashby reuse, 70 imported jobs with native pay and exact-run evidence, pending employer review and enabled scheduled refreshes.

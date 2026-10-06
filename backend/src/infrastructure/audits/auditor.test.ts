@@ -627,6 +627,81 @@ describe('official identity reconciliation', () => {
     });
   });
 
+  it('maps visible ElevenLabs UUIDs without merging equal titles or counting script inventory', () => {
+    const first = '11111111-1111-4111-8111-111111111111';
+    const second = '22222222-2222-4222-8222-222222222222';
+    const embedded = '33333333-3333-4333-8333-333333333333';
+    const page = { ...plan.pages[0]!, url: 'https://elevenlabs.io/careers/positions' };
+
+    const result = inspectOfficialPage(
+      `<a href="/careers/${first}/engineer">Engineer</a>` +
+        `<a href="/careers/${second}/engineer/">Engineer</a>` +
+        `<a href="/careers/${second}/engineer">Read more</a>` +
+        `<script>{"url":"https://elevenlabs.io/careers/${embedded}/engineer"}</script>`,
+      page,
+      [],
+    );
+
+    expect([...result.ids.get('ashby:elevenlabs')!]).toEqual([first, second]);
+    expect([...result.boards]).toEqual(['ashby:elevenlabs']);
+
+    expect(compareIdentities([first, second], [...result.ids.get('ashby:elevenlabs')!])).toEqual({
+      matchedCount: 2,
+      missingFromFeed: [],
+      missingFromOfficial: [],
+    });
+
+    expect(officialIdentity(`https://elevenlabs.io/careers/${first}/engineer/`)).toEqual({
+      board: 'ashby:elevenlabs',
+      id: first,
+    });
+  });
+
+  it('rejects unrelated hosts, malformed and noncanonical ElevenLabs identity URLs', () => {
+    const detail = '/careers/11111111-1111-4111-8111-111111111111/engineer';
+
+    for (const url of [
+      `https://example.com${detail}`,
+      `https://www.elevenlabs.io${detail}`,
+      `http://elevenlabs.io${detail}`,
+      `https://elevenlabs.io:8443${detail}`,
+      `https://user@elevenlabs.io${detail}`,
+      `https://elevenlabs.io${detail}?department=Engineering`,
+      `https://elevenlabs.io${detail}#application`,
+      `https://elevenlabs.io${detail}/application`,
+      'https://elevenlabs.io/careers/positions',
+      'https://elevenlabs.io/careers/111111/engineer',
+      'https://elevenlabs.io/careers/11111111-1111-4111-8111-11111111111g/engineer',
+      'https://elevenlabs.io/careers/11111111-1111-4111-8111-111111111111',
+    ]) {
+      expect(officialIdentity(url), url).toBeNull();
+    }
+  });
+
+  it('reconciles the documented ElevenLabs board case alias without folding unrelated boards', () => {
+    const id = '11111111-1111-4111-8111-111111111111';
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/ElevenLabs/${id}/application`)).toEqual({
+      board: 'ashby:elevenlabs',
+      id,
+    });
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/elevenlabs/${id}`)).toEqual({
+      board: 'ashby:elevenlabs',
+      id,
+    });
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/Perplexity/${id}`)).toEqual({
+      board: 'ashby:Perplexity',
+      id,
+    });
+
+    expect(officialIdentity(`https://jobs.ashbyhq.com/ELEVENLABS/${id}`)).toEqual({
+      board: 'ashby:ELEVENLABS',
+      id,
+    });
+  });
+
   it('withholds completion for an enabled icon-only next-page button', () => {
     const result = inspectOfficialPage(
       '<button aria-label="Next page" aria-disabled="false"><svg></svg></button>',

@@ -69,6 +69,12 @@ descriptions. These reports intentionally do not claim that inaccessible pages a
 
 [Vercel](VERCEL.md) uses native `vercel.com/careers/<slug>-<numeric-id>` links whose IDs match its Greenhouse board. The identity parser recognizes this exact host and detail path, including an optional trailing slash. Visible links establish posting enumeration; embedded URLs remain board discovery only. Duplicate links are deduplicated by ID, and equal titles never merge different postings. Other hosts and malformed/application paths cannot supply Vercel posting IDs.
 
+### ElevenLabs native posting identities
+
+[ElevenLabs](ELEVENLABS.md) uses native `elevenlabs.io/careers/<full-uuid>/<title-slug>` links. Only HTTPS on that exact host, a complete lowercase UUID and canonical slug path supply posting identities; custom ports, credentials, query/hash suffixes, short prefixes and extra application paths are rejected. Optional trailing slashes are supported. Visible links establish inventory; embedded URLs remain discovery only and repeated titles do not merge UUIDs.
+
+The official application configuration uses Ashby board `elevenlabs`; hosted metadata also advertises `ElevenLabs`. Both public spellings returned the same 137 posting identities, descriptions and metadata, differing only in native URL board casing. Official reconciliation maps only that observed alias to the configured lowercase board. Other Ashby boards retain their original case and all job/application URLs remain intact. Technical coverage does not approve employer access or activate absence-based closure.
+
 ### Legitimate location variants
 
 The default comparison requires exact posting IDs. Mozilla's official page selects one posting

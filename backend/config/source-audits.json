@@ -2810,5 +2810,67 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "elevenlabs",
+    "scope": {
+      "status": "pending",
+      "notes": "Official unfiltered careers positions HTML exposes 137 distinct native posting UUIDs across five departments. Official-linked public scripts configure Ashby elevenlabs for application forms; all 137 native UUIDs match its public aggregate. Source-specific exact-host/native-path identity reconciliation is implemented. Worldwide legal-employer/entity/channel scope review remains pending; current technical inventory matching is distinct from employer approval. Hosted metadata advertises ElevenLabs as a case alias; both public spellings returned identical posting identities, descriptions and metadata apart from original URL board casing. Reconciliation canonicalizes only this documented alias to elevenlabs; original URLs remain preserved.",
+      "evidenceUrls": [
+        "https://elevenlabs.io/careers",
+        "https://elevenlabs.io/careers/positions",
+        "https://jobs.ashbyhq.com/elevenlabs"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer automated-retrieval and full-description display permission remain unverified. EEA and non-EEA service terms dated 31 March 2026, privacy and Ashby public API documentation are captured; their availability and robots permission do not independently approve recruitment-description republication. No consent, reviewer, approved policy hashes or document records are invented. Existing blocked-plan and candidate closure gates remain unchanged.",
+      "evidenceUrls": [
+        "https://elevenlabs.io/terms-of-use-eu",
+        "https://elevenlabs.io/terms-of-use",
+        "https://elevenlabs.io/privacy-policy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://elevenlabs.io/careers/positions",
+        "disposition": "included",
+        "sourceIds": ["elevenlabs"],
+        "reason": "Unfiltered native official inventory uses the exact Ashby posting UUIDs; employer-linked scripts identify Ashby elevenlabs application forms."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/elevenlabs",
+        "disposition": "included",
+        "sourceIds": ["elevenlabs"],
+        "reason": "Official application configuration identifies this public board; hosted HTML is discovery evidence, not an independent visible inventory."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://elevenlabs.io/careers",
+        "role": "discovery",
+        "sourceIds": ["elevenlabs"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://elevenlabs.io/careers/positions",
+        "role": "listings",
+        "sourceIds": ["elevenlabs"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/elevenlabs",
+        "role": "discovery",
+        "sourceIds": ["elevenlabs"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

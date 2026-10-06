@@ -30,6 +30,8 @@ An adapter validates every received item with Zod before publishing a result. Mi
 
 [Lovable](LOVABLE.md) reuses its official-detail-linked Ashby board with 80 listed jobs and eight displayed compensation sections. Native IDs, descriptions and original URLs are preserved. Scheduled candidate refreshes retain pending employer review and independent native career-link reconciliation.
 
+[ElevenLabs](ELEVENLABS.md) reuses its officially configured public Ashby board. All 137 native career UUIDs match the exact imported run; original URLs, full descriptions and displayed compensation remain preserved. Native identity/case-alias reconciliation affects official auditing only, with no new ingestion destination or adapter.
+
 ## Invariants and extension procedure
 
 Preserve source IDs, original department labels, locations, advertised dates where mapped, URLs and full descriptions. `enumerationComplete` proves traversal of this board, not complete employer scope. Adapters neither classify functions nor close jobs. Generic non-vacancy exclusions are explicit and counted.

@@ -156,6 +156,13 @@ describe('read API and contract', () => {
       sources: [{ id: 'lovable', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
+    expect((await app.inject('/api/v1/companies/elevenlabs')).json()).toMatchObject({
+      name: 'ElevenLabs',
+      careersUrl: 'https://elevenlabs.io/careers/positions',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'elevenlabs', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

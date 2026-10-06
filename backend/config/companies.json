@@ -530,5 +530,12 @@
     "careersUrl": "https://lovable.dev/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "elevenlabs",
+    "name": "ElevenLabs",
+    "careersUrl": "https://elevenlabs.io/careers/positions",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

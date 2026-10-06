@@ -1,12 +1,12 @@
 # Decision: scheduled refresh independent of source verification
 
-**Status:** Implemented following explicit application-owner authorization on 6 October 2026, Europe/Amsterdam. All 65 configured source boards enabled for automatic refresh; audit approval and absence-based closure remain separate.
+**Status:** Implemented following explicit application-owner authorization on 6 October 2026, Europe/Amsterdam. All 66 configured source boards enabled for automatic refresh; audit approval and absence-based closure remain separate.
 
 ## Decision and rationale
 
 The application owner authorized Cursor local import/display and requested scheduling for all sources. A refresh request should not require inventing employer scope, access approval or technical coverage. Separate `scheduled` (whether the worker attempts a refresh) from `auditStatus` (whether stronger source verification and removal policies apply). This explicit request supersedes the repository's earlier verified-only scheduling policy; it does not approve missing employer reviews or permit bypassing restricted adapters.
 
-All 65 current sources retain `auditStatus: candidate` and now have `scheduled: true`. They cover 62 of the 76 registered companies; companies without a source cannot be refreshed. Existing access/display blocks and malformed/unavailable feeds remain actionable failed attempts. Successful candidate snapshots update observed jobs and matching features but cannot advance missing counters or close absent jobs.
+All 66 current sources retain `auditStatus: candidate` and now have `scheduled: true`. They cover 63 of the 77 registered companies; companies without a source cannot be refreshed. Existing access/display blocks and malformed/unavailable feeds remain actionable failed attempts. Successful candidate snapshots update observed jobs and matching features but cannot advance missing counters or close absent jobs.
 
 Cursor alone changes from blocked access/display to the existing pending-candidate local import path after explicit local authorization, as previously done for Cohere. Employer permission and scope remain unreviewed, with no fabricated reviewer, approved policy hashes or consent. Unrelated blocked plans remain blocked.
 
@@ -22,7 +22,7 @@ Cursor alone changes from blocked access/display to the existing pending-candida
 
 ## Implementation and verification
 
-[Replit](REPLIT.md) subsequently adds one scheduled candidate source with 70 imported jobs, bringing the current total to 64. [Lovable](LOVABLE.md) adds another scheduled candidate source with 80 imported jobs, bringing the current total to 65. The initial all-source verification below records the earlier 63-source deployment.
+[Replit](REPLIT.md) subsequently adds one scheduled candidate source with 70 imported jobs, bringing the current total to 64. [Lovable](LOVABLE.md) adds another scheduled candidate source with 80 imported jobs, bringing the current total to 65. [ElevenLabs](ELEVENLABS.md) adds another scheduled candidate source with 137 imported jobs and matched official UUIDs, bringing the current total to 66. The initial all-source verification below records the earlier 63-source deployment.
 
 Behavior tests cover scheduled-candidate startup validation, automatic disabled-source exclusion, mixed-board audit gaps, manual unscheduled investigation and preservation of candidate absence counters. Existing blocked-publication and verified-evidence tests remain required. Isolated PostgreSQL queue tests cover persisted UTC cadence and cross-client overlap suppression.
 
