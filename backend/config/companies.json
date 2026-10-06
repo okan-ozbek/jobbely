@@ -544,5 +544,12 @@
     "careersUrl": "https://runway.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "supabase",
+    "name": "Supabase",
+    "careersUrl": "https://supabase.com/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

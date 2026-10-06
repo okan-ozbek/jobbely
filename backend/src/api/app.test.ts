@@ -170,6 +170,13 @@ describe('read API and contract', () => {
       sources: [{ id: 'runway', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
+    expect((await app.inject('/api/v1/companies/supabase')).json()).toMatchObject({
+      name: 'Supabase',
+      careersUrl: 'https://supabase.com/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'supabase', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

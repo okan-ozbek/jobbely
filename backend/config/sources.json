@@ -561,5 +561,13 @@
     "board": "runway-ml",
     "auditStatus": "candidate",
     "scheduled": true
+  },
+  {
+    "id": "supabase",
+    "companySlug": "supabase",
+    "provider": "ashby",
+    "board": "supabase",
+    "auditStatus": "candidate",
+    "scheduled": true
   }
 ]

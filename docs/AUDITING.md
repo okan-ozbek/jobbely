@@ -176,3 +176,7 @@ The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix 
 [transport tests](../backend/src/infrastructure/audits/official-http.test.ts),
 [publication-failure tests](../backend/src/application/sync-source.test.ts).
 Live findings belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md), not a permanent completeness claim.
+
+## Ashby talent forms
+
+[Supabase](SUPABASE.md) links 51 specific vacancy UUIDs and a separate future-opportunity Talent Community form. Ashby `/board/form/<slug>` URLs identify the board for discovery but carry no posting identity. The reserved form segment must not become a phantom job ID or exclude the board’s real vacancies. Original job/application URLs and feed IDs remain unchanged. A synthetic regression verifies form-only discovery and mixed form/job/application links with exact identity reconciliation. Employer scope/access/display review remains separate from the technical match.

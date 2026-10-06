@@ -2934,5 +2934,62 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "supabase",
+    "scope": {
+      "status": "pending",
+      "notes": "Official Supabase careers visibly advertises 51 distinct Ashby supabase posting UUIDs matching the public aggregate in both directions. The separate Talent Community form explicitly invites updates on future opportunities and is not a current vacancy. Worldwide legal-entity scope and employer review remain pending; ATS identity matching alone does not approve employer scope.",
+      "evidenceUrls": ["https://supabase.com/careers", "https://jobs.ashbyhq.com/supabase"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer automated-retrieval and full-description display permission remain unverified. Terms govern hosted Cloud Services and reserve IP rights; privacy explicitly excludes applicant processing. Acceptable Use Policy version 1 dated 1 June 2026 restricts unauthorized scraping datasets in its service context. These documents and Ashby public API documentation are unreviewed evidence, not inferred permission for career republication. No employer consent, reviewer or approved policy hashes are invented. Existing explicit blocked plans and candidate closure gates remain unchanged.",
+      "evidenceUrls": [
+        "https://supabase.com/terms",
+        "https://supabase.com/privacy",
+        "https://supabase.com/aup",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://supabase.com/careers",
+        "disposition": "included",
+        "sourceIds": ["supabase"],
+        "reason": "Official careers page visibly links 51 specific current vacancies with full Ashby supabase posting UUIDs."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/supabase",
+        "disposition": "included",
+        "sourceIds": ["supabase"],
+        "reason": "Employer-linked public Ashby board; native identities match the current visible official vacancy inventory."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/supabase/form/talent-community-form",
+        "disposition": "excluded",
+        "sourceIds": [],
+        "reason": "Official careers labels this Talent Community invitation as updates on future opportunities when no role fits; it is not a specific current vacancy and is absent from the public job aggregate. No form was submitted."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://supabase.com/careers",
+        "role": "listings",
+        "sourceIds": ["supabase"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/supabase",
+        "role": "discovery",
+        "sourceIds": ["supabase"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

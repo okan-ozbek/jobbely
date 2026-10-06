@@ -133,7 +133,7 @@ export function officialIdentity(value: string): OfficialIdentity | null {
 
     return {
       board: `ashby:${board}`,
-      id: parts[1] && parts[1] !== 'application' ? parts[1] : null,
+      id: parts[1] && !['application', 'form'].includes(parts[1]) ? parts[1] : null,
     };
   }
 

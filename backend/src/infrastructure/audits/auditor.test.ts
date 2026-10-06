@@ -579,6 +579,32 @@ describe('evidence-backed source audits', () => {
 });
 
 describe('official identity reconciliation', () => {
+  it('keeps Ashby talent forms as board discovery without inventing vacancy identities', () => {
+    const id = '11111111-1111-4111-8111-111111111111';
+    const page = { ...plan.pages[0]!, url: 'https://example.com/careers' };
+    const form = 'https://jobs.ashbyhq.com/example/form/talent-community-form';
+    const formOnly = inspectOfficialPage(`<a href="${form}">Join community</a>`, page, []);
+
+    const withVacancy = inspectOfficialPage(
+      `<a href="${form}">Join community</a>` +
+        `<a href="https://jobs.ashbyhq.com/example/${id}">Engineer</a>` +
+        `<a href="https://jobs.ashbyhq.com/example/${id}/application">Apply</a>`,
+      page,
+      [],
+    );
+
+    expect(officialIdentity(form)).toEqual({ board: 'ashby:example', id: null });
+    expect([...formOnly.boards]).toEqual(['ashby:example']);
+    expect(formOnly.ids.size).toBe(0);
+    expect([...withVacancy.ids.get('ashby:example')!]).toEqual([id]);
+
+    expect(compareIdentities([id], [...withVacancy.ids.get('ashby:example')!])).toEqual({
+      matchedCount: 1,
+      missingFromFeed: [],
+      missingFromOfficial: [],
+    });
+  });
+
   it('recognizes dotted Ashby boards without treating script data as visible job inventory', () => {
     const page = { ...plan.pages[0]!, url: 'https://mistral.ai/careers/' };
 
