@@ -553,5 +553,13 @@
     "board": "elevenlabs",
     "auditStatus": "candidate",
     "scheduled": true
+  },
+  {
+    "id": "runway",
+    "companySlug": "runway",
+    "provider": "ashby",
+    "board": "runway-ml",
+    "auditStatus": "candidate",
+    "scheduled": true
   }
 ]

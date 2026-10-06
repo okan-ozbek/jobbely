@@ -23,7 +23,7 @@ After claiming the lease, the use case selects the adapter, invokes its injected
 
 ## Commands and scheduling
 
-Since 6 October, [WAVE_REFRESH.md](WAVE_REFRESH.md) adds ordered A → B → C sync plus automatic employer audits. Docker ingestion opts into this mode; it requests one cycle on startup and at 00:00/12:00 UTC, suppresses overlaps globally and persists progress in `ingestion-data`. Automatic wave imports now honor each source’s scheduled flag. Explicit owner authorization enabled all 66 configured sources independently of audit verification; candidate imports remain partial and do not change closure eligibility. See [SCHEDULING.md](SCHEDULING.md). The per-source worker behavior below applies when `INGESTION_WAVE_SYNC` is disabled.
+Since 6 October, [WAVE_REFRESH.md](WAVE_REFRESH.md) adds ordered A → B → C sync plus automatic employer audits. Docker ingestion opts into this mode; it requests one cycle on startup and at 00:00/12:00 UTC, suppresses overlaps globally and persists progress in `ingestion-data`. Automatic wave imports now honor each source’s scheduled flag. Explicit owner authorization enabled all 67 configured sources independently of audit verification; candidate imports remain partial and do not change closure eligibility. See [SCHEDULING.md](SCHEDULING.md). The per-source worker behavior below applies when `INGESTION_WAVE_SYNC` is disabled.
 
 From the repository root:
 
@@ -46,7 +46,7 @@ The worker uses pg-boss in the same PostgreSQL database, with local concurrency 
 
 Failed runs never reconcile removals or publish partial updates. Last successful listings remain readable. Quarantine affects removal reconciliation; valid observed postings still update. Successful snapshots retain raw evidence; failed runs currently retain an error summary rather than their fetched payloads.
 
-All 66 configured candidate sources are currently scheduled by explicit application-owner request. `SyncSource` renews ownership every minute during long extraction/validation; renewal failures prevent publication and cleanup stops the heartbeat. Workday extraction has a two-hour budget and the worker queue has a three-hour job lifetime. Worker startup removes disabled/orphaned per-source cron entries; queued disabled jobs are rejected, and wave mode excludes disabled sources. Queue restart/retry behavior remains an operational follow-up. Registry changes require process restart. The worker is not started by `pnpm dev` or the API entry point. SIGINT/SIGTERM trigger queue shutdown and repository closure.
+All 67 configured candidate sources are currently scheduled by explicit application-owner request. `SyncSource` renews ownership every minute during long extraction/validation; renewal failures prevent publication and cleanup stops the heartbeat. Workday extraction has a two-hour budget and the worker queue has a three-hour job lifetime. Worker startup removes disabled/orphaned per-source cron entries; queued disabled jobs are rejected, and wave mode excludes disabled sources. Queue restart/retry behavior remains an operational follow-up. Registry changes require process restart. The worker is not started by `pnpm dev` or the API entry point. SIGINT/SIGTERM trigger queue shutdown and repository closure.
 
 ## Implementation and verification
 

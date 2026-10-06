@@ -537,5 +537,12 @@
     "careersUrl": "https://elevenlabs.io/careers/positions",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "runway",
+    "name": "Runway",
+    "careersUrl": "https://runway.com/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

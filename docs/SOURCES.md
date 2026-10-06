@@ -8,7 +8,7 @@ Keep employers and extraction sources separate. One company may have multiple bo
 
 `companies.json` records slug, name, official careers entry point and planning wave. `sources.json` records stable source ID, company slug, provider, board, `auditStatus` and `scheduled`. Configuration is validated at startup: IDs must be unique, companies must exist, boards must match the allowed identifier format, and verified sources require valid audit evidence. Since the explicit 6 October application-owner request, candidates can be scheduled independently of verification; access/publication and closure gates remain separate. See [SCHEDULING.md](SCHEDULING.md).
 
-There are currently 77 target companies and 66 candidate source boards across 63 configured companies: 13 Wave A boards, 31 Wave B sources and 22 Wave C sources. This includes three Discord boards and explicit access gates for restricted employers. Every configured source is scheduled; restricted or unusable sources still fail explicitly. Dated live observations belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
+There are currently 78 target companies and 67 candidate source boards across 64 configured companies: 13 Wave A boards, 31 Wave B sources and 23 Wave C sources. This includes three Discord boards and explicit access gates for restricted employers. Every configured source is scheduled; restricted or unusable sources still fail explicitly. Dated live observations belong in [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
 
 ## Onboarding procedure
 

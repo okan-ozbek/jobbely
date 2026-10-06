@@ -163,6 +163,13 @@ describe('read API and contract', () => {
       sources: [{ id: 'elevenlabs', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
+    expect((await app.inject('/api/v1/companies/runway')).json()).toMatchObject({
+      name: 'Runway',
+      careersUrl: 'https://runway.com/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'runway', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

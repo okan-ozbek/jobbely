@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[RUNWAY.md](RUNWAY.md) records canonical careers discovery, 45 Ashby jobs with native pay, exact-run identity matching and scheduled refreshes, retaining unresolved Studios/Talent Network coverage and pending employer review.
+
 [ELEVENLABS.md](ELEVENLABS.md) records public Ashby reuse, native UUID/case-alias reconciliation, 137 imported jobs and exact-run technical coverage, retaining pending employer review and enabled schedules.
 
 [LOVABLE.md](LOVABLE.md) records official-detail-linked Ashby reuse, 80 jobs with native compensation, exact-run evidence and scheduled refreshes, with independent inventory and employer reviews pending.

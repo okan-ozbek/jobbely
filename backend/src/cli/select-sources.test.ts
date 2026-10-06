@@ -82,6 +82,7 @@ describe('manual sync source selection', () => {
       'replit',
       'lovable',
       'elevenlabs',
+      'runway',
     ]);
 
     expect(matching.every((source) => source.auditStatus === 'candidate' && source.scheduled)).toBe(
