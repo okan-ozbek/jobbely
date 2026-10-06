@@ -29,12 +29,12 @@ async function setup() {
 }
 
 describe('read API and contract', () => {
-  it('lists all 60 companies and explicitly labels demo data', async () => {
+  it('lists all registered companies and explicitly labels demo data', async () => {
     const { app } = await setup();
 
     const companies = (await app.inject('/api/v1/companies')).json();
 
-    expect(companies).toHaveLength(60);
+    expect(companies).toHaveLength(loadRegistry().companies.length);
 
     expect(companies.map((company: { logoUrl: string }) => company.logoUrl)).toEqual(
       loadRegistry().companies.map((company) => company.logoUrl),
@@ -42,6 +42,11 @@ describe('read API and contract', () => {
 
     expect((await app.inject('/api/v1/companies/meta')).json()).toMatchObject({
       logoUrl: '/logos/meta.svg',
+    });
+
+    expect((await app.inject('/api/v1/companies/atlassian')).json()).toMatchObject({
+      name: 'Atlassian',
+      logoUrl: '/logos/default.svg',
     });
 
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({

@@ -418,5 +418,12 @@
     "careersUrl": "https://careers.blizzard.com/global/en",
     "wave": "B",
     "logoUrl": "/logos/blizzard.svg"
+  },
+  {
+    "slug": "atlassian",
+    "name": "Atlassian",
+    "careersUrl": "https://www.atlassian.com/company/careers/all-jobs",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

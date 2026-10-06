@@ -2,6 +2,7 @@ import { load } from 'cheerio';
 import { z } from 'zod';
 import type { Extraction, Source } from '../../domain/model.js';
 import type { AuditPlan } from './model.js';
+import { atlassianPortalHosts } from '../adapters/atlassian.js';
 
 export interface OfficialIdentity {
   board: string;
@@ -33,6 +34,20 @@ export function officialIdentity(value: string): OfficialIdentity | null {
     return {
       board: 'apple:apple',
       id: url.pathname.match(/^\/en-us\/details\/(\d+(?:-\d+)?)(?:\/|$)/)?.[1] ?? null,
+    };
+  }
+
+  if (Object.values(atlassianPortalHosts).includes(url.hostname)) {
+    return {
+      board: 'atlassian:atlassian',
+      id: url.pathname.match(/^\/jobs\/(\d+)(?:\/|$)/)?.[1] ?? null,
+    };
+  }
+
+  if (url.hostname === 'www.atlassian.com' && url.pathname.startsWith('/company/careers/')) {
+    return {
+      board: 'atlassian:atlassian',
+      id: url.pathname.match(/^\/company\/careers\/details\/(\d+)\/?$/)?.[1] ?? null,
     };
   }
 

@@ -1,6 +1,7 @@
 import type { Provider } from '../../domain/model.js';
 import type { HtmlTransport, JsonSearchTransport, SourceAdapter } from '../../ports/ingestion.js';
 import { AppleAdapter } from './apple.js';
+import { AtlassianAdapter } from './atlassian.js';
 import { AmazonAdapter } from './amazon.js';
 import { EightfoldAdapter } from './eightfold.js';
 import { RestrictedAdapter } from './restricted.js';
@@ -24,6 +25,7 @@ export function createAdapters(
     apple: new AppleAdapter(http),
     amazon: new AmazonAdapter(http),
     eightfold: new EightfoldAdapter(http),
+    atlassian: new AtlassianAdapter(http),
     meta: new RestrictedAdapter(
       'Meta integration blocked: its published robots policy requires express written permission for automated collection. Configure an authorized employer feed before extraction.',
     ),

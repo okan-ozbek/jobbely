@@ -28,6 +28,7 @@ const sourceSchema = z
       'apple',
       'amazon',
       'eightfold',
+      'atlassian',
       'meta',
       'google',
     ]),
@@ -56,6 +57,10 @@ const sourceSchema = z
     }
 
     const nativeEndpoints: Record<string, { board: string; endpoint: string }> = {
+      atlassian: {
+        board: 'atlassian',
+        endpoint: 'https://www.atlassian.com/endpoint/careers/listings',
+      },
       apple: { board: 'apple', endpoint: 'https://jobs.apple.com/en-us/search' },
       amazon: { board: 'amazon', endpoint: 'https://www.amazon.jobs/en/search.json' },
       eightfold: {

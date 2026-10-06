@@ -1,6 +1,6 @@
 # Decision: local company logo assets
 
-**Status:** Implemented, updated 5 October 2026. All 60 target companies use local SVGs: 59 sourced vectors and one explicitly documented text fallback.
+**Status:** Implemented, updated 6 October 2026. All 61 target companies use local SVGs: 59 sourced vectors, one explicitly documented text fallback, and the shared N/A fallback for newly registered Atlassian pending vector review.
 
 ## Decision and rationale
 

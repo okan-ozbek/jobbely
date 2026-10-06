@@ -126,6 +126,7 @@ function audit(
       eightfold: adapter,
       meta: adapter,
       google: adapter,
+      atlassian: adapter,
     },
     () => now,
   ).run('ignored/raw-evidence', undefined, snapshots, automaticCoverage);
@@ -451,6 +452,7 @@ describe('evidence-backed source audits', () => {
         eightfold: adapter,
         meta: adapter,
         google: adapter,
+        atlassian: adapter,
       },
       () => now,
     );

@@ -62,6 +62,7 @@ function setup(validation?: PostingValidation) {
     eightfold: adapter,
     meta: adapter,
     google: adapter,
+    atlassian: adapter,
   };
 
   return {

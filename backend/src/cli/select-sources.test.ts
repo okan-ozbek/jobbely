@@ -54,7 +54,7 @@ describe('manual sync source selection', () => {
     expect(selectSources(companies, scheduled, { 'all-enabled': true })).toEqual([scheduled[0]]);
   });
 
-  it('selects the five priority Wave C companies without implying all Wave C is onboarded', () => {
+  it('selects the Wave C priorities and native backlog expansion without enabling them', () => {
     const matching = selectSources(companies, sources, { wave: 'C' });
 
     expect(matching.map((source) => source.companySlug)).toEqual([
@@ -63,6 +63,7 @@ describe('manual sync source selection', () => {
       'netflix',
       'google',
       'amazon',
+      'atlassian',
     ]);
 
     expect(

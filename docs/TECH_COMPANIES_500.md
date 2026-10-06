@@ -1,6 +1,6 @@
 # 500 technology employers: integration backlog
 
-**Status:** Proposed discovery and onboarding backlog. Created 6 October 2026, Europe/Amsterdam. No new runtime integrations are added by this document.
+**Status:** Discovery and onboarding backlog; first candidate integration implemented. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is configured but its full import is blocked by a missing upstream description.
 
 ## Purpose and selection
 
@@ -12,13 +12,13 @@ The companion [JSON backlog](TECH_COMPANIES_500.json) carries proposed target sl
 
 ## Current registry snapshot
 
-The existing runtime registry has **60 companies** and **49 source boards**. Of this shortlist:
+The runtime registry now has **61 companies** and **50 source boards**. Of this shortlist:
 
 | State             | Count | Meaning                                                                                                                        |
 | ----------------- | ----: | ------------------------------------------------------------------------------------------------------------------------------ |
-| Source configured |    40 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
+| Source configured |    41 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
 | Registered only   |     8 | Existing company slug with no configured source. Existing A–D planning assignments, including Wave D deferrals, still apply.   |
-| New candidate     |   452 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
+| New candidate     |   451 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
 
 The 12 existing finance/trading employers outside this tech shortlist are retained: Jane Street, Radix Trading, Hudson River Trading, Five Rings, Citadel, Two Sigma, Headlands Technologies, Optiver, JPMorgan Chase, Goldman Sachs, ABN AMRO, ING. This backlog does not replace the original MVP cohort or its coverage commitments. Registry counts are a 6 October snapshot; recompute them after future integrations.
 
@@ -40,6 +40,8 @@ Start discovery in this order, then adjust for source access, employer scope, ad
 | 10    | Mistral AI | [Careers](https://mistral.ai/careers/)               | Adds a prominent European AI employer.                                         |
 
 These ten careers pages were readable through the web research tool on 6 October 2026. Observing a careers page does not verify its full inventory, API/provider, pagination, description availability, access permission or adapter compatibility. For existing configured employers, resolving their documented blockers and auditing coverage is a separate stream of work.
+
+Atlassian now has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. Coverage and access/display reviews remain pending. Shopify is the next discovery target. See [the integration decision and verification](ATLASSIAN.md).
 
 ## One-company completion procedure
 
@@ -124,7 +126,7 @@ Within each sector, the rows provide a discovery link and the current local regi
 | --: | ------------------- | --------------------------------------------------------------------------------- | ----------------- | ------------- | -------------------- |
 |  26 | ServiceNow          | [Careers observed](https://careers.servicenow.com/)                               | New candidate     | —             | —                    |
 |  27 | Workday             | [Registry URL](https://www.workday.com/en-us/company/careers/open-positions.html) | Source configured | `workday`     | workday              |
-|  28 | Atlassian           | [Careers observed](https://www.atlassian.com/company/careers)                     | New candidate     | —             | —                    |
+|  28 | Atlassian           | [Careers observed](https://www.atlassian.com/company/careers)                     | Source configured | C             | atlassian            |
 |  29 | Intuit              | [Homepage seed](https://intuit.com/)                                              | New candidate     | —             | —                    |
 |  30 | HubSpot             | [Careers observed](https://www.hubspot.com/careers/jobs)                          | New candidate     | —             | —                    |
 |  31 | Zendesk             | [Homepage seed](https://zendesk.com/)                                             | New candidate     | —             | —                    |
@@ -690,4 +692,4 @@ Within each sector, the rows provide a discovery link and the current local regi
 
 ## Verification for this artifact
 
-Check that the JSON contains exactly 500 unique names, target slugs and discovery URLs; numbers must be contiguous from 1 to 500 and every sector must have 25 targets. Validate all existing-company matches against the current registry, all suggested-next references against the shortlist, HTTPS URL syntax, local documentation links and Markdown/JSON formatting. Those checks establish artifact consistency, not live integration correctness. No application behavior changed, so application/browser/database tests are not evidence for this planning document.
+Check that the JSON contains exactly 500 unique names, target slugs and discovery URLs; numbers must be contiguous from 1 to 500 and every sector must have 25 targets. Validate all existing-company matches against the current registry, all suggested-next references against the shortlist, HTTPS URL syntax, local documentation links and Markdown/JSON formatting. Those checks establish artifact consistency, not live integration correctness. Each implemented integration records its behavior checks and live limits separately; see [Atlassian](ATLASSIAN.md).

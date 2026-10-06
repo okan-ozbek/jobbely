@@ -21,6 +21,7 @@ const allowedHosts = new Set([
   'www.amazon.jobs',
   'explore.jobs.netflix.net',
   'jobs.apple.com',
+  'www.atlassian.com',
 ]);
 
 const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -81,6 +82,11 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
 
     const nativePaths: Record<string, boolean> = {
+      'www.atlassian.com':
+        format === 'json' &&
+        parsed.pathname === '/endpoint/careers/listings' &&
+        !parsed.search &&
+        !parsed.hash,
       'www.amazon.jobs': format === 'json' && parsed.pathname === '/en/search.json',
       'explore.jobs.netflix.net':
         format === 'json' && /^\/api\/apply\/v2\/jobs(?:\/\d+)?$/.test(parsed.pathname),

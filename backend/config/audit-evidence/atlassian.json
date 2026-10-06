@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "companySlug": "atlassian",
+  "observedAt": "2026-10-06T12:05:01.196Z",
+  "configurationHash": "939425ed55bc0160d0283b6f352e2e1a72f11cb42e5eb0e9e7d8397d544e36c3",
+  "artifactDirectory": "backend/data/audits/atlassian/2026-10-06T12-05-01.195Z/",
+  "blockers": [
+    "scope review is pending: Native aggregate observed across six regional/campus/mobility iCIMS portals. Independent complete inventory reconciliation and employer-wide scope review remain pending. Dynamic HTML is not a complete listing inventory.",
+    "access review is pending: Public employer feed observed; access and full-description display review remain pending."
+  ],
+  "policies": [
+    {
+      "url": "https://www.atlassian.com/legal/privacy-policy",
+      "textSha256": "07cf4b2251292bee9d246fae8c20a8984f282b7c1b38520b18d85b5b09c2e2e0",
+      "rawSha256": "4815c1501cc9d2f678516af00ffdfaccd175c7d6c82f6ecba4b1a890ec829fb2",
+      "robotsUrl": "https://www.atlassian.com/robots.txt",
+      "robotsSha256": "c0a6d137d17b75f9f916b616a77e87fde588b0adb4338127b03b55ea77ba3841",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://www.atlassian.com/company/careers/all-jobs",
+      "sha256": "09efd408019bf3fffe1bc30f55784df81badbba3fa29ec958196ce3c5b3558cc",
+      "robotsUrl": "https://www.atlassian.com/robots.txt",
+      "robotsSha256": "c0a6d137d17b75f9f916b616a77e87fde588b0adb4338127b03b55ea77ba3841",
+      "links": [
+        "https://www.atlassian.com/br/company/careers/all-jobs",
+        "https://www.atlassian.com/company/careers",
+        "https://www.atlassian.com/company/careers/all-jobs",
+        "https://www.atlassian.com/company/careers/all-jobs#",
+        "https://www.atlassian.com/company/careers/earlycareers",
+        "https://www.atlassian.com/company/careers/employee-awards",
+        "https://www.atlassian.com/company/careers/engineering",
+        "https://www.atlassian.com/company/careers/engineering/ai",
+        "https://www.atlassian.com/company/careers/resources",
+        "https://www.atlassian.com/company/careers/resources/applying",
+        "https://www.atlassian.com/company/careers/resources/awards",
+        "https://www.atlassian.com/company/careers/resources/career-growth",
+        "https://www.atlassian.com/company/careers/resources/interviewing",
+        "https://www.atlassian.com/company/careers/resources/interviewing/recruitment-fraud",
+        "https://www.atlassian.com/company/careers/resources/perk-and-benefits",
+        "https://www.atlassian.com/company/careers/sales",
+        "https://www.atlassian.com/company/careers/team-everyone",
+        "https://www.atlassian.com/company/careers/teamanywhere",
+        "https://www.atlassian.com/company/careers/teams",
+        "https://www.atlassian.com/de/company/careers/all-jobs",
+        "https://www.atlassian.com/es/company/careers/all-jobs",
+        "https://www.atlassian.com/fr/company/careers/all-jobs",
+        "https://www.atlassian.com/it/company/careers/all-jobs",
+        "https://www.atlassian.com/ja/company/careers/all-jobs",
+        "https://www.atlassian.com/ko/company/careers/all-jobs",
+        "https://www.atlassian.com/legal/careers-privacy-notice",
+        "https://www.atlassian.com/legal/careers-privacy-notice#additional-disclosures",
+        "https://www.atlassian.com/nl/company/careers/all-jobs",
+        "https://www.atlassian.com/pl/company/careers/all-jobs",
+        "https://www.atlassian.com/ru/company/careers/all-jobs",
+        "https://www.atlassian.com/zh/company/careers/all-jobs"
+      ],
+      "discoveredBoards": ["atlassian:atlassian"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "atlassian",
+      "feedCount": 0,
+      "officialCount": 0,
+      "excludedCount": 0,
+      "matchedCount": 0,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": false,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": true,
+      "feedHashes": [],
+      "samples": [],
+      "error": "Atlassian posting 26639 has no readable job description"
+    }
+  ]
+}

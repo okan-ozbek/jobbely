@@ -2059,5 +2059,38 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "atlassian",
+    "scope": {
+      "status": "pending",
+      "notes": "Native aggregate observed across six regional/campus/mobility iCIMS portals. Independent complete inventory reconciliation and employer-wide scope review remain pending. Dynamic HTML is not a complete listing inventory.",
+      "evidenceUrls": ["https://www.atlassian.com/company/careers/all-jobs"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Public employer feed observed; access and full-description display review remain pending.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://www.atlassian.com/legal/privacy-policy"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.atlassian.com/company/careers/all-jobs",
+        "disposition": "included",
+        "sourceIds": ["atlassian"],
+        "reason": "Official careers application consumes the native aggregate; independent dynamic-listing reconciliation remains pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.atlassian.com/company/careers/all-jobs",
+        "role": "listings",
+        "sourceIds": ["atlassian"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

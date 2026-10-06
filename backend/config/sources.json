@@ -411,5 +411,14 @@
     "auditStatus": "candidate",
     "scheduled": false,
     "endpoint": "https://www.amazon.jobs/en/search.json"
+  },
+  {
+    "id": "atlassian",
+    "companySlug": "atlassian",
+    "provider": "atlassian",
+    "board": "atlassian",
+    "endpoint": "https://www.atlassian.com/endpoint/careers/listings",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

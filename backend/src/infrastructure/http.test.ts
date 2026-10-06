@@ -6,6 +6,29 @@ afterEach(() => vi.useRealTimers());
 const url = 'https://boards-api.greenhouse.io/v1/boards/test/jobs';
 
 describe('bounded transport', () => {
+  it('allows only the complete read-only Atlassian feed', async () => {
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response('[]', { headers: { 'content-type': 'application/json' } }));
+
+    const http = new PublicJsonTransport(fetcher, 0);
+    const endpoint = 'https://www.atlassian.com/endpoint/careers/listings';
+
+    expect((await http.get(endpoint)).body).toEqual([]);
+
+    for (const target of [
+      `${endpoint}?location=US`,
+      `${endpoint}#filtered`,
+      'https://www.atlassian.com/endpoint/account',
+    ]) {
+      await expect(http.get(target)).rejects.toThrow(/native career routes/);
+    }
+
+    await expect(http.getHtml(endpoint)).rejects.toThrow(/native career routes/);
+    await expect(http.post(endpoint, {})).rejects.toThrow(/read-only/);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   it('limits native requests to public listing/detail routes and returns raw Apple HTML', async () => {
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
       new Response('<html>public detail</html>', {
