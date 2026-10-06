@@ -30,6 +30,7 @@ const sourceSchema = z
       'eightfold',
       'atlassian',
       'shopify',
+      'hubspot',
       'meta',
       'google',
     ]),
@@ -58,6 +59,7 @@ const sourceSchema = z
     }
 
     const nativeEndpoints: Record<string, { board: string; endpoint: string }> = {
+      hubspot: { board: 'hubspot', endpoint: 'https://wtcfns.hubspot.com/careers/graphql' },
       shopify: { board: 'shopify', endpoint: 'https://www.shopify.com/careers' },
       atlassian: {
         board: 'atlassian',

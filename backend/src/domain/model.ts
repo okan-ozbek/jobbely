@@ -10,6 +10,7 @@ export type Provider =
   | 'eightfold'
   | 'atlassian'
   | 'shopify'
+  | 'hubspot'
   | 'meta'
   | 'google';
 

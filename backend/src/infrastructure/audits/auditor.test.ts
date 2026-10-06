@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Company, Extraction, Source } from '../../domain/model.js';
-import { SourceAuditor } from './auditor.js';
+import { SourceAuditor, officialHosts } from './auditor.js';
 import { assertAuditEvidence, auditPlanSchema, hash } from './model.js';
 import { compareIdentities, inspectOfficialPage } from './reconcile.js';
 
@@ -128,12 +128,36 @@ function audit(
       google: adapter,
       atlassian: adapter,
       shopify: adapter,
+      hubspot: adapter,
     },
     () => now,
   ).run('ignored/raw-evidence', undefined, snapshots, automaticCoverage);
 }
 
 describe('automatic technical coverage', () => {
+  it('allows HubSpot legal evidence only for the registered official employer', () => {
+    const hubspot = {
+      ...company,
+      slug: 'hubspot',
+      careersUrl: 'https://www.hubspot.com/careers/jobs',
+    };
+
+    const hubspotPlan = auditPlanSchema.parse({
+      ...plan,
+      companySlug: 'hubspot',
+      pages: [{ ...plan.pages[0]!, url: hubspot.careersUrl }],
+      access: { ...plan.access, evidenceUrls: ['https://legal.hubspot.com/website-terms-of-use'] },
+    });
+
+    expect(officialHosts(hubspot, hubspotPlan).has('legal.hubspot.com')).toBe(true);
+    expect(officialHosts(hubspot, hubspotPlan).has('wtcfns.hubspot.com')).toBe(false);
+    expect(() => officialHosts(company, hubspotPlan)).toThrow('not an official employer');
+
+    expect(() =>
+      officialHosts({ ...hubspot, careersUrl: company.careersUrl }, hubspotPlan),
+    ).toThrow('not an official employer');
+  });
+
   const pending = auditPlanSchema.parse({
     ...plan,
     scope: { ...plan.scope, status: 'pending' },

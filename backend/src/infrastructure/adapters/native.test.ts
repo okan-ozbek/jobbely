@@ -392,6 +392,27 @@ describe('priority native integrations', () => {
     expect(http.getHtml).not.toHaveBeenCalled();
   });
 
+  it('reports unavailable HubSpot discovery without fetching or claiming an empty inventory', async () => {
+    const http = { get: vi.fn(), post: vi.fn(), getHtml: vi.fn() };
+    const adapters = createAdapters(http);
+
+    await expect(
+      adapters.hubspot.extract({
+        id: 'hubspot',
+        companySlug: 'hubspot',
+        provider: 'hubspot',
+        board: 'hubspot',
+        endpoint: 'https://wtcfns.hubspot.com/careers/graphql',
+        auditStatus: 'candidate',
+        scheduled: false,
+      }),
+    ).rejects.toThrow(/GraphQL 404: Not Found.*does not mean zero vacancies/);
+
+    expect(http.get).not.toHaveBeenCalled();
+    expect(http.post).not.toHaveBeenCalled();
+    expect(http.getHtml).not.toHaveBeenCalled();
+  });
+
   it('recognizes native URLs without treating title slugs as job identities', () => {
     expect(officialIdentity('https://jobs.apple.com/en-us/details/100-01/new-title')).toEqual({
       board: 'apple:apple',

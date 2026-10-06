@@ -28,6 +28,9 @@ export function createAdapters(
     eightfold: new EightfoldAdapter(http),
     atlassian: new AtlassianAdapter(http),
     shopify: new ShopifyAdapter(http),
+    hubspot: new RestrictedAdapter(
+      'HubSpot integration blocked: its public careers listing and detail service returned GraphQL 404: Not Found during discovery on 6 October 2026. No usable complete vacancy feed has been established. Recheck the official source and resolve access review before implementing collection; this failure does not mean zero vacancies.',
+    ),
     meta: new RestrictedAdapter(
       'Meta integration blocked: its published robots policy requires express written permission for automated collection. Configure an authorized employer feed before extraction.',
     ),

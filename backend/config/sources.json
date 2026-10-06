@@ -429,5 +429,14 @@
     "endpoint": "https://www.shopify.com/careers",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "hubspot",
+    "companySlug": "hubspot",
+    "provider": "hubspot",
+    "board": "hubspot",
+    "endpoint": "https://wtcfns.hubspot.com/careers/graphql",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

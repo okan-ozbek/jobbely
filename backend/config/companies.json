@@ -432,5 +432,12 @@
     "careersUrl": "https://www.shopify.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "hubspot",
+    "name": "HubSpot",
+    "careersUrl": "https://www.hubspot.com/careers/jobs",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

@@ -2125,5 +2125,38 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "hubspot",
+    "scope": {
+      "status": "pending",
+      "notes": "Official public careers configuration identifies a GraphQL service, but unfiltered listings and a public detail return GraphQL 404 errors. The initial HTML is an empty client shell. Worldwide inventory, channels and employer scope remain unverified.",
+      "evidenceUrls": ["https://www.hubspot.com/careers/jobs"]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Access and full-description display review remain pending. The careers service robots URL returned HTTP 403 during discovery; that response is not an access approval.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": ["https://legal.hubspot.com/website-terms-of-use"]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.hubspot.com/careers/jobs",
+        "disposition": "included",
+        "sourceIds": ["hubspot"],
+        "reason": "Official employer careers entry point. Candidate collection is explicitly blocked until a usable complete public source and access conditions are established."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.hubspot.com/careers/jobs",
+        "role": "listings",
+        "sourceIds": ["hubspot"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

@@ -409,6 +409,10 @@ export function officialHosts(company: Company, plan: AuditPlan): Set<string> {
     'www.linkedin.com',
   ]);
 
+  if (company.slug === 'hubspot' && new URL(company.careersUrl).hostname === 'www.hubspot.com') {
+    trusted.add('legal.hubspot.com');
+  }
+
   for (const url of [...plan.pages.map((page) => page.url), ...plan.access.evidenceUrls]) {
     if (!trusted.has(new URL(url).hostname)) {
       throw new Error(`Audit page is not an official employer/ATS/documentation host: ${url}`);

@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "companySlug": "hubspot",
+  "observedAt": "2026-10-06T13:09:56.854Z",
+  "configurationHash": "8b85853f13c25c0abf29b97a49fc94467e48ae63c2a8a6b9ef28e42c242d409e",
+  "artifactDirectory": "backend/data/audits/hubspot/2026-10-06T13-09-56.853Z/",
+  "blockers": [
+    "scope review is pending: Official public careers configuration identifies a GraphQL service, but unfiltered listings and a public detail return GraphQL 404 errors. The initial HTML is an empty client shell. Worldwide inventory, channels and employer scope remain unverified.",
+    "access review is pending: Access and full-description display review remain pending. The careers service robots URL returned HTTP 403 during discovery; that response is not an access approval."
+  ],
+  "policies": [
+    {
+      "url": "https://legal.hubspot.com/website-terms-of-use",
+      "textSha256": "aa401850a92b26ab13a59ee8e979d082b93382c82ec910e5229421d74aac7d50",
+      "rawSha256": "a5a1a77a1af2ab7dd2542829ba11f37c443791fbf9e0a7a93b7deb6355dd6596",
+      "robotsUrl": "https://legal.hubspot.com/robots.txt",
+      "robotsSha256": "ea8e85a2b5420fc4539c4997c85a6821500c4e4a4ebb410b0c926f648fddb5ce",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://www.hubspot.com/careers/jobs",
+      "sha256": "1a8921ce72518d135f242a88a6ebb696c81b56d11a4001c7dfa674c12c307f69",
+      "robotsUrl": "https://www.hubspot.com/robots.txt",
+      "robotsSha256": "74374bc3165f346bbb5959ad5d2948e2e16f1a364ba8ccb49663cb14eaae96af",
+      "links": [
+        "https://www.hubspot.com/careers",
+        "https://www.hubspot.com/careers-blog",
+        "https://www.hubspot.com/careers/belonging",
+        "https://www.hubspot.com/careers/benefits?hubs_signup-cta=careers-nav-benefits",
+        "https://www.hubspot.com/careers/candidate-experience",
+        "https://www.hubspot.com/careers/customer-success",
+        "https://www.hubspot.com/careers/emerging-talent",
+        "https://www.hubspot.com/careers/general-administration",
+        "https://www.hubspot.com/careers/hiring-ai",
+        "https://www.hubspot.com/careers/hybrid-work",
+        "https://www.hubspot.com/careers/jobs#global-nav-main-content",
+        "https://www.hubspot.com/careers/jobs?hubs_signup-cta=careers-nav-cta",
+        "https://www.hubspot.com/careers/marketing",
+        "https://www.hubspot.com/careers/operations",
+        "https://www.hubspot.com/careers/people-team",
+        "https://www.hubspot.com/careers/product-ux-engineering",
+        "https://www.hubspot.com/careers/sales"
+      ],
+      "discoveredBoards": [],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "hubspot",
+      "feedCount": 0,
+      "officialCount": 0,
+      "excludedCount": 0,
+      "matchedCount": 0,
+      "missingFromFeed": [],
+      "missingFromOfficial": [],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": false,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": false,
+      "feedHashes": [],
+      "samples": [],
+      "error": "HubSpot integration blocked: its public careers listing and detail service returned GraphQL 404: Not Found during discovery on 6 October 2026. No usable complete vacancy feed has been established. Recheck the official source and resolve access review before implementing collection; this failure does not mean zero vacancies."
+    }
+  ]
+}

@@ -32,6 +32,8 @@ Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netfl
 
 ## Tradeoffs and extension points
 
+[HubSpot](HUBSPOT.md) remains outside the ingestion fetch allowlist behind an explicit unavailable-source gate. Its audit can retrieve `legal.hubspot.com` only when the company is `hubspot` with the official `www.hubspot.com` careers host. This permits policy evidence collection, not access/display approval or GraphQL collection.
+
 Official-site auditing uses a separate HTML/policy transport with employer/ATS/documentation
 allowlists, public DNS-address checks, robots rules, redirect rejection, host pacing, bounded bodies
 and elapsed time. It does not reuse the ATS JSON parser or bypass challenges. See

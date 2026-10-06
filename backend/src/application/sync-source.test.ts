@@ -3,6 +3,8 @@ import { SyncSource } from './sync-source.js';
 import { MemoryJobRepository } from '../infrastructure/storage/memory.js';
 import { htmlPreparation } from '../infrastructure/html.js';
 import { LabelMappingStrategy } from '../domain/classification.js';
+import { createAdapters } from '../infrastructure/adapters/factory.js';
+import { loadRegistry } from '../infrastructure/registry.js';
 import type { ExtractedPosting, Provider, Source } from '../domain/model.js';
 import type { PostingValidation, SourceAdapter } from '../ports/ingestion.js';
 
@@ -64,6 +66,7 @@ function setup(validation?: PostingValidation) {
     google: adapter,
     atlassian: adapter,
     shopify: adapter,
+    hubspot: adapter,
   };
 
   return {
@@ -93,6 +96,31 @@ function setup(validation?: PostingValidation) {
 }
 
 describe('source synchronization', () => {
+  it('records HubSpot as failed while preserving prior listings and publication version', async () => {
+    const test = setup();
+    const hubspot = loadRegistry().sources.find((item) => item.id === 'hubspot')!;
+
+    await test.sync.execute(hubspot);
+
+    const before = await test.repository.read();
+    const http = { get: vi.fn(), post: vi.fn(), getHtml: vi.fn() };
+
+    const sync = new SyncSource(test.repository, createAdapters(http), htmlPreparation, [
+      new LabelMappingStrategy(),
+    ]);
+
+    await expect(sync.execute(hubspot)).rejects.toThrow('HubSpot integration blocked');
+
+    const after = await test.repository.read();
+
+    expect(after.version).toBe(before.version);
+    expect(after.jobs).toEqual(before.jobs);
+    expect(after.runs.at(-1)).toMatchObject({ sourceId: 'hubspot', status: 'failed' });
+    expect(hubspot).toMatchObject({ auditStatus: 'candidate', scheduled: false });
+    expect(http.get).not.toHaveBeenCalled();
+    expect(http.post).not.toHaveBeenCalled();
+  });
+
   it('renews long-running ownership and refuses publication after renewal failure', async () => {
     vi.useFakeTimers();
 
