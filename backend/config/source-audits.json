@@ -2749,5 +2749,66 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "lovable",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers displays 80 native title-slug postings and a representative job detail links to Ashby lovable. Public aggregate supplies 80 listed jobs and eight advertised compensation sections. Native six-character UUID prefixes are not validated full posting identities; independent inventory/traversal and worldwide employer/entity/channel review remain pending.",
+      "evidenceUrls": [
+        "https://lovable.dev/careers",
+        "https://lovable.dev/careers/brand-designer-ai-and-ops-df79d8",
+        "https://jobs.ashbyhq.com/lovable"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer retrieval/display permission remains unverified. General terms dated 28 August 2026 restrict automated tools accessing the Services without written permission; public Ashby API availability and robots permission do not independently approve employer-description display. Terms/privacy/API documentation are captured without inventing consent, reviewers or approved documents. Existing explicit blocked-plan and verification gates remain unchanged.",
+      "evidenceUrls": [
+        "https://lovable.dev/terms",
+        "https://lovable.dev/privacy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://lovable.dev/careers",
+        "disposition": "included",
+        "sourceIds": ["lovable"],
+        "reason": "Official employer careers lists native detail routes; a captured detail page directly links to the public Ashby lovable board application."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/lovable",
+        "disposition": "included",
+        "sourceIds": ["lovable"],
+        "reason": "Employer-linked public Ashby board; hosted HTML is a JavaScript shell without visible posting anchors."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://lovable.dev/careers",
+        "role": "listings",
+        "sourceIds": ["lovable"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://lovable.dev/careers/brand-designer-ai-and-ops-df79d8",
+        "role": "discovery",
+        "sourceIds": ["lovable"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/lovable",
+        "role": "listings",
+        "sourceIds": ["lovable"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

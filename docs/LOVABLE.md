@@ -1,0 +1,33 @@
+# Decision: Lovable public Ashby import
+
+**Status:** Implemented; 80 jobs imported locally with full descriptions, advertised compensation and matching features. Source candidate and scheduled; independent posting inventory and employer scope/access/display reviews remain pending. Recorded 6 October 2026, Europe/Amsterdam.
+
+## Discovery and rationale
+
+The [official careers page](https://lovable.dev/careers) displays 80 native job links. The [Brand Designer detail](https://lovable.dev/careers/brand-designer-ai-and-ops-df79d8) links directly to an application on [Ashby board lovable](https://jobs.ashbyhq.com/lovable). Its public version-1 aggregate supplies 80 listed postings with full descriptions, immutable UUIDs and original job/application links. Eight advertise structured compensation, each with one native tier; the existing adapter preserves native summaries, component text, currency/interval and additional information without calculating ranges. Other explicit display flags suppress structured compensation. Generic non-vacancy rules produce no exclusions.
+
+Native careers links use title slugs ending in six-character UUID prefixes. A matching count or prefix is not validated full posting identity. The hosted Ashby HTML exposes no visible posting links. The representative official detail proves board association; independent exhaustive inventory reconciliation and worldwide employer/entity/channel review remain pending. Equal titles do not merge distinct UUIDs.
+
+The application owner's continuing onboarding request authorizes this local integration and the earlier all-source instruction enables scheduled refresh attempts. Employer permission remains unverified. Captured [general terms](https://lovable.dev/terms), dated 28 August 2026, restrict automated tools accessing the Services without written permission. The [privacy policy](https://lovable.dev/privacy) and [Ashby public API documentation](https://developers.ashbyhq.com/docs/public-job-posting-api) are also captured. Public API availability and robots permission do not independently establish description display rights. No employer consent, reviewer or approved document records are fabricated.
+
+## Runtime invariants
+
+- Stable company/source/board ID `lovable`, provider `ashby`, Wave C, shared local N/A logo pending vector review. Scheduling follows [SCHEDULING.md](SCHEDULING.md) independently of verification.
+- Reuse `https://api.ashbyhq.com/posting-api/job-board/lovable?includeCompensation=true` through the existing adapter and bounded public transport. No new provider, network destination, credentials, private API or application submission.
+- Preserve full sanitized HTML/text, advertised compensation, posting UUIDs, titles, original URLs, department/team, primary/secondary locations, employment/workplace labels and publication dates. Unknown optional values remain unknown.
+- Post-import audit uses the exact successful extraction and source run ID without a second feed fetch. Candidate refreshes cannot advance missing counters or close jobs; explicit blocked access/display plans and removal quarantine remain effective.
+- Raw public descriptions, discovery/policy records and diagnostic output remain in ignored backend data. Compact checked-in evidence records identifiers, hashes, counts and limitations.
+
+## Implementation and verification
+
+PostgreSQL run `681c338c-3cc0-4cf9-8140-07d3be1770bb` succeeded at 18:25:34 UTC on 6 October 2026 with 80 listed vacancies, zero exclusions, complete aggregate enumeration and no removal quarantine. All 80 jobs have matching features; the run retains one successful source snapshot. Database verification compared every active job with that exact snapshot, including complete sanitized descriptions, native UUIDs, original URLs, department/team, primary/secondary locations, employment/workplace labels and publication dates. Every feature content hash matches its posting. The shortest description contains 3,007 characters; all eight displayed compensation tiers were retained.
+
+The [compact audit](../backend/config/audit-evidence/lovable.json) establishes employer-to-board association through the representative native detail, captures robots/policy evidence and binds the exact successful import. It does not treat native short prefixes as full UUIDs: independent inventory has zero validated IDs and all 80 feed IDs remain unreconciled. Persisted technical coverage is partial, access unreviewed. Aggregate completeness and employer completeness remain separate.
+
+API metadata and Wave C selection checks include Lovable. The runtime registry has 76 companies and 65 scheduled candidate sources across 62 configured companies. The 500-company backlog has 56 configured targets, eight registered-only and 436 new candidates. ElevenLabs is the next proposed discovery target. No provider implementation or public contract changes were required.
+
+Root `pnpm check` passed formatting, boundaries, local logos, zero-warning lint, strict types, 761 tests (726 backend and 35 frontend), contracts and both builds. Its default environment skipped 28 PostgreSQL tests without `TEST_DATABASE_URL`; the explicit successful import/database verification above provides separate live evidence. The rebuilt API and ingestion worker restarted healthy. Checks through `http://localhost:8080` confirmed 80 Lovable jobs, full detail HTML/text, a paid posting’s native compensation and original Ashby application URL. All 65 configured sources report scheduled candidate state across 62 configured employers; the persistent exclusive wave schedule remains 00:00 and 12:00 UTC with no competing per-source cron entries. Lovable reports a successful latest import, partial technical coverage and unreviewed access. Replit’s 70 jobs remain available. The configured browser origin was accepted; an actual Firefox UI session was not exercised. This import and schedule check do not establish successful refreshes for the entire cohort.
+
+- [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
+- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [adapter tests](../backend/src/infrastructure/adapters/adapters.test.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/wave-refresh.ts).
+- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](WAVE_C.md), [quality checks](QUALITY.md).

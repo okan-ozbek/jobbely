@@ -523,5 +523,12 @@
     "careersUrl": "https://replit.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "lovable",
+    "name": "Lovable",
+    "careersUrl": "https://lovable.dev/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

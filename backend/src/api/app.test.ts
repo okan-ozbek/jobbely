@@ -149,6 +149,13 @@ describe('read API and contract', () => {
       sources: [{ id: 'replit', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
+    expect((await app.inject('/api/v1/companies/lovable')).json()).toMatchObject({
+      name: 'Lovable',
+      careersUrl: 'https://lovable.dev/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'lovable', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,
