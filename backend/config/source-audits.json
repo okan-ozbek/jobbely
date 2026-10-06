@@ -2596,5 +2596,58 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "perplexity",
+    "scope": {
+      "status": "pending",
+      "notes": "Current Ashby Perplexity board identifies the employer name, publicWebsite www.perplexity.ai and recruiting privacy URL. Its public feed contains 130 listed postings. Employer homepage/careers HTML returns HTTP 403 and hosted Ashby HTML exposes no visible posting links, so independent official employer linking, worldwide inventory and employer/entity/channel scope remain unverified.",
+      "evidenceUrls": [
+        "https://www.perplexity.ai/hub/careers",
+        "https://jobs.ashbyhq.com/Perplexity"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Public Ashby aggregate is accessible without credentials. Employer careers, terms and privacy URLs currently return HTTP 403; no challenge, redirect or account access is bypassed. Automated retrieval and full-description display review remain pending; API availability and branded ATS metadata are not employer approval.",
+      "evidenceUrls": [
+        "https://www.perplexity.ai/hub/legal/terms-of-service",
+        "https://www.perplexity.ai/hub/legal/privacy-policy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.perplexity.ai/hub/careers",
+        "disposition": "included",
+        "sourceIds": ["perplexity"],
+        "reason": "Known employer careers route; access challenge prevents confirming the live outgoing board association or inventory."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/Perplexity",
+        "disposition": "included",
+        "sourceIds": ["perplexity"],
+        "reason": "Public branded employer board whose native metadata identifies Perplexity, employer website and privacy notice. Independent linking and visible inventory remain pending."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.perplexity.ai/hub/careers",
+        "role": "discovery",
+        "sourceIds": ["perplexity"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/Perplexity",
+        "role": "listings",
+        "sourceIds": ["perplexity"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

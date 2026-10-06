@@ -502,5 +502,12 @@
     "careersUrl": "https://huggingface.co/",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "perplexity",
+    "name": "Perplexity",
+    "careersUrl": "https://www.perplexity.ai/hub/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

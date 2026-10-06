@@ -513,5 +513,13 @@
     "board": "huggingface",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "perplexity",
+    "companySlug": "perplexity",
+    "provider": "ashby",
+    "board": "Perplexity",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

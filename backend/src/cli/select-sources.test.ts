@@ -75,6 +75,7 @@ describe('manual sync source selection', () => {
       'mistral-ai',
       'cohere',
       'hugging-face',
+      'perplexity',
     ]);
 
     expect(

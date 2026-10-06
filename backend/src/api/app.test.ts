@@ -132,6 +132,15 @@ describe('read API and contract', () => {
       ],
     });
 
+    expect((await app.inject('/api/v1/companies/perplexity')).json()).toMatchObject({
+      name: 'Perplexity',
+      careersUrl: 'https://www.perplexity.ai/hub/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [
+        { id: 'perplexity', provider: 'ashby', auditStatus: 'candidate', scheduled: false },
+      ],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

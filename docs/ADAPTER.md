@@ -22,6 +22,8 @@ An adapter validates every received item with Zod before publishing a result. Mi
 
 [Hugging Face](HUGGING_FACE.md) introduces public Workable widget support limited to the observed huggingface account. The adapter validates employer attribution, unique shortcodes, native detail/application links and full readable descriptions, then rechecks the complete published aggregate for drift. It preserves source labels and date-only publication dates, displays only country for hidden office locations, and excludes the employer-specific Wild Card open application. No private API or application request is used.
 
+[Perplexity](PERPLEXITY.md) reuses the existing Ashby adapter with the case-preserved Perplexity board, full descriptions and native advertised compensation. Its 130 listed entries, including paid internship/fellowship/early-career roles, retain distinct native UUIDs and original links. No new provider, ingestion host or application request is introduced; independent employer attribution/inventory and review remain pending.
+
 ## Invariants and extension procedure
 
 Preserve source IDs, original department labels, locations, advertised dates where mapped, URLs and full descriptions. `enumerationComplete` proves traversal of this board, not complete employer scope. Adapters neither classify functions nor close jobs. Generic non-vacancy exclusions are explicit and counted.
