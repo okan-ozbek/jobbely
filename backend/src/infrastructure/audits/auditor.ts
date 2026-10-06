@@ -423,6 +423,10 @@ export function officialHosts(company: Company, plan: AuditPlan): Set<string> {
     trusted.add('www.servicenow.com');
   }
 
+  if (company.slug === 'adyen' && new URL(company.careersUrl).hostname === 'careers.adyen.com') {
+    trusted.add('www.adyen.com');
+  }
+
   for (const url of [...plan.pages.map((page) => page.url), ...plan.access.evidenceUrls]) {
     if (!trusted.has(new URL(url).hostname)) {
       throw new Error(`Audit page is not an official employer/ATS/documentation host: ${url}`);

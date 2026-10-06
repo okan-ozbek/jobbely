@@ -219,13 +219,18 @@ export function inspectOfficialPage(
   const paginationHints = new Set<string>();
 
   for (const element of document('a[rel="next"], a, button').toArray()) {
-    const label = document(element).text().trim();
+    const control = document(element);
+    const label = control.text().trim() || control.attr('aria-label')?.trim() || '';
+
+    if (control.is('[disabled]') || control.attr('aria-disabled') === 'true') {
+      continue;
+    }
 
     if (
-      document(element).attr('rel') === 'next' ||
-      /^(next|load more|show more|more jobs)(\s*[›»→])?$/i.test(label)
+      control.attr('rel') === 'next' ||
+      /^(next(?: page)?|load more|show more|more jobs)(\s*[›»→])?$/i.test(label)
     ) {
-      const href = document(element).attr('href');
+      const href = control.attr('href');
 
       paginationHints.add(
         href && href !== '#' ? new URL(href, page.url).href : `interactive:${label}`,

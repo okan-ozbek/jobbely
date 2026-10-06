@@ -47,7 +47,7 @@ descriptions. These reports intentionally do not claim that inaccessible pages a
 - A hosted board cannot establish its own employer attribution: a configured official employer
   page must link to it. Newly discovered unregistered boards block approval unless explicitly
   excluded with a scope reason.
-- Pagination links/load-more controls must be accounted for in configured listing pages. A human
+- Pagination links/load-more controls, including enabled icon-only next-page controls with accessibility labels, must be accounted for in configured listing pages. Disabled controls do not demand another page. A human
   reviewer must confirm worldwide, unfiltered traversal and mark each listing page `complete`.
   An empty JavaScript shell is not a zero-jobs result; zero requires a reviewed `emptySelector`.
 - Every extracted vacancy is checked for a readable sanitized description, a nonempty title and

@@ -2222,5 +2222,64 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "adyen",
+    "scope": {
+      "status": "pending",
+      "notes": "The official careers client explicitly reads the public Greenhouse adyen board, and an official vacancy links to that board. Independent worldwide employer scope and interactive inventory traversal remain under review. The server-rendered careers listing is an empty client shell, not evidence of zero vacancies.",
+      "evidenceUrls": [
+        "https://careers.adyen.com/vacancies",
+        "https://job-boards.greenhouse.io/adyen"
+      ]
+    },
+    "access": {
+      "status": "pending",
+      "notes": "Documented public GET Job Board API requires no credentials. Employer access and full-description display review remain pending; documentation availability does not approve republishing.",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "evidenceUrls": [
+        "https://www.adyen.com/policies-and-disclaimer/disclaimer",
+        "https://docs.greenhouse.io/job-board.html"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://careers.adyen.com/vacancies",
+        "disposition": "included",
+        "sourceIds": ["adyen"],
+        "reason": "Official employer worldwide careers search reads this public board; locations and career types are filters over that inventory, with independent scope review pending."
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/adyen",
+        "disposition": "included",
+        "sourceIds": ["adyen"],
+        "reason": "Official vacancy application link and careers client identify this hosted board; interactive pagination remains unverified."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://careers.adyen.com/vacancies",
+        "role": "listings",
+        "sourceIds": ["adyen"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://careers.adyen.com/vacancies/8226137-people-technology-application-engineer",
+        "role": "discovery",
+        "sourceIds": ["adyen"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://job-boards.greenhouse.io/adyen",
+        "role": "listings",
+        "sourceIds": ["adyen"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

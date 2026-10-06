@@ -446,5 +446,12 @@
     "careersUrl": "https://careers.servicenow.com/jobs/",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "adyen",
+    "name": "Adyen",
+    "careersUrl": "https://careers.adyen.com/vacancies",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

@@ -66,6 +66,15 @@ describe('read API and contract', () => {
       logoUrl: '/logos/default.svg',
     });
 
+    expect((await app.inject('/api/v1/companies/adyen')).json()).toMatchObject({
+      name: 'Adyen',
+      careersUrl: 'https://careers.adyen.com/vacancies',
+      logoUrl: '/logos/default.svg',
+      sources: [
+        { id: 'adyen', provider: 'greenhouse', auditStatus: 'candidate', scheduled: false },
+      ],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

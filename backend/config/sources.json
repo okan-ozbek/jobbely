@@ -447,5 +447,13 @@
     "endpoint": "https://api.smartrecruiters.com/v1/companies/ServiceNow/postings",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "adyen",
+    "companySlug": "adyen",
+    "provider": "greenhouse",
+    "board": "adyen",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

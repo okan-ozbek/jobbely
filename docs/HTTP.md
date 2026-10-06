@@ -32,6 +32,8 @@ Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netfl
 
 [ServiceNow](SERVICENOW.md) adds JSON GET access only to `api.smartrecruiters.com/v1/companies/ServiceNow/postings`, with exactly `limit=100`, a bounded numeric `offset` and `destination=PUBLIC`, and numeric detail paths without queries. Internal postings, filtered searches, configuration/candidate/application endpoints, POST, HTML, fragments and other company boards are rejected. Official auditing separately permits SmartRecruiters hosted boards/documentation and scopes `www.servicenow.com` policy evidence to ServiceNow's official careers host.
 
+[Adyen](ADYEN.md) reuses the existing Greenhouse JSON destination and request policy. Official auditing permits `www.adyen.com` policy evidence only for company `adyen` with the official `careers.adyen.com` careers host; it grants no new ingestion host or access approval.
+
 ## Tradeoffs and extension points
 
 [HubSpot](HUBSPOT.md) remains outside the ingestion fetch allowlist behind an explicit unavailable-source gate. Its audit can retrieve `legal.hubspot.com` only when the company is `hubspot` with the official `www.hubspot.com` careers host. This permits policy evidence collection, not access/display approval or GraphQL collection.

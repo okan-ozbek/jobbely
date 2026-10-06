@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[ADYEN.md](ADYEN.md) records reuse of the public Greenhouse board, 228 imported vacancies and independent interactive-pagination coverage limits.
+
 [SERVICENOW.md](SERVICENOW.md) records public SmartRecruiters collection, full detail hydration and the challenged official-inventory coverage boundary.
 
 [HUBSPOT.md](HUBSPOT.md) records the unavailable public careers service and explicit candidate failure gate; no HubSpot jobs have been imported.

@@ -1,6 +1,6 @@
 # 500 technology employers: integration backlog
 
-**Status:** Discovery and onboarding backlog; three collectors implemented and HubSpot configured with an explicit source blocker. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs and [ServiceNow](SERVICENOW.md) imported 705 vacancies, both with independent coverage still partial; [HubSpot](HUBSPOT.md) has no usable current feed.
+**Status:** Discovery and onboarding backlog; four employer collection integrations implemented and HubSpot configured with an explicit source blocker. Created and updated 6 October 2026, Europe/Amsterdam. [Atlassian](ATLASSIAN.md) is description-blocked; [Shopify](SHOPIFY.md) imported 116 jobs, [ServiceNow](SERVICENOW.md) imported 705 vacancies and [Adyen](ADYEN.md) imported 228 vacancies, all with independent coverage still partial; [HubSpot](HUBSPOT.md) has no usable current feed.
 
 ## Purpose and selection
 
@@ -12,13 +12,13 @@ The companion [JSON backlog](TECH_COMPANIES_500.json) carries proposed target sl
 
 ## Current registry snapshot
 
-The runtime registry now has **64 companies** and **53 source boards**. Of this shortlist:
+The runtime registry now has **65 companies** and **54 source boards**. Of this shortlist:
 
 | State             | Count | Meaning                                                                                                                        |
 | ----------------- | ----: | ------------------------------------------------------------------------------------------------------------------------------ |
-| Source configured |    44 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
+| Source configured |    45 | At least one configured source; this does not establish successful imports, coverage, current availability or access approval. |
 | Registered only   |     8 | Existing company slug with no configured source. Existing A–D planning assignments, including Wave D deferrals, still apply.   |
-| New candidate     |   448 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
+| New candidate     |   447 | Proposed target outside the runtime registry; discovery and integration remain pending.                                        |
 
 The 12 existing finance/trading employers outside this tech shortlist are retained: Jane Street, Radix Trading, Hudson River Trading, Five Rings, Citadel, Two Sigma, Headlands Technologies, Optiver, JPMorgan Chase, Goldman Sachs, ABN AMRO, ING. This backlog does not replace the original MVP cohort or its coverage commitments. Registry counts are a 6 October snapshot; recompute them after future integrations.
 
@@ -41,7 +41,7 @@ Start discovery in this order, then adjust for source access, employer scope, ad
 
 These ten careers pages were readable through the web research tool on 6 October 2026. Observing a careers page does not verify its full inventory, API/provider, pagination, description availability, access permission or adapter compatibility. For existing configured employers, resolving their documented blockers and auditing coverage is a separate stream of work.
 
-Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. [HubSpot](HUBSPOT.md) is configured behind an explicit failure gate: its public listing and detail service returned GraphQL 404 errors, so no vacancies were imported. [ServiceNow](SERVICENOW.md) imported 705 vacancies with full SmartRecruiters details after excluding one non-vacancy entry. Its exact-run audit remains partial because the official inventory could not be read and additional channels are unresolved; access/display reviews remain pending and the source stays candidate and unscheduled. Adyen is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
+Atlassian has a native Wave C candidate integration. Its feed was observed with 354 rows / 336 unique IDs, but posting 26639 has no readable description and blocks full publication. [Shopify](SHOPIFY.md) imported 116 jobs with complete public listing/detail hydration; its independent audit matched 37 visible IDs and kept coverage partial because 79 imported IDs were absent from that visible inventory. Both remain candidate and unscheduled; access/display reviews are pending. [HubSpot](HUBSPOT.md) is configured behind an explicit failure gate: its public listing and detail service returned GraphQL 404 errors, so no vacancies were imported. [ServiceNow](SERVICENOW.md) imported 705 vacancies with full SmartRecruiters details after excluding one non-vacancy entry. Its exact-run audit remains partial because the official inventory could not be read and additional channels are unresolved; access/display reviews remain pending and the source stays candidate and unscheduled. [Adyen](ADYEN.md) imported 228 vacancies using the existing public Greenhouse adapter. Its exact-run audit matched 50 visible IDs and kept technical coverage partial because interactive hosted-board pagination left 178 feed IDs unmatched. Access/display reviews remain pending; the source stays candidate and unscheduled. ASML is the next discovery target. See [Atlassian's blocker](ATLASSIAN.md).
 
 ## One-company completion procedure
 
@@ -275,7 +275,7 @@ Within each sector, the rows provide a discovery link and the current local regi
 |   # | Company       | Discovery entry point                                      | Registry state    | Existing slug | Configured providers |
 | --: | ------------- | ---------------------------------------------------------- | ----------------- | ------------- | -------------------- |
 | 151 | Stripe        | [Registry URL](https://stripe.com/careers/search)          | Source configured | `stripe`      | greenhouse           |
-| 152 | Adyen         | [Careers observed](https://careers.adyen.com/)             | New candidate     | —             | —                    |
+| 152 | Adyen         | [Careers observed](https://careers.adyen.com/vacancies)    | Source configured | C             | greenhouse           |
 | 153 | PayPal        | [Registry URL](https://careers.pypl.com/home/)             | Source configured | `paypal`      | workday              |
 | 154 | Block         | [Homepage seed](https://block.xyz/)                        | New candidate     | —             | —                    |
 | 155 | Coinbase      | [Registry URL](https://www.coinbase.com/careers/positions) | Source configured | `coinbase`    | greenhouse           |

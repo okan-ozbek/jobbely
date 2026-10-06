@@ -136,6 +136,38 @@ function audit(
 }
 
 describe('automatic technical coverage', () => {
+  it('scopes Adyen policy hosting to its official employer without granting unrelated hosts', () => {
+    const employer = {
+      ...company,
+      slug: 'adyen',
+      careersUrl: 'https://careers.adyen.com/vacancies',
+    };
+
+    const auditPlan = auditPlanSchema.parse({
+      ...plan,
+      companySlug: 'adyen',
+      pages: [{ ...plan.pages[0]!, url: employer.careersUrl }],
+      access: {
+        ...plan.access,
+        evidenceUrls: ['https://www.adyen.com/policies-and-disclaimer/disclaimer'],
+      },
+    });
+
+    expect(officialHosts(employer, auditPlan).has('www.adyen.com')).toBe(true);
+    expect(() => officialHosts(company, auditPlan)).toThrow('not an official employer');
+
+    expect(() => officialHosts({ ...employer, careersUrl: company.careersUrl }, auditPlan)).toThrow(
+      'not an official employer',
+    );
+
+    expect(() =>
+      officialHosts(employer, {
+        ...auditPlan,
+        access: { ...auditPlan.access, evidenceUrls: ['https://unrelated.example/policy'] },
+      }),
+    ).toThrow('not an official employer');
+  });
+
   it('scopes ServiceNow policy hosting to the official employer and permits public ATS evidence', () => {
     const employer = {
       ...company,
@@ -517,6 +549,36 @@ describe('evidence-backed source audits', () => {
 });
 
 describe('official identity reconciliation', () => {
+  it('withholds completion for an enabled icon-only next-page button', () => {
+    const result = inspectOfficialPage(
+      '<button aria-label="Next page" aria-disabled="false"><svg></svg></button>',
+      plan.pages[0]!,
+      [source],
+    );
+
+    expect([...result.paginationHints]).toEqual(['interactive:Next page']);
+  });
+
+  it('ignores disabled pagination controls at the end of an inventory', () => {
+    const result = inspectOfficialPage(
+      '<button aria-label="Next page" aria-disabled="true"><svg></svg></button><button disabled>Next</button>',
+      plan.pages[0]!,
+      [source],
+    );
+
+    expect([...result.paginationHints]).toEqual([]);
+  });
+
+  it('follows next-page links identified by an accessibility label', () => {
+    const result = inspectOfficialPage(
+      '<a href="?page=2" aria-label="Next page"><svg></svg></a>',
+      plan.pages[0]!,
+      [source],
+    );
+
+    expect([...result.paginationHints]).toEqual([`${plan.pages[0]!.url}?page=2`]);
+  });
+
   it('deduplicates references without conflating different posting IDs', () => {
     expect(compareIdentities(['1', '1', '2'], ['1', '1', '3'])).toEqual({
       matchedCount: 1,
