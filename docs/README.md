@@ -4,7 +4,9 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
-[SCHEDULING.md](SCHEDULING.md) records the application-owner request enabling all 63 configured source schedules independently of verification, with unchanged access, coverage and closure gates.
+[REPLIT.md](REPLIT.md) records official-linked Ashby reuse, 70 imported jobs with native pay and exact-run evidence, pending employer review and enabled scheduled refreshes.
+
+[SCHEDULING.md](SCHEDULING.md) records the application-owner request enabling all configured source schedules independently of verification, with unchanged access, coverage and closure gates.
 
 [ANYSPHERE.md](ANYSPHERE.md) records Cursor’s employer-embedded Ashby source, 132 authorized local imports and exact-run evidence, retaining pending employer review and independent visible-identity reconciliation.
 

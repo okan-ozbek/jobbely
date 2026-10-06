@@ -26,6 +26,8 @@ An adapter validates every received item with Zod before publishing a result. Mi
 
 [Perplexity](PERPLEXITY.md) reuses the existing Ashby adapter with the case-preserved Perplexity board, full descriptions and native advertised compensation. Its 130 listed entries, including paid internship/fellowship/early-career roles, retain distinct native UUIDs and original links. No new provider, ingestion host or application request is introduced; independent employer attribution/inventory and review remain pending.
 
+[Replit](REPLIT.md) reuses its official-linked Ashby board with 70 listed jobs and 62 advertised compensation sections. Native IDs, full descriptions and original links remain intact; source refresh scheduling is enabled independently of pending employer review and visible inventory reconciliation.
+
 ## Invariants and extension procedure
 
 Preserve source IDs, original department labels, locations, advertised dates where mapped, URLs and full descriptions. `enumerationComplete` proves traversal of this board, not complete employer scope. Adapters neither classify functions nor close jobs. Generic non-vacancy exclusions are explicit and counted.

@@ -1,6 +1,6 @@
 # Decision: local company logo assets
 
-**Status:** Implemented, updated 6 October 2026. All 74 target companies use local SVGs: 59 sourced vectors, one explicitly documented text fallback, and the shared N/A fallback for Atlassian, Shopify, HubSpot, ServiceNow, Adyen, ASML, Canva, Notion, Vercel, Mistral AI, Cohere, Hugging Face, Perplexity and Anysphere (Cursor) pending vector review.
+**Status:** Implemented, updated 6 October 2026. All 75 target companies use local SVGs: 59 sourced vectors, one explicitly documented text fallback, and the shared N/A fallback for Atlassian, Shopify, HubSpot, ServiceNow, Adyen, ASML, Canva, Notion, Vercel, Mistral AI, Cohere, Hugging Face, Perplexity, Anysphere (Cursor) and Replit pending vector review.
 
 ## Decision and rationale
 

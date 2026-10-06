@@ -1,0 +1,182 @@
+{
+  "version": 1,
+  "companySlug": "replit",
+  "observedAt": "2026-10-06T18:01:08.443Z",
+  "configurationHash": "0e38215be52c9f6f3c1d141128c48d6e46b22361f7845cb57f8d9d6a55acddb0",
+  "artifactDirectory": "data/wave-sync/replit-onboarding-2026-10-06T18-01-04-848Z/replit/",
+  "blockers": [
+    "scope review is pending: Official careers page directly links to Ashby replit. Its public aggregate contains 70 listed postings with native UUIDs and full descriptions; 62 advertise structured compensation. Official careers contains board links rather than vacancy IDs and hosted HTML exposes no visible posting anchors, leaving independent inventory/traversal and worldwide employer/entity/channel scope review pending.",
+    "access review is pending: Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer automated-retrieval and full-description display permission remain unverified; terms/privacy and Ashby API documentation are captured without inventing consent, reviewers or approved documents. Replit service terms include content scraping restrictions; product/platform terms and public ATS availability do not independently establish recruitment-description display rights. Pending-candidate local investigation retains existing blocked-plan and verification gates."
+  ],
+  "policies": [
+    {
+      "url": "https://replit.com/terms-of-service",
+      "textSha256": "203e3c5d4894758c32e6368886d2650148ce5666ff8db70a8b10d96d33ba19e0",
+      "rawSha256": "1ef61e1a243879c753db4d76987b6866901a7f3f1478c30e5ced3f94f6668a31",
+      "robotsUrl": "https://replit.com/robots.txt",
+      "robotsSha256": "81e64c79ebe9d4ff886b91062ec54fc7f55b32fa5cacdda511f4901b471fd017",
+      "error": null
+    },
+    {
+      "url": "https://replit.com/privacy-policy",
+      "textSha256": "846082604ed39a9354b271988fa02a6b370832cd3948adbe22555df9d4286de9",
+      "rawSha256": "6be96333c2bd48c6326248e3fed23c26f8f53393e6a53e8ca2ec968c56d32108",
+      "robotsUrl": "https://replit.com/robots.txt",
+      "robotsSha256": "81e64c79ebe9d4ff886b91062ec54fc7f55b32fa5cacdda511f4901b471fd017",
+      "error": null
+    },
+    {
+      "url": "https://developers.ashbyhq.com/docs/public-job-posting-api",
+      "textSha256": "1de2ba2ad464e0c6a82ad61678643c608a0de642532a546ee44f964d64039c8a",
+      "rawSha256": "c599e9cfe7e4a3aaf9303ea526619edc6d564af7ae3d9ea427eed1de03d06747",
+      "robotsUrl": "https://developers.ashbyhq.com/robots.txt",
+      "robotsSha256": "50c39ea8fd67b9268bd9ed2496c7354c8ca38065b26313ae387197029d52b0a7",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://replit.com/careers",
+      "sha256": "7299ef3af79fc2a5c36248b6f557d8656f2f7db01776d1e9df9b80d122003ed1",
+      "robotsUrl": "https://replit.com/robots.txt",
+      "robotsSha256": "81e64c79ebe9d4ff886b91062ec54fc7f55b32fa5cacdda511f4901b471fd017",
+      "links": ["https://jobs.ashbyhq.com/replit", "https://replit.com/careers"],
+      "discoveredBoards": ["ashby:replit"],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://jobs.ashbyhq.com/replit",
+      "sha256": "225f50767bdb7b6206089cd79de615e81f5b1e9104f18715b347fd380ed510a8",
+      "robotsUrl": "https://jobs.ashbyhq.com/robots.txt",
+      "robotsSha256": "d3ccab98eafadd5f808f9622b93f8176c2f89845489a5f6a949b9792d6b1431d",
+      "links": ["https://jobs.ashbyhq.com/replit"],
+      "discoveredBoards": ["ashby:replit"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "replit",
+      "feedCount": 70,
+      "officialCount": 0,
+      "excludedCount": 0,
+      "matchedCount": 0,
+      "missingFromFeed": [],
+      "missingFromOfficial": [
+        "06cbc016-f931-431a-92cf-29fa74eedbf1",
+        "07c4c890-0dd4-4022-bba4-8dfba6ff16ee",
+        "0a94327b-52c0-41d1-931f-b2aca5e90c1f",
+        "1015fa18-69d0-49e5-a785-afe5cbcc4760",
+        "10789e06-f7d1-4619-93aa-1879f84e948e",
+        "14b3aef3-f926-4db9-8c31-af8ba848fbd8",
+        "1c53645d-ff76-4346-aa07-49c41594c8a3",
+        "226d0562-2420-4991-ac18-23c827ed119c",
+        "22e99380-e48c-4bc3-a870-721411b22957",
+        "234c9a82-2857-4691-af83-308100806df3",
+        "2b5f50b9-0c83-46de-b795-aa71a50f85ae",
+        "2c147ccb-2557-40f8-aab9-64422cef220c",
+        "2f1de5f1-48c2-4104-a697-a51fe1620508",
+        "2fa2d079-96a5-4d51-8718-04134ed39032",
+        "37f81c18-c742-4f7d-bf81-34c3f5142973",
+        "43bd4e63-22c3-4b80-abd2-67eaf2c89790",
+        "447a6e11-b06b-4cc5-9203-cd55883f2af4",
+        "47235851-fadd-4bd7-9cc6-61f545059ac1",
+        "4b290489-9ce6-45f9-bbc8-e1baa4bd8b6f",
+        "4df82fb0-0bcb-4034-89ce-09e679b00fe7",
+        "4e64e46f-f69d-4454-89b6-bd27302a464d",
+        "56d7dc53-f4ba-4147-9aaa-0fd4af7cbb4f",
+        "61cfbcb7-cd1e-49ab-82a1-e93c3962e343",
+        "6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
+        "659a8e1e-69ba-44c0-a632-96665051a3e8",
+        "6b9b25d2-cf44-446e-8e1f-dacb5ade7b6c",
+        "72866fb1-d377-4d3e-9851-f3d705449190",
+        "790afe73-238a-489c-875e-ac4e15780112",
+        "7b4bc2fe-5860-4f56-8746-aabb852cf0e1",
+        "7e48291b-6188-46d7-bc21-1d66a512ffcb",
+        "7fa1826e-d7fd-4837-8485-97de895ba7fc",
+        "88119b4c-3782-455b-a6fa-b002210c714b",
+        "8c3edc8e-3cd2-45eb-b506-cd0eb33e5bd0",
+        "8fbbe594-596a-4a4f-844b-dc00111e717f",
+        "9394684e-814c-4a3c-b5ed-19612e4331bc",
+        "9398cc6a-8e30-4bfe-a6c3-59e8b384a848",
+        "93b62fcc-5358-4381-bbde-540d334a451f",
+        "951e0ebb-a957-45fa-8763-d56ba46750b4",
+        "9936ea0d-071a-4b51-8154-fdde89ded616",
+        "999e1432-3edd-453b-b598-ab4b26e1bc5c",
+        "9a56d0ac-db44-4dc1-b960-2364557bf4c8",
+        "a45ca7ba-21f9-464d-8c00-eb5361b3c9f4",
+        "a4fe06bf-bf6d-4a51-bb36-270cd3484f00",
+        "aaffb152-16ff-4edf-a760-fd43595cd70e",
+        "b04f15b6-1757-4f36-918e-9e0f671723b5",
+        "b386f0ef-41e1-48e4-abe3-d35ce627de95",
+        "b59955db-9bf3-437b-9271-7e50e7a07ba7",
+        "b5e81eae-06f9-4798-8988-2d06ca936dbc",
+        "b68de733-07d9-4e57-82c5-78c6bd454044",
+        "b7f12834-78d2-424d-bf83-0c942815fbf7",
+        "bb52f792-58c2-41ab-954d-555c821fe3fe",
+        "bcfd5249-9b34-414f-a6ec-677ae279dffe",
+        "bcfdb564-48c9-42c9-ab5b-c901b6babb44",
+        "bda076c2-3eea-4c67-b288-7c7e2a23db4c",
+        "bfb473fb-6db1-469f-873a-7a3c1d127d21",
+        "c05749db-f413-4091-a95c-c8e0aa1b5630",
+        "c1a83620-c70f-471b-bd52-9dd19f1a7c09",
+        "d02e678d-866b-4349-acb8-6a41e1703f81",
+        "d0e0dd7d-59d1-4de8-afbb-54aea680b51d",
+        "de941de4-b0f2-4de8-a018-af667c67f33e",
+        "df65b94a-2273-4e65-aead-fac409839e30",
+        "df7b6d30-9da1-4ace-8121-17c2aa55aa6f",
+        "e658545c-ee42-48b5-8f39-c43991b02164",
+        "e673256c-7701-4b97-b7f4-800b68f03f84",
+        "ebc39bd6-f32b-4e1b-bda2-30467453c725",
+        "ecebead2-74fc-4d00-98c5-6f67266cbab5",
+        "f2f56292-890e-498c-844c-07f2bea8ea7a",
+        "f508992f-5b26-4ab1-816d-d17f121d208b",
+        "f98605a1-36d2-4b2f-b9be-f66064a02645",
+        "fe171a6b-ebbb-4ecb-bc74-01b2131bc0c6"
+      ],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": true,
+      "feedHashes": ["138c8a692883da74149f922b5c3f08320f4650be9d6778d7b0023230a613fc67"],
+      "samples": [
+        {
+          "id": "2f1de5f1-48c2-4104-a697-a51fe1620508",
+          "title": "Design Engineer",
+          "url": "https://jobs.ashbyhq.com/replit/2f1de5f1-48c2-4104-a697-a51fe1620508",
+          "applyUrl": "https://jobs.ashbyhq.com/replit/2f1de5f1-48c2-4104-a697-a51fe1620508/application"
+        },
+        {
+          "id": "47235851-fadd-4bd7-9cc6-61f545059ac1",
+          "title": "Staff Software Engineer, Product",
+          "url": "https://jobs.ashbyhq.com/replit/47235851-fadd-4bd7-9cc6-61f545059ac1",
+          "applyUrl": "https://jobs.ashbyhq.com/replit/47235851-fadd-4bd7-9cc6-61f545059ac1/application"
+        },
+        {
+          "id": "8fbbe594-596a-4a4f-844b-dc00111e717f",
+          "title": "Software Engineer, Mobile",
+          "url": "https://jobs.ashbyhq.com/replit/8fbbe594-596a-4a4f-844b-dc00111e717f",
+          "applyUrl": "https://jobs.ashbyhq.com/replit/8fbbe594-596a-4a4f-844b-dc00111e717f/application"
+        }
+      ],
+      "error": null
+    }
+  ],
+  "technicalCoverage": {
+    "companySlug": "replit",
+    "configurationHash": "0e38215be52c9f6f3c1d141128c48d6e46b22361f7845cb57f8d9d6a55acddb0",
+    "checkedAt": "2026-10-06T18:01:08.443Z",
+    "status": "partial",
+    "sourceRunIds": {
+      "replit": "de59c9c0-a5bf-465a-9119-9b873224b70a"
+    },
+    "blockers": [
+      "replit: official listing traversal not reviewed",
+      "replit: 70 feed IDs absent from official inventory"
+    ],
+    "accessStatus": "unreviewed"
+  }
+}

@@ -516,5 +516,12 @@
     "careersUrl": "https://cursor.com/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "replit",
+    "name": "Replit",
+    "careersUrl": "https://replit.com/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

@@ -142,6 +142,13 @@ describe('read API and contract', () => {
       sources: [{ id: 'anysphere', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
+    expect((await app.inject('/api/v1/companies/replit')).json()).toMatchObject({
+      name: 'Replit',
+      careersUrl: 'https://replit.com/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'replit', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

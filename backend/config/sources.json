@@ -529,5 +529,13 @@
     "board": "cursor",
     "auditStatus": "candidate",
     "scheduled": true
+  },
+  {
+    "id": "replit",
+    "companySlug": "replit",
+    "provider": "ashby",
+    "board": "replit",
+    "auditStatus": "candidate",
+    "scheduled": true
   }
 ]

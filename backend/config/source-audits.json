@@ -2699,5 +2699,55 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "replit",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers page directly links to Ashby replit. Its public aggregate contains 70 listed postings with native UUIDs and full descriptions; 62 advertise structured compensation. Official careers contains board links rather than vacancy IDs and hosted HTML exposes no visible posting anchors, leaving independent inventory/traversal and worldwide employer/entity/channel scope review pending.",
+      "evidenceUrls": ["https://replit.com/careers", "https://jobs.ashbyhq.com/replit"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer automated-retrieval and full-description display permission remain unverified; terms/privacy and Ashby API documentation are captured without inventing consent, reviewers or approved documents. Replit service terms include content scraping restrictions; product/platform terms and public ATS availability do not independently establish recruitment-description display rights. Pending-candidate local investigation retains existing blocked-plan and verification gates.",
+      "evidenceUrls": [
+        "https://replit.com/terms-of-service",
+        "https://replit.com/privacy-policy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://replit.com/careers",
+        "disposition": "included",
+        "sourceIds": ["replit"],
+        "reason": "Official employer careers page directly links to the unfiltered public Ashby replit board."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/replit",
+        "disposition": "included",
+        "sourceIds": ["replit"],
+        "reason": "Employer-linked public Ashby board; hosted HTML does not expose visible vacancy links and does not prove zero jobs."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://replit.com/careers",
+        "role": "discovery",
+        "sourceIds": ["replit"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/replit",
+        "role": "listings",
+        "sourceIds": ["replit"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]
