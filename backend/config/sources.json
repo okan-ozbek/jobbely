@@ -497,5 +497,13 @@
     "board": "mistral.ai",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "cohere",
+    "companySlug": "cohere",
+    "provider": "ashby",
+    "board": "cohere",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]

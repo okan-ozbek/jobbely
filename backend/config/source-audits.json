@@ -2494,5 +2494,56 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "cohere",
+    "scope": {
+      "status": "pending",
+      "notes": "Official careers HTML links to public Ashby cohere, observed with 130 listed jobs. Official landing and hosted HTML expose no visible posting IDs, so independent worldwide inventory and employer/entity/channel scope remain unverified.",
+      "evidenceUrls": ["https://cohere.com/careers", "https://jobs.ashbyhq.com/cohere"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "The application owner explicitly authorized local Cohere import and display on 6 October 2026, removing the local candidate publication block. Employer permission and automated retrieval/full-description display review remain unverified: Cohere terms-of-use section 9 restricts copying and republication of supplied content, and public Ashby availability does not establish a display-rights grant. This local authorization does not approve scheduling, closure or worldwide employer coverage.",
+      "evidenceUrls": [
+        "https://cohere.com/terms-of-use",
+        "https://cohere.com/privacy",
+        "https://cohere.com/applicant-privacy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://cohere.com/careers",
+        "disposition": "included",
+        "sourceIds": ["cohere"],
+        "reason": "Official careers links directly to current Ashby board; local import/display authorized by the application owner, with independent inventory and employer access/display review pending."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/cohere",
+        "disposition": "included",
+        "sourceIds": ["cohere"],
+        "reason": "Official-linked public board; hosted JavaScript shell does not prove zero vacancies or independent complete enumeration."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://cohere.com/careers",
+        "role": "discovery",
+        "sourceIds": ["cohere"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/cohere",
+        "role": "listings",
+        "sourceIds": ["cohere"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

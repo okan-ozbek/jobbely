@@ -116,6 +116,13 @@ describe('read API and contract', () => {
       ],
     });
 
+    expect((await app.inject('/api/v1/companies/cohere')).json()).toMatchObject({
+      name: 'Cohere',
+      careersUrl: 'https://cohere.com/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'cohere', provider: 'ashby', auditStatus: 'candidate', scheduled: false }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

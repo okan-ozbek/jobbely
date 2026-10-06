@@ -10,13 +10,13 @@ The Adapter pattern isolates upstream differences. Bootstrap selects the provide
 
 ## Current provider behavior
 
-| Provider   | Enumeration and translation                                                                                                                                              |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Greenhouse | Requests full content, compares item count with `meta.total`, excludes prospect entries with null internal job IDs and generic talent-pool titles                        |
-| Ashby      | Requires API version `1`, filters `isListed`, retains department/team and secondary locations; nullable workplace fields remain unknown                                  |
-| Lever      | Traverses pages of 100 up to 100 pages, rejects repeated IDs, finishes only on a short page; assembles description, list sections, closing text and salary description   |
-| Workday    | Exhausts CXS search and native category partitions, handles the 2,000-result cap and later-page zero-total sentinel, hydrates all descriptions and retains immutable IDs |
-| iCIMS/Jibe | Traverses `/api/jobs` pages against explicit totals, retains full descriptions and native categories, applies explicit employer membership/URL host configuration        |
+| Provider   | Enumeration and translation                                                                                                                                                                                   |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Greenhouse | Requests full content, compares item count with `meta.total`, excludes prospect entries with null internal job IDs and generic talent-pool titles                                                             |
+| Ashby      | Requires API version `1`, filters `isListed`, retains department/team and secondary locations; nullable workplace fields remain unknown; retains displayed native compensation summaries and geographic tiers |
+| Lever      | Traverses pages of 100 up to 100 pages, rejects repeated IDs, finishes only on a short page; assembles description, list sections, closing text and salary description                                        |
+| Workday    | Exhausts CXS search and native category partitions, handles the 2,000-result cap and later-page zero-total sentinel, hydrates all descriptions and retains immutable IDs                                      |
+| iCIMS/Jibe | Traverses `/api/jobs` pages against explicit totals, retains full descriptions and native categories, applies explicit employer membership/URL host configuration                                             |
 
 An adapter validates every received item with Zod before publishing a result. Missing required fields fail the run. Optional information can remain unknown; a missing remote flag does not imply on-site work. Employment labels are currently source strings, with `unknown` for absence. Ashby falls back to its job URL when the feed omits an ID.
 
@@ -43,6 +43,8 @@ For an existing provider, add a candidate entry to the registry and audit it. Fo
 [Vercel](VERCEL.md) reuses Greenhouse full-content enumeration. Its native careers URLs carry the same numeric posting IDs; the audit recognizes only the exact employer host and careers detail path, using visible links for inventory and embedded URLs for board discovery. No additional ingestion host is allowed.
 
 [Mistral AI](MISTRAL_AI.md) reuses Ashby full-description enumeration on the current `mistral.ai` board. Registry validation permits dotted segments only for Ashby, sharing its identifier pattern with official URL reconciliation; other provider board rules remain unchanged. Legacy Lever discovery is not a configured source. Independent visible inventory remains unavailable from the hosted JavaScript shell.
+
+[Cohere](COHERE.md) reuses its public Ashby board and imported 130 jobs locally after explicit application-owner authorization; employer access/display review remains pending. Candidate validation rejects explicitly blocked plans before storage and retains the existing manual import path for pending candidates. Ashby appends safely escaped native compensation summaries, tier labels, component summaries/currency/interval and additional text to full descriptions when publicly displayed. Explicit `shouldDisplayCompensationOnJobPostings: false` suppresses compensation; absent/null/empty compensation leaves descriptions unchanged. Malformed compensation fails the snapshot rather than silently omitting pay. No public API schema or ingestion destination changes.
 
 Detailed enterprise invariants and source assignments live in [WAVE_B.md](WAVE_B.md). Other custom boards and scraping remain planned extensions. No universal scraper, browser extraction adapter or MCP dependency is implemented.
 

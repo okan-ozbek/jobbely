@@ -127,7 +127,7 @@ refresh, it revalidates audit evidence, retrieves current official inventories a
 reconciles the extracted source again. A mismatch, new board, challenge, policy change or unreviewed
 scope fails the run before publication. Existing jobs and removal counters are preserved, and
 coverage reflects the failed run. Successful reconciliation evidence is stored with the database
-snapshot. Candidate manual imports remain available for investigation but cannot reconcile closure.
+snapshot. Candidate manual imports remain available for investigation but cannot reconcile closure. An explicitly blocked access or display plan now fails candidate validation before atomic publication. Public feed retrieval remains possible for discovery/audit, but failed imports store no posting descriptions or successful snapshots. Pending reviews preserve the existing investigation path. See [Cohere](COHERE.md).
 
 Enterprise source endpoint, canonical host aliases and employer membership rules are included in the configuration hash. Workday official URL slugs are reconciled to immutable posting IDs through captured detail evidence, rather than inventing requisition/title equivalence. The expanded registry includes pending plans for every Wave B company; a configured plan is not an approval. See [WAVE_B.md](WAVE_B.md).
 
@@ -149,8 +149,8 @@ The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix 
   30-second requests, 8 MiB page/1 MiB robots limits and a four-minute official-fetch budget. DNS
   checks are not connection-pinned; deployment egress controls remain recommended. Official HTML
   requests have no automatic retries; 403/429 are not bypassed.
-- Candidate imports are not subject to the verified publication guard. No source is approved merely
-  by setting a JSON flag, and no source has been enabled while its audit still has blockers.
+- Candidate imports are not subject to the verified inventory guard, but explicit blocked access/display plans prevent their publication. No source is approved merely
+  by setting a JSON flag, and no source has been activated for verified scheduling while its audit still has blockers. Cohere local import/display was explicitly authorized by the application owner; it remains a pending, unscheduled candidate rather than a verified source.
 - Source state requires process restart, and expired/missing evidence prevents normal startup with
   verified configuration. Restore valid evidence or explicitly downgrade the source before restart.
 

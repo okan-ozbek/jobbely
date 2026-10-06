@@ -13,6 +13,14 @@ export class AuditedPostingValidation implements PostingValidation {
 
   async validate(source: Source, extraction: Extraction) {
     if (source.auditStatus !== 'verified') {
+      const plan = loadAuditPlans().find((entry) => entry.companySlug === source.companySlug);
+
+      if (plan?.access.status === 'blocked' || plan?.access.display === 'blocked') {
+        throw new Error(
+          `Full-description publication blocked for ${source.companySlug}: ${plan.access.notes}`,
+        );
+      }
+
       return [];
     }
 

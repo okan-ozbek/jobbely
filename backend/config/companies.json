@@ -488,5 +488,12 @@
     "careersUrl": "https://mistral.ai/careers/",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "cohere",
+    "name": "Cohere",
+    "careersUrl": "https://cohere.com/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

@@ -19,7 +19,7 @@ flowchart LR
   Commit -. failure .-> Fail
 ```
 
-After claiming the lease, the use case selects the adapter, invokes its injected `PostingValidation` port, rejects duplicate IDs, prepares HTML/text, rejects empty descriptions, classifies each posting and hashes the normalized content. Verified-source validation repeats official inventory reconciliation and current access-policy checks; candidate imports remain an investigation path. The repository publishes postings, feed/audit evidence, versions and successful run state together. Any extraction/validation/preparation/publication exception records failure and is rethrown. A lease conflict fails before another run is created. See [AUDITING.md](AUDITING.md).
+After claiming the lease, the use case selects the adapter, invokes its injected `PostingValidation` port, rejects duplicate IDs, prepares HTML/text, rejects empty descriptions, classifies each posting and hashes the normalized content. Verified-source validation repeats official inventory reconciliation and current access-policy checks; candidate imports remain an investigation path. Explicitly blocked access/display plans now fail candidate validation before publication, preserving prior listings and absence counters; pending reviews retain the existing investigation behavior. The repository publishes postings, feed/audit evidence, versions and successful run state together. Any extraction/validation/preparation/publication exception records failure and is rethrown. A lease conflict fails before another run is created. See [AUDITING.md](AUDITING.md).
 
 ## Commands and scheduling
 
@@ -38,7 +38,7 @@ pnpm --filter @jobbely/backend run worker
 
 Manual sync requires PostgreSQL mode. `--company` and `--wave` include configured candidate boards for evaluation; `--all-enabled` selects scheduled sources. Choose exactly one selector. One company may have multiple boards, synchronized separately. The CLI continues after a source error and exits unsuccessfully if any source failed.
 
-Wave C currently selects its five configured priorities plus the configured Atlassian, Shopify, HubSpot, ServiceNow, Adyen, ASML, Canva, Notion, Vercel and Mistral AI backlog expansions. Apple requires a full initial detail traversal, potentially over 100 minutes at default pacing; inventory diagnostics or samples cannot publish jobs. Native source errors and access gates preserve existing data. See [WAVE_C.md](WAVE_C.md).
+Wave C currently selects its five configured priorities plus the configured Atlassian, Shopify, HubSpot, ServiceNow, Adyen, ASML, Canva, Notion, Vercel, Mistral AI and Cohere backlog expansions. Apple requires a full initial detail traversal, potentially over 100 minutes at default pacing; inventory diagnostics or samples cannot publish jobs. Native source errors and access gates preserve existing data. See [WAVE_C.md](WAVE_C.md).
 
 The worker uses pg-boss in the same PostgreSQL database, with local concurrency one, keyed source schedules, UTC refreshes at staggered minutes every 12 hours, and a configured two retries with backoff. It rechecks audit/enabled state before processing a job. The source lease is the cross-process overlap guard; local concurrency alone is not.
 

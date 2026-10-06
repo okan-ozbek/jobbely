@@ -149,6 +149,114 @@ describe('source translation and completeness', () => {
     ).rejects.toThrow(/version/);
   });
 
+  it('preserves Ashby geographic compensation tiers, units and safely escaped native labels', async () => {
+    const result = await new AshbyAdapter(
+      http({
+        apiVersion: '1',
+        jobs: [
+          {
+            ...ashby,
+            shouldDisplayCompensationOnJobPostings: true,
+            compensation: {
+              compensationTierSummary: 'Multiple Ranges & Equity',
+              compensationTiers: [
+                {
+                  title: 'Canada <Toronto>',
+                  tierSummary: 'Base Salary CA$100K – CA$150K',
+                  components: [
+                    {
+                      summary: 'Base Salary CA$100K – CA$150K',
+                      interval: '1 YEAR',
+                      currencyCode: 'CAD',
+                    },
+                    { summary: 'Offers Equity', interval: 'NONE', currencyCode: null },
+                  ],
+                },
+                {
+                  title: 'USA',
+                  tierSummary: 'Base Salary $90K – $140K',
+                  additionalInformation: '<script>text</script>',
+                  components: [
+                    {
+                      summary: 'Base Salary $90K – $140K',
+                      interval: '1 YEAR',
+                      currencyCode: 'USD',
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    ).extract({ ...source, provider: 'ashby' });
+
+    const html = result.postings[0]!.descriptionHtml;
+
+    expect(html).toContain(ashby.descriptionHtml);
+    expect(html).toContain('Multiple Ranges &amp; Equity');
+    expect(html).toContain('Canada &lt;Toronto&gt;');
+    expect(html).toContain('Base Salary CA$100K – CA$150K (1 YEAR, CAD)');
+    expect(html).toContain('Base Salary $90K – $140K (1 YEAR, USD)');
+    expect(html).toContain('Offers Equity</p>');
+    expect(html).toContain('&lt;script&gt;text&lt;/script&gt;');
+    expect(html).not.toContain('<script>');
+  });
+
+  it('omits explicitly hidden Ashby compensation and leaves empty compensation unchanged', async () => {
+    const result = await new AshbyAdapter(
+      http({
+        apiVersion: '1',
+        jobs: [
+          {
+            ...ashby,
+            shouldDisplayCompensationOnJobPostings: false,
+            compensation: { compensationTierSummary: 'Hidden range' },
+          },
+          {
+            ...ashby,
+            id: 'empty',
+            compensation: { compensationTierSummary: null, compensationTiers: [] },
+          },
+        ],
+      }),
+    ).extract({ ...source, provider: 'ashby' });
+
+    expect(result.postings.map((posting) => posting.descriptionHtml)).toEqual([
+      ashby.descriptionHtml,
+      ashby.descriptionHtml,
+    ]);
+  });
+
+  it('retains the public Ashby salary summary when tiers and the display flag are absent', async () => {
+    const result = await new AshbyAdapter(
+      http({
+        apiVersion: '1',
+        jobs: [{ ...ashby, compensation: { scrapeableCompensationSalarySummary: '$50K – $75K' } }],
+      }),
+    ).extract({ ...source, provider: 'ashby' });
+
+    expect(result.postings[0]?.descriptionHtml).toContain('$50K – $75K');
+  });
+
+  it('fails the entire Ashby snapshot for malformed compensation instead of omitting pay', async () => {
+    await expect(
+      new AshbyAdapter(
+        http({
+          apiVersion: '1',
+          jobs: [
+            ashby,
+            {
+              ...ashby,
+              id: 'malformed',
+              compensation: { compensationTiers: [{ components: [{ summary: 100 }] }] },
+            },
+          ],
+        }),
+      ).extract({ ...source, provider: 'ashby' }),
+    ).rejects.toThrow('Upstream schema mismatch');
+  });
+
   it('traverses Lever pages and assembles requirements/closing content', async () => {
     const urls: string[] = [];
 

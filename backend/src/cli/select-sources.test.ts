@@ -73,6 +73,7 @@ describe('manual sync source selection', () => {
       'notion',
       'vercel',
       'mistral-ai',
+      'cohere',
     ]);
 
     expect(
