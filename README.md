@@ -4,6 +4,8 @@ Jobbely collects public employer job listings, categorizes them without AI, and 
 
 Agents should start with [AGENTS.md](AGENTS.md) for repository boundaries, documentation references and required completion checks.
 
+The [500-company technology employer backlog](docs/TECH_COMPANIES_500.md) proposes future integrations by sector, with existing registry status, discovery links and a suggested next-ten queue. It is a planning shortlist; each employer still needs source discovery and coverage/access checks before activation.
+
 The **Resume** page reads text or a local PDF/DOCX, shows reading order and claims, and lets you correct the profile before requesting explained job recommendations. It covers engineering, data/AI, product, sales and people, with explicit gaps, uncertainty and freshness. Candidate data stays transient; only public job features are persisted. Try the synthetic examples in [RESUME_TESTING](docs/RESUME_TESTING.md); see [RESUME_PLAN](RESUME_PLAN.md) for broader follow-ups.
 
 TypeScript lives in separate `/frontend` and `/backend` packages. Integrations support Greenhouse, Ashby, Lever, Workday, iCIMS/Jibe and the first native Wave C boards. All 60 employers are registered, with sources for all 10 Wave A and 31 Wave B companies plus Meta, Apple, Netflix, Google and Amazon. Wave B full imports succeeded for 29 companies; NVIDIA has a malformed feed and LinkedIn requires an authorized feed. Meta and Google also have explicit access blockers. Full employer coverage remains under audit. See [the MVP boundaries](MVP_PLAN.md), [Wave B](docs/WAVE_B.md), [Wave C](docs/WAVE_C.md) and [dated source checks](docs/SOURCE_CHECKS.md).

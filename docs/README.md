@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[TECH_COMPANIES_500.md](TECH_COMPANIES_500.md) proposes a global 500-employer technology shortlist for one-company-at-a-time onboarding, with a [JSON backlog](TECH_COMPANIES_500.json), current registry matches, discovery-evidence levels and a suggested next-ten queue. It adds no runtime integrations or source approvals.
+
 [AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) records automatic technical verification, pagination, persisted run/configuration-bound results and live checkmarks. Access/display review and legacy removal activation remain separate from technical coverage.
 
 [WAVE_REFRESH.md](WAVE_REFRESH.md) records the automated A → B → C ingestion/audit cycle, exclusive queue, exact snapshot reuse, persisted progress and unchanged source verification/lifecycle gates.
