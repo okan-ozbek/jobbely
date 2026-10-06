@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[ANYSPHERE.md](ANYSPHERE.md) records Cursor’s employer-embedded Ashby source, 132 discovered postings and the verified full-description publication gate, with authorization and independent identity reconciliation pending.
+
 [PERPLEXITY.md](PERPLEXITY.md) records public Ashby reuse, 130 imported jobs with native compensation and exact-run evidence, separating collection from challenged official careers/policy access and unverified independent inventory.
 
 [HUGGING_FACE.md](HUGGING_FACE.md) records public Workable support, five imported vacancies, the Wild Card exclusion and exact-run reconciliation against the advertised Markdown inventory, with employer scope/access/display reviews pending.

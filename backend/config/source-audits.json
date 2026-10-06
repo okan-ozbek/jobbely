@@ -2649,5 +2649,55 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "anysphere",
+    "scope": {
+      "status": "pending",
+      "notes": "Official Cursor careers HTML exposes 132 native vacancy links and embeds the Ashby cursor board with 132 UUIDs. The public aggregate also advertises 132 listed postings. Native title slugs are not immutable Ashby identities; independent per-posting mapping, worldwide employer/entity/channel scope and traversal review remain pending.",
+      "evidenceUrls": ["https://cursor.com/careers", "https://jobs.ashbyhq.com/cursor"]
+    },
+    "access": {
+      "status": "blocked",
+      "display": "blocked",
+      "reviewedDocuments": [],
+      "notes": "Cursor terms dated 3 September 2026 define the Service to include its website and section 1.5(viii) restricts harvesting, scraping or extracting Service data. Full-description collection/display authorization has not been established for this employer. Register the public Ashby source behind the existing candidate publication gate; policy/feed accessibility and embedded board metadata do not approve employer access or republication.",
+      "evidenceUrls": [
+        "https://cursor.com/terms-of-service",
+        "https://cursor.com/privacy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://cursor.com/careers",
+        "disposition": "included",
+        "sourceIds": ["anysphere"],
+        "reason": "Official careers page embeds canonical Ashby cursor posting/application URLs while presenting native title-slug vacancy links."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/cursor",
+        "disposition": "included",
+        "sourceIds": ["anysphere"],
+        "reason": "Employer-embedded public Ashby board; HTML is a JavaScript shell rather than an independent visible inventory."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://cursor.com/careers",
+        "role": "listings",
+        "sourceIds": ["anysphere"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/cursor",
+        "role": "listings",
+        "sourceIds": ["anysphere"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

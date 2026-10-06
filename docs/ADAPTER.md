@@ -2,6 +2,8 @@
 
 **Status:** Implemented, 30 September 2026.
 
+[Anysphere (Cursor)](ANYSPHERE.md) reuses Ashby board `cursor`, discovered in official careers hydration. Its current access/display plan blocks candidate publication; public feed extraction does not authorize stored description display.
+
 ## Decision and rationale
 
 Use one adapter per ATS provider, configured with an employer board identifier and, for enterprise boards, an explicit endpoint. Greenhouse, Ashby, Lever, Workday and iCIMS implement `SourceAdapter.extract(source)` and return `Extraction`: canonical postings, raw responses, exclusion count and explicit traversal completeness. Provider schemas and pagination stay inside infrastructure. The shared factory supplies the same implementations to bootstrap and auditing. LinkedIn has a fail-closed access gate pending an authorized feed.

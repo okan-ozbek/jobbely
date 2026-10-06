@@ -509,5 +509,12 @@
     "careersUrl": "https://www.perplexity.ai/hub/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "anysphere",
+    "name": "Anysphere (Cursor)",
+    "careersUrl": "https://cursor.com/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]

@@ -521,5 +521,13 @@
     "board": "Perplexity",
     "auditStatus": "candidate",
     "scheduled": false
+  },
+  {
+    "id": "anysphere",
+    "companySlug": "anysphere",
+    "provider": "ashby",
+    "board": "cursor",
+    "auditStatus": "candidate",
+    "scheduled": false
   }
 ]
