@@ -43,6 +43,81 @@ function accountResult<T>(result: { data?: T; error?: { message: string; code: s
   return result.data;
 }
 
+export async function requestEmailChange(
+  body: { email: string; password: string },
+  csrfToken: string,
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/account/email/change', {
+      body,
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export async function confirmEmailChange(
+  body: { challenge: string; code: string },
+  csrfToken: string,
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/account/email/confirm', {
+      body,
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export async function resendEmailChange(challenge: string, csrfToken: string, signal: AbortSignal) {
+  return accountResult(
+    await client.POST('/api/v1/account/email/resend', {
+      body: { challenge },
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export type Plans = paths['/api/v1/plans']['get']['responses'][200]['content']['application/json'];
+
+export type BillingPeriod = Plans['billingOptions'][number]['key'];
+
+export async function listPlans(signal: AbortSignal) {
+  return accountResult(await client.GET('/api/v1/plans', { signal, cache: 'no-store' }));
+}
+
+export async function createTestCheckout(
+  period: BillingPeriod,
+  requestId: string,
+  csrfToken: string,
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/billing/checkout', {
+      body: { period, requestId },
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export async function testCheckoutStatus(id: string, signal: AbortSignal) {
+  return accountResult(
+    await client.GET('/api/v1/billing/checkout/{id}', {
+      params: { path: { id } },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
 export async function registerPasswordAccount(
   body: { email: string; password: string },
   signal: AbortSignal,

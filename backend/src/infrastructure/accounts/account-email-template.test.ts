@@ -2,6 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { renderAccountEmail } from './account-email-template.js';
 
 describe('account email presentation', () => {
+  it('uses distinct new-email verification copy', () => {
+    const email = renderAccountEmail({
+      to: 'synthetic@example.invalid',
+      code: '012345',
+      purpose: 'change-email',
+      expiresAt: '2099-01-01T00:00:00Z',
+    });
+
+    expect(email.subject).toBe('Confirm your new email — Jobbely');
+    expect(email.html).toContain('confirm your new email address');
+    expect(email.text).toContain('confirm your new email address');
+    expect(email.html).not.toContain('set a new password');
+  });
+
   it('keeps the leading-zero code and expiry in both email formats without remote content', () => {
     const email = renderAccountEmail({
       to: 'synthetic@example.invalid',

@@ -144,7 +144,7 @@ export class Accounts implements MatchingAccessProvider {
     await this.repository.revokeSession(session.tokenHash, this.clock());
   }
 
-  private async authorizedSession(token: string | undefined, csrf: string | undefined) {
+  async authorizedSession(token: string | undefined, csrf: string | undefined) {
     const session = await this.current(token);
     const expected = Buffer.from(session?.csrfToken ?? '');
     const actual = Buffer.from(csrf ?? '');

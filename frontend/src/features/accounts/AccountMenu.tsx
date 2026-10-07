@@ -11,15 +11,21 @@ import {
 import { ApiError } from '../../api/client.js';
 import './accounts.css';
 import { EmailAccountForm } from './EmailAccountForm.js';
+import { AccountEmailChangeForm } from './AccountEmailChangeForm.js';
+import { PricingPlans } from './PricingPlans.js';
 
 const names = { github: 'GitHub', linkedin: 'LinkedIn' };
 
 export function AccountMenu({
   onSessionEnd,
   onDeleted,
+  openRequest = 0,
+  onAccountChange,
 }: {
   onSessionEnd: () => void;
   onDeleted: () => void;
+  openRequest?: number;
+  onAccountChange?: (userId: string | null) => void;
 }) {
   const [account, setAccount] = useState<Account | null>(null);
   const [providers, setProviders] = useState<{ name: SignInProvider; available: boolean }[]>([]);
@@ -29,6 +35,8 @@ export function AccountMenu({
   const [error, setError] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteText, setDeleteText] = useState('');
+  const [panel, setPanel] = useState<'details' | 'plans' | 'email' | 'reset'>('details');
+  const [notice, setNotice] = useState('');
   const [link, setLink] = useState<{ provider: SignInProvider; url: string } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const active = useRef<AbortController | null>(null);
@@ -36,11 +44,16 @@ export function AccountMenu({
   const userId = useRef<string | null>(null);
   const mutating = useRef(false);
   const ended = useRef(onSessionEnd);
+  const accountChanged = useRef(onAccountChange);
   const titleId = useId();
 
   useEffect(() => {
     ended.current = onSessionEnd;
   }, [onSessionEnd]);
+
+  useEffect(() => {
+    accountChanged.current = onAccountChange;
+  }, [onAccountChange]);
 
   const refresh = useCallback(async () => {
     if (mutating.current) {
@@ -64,6 +77,7 @@ export function AccountMenu({
         ended.current();
         setConfirmDelete(false);
         setDeleteText('');
+        setPanel('details');
       }
 
       if (!userId.current && result.user) {
@@ -73,6 +87,7 @@ export function AccountMenu({
 
       userId.current = result.user?.id ?? null;
       setAccount(result);
+      accountChanged.current?.(result.user?.id ?? null);
       setError('');
     } catch (failure) {
       if (controller.signal.aborted) {
@@ -86,11 +101,21 @@ export function AccountMenu({
 
         userId.current = null;
         setAccount(null);
+        accountChanged.current?.(null);
       }
 
       setError(failure instanceof Error ? failure.message : 'Could not load your account.');
     }
   }, []);
+
+  useEffect(() => {
+    if (openRequest > 0) {
+      setPanel('details');
+      setConfirmDelete(false);
+      setOpen(true);
+      void refresh();
+    }
+  }, [openRequest, refresh]);
 
   useEffect(() => {
     void refresh();
@@ -202,6 +227,7 @@ export function AccountMenu({
         ended.current();
         userId.current = null;
         setAccount(null);
+        accountChanged.current?.(null);
         setLink(null);
         setConfirmDelete(false);
         setDeleteText('');
@@ -216,6 +242,8 @@ export function AccountMenu({
         if (remove && failure instanceof ApiError && failure.code === 'authentication_required') {
           setConfirmDelete(false);
           setDeleteText('');
+          setPanel('details');
+          setNotice('');
         }
 
         setError(
@@ -249,7 +277,7 @@ export function AccountMenu({
         {account?.user ? 'Account' : 'Sign in'}
       </button>
       <dialog
-        className="account-dialog"
+        className={`account-dialog${account?.user && !confirmDelete && (panel === 'details' || panel === 'plans') ? ' account-dialog-settings' : ''}`}
         ref={dialog}
         aria-labelledby={titleId}
         onCancel={(event) => {
@@ -261,6 +289,7 @@ export function AccountMenu({
           setOpen(false);
           setConfirmDelete(false);
           setDeleteText('');
+          setPanel('details');
           active.current?.abort();
         }}
       >
@@ -315,29 +344,149 @@ export function AccountMenu({
               </form>
             ) : (
               <>
-                <p>{account.user.email ?? 'You’re signed in.'}</p>
-                <div className="account-actions">
-                  <button
-                    className="secondary-button"
-                    disabled={loading}
-                    onClick={() => {
-                      void endAccount();
+                {(panel === 'details' || panel === 'plans') && (
+                  <div className="account-mode-buttons">
+                    <button
+                      aria-pressed={panel === 'details'}
+                      onClick={() => setPanel('details')}
+                    >
+                      Your details
+                    </button>
+                    <button
+                      aria-pressed={panel === 'plans'}
+                      onClick={() => setPanel('plans')}
+                    >
+                      Plans &amp; billing
+                    </button>
+                  </div>
+                )}
+                {panel === 'email' && account.csrfToken ? (
+                  <AccountEmailChangeForm
+                    csrfToken={account.csrfToken}
+                    onCancel={() => setPanel('details')}
+                    onChanged={async () => {
+                      await refresh();
+                      setPanel('details');
+
+                      setNotice(
+                        'Your email was updated. Your other sessions have been signed out.',
+                      );
                     }}
-                  >
-                    Sign out
-                  </button>
-                  <button
-                    className="account-danger-button"
-                    disabled={loading}
-                    onClick={() => {
-                      setConfirmDelete(true);
-                      setDeleteText('');
-                      setError('');
+                  />
+                ) : panel === 'reset' ? (
+                  <>
+                    <EmailAccountForm
+                      available={emailAvailable}
+                      initialMode="reset"
+                      initialEmail={account.user.email ?? ''}
+                      onBack={() => setPanel('details')}
+                      onSignedIn={refresh}
+                      onPasswordReset={async () => {
+                        await refresh();
+                        setPanel('details');
+                        setNotice('Password updated. Sign in with your new password.');
+                      }}
+                    />
+                  </>
+                ) : panel === 'plans' ? (
+                  <PricingPlans
+                    signedIn
+                    accountKey={account.user.id}
+                    onSignIn={() => {
+                      setOpen(false);
+                      void refresh();
                     }}
-                  >
-                    Delete account
-                  </button>
-                </div>
+                  />
+                ) : (
+                  <>
+                    <section className="account-details">
+                      <h3>Your details</h3>
+                      <div className="account-detail-row">
+                        <div>
+                          <span className="small-note">Email address</span>
+                          <p>
+                            {account.user.email ?? 'No email supplied by your sign-in provider'}
+                          </p>
+                        </div>
+                        {account.user.hasPassword && (
+                          <button
+                            className="secondary-button"
+                            onClick={() => {
+                              setNotice('');
+                              setPanel('email');
+                            }}
+                          >
+                            Change email
+                          </button>
+                        )}
+                      </div>
+                      <div className="account-detail-row">
+                        <div>
+                          <span className="small-note">Password</span>
+                          <p
+                            aria-label={account.user.hasPassword ? 'Password is hidden' : undefined}
+                          >
+                            {account.user.hasPassword
+                              ? '••••••••'
+                              : 'Managed by your sign-in provider'}
+                          </p>
+                        </div>
+                        {account.user.hasPassword && (
+                          <button
+                            className="secondary-button"
+                            onClick={() => {
+                              setNotice('');
+                              setPanel('reset');
+                            }}
+                          >
+                            Reset password
+                          </button>
+                        )}
+                      </div>
+                    </section>
+                    <section className="account-current-plan">
+                      <div>
+                        <span className="plan-eyebrow">Your current plan</span>
+                        <h3>
+                          Basic <span>Free</span>
+                        </h3>
+                        <p className="small-note">Job discovery, resume review and matching.</p>
+                      </div>
+                      <button
+                        className="secondary-button"
+                        onClick={() => setPanel('plans')}
+                      >
+                        Explore plans
+                      </button>
+                    </section>
+                  </>
+                )}
+                {(panel === 'details' || panel === 'plans') && (
+                  <div className="account-footer-actions">
+                    <div className="account-actions">
+                      <button
+                        className="secondary-button"
+                        disabled={loading}
+                        onClick={() => {
+                          void endAccount();
+                        }}
+                      >
+                        Sign out
+                      </button>
+                      <button
+                        className="account-danger-button"
+                        disabled={loading}
+                        onClick={() => {
+                          setConfirmDelete(true);
+                          setDeleteText('');
+                          setError('');
+                        }}
+                      >
+                        Delete account
+                      </button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </>
@@ -386,6 +535,14 @@ export function AccountMenu({
             role="status"
           >
             Please wait…
+          </p>
+        )}
+        {notice && (
+          <p
+            className="small-note"
+            role="status"
+          >
+            {notice}
           </p>
         )}
         {error && (

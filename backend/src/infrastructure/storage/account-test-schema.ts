@@ -24,6 +24,22 @@ export async function ensureAccountTestSchema(client: pg.Client) {
       }
     }
 
+    const emailChange = await client.query(
+      `SELECT 1 FROM pg_constraint WHERE conrelid = '"EmailChallenge"'::regclass AND conname = 'EmailChallenge_purpose_check' AND pg_get_constraintdef(oid) LIKE '%change-email%'`,
+    );
+
+    if (!emailChange.rowCount) {
+      await client.query(
+        await readFile(
+          new URL(
+            '../../../prisma/migrations/202610070001_email_change/migration.sql',
+            import.meta.url,
+          ),
+          'utf8',
+        ),
+      );
+    }
+
     await client.query('COMMIT');
   } catch (error) {
     await client.query('ROLLBACK');

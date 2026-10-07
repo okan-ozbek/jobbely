@@ -178,7 +178,7 @@ export class PostgresAccounts implements AccountRepository {
       // Only native credentials own email challenges; matching SSO emails never imply ownership.
       if (credential) {
         const challenges = await transaction.emailChallenge.findMany({
-          where: { email: credential.email },
+          where: { OR: [{ email: credential.email }, { userId }] },
           select: { tokenHash: true },
         });
 
@@ -186,7 +186,10 @@ export class PostgresAccounts implements AccountRepository {
           where: { challengeHash: { in: challenges.map((challenge) => challenge.tokenHash) } },
         });
 
-        await transaction.emailChallenge.deleteMany({ where: { email: credential.email } });
+        await transaction.emailChallenge.deleteMany({
+          where: { OR: [{ email: credential.email }, { userId }] },
+        });
+
         await transaction.passwordCredential.deleteMany({ where: { userId } });
       }
 

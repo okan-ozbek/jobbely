@@ -1,6 +1,6 @@
 import type { AccountSession } from './identity.js';
 
-export type EmailCodePurpose = 'register' | 'reset';
+export type EmailCodePurpose = 'register' | 'reset' | 'change-email';
 
 export const emailCodeLifetimeMs = 10 * 60_000;
 
@@ -23,6 +23,8 @@ export interface EmailChallenge {
   codeHash: string;
   passwordHash: string | null;
   username: string | null;
+  userId?: string | null;
+  previousEmail?: string | null;
   attempts: number;
   sends: number;
   expiresAt: string;

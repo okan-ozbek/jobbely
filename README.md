@@ -265,6 +265,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [SECURITY](docs/SECURITY.md): trust boundaries and HTML preparation.
 - [API](docs/API.md): public contract, query behavior and pagination.
 - [ACCOUNT_BILLING_PLAN](docs/ACCOUNT_BILLING_PLAN.md): delivery plan for GitHub/LinkedIn sign-in, five free matches, US$7.95 monthly Pro, Stripe and administration; [ACCOUNTS](docs/ACCOUNTS.md) records the implemented account foundation and setup.
+- [BILLING_TEST](docs/BILLING_TEST.md): account settings, monthly/quarterly/yearly pricing and Stripe sandbox checkout. Set the backend test secret, run `pnpm billing:setup:test` and restart the API when ready to test; live billing and paid access remain pending.
 - [ANALYTICS_PLAN](docs/ANALYTICS_PLAN.md): proposed admin audience, registration, observed active users, funnel, retention, subscription metrics and privacy controls.
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
 - [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.

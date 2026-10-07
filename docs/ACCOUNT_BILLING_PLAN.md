@@ -1,6 +1,6 @@
 # Plan: accounts, tiers, Stripe subscriptions and administration
 
-**Status:** Account foundation implemented; remaining delivery phases proposed, 5 October 2026, Europe/Amsterdam. [ACCOUNTS](ACCOUNTS.md) documents implemented behavior and verification. The five-result paywall, Stripe integration, admin dashboard and analytics are not yet enabled.
+**Status:** Account foundation implemented, 5 October 2026, Europe/Amsterdam; [sandbox pricing/checkout integration](BILLING_TEST.md) added 7 October 2026 with configuration deferred by the user. [ACCOUNTS](ACCOUNTS.md) documents account behavior and verification. The five-result paywall, live Stripe billing, admin dashboard and analytics remain proposed.
 
 **Confirmed product choices:** Visitors can analyze a resume and see their top five matches without an account. An account is required to upgrade. Pro is **US$7.95 monthly** (795 USD minor units). The user selected application-owned accounts with email/password registration, email verification codes, GitHub and LinkedIn sign-in instead of a separate managed-auth supplier. Generic SMTP delivery uses a separate queue worker. Merchant/tax/commercial terms remain open.
 
@@ -59,6 +59,8 @@ Implement one application-owned access policy around ranking, pagination and sin
 Guest binding can use a short-lived HttpOnly preview-session cookie. It is not an account and does not persist a resume. If login rotates its binding, rerun matching with the in-memory reviewed profile to issue a new receipt. Apply distributed admission controls to bound reranking abuse; the current per-process IP limiter is insufficient across multiple production instances.
 
 ## Stripe integration and payment flow
+
+The 7 October [sandbox increment](BILLING_TEST.md) implements hosted subscription checkout for monthly, quarterly (10% off) and yearly (25% off) billing. The user will supply test configuration later. It verifies ownership and returned session status but intentionally issues no entitlement. The production customer, webhook, invoice reconciliation, duplicate-subscription, portal and deletion-cancellation workflow below remains proposed.
 
 Use Stripe Billing with an initial Pro product, one published monthly recurring Price revision and Stripe-hosted Checkout. The admin pricing workflow below publishes new revisions and can introduce tiers backed by implemented capabilities. Use the Customer Portal for card updates, invoices and cancellation. This avoids building payment forms. Stripe supports server-created Checkout Sessions and hosted subscription management. [Checkout Sessions](https://docs.stripe.com/api/checkout/sessions), [Customer Portal](https://docs.stripe.com/customer-management).
 
