@@ -577,5 +577,13 @@
     "board": "Linear",
     "auditStatus": "candidate",
     "scheduled": true
+  },
+  {
+    "id": "synthesia",
+    "companySlug": "synthesia",
+    "provider": "ashby",
+    "board": "synthesia",
+    "auditStatus": "candidate",
+    "scheduled": true
   }
 ]

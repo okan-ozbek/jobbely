@@ -1,0 +1,177 @@
+{
+  "version": 1,
+  "companySlug": "synthesia",
+  "observedAt": "2026-10-07T00:08:00.686Z",
+  "configurationHash": "079c1e65e3c9f9ce8178e20d651a31b94aa6935708a2dd85feb4126d3b176585",
+  "artifactDirectory": "data/wave-sync/synthesia-onboarding-2026-10-07T00-07-57-011Z/synthesia/",
+  "blockers": [
+    "scope review is pending: Official Synthesia careers embeds an ashby-jobs widget with literal JOB_BOARD_NAME synthesia and a public posting-api request constructed from it. The public aggregate contains 45 listed entries: 44 specific vacancies and Marketing General Application, excluded by existing generic non-vacancy rules. Neither employer raw HTML nor hosted Ashby HTML exposes a visible posting inventory. The current automatic parser does not resolve the concatenated board request for attribution. Employer worldwide legal-entity scope, independent visible inventory and automatic board attribution remain pending.",
+    "access review is pending: Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer automated-retrieval and full-description display permission remain unverified. Customer terms are effective 20 July 2026; user terms and AUP are updated 23 February 2024; privacy is effective 1 October 2026. The AUP restricts scraping for AI model/tool creation or training; Jobbely collection/classification/matching remains deterministic without runtime AI. These service policies and Ashby API documentation are unreviewed evidence, not career republication permission. No employer consent, reviewer or approved document hashes are invented. Existing explicit blocked plans and candidate closure gates remain unchanged."
+  ],
+  "policies": [
+    {
+      "url": "https://www.synthesia.io/legal/customer-terms-of-service",
+      "textSha256": "f1fc3e0bc97a6fe7502e0c0c76822cd60189c42ea3604ffd069d7e1cc18745cf",
+      "rawSha256": "e6ffbcd283d5218518f726deab2245d41928a8e217a47c1136d8d637fa4c2968",
+      "robotsUrl": "https://www.synthesia.io/robots.txt",
+      "robotsSha256": "45cd339e0995ff15e91742da193637347de29972d8b9f567ada24d8b79652f67",
+      "error": null
+    },
+    {
+      "url": "https://www.synthesia.io/legal/user-terms-of-service",
+      "textSha256": "c263e6e70debd5f75eeb5bc0795590167b2624cbfc49256dc90e554f33c9f5c6",
+      "rawSha256": "d6e7e03d11678f62fb2260e1f90eb949cd28bb740d1d41ca611a3c33c75a8fd4",
+      "robotsUrl": "https://www.synthesia.io/robots.txt",
+      "robotsSha256": "45cd339e0995ff15e91742da193637347de29972d8b9f567ada24d8b79652f67",
+      "error": null
+    },
+    {
+      "url": "https://www.synthesia.io/legal/privacy-policy",
+      "textSha256": "7a94949b7864db310c6db9624f4dfa4c6b550365fb7414b3b8f255181fd4c14a",
+      "rawSha256": "b567e73a5802e28781361e165567c61184ca4da98a755fc6ed951f82c5ac6927",
+      "robotsUrl": "https://www.synthesia.io/robots.txt",
+      "robotsSha256": "45cd339e0995ff15e91742da193637347de29972d8b9f567ada24d8b79652f67",
+      "error": null
+    },
+    {
+      "url": "https://www.synthesia.io/legal/acceptable-use-policy",
+      "textSha256": "8c20507e46c01f8b8432cd4c3cdaf799ffd25361ab6a0dc33ae5b74b672cc961",
+      "rawSha256": "e7a2fcc5444a0033562ab8a04e3cb8f4c7edc8e9a903eb8edf418d2bac828935",
+      "robotsUrl": "https://www.synthesia.io/robots.txt",
+      "robotsSha256": "45cd339e0995ff15e91742da193637347de29972d8b9f567ada24d8b79652f67",
+      "error": null
+    },
+    {
+      "url": "https://developers.ashbyhq.com/docs/public-job-posting-api",
+      "textSha256": "1de2ba2ad464e0c6a82ad61678643c608a0de642532a546ee44f964d64039c8a",
+      "rawSha256": "5cff1f711ddedfeceda315ec8654b4175feda2afdd5815fee2b7a21635db2682",
+      "robotsUrl": "https://developers.ashbyhq.com/robots.txt",
+      "robotsSha256": "50c39ea8fd67b9268bd9ed2496c7354c8ca38065b26313ae387197029d52b0a7",
+      "error": null
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://www.synthesia.io/careers",
+      "sha256": "099d97d140c029ad7f6f3eb27d084b3c6028ecec2a7639262a57cdc5200c3604",
+      "robotsUrl": "https://www.synthesia.io/robots.txt",
+      "robotsSha256": "45cd339e0995ff15e91742da193637347de29972d8b9f567ada24d8b79652f67",
+      "links": [
+        "https://hbr.org/2023/03/generative-ai-will-enhance-not-erase-customer-service-jobs",
+        "https://www.synthesia.io/careers",
+        "https://www.synthesia.io/careers#open-positions"
+      ],
+      "discoveredBoards": [],
+      "paginationHints": [],
+      "error": null
+    },
+    {
+      "url": "https://jobs.ashbyhq.com/synthesia",
+      "sha256": "ab8d581955aab8560016f68c24ad0a48ea8e8ef9c8b447179c5e4aba5d9c5de5",
+      "robotsUrl": "https://jobs.ashbyhq.com/robots.txt",
+      "robotsSha256": "d3ccab98eafadd5f808f9622b93f8176c2f89845489a5f6a949b9792d6b1431d",
+      "links": ["https://jobs.ashbyhq.com/synthesia"],
+      "discoveredBoards": ["ashby:synthesia"],
+      "paginationHints": [],
+      "error": null
+    }
+  ],
+  "sources": [
+    {
+      "sourceId": "synthesia",
+      "feedCount": 44,
+      "officialCount": 0,
+      "excludedCount": 1,
+      "matchedCount": 0,
+      "missingFromFeed": [],
+      "missingFromOfficial": [
+        "0428085b-d840-4290-a1e7-9df341dd1702",
+        "08b78641-ac44-4656-95ba-d02df957e3e6",
+        "09deb5a4-5570-4016-9d0b-a88983b3c1dd",
+        "11571432-672d-41d9-80ec-bfc7708ae96a",
+        "11cac93d-fea6-4f22-add1-d4e3bb904b94",
+        "18acb910-bacb-4255-aab5-98d6f32b7f3a",
+        "18fa78ca-e034-4db9-a0cf-720ff7e9945e",
+        "243dc52d-8367-4ff9-9d71-8c41437ba6e1",
+        "2a637b27-92db-4752-8c0d-343e267ea299",
+        "2bb161ef-7355-474c-a051-dc57322f8225",
+        "30e9bca5-32ce-4609-8546-47772b6315a1",
+        "31e1dca3-74fd-4f74-8f40-5bb19f4034bb",
+        "34a24bda-4dfb-4387-9f17-8ac212b5c170",
+        "46d13eb9-9d94-435b-a141-19524b9e5c34",
+        "497cc4cf-a6e7-4165-852f-e65bc817dc9b",
+        "4c6dedb3-2dbf-46b7-9336-a2b19b55dfd7",
+        "637a0f3b-fd23-409a-b66b-917d1411d56e",
+        "6afd3236-71d3-4f67-92e6-b99a868a3260",
+        "72144066-ff3f-4cdd-b648-743592e414ca",
+        "75c90455-75c8-44e0-ab38-887120dbb1d0",
+        "776f612e-cd1d-4386-9d24-8d101d5ee5d7",
+        "81fbed84-4d11-491c-8659-6a96d5ad4e77",
+        "848ccd2d-a001-436a-953f-452898f49ebe",
+        "85e7b0df-f603-416b-a7bd-3331b6576186",
+        "8b09d868-85ad-4b3e-9203-da0c15caf793",
+        "8d8233ca-15c4-4feb-99f6-46c5c48db52c",
+        "9126e40f-ff2c-4cf7-b696-67c3787983cc",
+        "95fc578b-aa9a-477c-9feb-a71b377a716a",
+        "9dca0702-4f87-4b20-942f-369695629590",
+        "9e9a665d-3861-4d55-9316-ddbd574ded41",
+        "a7730e60-1f5c-4bf8-a059-f2975d893f10",
+        "aa69627f-0c29-4416-b0e5-87bef74c768c",
+        "aff19178-febd-4c6b-bbe0-6c69c9f5c42f",
+        "b682f464-c147-48a3-8064-edd5df8cd512",
+        "ba6d0833-902b-4f80-95e4-3b08b9e86cbb",
+        "bffd5b98-bbe2-4bb0-9e8e-fb0380599fd4",
+        "c2ba6d4d-f991-4432-a9c8-1514a93b08bb",
+        "c3c79cb1-3ead-46ac-abf2-04502e4655bd",
+        "c511c8e2-a929-4b9c-af16-48f968fafc33",
+        "c6b9462f-91b7-404d-ae28-5bfb950611ba",
+        "d3d0cf52-97b5-46e6-aa27-2d8b752bee3b",
+        "e934a7ac-b668-46c0-9953-eed4504658b7",
+        "e9c63d3d-13cc-4049-ae0a-5fef402c595b",
+        "f28a5957-82c1-4a40-9d2f-2d0afe849339"
+      ],
+      "coveredVariants": [],
+      "invalidDetails": [],
+      "enumerationComplete": true,
+      "officialEnumerationReviewed": false,
+      "officiallyLinked": false,
+      "feedHashes": ["b249f98ca559780889b753b03e35f01cd309df54d19b24334fe7a8420cb7b7a5"],
+      "samples": [
+        {
+          "id": "a7730e60-1f5c-4bf8-a059-f2975d893f10",
+          "title": "Proposal Manager",
+          "url": "https://jobs.ashbyhq.com/synthesia/a7730e60-1f5c-4bf8-a059-f2975d893f10",
+          "applyUrl": "https://jobs.ashbyhq.com/synthesia/a7730e60-1f5c-4bf8-a059-f2975d893f10/application"
+        },
+        {
+          "id": "c3c79cb1-3ead-46ac-abf2-04502e4655bd",
+          "title": "SecOps Security Engineer (Staff-level, L6)",
+          "url": "https://jobs.ashbyhq.com/synthesia/c3c79cb1-3ead-46ac-abf2-04502e4655bd",
+          "applyUrl": "https://jobs.ashbyhq.com/synthesia/c3c79cb1-3ead-46ac-abf2-04502e4655bd/application"
+        },
+        {
+          "id": "11cac93d-fea6-4f22-add1-d4e3bb904b94",
+          "title": "Enterprise Account Executive",
+          "url": "https://jobs.ashbyhq.com/synthesia/11cac93d-fea6-4f22-add1-d4e3bb904b94",
+          "applyUrl": "https://jobs.ashbyhq.com/synthesia/11cac93d-fea6-4f22-add1-d4e3bb904b94/application"
+        }
+      ],
+      "error": null
+    }
+  ],
+  "technicalCoverage": {
+    "companySlug": "synthesia",
+    "configurationHash": "079c1e65e3c9f9ce8178e20d651a31b94aa6935708a2dd85feb4126d3b176585",
+    "checkedAt": "2026-10-07T00:08:00.686Z",
+    "status": "partial",
+    "sourceRunIds": {
+      "synthesia": "503a0254-da66-4528-bffd-7954dcd5f8d8"
+    },
+    "blockers": [
+      "synthesia: official listing traversal not reviewed",
+      "synthesia: no official employer link to this board",
+      "synthesia: 44 feed IDs absent from official inventory"
+    ],
+    "accessStatus": "unreviewed"
+  }
+}

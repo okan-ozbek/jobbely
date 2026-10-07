@@ -3053,5 +3053,63 @@
         "selector": "a[href]"
       }
     ]
+  },
+  {
+    "companySlug": "synthesia",
+    "scope": {
+      "status": "pending",
+      "notes": "Official Synthesia careers embeds an ashby-jobs widget with literal JOB_BOARD_NAME synthesia and a public posting-api request constructed from it. The public aggregate contains 45 listed entries: 44 specific vacancies and Marketing General Application, excluded by existing generic non-vacancy rules. Neither employer raw HTML nor hosted Ashby HTML exposes a visible posting inventory. The current automatic parser does not resolve the concatenated board request for attribution. Employer worldwide legal-entity scope, independent visible inventory and automatic board attribution remain pending.",
+      "evidenceUrls": ["https://www.synthesia.io/careers", "https://jobs.ashbyhq.com/synthesia"]
+    },
+    "access": {
+      "status": "pending",
+      "display": "pending",
+      "reviewedDocuments": [],
+      "notes": "Application-owner instructions continue public employer onboarding/local description display and scheduled refreshes for all sources. Employer automated-retrieval and full-description display permission remain unverified. Customer terms are effective 20 July 2026; user terms and AUP are updated 23 February 2024; privacy is effective 1 October 2026. The AUP restricts scraping for AI model/tool creation or training; Jobbely collection/classification/matching remains deterministic without runtime AI. These service policies and Ashby API documentation are unreviewed evidence, not career republication permission. No employer consent, reviewer or approved document hashes are invented. Existing explicit blocked plans and candidate closure gates remain unchanged.",
+      "evidenceUrls": [
+        "https://www.synthesia.io/legal/customer-terms-of-service",
+        "https://www.synthesia.io/legal/user-terms-of-service",
+        "https://www.synthesia.io/legal/privacy-policy",
+        "https://www.synthesia.io/legal/acceptable-use-policy",
+        "https://developers.ashbyhq.com/docs/public-job-posting-api"
+      ]
+    },
+    "reconciliation": "posting_ids",
+    "channels": [
+      {
+        "url": "https://www.synthesia.io/careers",
+        "disposition": "included",
+        "sourceIds": ["synthesia"],
+        "reason": "Official employer widget explicitly configures public Ashby board synthesia, but its raw HTML contains no visible posting UUID inventory."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/synthesia",
+        "disposition": "included",
+        "sourceIds": ["synthesia"],
+        "reason": "Public board identified by official widget configuration; complete aggregate collection is separate from unresolved independent visible inventory and automatic attribution."
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/synthesia/7b8a6552-4960-43f1-a15c-231be624ba1a",
+        "disposition": "excluded",
+        "sourceIds": [],
+        "reason": "Marketing General Application is a general recruiting invitation rather than a specific vacancy; existing generic non-vacancy rules exclude and count it."
+      }
+    ],
+    "pages": [
+      {
+        "url": "https://www.synthesia.io/careers",
+        "role": "listings",
+        "sourceIds": ["synthesia"],
+        "complete": false,
+        "selector": "a[href]"
+      },
+      {
+        "url": "https://jobs.ashbyhq.com/synthesia",
+        "role": "discovery",
+        "sourceIds": ["synthesia"],
+        "complete": false,
+        "selector": "a[href]"
+      }
+    ]
   }
 ]

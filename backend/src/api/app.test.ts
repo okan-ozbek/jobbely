@@ -184,6 +184,13 @@ describe('read API and contract', () => {
       sources: [{ id: 'linear', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
     });
 
+    expect((await app.inject('/api/v1/companies/synthesia')).json()).toMatchObject({
+      name: 'Synthesia',
+      careersUrl: 'https://www.synthesia.io/careers',
+      logoUrl: '/logos/default.svg',
+      sources: [{ id: 'synthesia', provider: 'ashby', auditStatus: 'candidate', scheduled: true }],
+    });
+
     expect((await app.inject('/api/v1/jobs')).json()).toMatchObject({
       mode: 'demo',
       total: 6,

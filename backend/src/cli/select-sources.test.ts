@@ -85,6 +85,7 @@ describe('manual sync source selection', () => {
       'runway',
       'supabase',
       'linear',
+      'synthesia',
     ]);
 
     expect(matching.every((source) => source.auditStatus === 'candidate' && source.scheduled)).toBe(

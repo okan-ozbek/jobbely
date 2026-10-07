@@ -558,5 +558,12 @@
     "careersUrl": "https://linear.app/careers",
     "logoUrl": "/logos/default.svg",
     "wave": "C"
+  },
+  {
+    "slug": "synthesia",
+    "name": "Synthesia",
+    "careersUrl": "https://www.synthesia.io/careers",
+    "logoUrl": "/logos/default.svg",
+    "wave": "C"
   }
 ]
