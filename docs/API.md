@@ -49,6 +49,8 @@ Requests are capped at 768 KiB, text at 100,000 characters/2,000 lines/2,000 cha
 
 ## Catalog pagination and errors
 
+Native registration confirmation can return `400` with `account_exists` only after valid browser-bound email proof for an occupied native address. It consumes the challenge without changing credentials or issuing a session. Invalid/expired/wrong-browser codes keep the generic `invalid_code` response; request receipts remain generic. See [EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md).
+
 A cursor carries dataset version, filter fingerprint and last ID. Invalid/different-filter cursors return 400. A newly published dataset makes prior cursors stale and returns 409, requiring pagination restart. This prevents merging pages from different observations. Cursors are pagination state, not authorization tokens.
 
 Public errors use code/message without internal traces. Unexpected failures return 500 and are logged server-side. Response serialization constrains exposed fields; raw snapshots and hashes are not a public contract.

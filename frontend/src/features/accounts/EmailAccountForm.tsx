@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
+import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ApiError } from '../../api/client.js';
 import {
   registerPasswordAccount,
   confirmPasswordAccount,
@@ -20,6 +22,8 @@ export function EmailAccountForm({
   initialEmail = '',
   onBack,
   showHeading = true,
+  workspace = false,
+  headingId,
 }: {
   available: boolean;
   onSignedIn: () => Promise<void>;
@@ -28,6 +32,8 @@ export function EmailAccountForm({
   initialEmail?: string;
   onBack?: () => void;
   showHeading?: boolean;
+  workspace?: boolean;
+  headingId?: string;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState(initialEmail);
@@ -41,6 +47,9 @@ export function EmailAccountForm({
   const [resendAt, setResendAt] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [sends, setSends] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordId = useId();
+  const passwordHintId = useId();
   const active = useRef<AbortController | null>(null);
   const confirmation = mode === 'confirm' || mode === 'reset-confirm';
   const newPassword = mode === 'register' || mode === 'reset-confirm';
@@ -68,10 +77,16 @@ export function EmailAccountForm({
     setMessage('');
     setBusy(false);
     setSends(1);
+    setShowPassword(false);
+    setResendAt(0);
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (busy) {
+      return;
+    }
 
     const normalizedPassword = password.normalize('NFC');
 
@@ -157,6 +172,17 @@ export function EmailAccountForm({
       }
     } catch (failure) {
       if (!controller.signal.aborted) {
+        if (
+          mode === 'confirm' &&
+          failure instanceof ApiError &&
+          failure.code === 'account_exists'
+        ) {
+          changeMode('login');
+          setMessage(failure.message);
+
+          return;
+        }
+
         setError(failure instanceof Error ? failure.message : 'Please try again.');
       }
     } finally {
@@ -199,8 +225,42 @@ export function EmailAccountForm({
   }
 
   return (
-    <div className="email-account">
-      {!confirmation && mode !== 'reset' && (
+    <div className={`email-account${workspace ? ' auth-email-account' : ''}`}>
+      {workspace && (
+        <div className="auth-form-heading">
+          <span className="auth-form-eyebrow">Your Jobbely account</span>
+          <h2 id={headingId}>
+            {mode === 'register'
+              ? 'Create an account.'
+              : mode === 'login'
+                ? 'Welcome back.'
+                : confirmation
+                  ? 'Check your inbox.'
+                  : 'A fresh start.'}
+          </h2>
+          {mode === 'login' || mode === 'register' ? (
+            <p>
+              {mode === 'login' ? 'New to Jobbely?' : 'Already have an account?'}{' '}
+              <button
+                className="auth-inline-link"
+                disabled={busy}
+                onClick={() => changeMode(mode === 'login' ? 'register' : 'login')}
+              >
+                {mode === 'login' ? 'Create an account' : 'Sign in'}
+              </button>
+            </p>
+          ) : (
+            <p>
+              {mode === 'confirm'
+                ? 'One small step. Confirm your email to get started.'
+                : mode === 'reset-confirm'
+                  ? 'Enter your email code and choose a new password.'
+                  : 'We’ll help you get back to your account.'}
+            </p>
+          )}
+        </div>
+      )}
+      {!workspace && !confirmation && mode !== 'reset' && (
         <div className="account-mode-buttons">
           <button
             type="button"
@@ -218,7 +278,7 @@ export function EmailAccountForm({
           </button>
         </div>
       )}
-      {showHeading && (confirmation || mode === 'reset') && (
+      {!workspace && showHeading && (confirmation || mode === 'reset') && (
         <h3>{mode === 'confirm' ? 'Confirm your email' : 'Reset your password'}</h3>
       )}
       {message && (
@@ -247,6 +307,7 @@ export function EmailAccountForm({
               required
               maxLength={254}
               value={email}
+              disabled={busy}
               onChange={(event) => setEmail(event.target.value)}
             />
           </label>
@@ -260,32 +321,55 @@ export function EmailAccountForm({
           />
         )}
         {(mode === 'login' || newPassword) && (
-          <label>
-            {mode === 'reset-confirm' ? 'New password' : 'Password'}
-            <input
-              type="password"
-              placeholder="••••••••"
-              autoComplete={newPassword ? 'new-password' : 'current-password'}
-              required
-              maxLength={256}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
+          <div className="account-password-label">
+            <label htmlFor={passwordId}>
+              {mode === 'reset-confirm' ? 'New password' : 'Password'}
+            </label>
+            <div className="auth-password-field">
+              <input
+                id={passwordId}
+                aria-describedby={newPassword ? passwordHintId : undefined}
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                autoComplete={newPassword ? 'new-password' : 'current-password'}
+                required
+                maxLength={256}
+                value={password}
+                disabled={busy}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <button
+                type="button"
+                className="auth-password-toggle"
+                disabled={busy}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                onClick={() => setShowPassword((value) => !value)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
             {newPassword && (
-              <span className="small-note">8–128 characters, including a number and a symbol.</span>
+              <span
+                id={passwordHintId}
+                className="small-note"
+              >
+                8–128 characters, including a number and a symbol.
+              </span>
             )}
-          </label>
+          </div>
         )}
         {newPassword && (
           <label>
             Confirm password
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               autoComplete="new-password"
               required
               maxLength={256}
               value={repeat}
+              disabled={busy}
               onChange={(event) => setRepeat(event.target.value)}
             />
           </label>
@@ -314,11 +398,13 @@ export function EmailAccountForm({
                   : mode === 'reset'
                     ? 'Send reset code'
                     : 'Save new password'}
+          {workspace && !busy && <ArrowRight size={17} />}
         </button>
       </form>
       {mode === 'login' && (
         <button
           className="account-text-button"
+          disabled={busy}
           onClick={() => changeMode('reset')}
         >
           Forgot password?
@@ -342,9 +428,19 @@ export function EmailAccountForm({
       {(confirmation || mode === 'reset') && (
         <button
           className="account-text-button"
+          disabled={busy}
           onClick={() => (onBack ? onBack() : changeMode('login'))}
         >
           {onBack ? 'Back to your details' : 'Back to sign in'}
+        </button>
+      )}
+      {mode === 'confirm' && (
+        <button
+          className="account-text-button"
+          disabled={busy}
+          onClick={() => changeMode('register')}
+        >
+          Start registration again
         </button>
       )}
     </div>

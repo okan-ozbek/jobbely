@@ -280,12 +280,13 @@ export class PostgresPasswordAccounts implements PasswordAccountRepository {
     return this.client.$transaction(async (tx) => {
       const row = await this.checked(tx, tokenHash, browserHash, codeHash, 'register', now);
 
-      if (
-        !row ||
-        !row.passwordHash ||
-        (await tx.passwordCredential.findUnique({ where: { email: row.email } }))
-      ) {
+      if (!row || !row.passwordHash) {
         return null;
+      }
+
+      // Reveal the existing native account only after valid, browser-bound email proof.
+      if (await tx.passwordCredential.findUnique({ where: { email: row.email } })) {
+        return 'account_exists' as const;
       }
 
       // Never link to an SSO user by matching email alone.

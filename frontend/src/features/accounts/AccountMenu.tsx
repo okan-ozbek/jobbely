@@ -12,6 +12,7 @@ import { ApiError } from '../../api/client.js';
 import './accounts.css';
 import { EmailAccountForm } from './EmailAccountForm.js';
 import { AccountEmailChangeForm } from './AccountEmailChangeForm.js';
+import { AuthShell } from './AuthShell.js';
 
 export type AccountAction = 'email' | 'reset' | 'delete' | 'signout' | 'refresh';
 
@@ -337,7 +338,7 @@ export function AccountMenu({
         {account?.user ? 'Account' : 'Sign in'}
       </button>
       <dialog
-        className="account-dialog"
+        className={`account-dialog${!account?.user ? ' account-dialog-auth' : ''}`}
         ref={dialog}
         aria-labelledby={titleId}
         onCancel={(event) => {
@@ -353,167 +354,181 @@ export function AccountMenu({
           active.current?.abort();
         }}
       >
-        <div className="account-dialog-heading">
-          <h2 id={titleId}>
-            {account?.user
-              ? confirmDelete
-                ? 'Delete account'
-                : panel === 'email'
-                  ? 'Change your email'
-                  : panel === 'reset'
-                    ? 'Reset your password'
-                    : 'Your account'
-              : 'Welcome to Jobbely'}
-          </h2>
-          <button
-            className="icon-button"
-            aria-label="Close account dialog"
-            disabled={loading && mutating.current}
-            onClick={() => setOpen(false)}
-          >
-            <X size={18} />
-          </button>
-        </div>
-        {account?.user ? (
-          confirmDelete ? (
-            <form
-              className="account-form account-delete-confirmation"
-              aria-busy={loading}
-              onSubmit={(event) => {
-                event.preventDefault();
-                void endAccount(true);
-              }}
-            >
-              <h3>Delete your account?</h3>
-              <p>{account.user.email ?? 'You’re signed in.'}</p>
-              <p className="small-note">
-                This permanently removes your account and sign-in details, signs you out of all
-                sessions, and clears the resume from this tab. This cannot be undone.
-              </p>
-              <label>
-                Type DELETE to confirm
-                <input
-                  autoFocus
-                  autoComplete="off"
-                  spellCheck={false}
-                  value={deleteText}
-                  onChange={(event) => setDeleteText(event.target.value)}
-                  disabled={loading}
-                />
-              </label>
-              <div className="account-actions">
-                <button
-                  className="account-danger-button"
-                  type="submit"
-                  disabled={loading || deleteText !== 'DELETE'}
-                >
-                  {loading ? 'Deleting…' : 'Permanently delete'}
-                </button>
-              </div>
-            </form>
-          ) : panel === 'email' && account.csrfToken ? (
-            <AccountEmailChangeForm
-              showHeading={false}
-              csrfToken={account.csrfToken}
-              onCancel={() => setOpen(false)}
-              onChanged={async () => {
-                await refresh();
-                setPanel('details');
-                setOpen(false);
-                setNotice('Your email was updated. Your other sessions have been signed out.');
-              }}
-            />
-          ) : panel === 'reset' ? (
-            <EmailAccountForm
-              showHeading={false}
-              available={emailAvailable}
-              initialMode="reset"
-              initialEmail={account.user.email ?? ''}
-              onBack={() => setOpen(false)}
-              onSignedIn={refresh}
-              onPasswordReset={async () => {
-                await refresh();
-                setPanel('details');
-                setNotice('Password updated. Sign in with your new password.');
-              }}
-            />
-          ) : (
-            <div className="account-dialog-redirect">
-              <p>Manage your details and plan in your account workspace.</p>
+        <AuthShell
+          signedIn={!!account?.user}
+          onClose={() => setOpen(false)}
+        >
+          {account?.user && (
+            <div className="account-dialog-heading">
+              <h2 id={titleId}>
+                {account?.user
+                  ? confirmDelete
+                    ? 'Delete account'
+                    : panel === 'email'
+                      ? 'Change your email'
+                      : panel === 'reset'
+                        ? 'Reset your password'
+                        : 'Your account'
+                  : 'Welcome to Jobbely'}
+              </h2>
               <button
-                className="primary-button"
-                onClick={() => {
-                  setOpen(false);
-                  onOpenAccount();
-                }}
+                className="icon-button"
+                aria-label="Close account dialog"
+                disabled={loading && mutating.current}
+                onClick={() => setOpen(false)}
               >
-                Open your account
+                <X size={18} />
               </button>
             </div>
-          )
-        ) : (
-          <>
-            {open && (
-              <EmailAccountForm
-                available={emailAvailable}
-                onSignedIn={refresh}
-                onPasswordReset={refresh}
-              />
-            )}
-            {providers.some((provider) => provider.available) && (
-              <div className="account-provider-buttons">
-                {(['github', 'linkedin'] as const).map((provider) => (
-                  <button
-                    key={provider}
-                    className="secondary-button"
-                    disabled={
-                      loading || !providers.find((item) => item.name === provider)?.available
-                    }
-                    onClick={() => {
-                      void begin(provider);
-                    }}
-                  >
-                    Sign in with {names[provider]}
-                  </button>
-                ))}
-              </div>
-            )}
-            {link && (
-              <a
-                className="primary-button account-continue"
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
+          )}
+          {account?.user ? (
+            confirmDelete ? (
+              <form
+                className="account-form account-delete-confirmation"
+                aria-busy={loading}
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void endAccount(true);
+                }}
               >
-                Continue with {names[link.provider]} <ArrowUpRight size={16} />
-              </a>
-            )}
-          </>
-        )}
-        {loading && (
-          <p
-            className="small-note"
-            role="status"
-          >
-            Please wait…
-          </p>
-        )}
-        {notice && (
-          <p
-            className="small-note"
-            role="status"
-          >
-            {notice}
-          </p>
-        )}
-        {error && (
-          <p
-            className="account-error"
-            role="alert"
-          >
-            {error}
-          </p>
-        )}
+                <h3>Delete your account?</h3>
+                <p>{account.user.email ?? 'You’re signed in.'}</p>
+                <p className="small-note">
+                  This permanently removes your account and sign-in details, signs you out of all
+                  sessions, and clears the resume from this tab. This cannot be undone.
+                </p>
+                <label>
+                  Type DELETE to confirm
+                  <input
+                    autoFocus
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={deleteText}
+                    onChange={(event) => setDeleteText(event.target.value)}
+                    disabled={loading}
+                  />
+                </label>
+                <div className="account-actions">
+                  <button
+                    className="account-danger-button"
+                    type="submit"
+                    disabled={loading || deleteText !== 'DELETE'}
+                  >
+                    {loading ? 'Deleting…' : 'Permanently delete'}
+                  </button>
+                </div>
+              </form>
+            ) : panel === 'email' && account.csrfToken ? (
+              <AccountEmailChangeForm
+                showHeading={false}
+                csrfToken={account.csrfToken}
+                onCancel={() => setOpen(false)}
+                onChanged={async () => {
+                  await refresh();
+                  setPanel('details');
+                  setOpen(false);
+                  setNotice('Your email was updated. Your other sessions have been signed out.');
+                }}
+              />
+            ) : panel === 'reset' ? (
+              <EmailAccountForm
+                showHeading={false}
+                available={emailAvailable}
+                initialMode="reset"
+                initialEmail={account.user.email ?? ''}
+                onBack={() => setOpen(false)}
+                onSignedIn={refresh}
+                onPasswordReset={async () => {
+                  await refresh();
+                  setPanel('details');
+                  setNotice('Password updated. Sign in with your new password.');
+                }}
+              />
+            ) : (
+              <div className="account-dialog-redirect">
+                <p>Manage your details and plan in your account workspace.</p>
+                <button
+                  className="primary-button"
+                  onClick={() => {
+                    setOpen(false);
+                    onOpenAccount();
+                  }}
+                >
+                  Open your account
+                </button>
+              </div>
+            )
+          ) : (
+            <>
+              {open && (
+                <EmailAccountForm
+                  workspace
+                  headingId={titleId}
+                  available={emailAvailable}
+                  onSignedIn={refresh}
+                  onPasswordReset={refresh}
+                />
+              )}
+              {providers.some((provider) => provider.available) && (
+                <>
+                  <div className="auth-provider-divider">
+                    <span>Or continue with</span>
+                  </div>
+                  <div className="account-provider-buttons">
+                    {(['github', 'linkedin'] as const).map((provider) => (
+                      <button
+                        key={provider}
+                        className="secondary-button"
+                        disabled={
+                          loading || !providers.find((item) => item.name === provider)?.available
+                        }
+                        onClick={() => {
+                          void begin(provider);
+                        }}
+                      >
+                        Sign in with {names[provider]}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+              {link && (
+                <a
+                  className="primary-button account-continue"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Continue with {names[link.provider]} <ArrowUpRight size={16} />
+                </a>
+              )}
+            </>
+          )}
+          {loading && (
+            <p
+              className="small-note"
+              role="status"
+            >
+              Please wait…
+            </p>
+          )}
+          {notice && (
+            <p
+              className="small-note"
+              role="status"
+            >
+              {notice}
+            </p>
+          )}
+          {error && (
+            <p
+              className="account-error"
+              role="alert"
+            >
+              {error}
+            </p>
+          )}
+        </AuthShell>
       </dialog>
     </>
   );

@@ -20,6 +20,10 @@ The overview chart has selectable periods/data points, readable counts and expli
 
 ## Tokens and typography
 
+### Sign-in and registration, 8 October 2026
+
+The guest account dialog uses a two-column composition: an original CSS landscape with the Jobbely wordmark/back action on the left, and a focused white form on the right. The supplied reference informs placement; the app retains its local Galdeano face and lavender/ink palette. On narrow screens, the landscape becomes a compact header above the form. Native dialog focus containment, Escape/back dismissal, labels, password-manager autocomplete, password visibility, digit entry and recovery remain. Only configured GitHub/LinkedIn providers appear; no extra identity fields or terms acceptance are introduced. [Shell](../frontend/src/features/accounts/AuthShell.tsx), [styles](../frontend/src/features/accounts/auth.css), [form](../frontend/src/features/accounts/EmailAccountForm.tsx).
+
 Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6fb`, dark ink `#232538`, muted text `#62677c` and purple `#514abe` for small interactive text. Galdeano is locally hosted with system sans-serif fallbacks; display, body and form controls share the same family. Its regular 400 face uses synthesized heavier weights for existing headings. HTML email previews load the same local face; delivered emails use Arial when Galdeano is unavailable. Directory logos use flat brand colors on transparent wrappers; the home logo row retains brand colors at 65% opacity. See [LOGOS](LOGOS.md) for sources and the Radix text fallback.
 
 Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Shared searchable glass listboxes replace native select popups, retaining labels, keyboard navigation and visible focus. Catalog search keeps its original transparent background on focus and uses the search icon color as its focus cue without an added outline.

@@ -38,7 +38,7 @@ export interface PasswordAccountRepository {
     codeHash: string,
     session: NewAccountSession,
     now: Date,
-  ): Promise<AccountSession | null>;
+  ): Promise<AccountSession | 'account_exists' | null>;
   resetPassword(
     tokenHash: string,
     browserHash: string,

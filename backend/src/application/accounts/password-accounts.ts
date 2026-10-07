@@ -224,6 +224,13 @@ export class PasswordAccounts {
       now,
     );
 
+    if (session === 'account_exists') {
+      throw new PasswordAccountError(
+        'account_exists',
+        'Your email is already verified. Sign in to your existing account or reset your password.',
+      );
+    }
+
     if (!session) {
       throw new PasswordAccountError(
         'invalid_code',

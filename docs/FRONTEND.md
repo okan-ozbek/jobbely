@@ -63,6 +63,8 @@ Match explanations use a bordered disclosure control with a larger chevron. Skil
 
 ## Account workspace and pricing, 8 October 2026
 
+Guest sign-in/registration now renders through [AuthShell](../frontend/src/features/accounts/AuthShell.tsx) in the native dialog. Form headings and sign-in/register links follow the current in-memory step. Verified duplicate registration returns to sign-in with a recovery notice; its submitted password/code/challenge are cleared. Closing/remounting releases form secrets. The existing resume workbench stays mounted; no auth routing or browser persistence is added. Signed-in email changes, reset and deletion retain compact action dialogs.
+
 Account sections use the existing URL navigation (`section=overview|details|billing|resume|preferences`) and support direct links/back/forward; unknown sections fall back to Overview. AccountMenu remains the single account/session controller, reports the full public account response to App, consumes page action requests once, and retains abortable reads, mutation exclusion, Origin/CSRF and server recent-sign-in guards. Page section changes reset scroll; the existing resume workbench stays mounted across account/pricing navigation. Identity changes remount account previews and clear transient candidate state through the existing session-end callback.
 
 Anonymous/loading/error states show an account gate rather than account details or sample activity. Native users retain verified email change and password reset; SSO users see provider-managed credentials. Deletion still requires DELETE, closes its dialog and returns home. Browsing and dismissing the forms performs no credential mutation.

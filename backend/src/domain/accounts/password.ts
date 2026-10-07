@@ -47,6 +47,7 @@ export class PasswordAccountError extends Error {
     public readonly code:
       | 'invalid_credentials'
       | 'invalid_code'
+      | 'account_exists'
       | 'invalid_input'
       | 'rate_limited'
       | 'access_unavailable',
