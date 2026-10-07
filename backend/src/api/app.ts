@@ -14,6 +14,8 @@ import { registerMatchingRoutes } from './matching-routes.js';
 import { registerAccountRoutes } from './account-routes.js';
 import type { Accounts } from '../application/accounts/accounts.js';
 import type { PasswordAccounts } from '../application/accounts/password-accounts.js';
+import type { AccountEmail } from '../ports/password-accounts.js';
+import { registerEmailPreviewRoutes } from './email-preview-routes.js';
 import {
   companySchema,
   errorSchema,
@@ -34,6 +36,7 @@ export async function createApp(dependencies: {
   accounts?: Accounts;
   passwordAccounts?: PasswordAccounts;
   closeAccounts?: () => Promise<void>;
+  renderAccountEmail?: (message: AccountEmail) => { html: string };
 }) {
   /**
    * Creates and configures the Fastify application instance with all routes, hooks, and error handling.
@@ -276,6 +279,8 @@ export async function createApp(dependencies: {
     dependencies.origin ?? 'http://127.0.0.1:5173',
     dependencies.passwordAccounts,
   );
+
+  registerEmailPreviewRoutes(app, dependencies.renderAccountEmail);
 
   await app.ready();
 

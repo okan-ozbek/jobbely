@@ -2,7 +2,7 @@
 
 **Status:** Account foundation implemented; remaining delivery phases proposed, 5 October 2026, Europe/Amsterdam. [ACCOUNTS](ACCOUNTS.md) documents implemented behavior and verification. The five-result paywall, Stripe integration, admin dashboard and analytics are not yet enabled.
 
-**Confirmed product choices:** Visitors can analyze a resume and see their top five matches without an account. An account is required to upgrade. Pro is **US$7.95 monthly** (795 USD minor units). The user selected application-owned accounts with email/password registration, optional username, email verification codes, GitHub and LinkedIn sign-in instead of a separate managed-auth supplier. Generic SMTP delivery uses a separate queue worker. Merchant/tax/commercial terms remain open.
+**Confirmed product choices:** Visitors can analyze a resume and see their top five matches without an account. An account is required to upgrade. Pro is **US$7.95 monthly** (795 USD minor units). The user selected application-owned accounts with email/password registration, email verification codes, GitHub and LinkedIn sign-in instead of a separate managed-auth supplier. Generic SMTP delivery uses a separate queue worker. Merchant/tax/commercial terms remain open.
 
 **Administration scope:** Authorized admins can remove companies and jobs from public display and manage pricing tiers through a private dashboard. Removal is reversible unpublishing; source identities and ingestion evidence remain intact.
 
@@ -29,7 +29,7 @@ When more than five results exist, show five real cards followed by one upgrade 
 
 ## Registration and login
 
-Use application-owned users and revocable sessions with **email/password registration, GitHub OAuth and LinkedIn OpenID Connect**. Native registration has an optional display username and requires a six-digit email verification code. Password recovery uses a separate code flow. [EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md) records implemented hashing, limits and the independently runnable generic-SMTP queue worker. No managed-auth service is required. Provider app registration, credentials and exact callback URLs are still required for SSO.
+Use application-owned users and revocable sessions with **email/password registration, GitHub OAuth and LinkedIn OpenID Connect**. Native registration uses email and requires a six-digit email verification code. Password recovery uses a separate code flow. [EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md) records implemented hashing, limits and the independently runnable generic-SMTP queue worker. No managed-auth service is required. Provider app registration, credentials and exact callback URLs are still required for SSO.
 
 Request only identity/email permissions. Map accounts by stable issuer/subject, never mutable usernames or matching emails. Only explicitly verified provider email is stored; missing/unverified email stays null. A verified billing-contact requirement needs its own workflow before Checkout. See [GitHub OAuth](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) and [LinkedIn OIDC](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2).
 

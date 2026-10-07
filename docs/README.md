@@ -56,6 +56,10 @@ The 7 October [account deletion increment](ACCOUNTS.md#permanent-account-deletio
 
 [ACCOUNT_BILLING_PLAN.md](ACCOUNT_BILLING_PLAN.md) tracks five free resume matches, native and GitHub/LinkedIn sign-in, US$7.95 monthly Pro, Stripe and administration. [ACCOUNTS.md](ACCOUNTS.md) records the implemented account/session/dialog and draft-offer foundation. [EMAIL_ACCOUNTS.md](EMAIL_ACCOUNTS.md) records password registration, email verification/reset codes, durable admission and the separate SMTP queue worker. Paywall enforcement, Stripe, admin controls and analytics remain pending.
 
+The 7 October account interface update removes username collection, uses an eight-character minimum with number/symbol checks, splits code entry into six fields, adds HTML email alternatives and returns home after account deletion; see the account documents above.
+
+The same templates are available through intentionally public, read-only email preview endpoints pending the admin panel. [EMAIL_ACCOUNTS.md](EMAIL_ACCOUNTS.md) records sample links and boundaries; [SECURITY.md](SECURITY.md) records the temporary public access.
+
 [ANALYTICS_PLAN.md](ANALYTICS_PLAN.md) proposes admin audience, registration, observed DAU/WAU/MAU, funnel, retention, billing and health reporting, with explicit metric definitions, privacy/consent boundaries and aggregation checks. Analytics remains unimplemented.
 
 [SEMANTIC_EXPERIMENTS.md](SEMANTIC_EXPERIMENTS.md) records the first implemented foundation: requirement/evidence contracts, pure coverage algebra, reproducible development evaluation and a pinned local-model public-job shadow adapter. Live recommendations still use the deterministic policy.

@@ -23,6 +23,7 @@ import { OAuthIdentityProvider } from './infrastructure/accounts/oauth.js';
 import { PasswordAccounts } from './application/accounts/password-accounts.js';
 import { PostgresPasswordAccounts } from './infrastructure/storage/password-accounts-postgres.js';
 import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
+import { renderAccountEmail } from './infrastructure/accounts/account-email-template.js';
 import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
 import { RefreshWaves } from './application/refresh-waves.js';
 import { FileWaveAudits, FileWaveRefreshReports } from './infrastructure/audits/wave-refresh.js';
@@ -193,6 +194,7 @@ export async function bootstrap() {
   return {
     companies,
     sources,
+    renderAccountEmail,
     repository,
     adapters,
     ...(accountRepository ? { accounts: new Accounts(accountRepository, providers) } : {}),

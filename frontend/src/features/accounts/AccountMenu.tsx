@@ -14,7 +14,13 @@ import { EmailAccountForm } from './EmailAccountForm.js';
 
 const names = { github: 'GitHub', linkedin: 'LinkedIn' };
 
-export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
+export function AccountMenu({
+  onSessionEnd,
+  onDeleted,
+}: {
+  onSessionEnd: () => void;
+  onDeleted: () => void;
+}) {
   const [account, setAccount] = useState<Account | null>(null);
   const [providers, setProviders] = useState<{ name: SignInProvider; available: boolean }[]>([]);
   const [emailAvailable, setEmailAvailable] = useState(false);
@@ -23,7 +29,6 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
   const [error, setError] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteText, setDeleteText] = useState('');
-  const [notice, setNotice] = useState('');
   const [link, setLink] = useState<{ provider: SignInProvider; url: string } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const active = useRef<AbortController | null>(null);
@@ -200,8 +205,11 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
         setLink(null);
         setConfirmDelete(false);
         setDeleteText('');
-        setNotice(remove ? 'Your account has been permanently deleted.' : '');
-        setOpen(remove);
+        setOpen(false);
+
+        if (remove) {
+          onDeleted();
+        }
       }
     } catch (failure) {
       if (!controller.signal.aborted) {
@@ -233,7 +241,6 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
         className="nav-link"
         onClick={() => {
           setLink(null);
-          setNotice('');
           setConfirmDelete(false);
           setDeleteText('');
           setOpen(true);
@@ -268,12 +275,8 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
             <X size={18} />
           </button>
         </div>
-        {notice && <p role="status">{notice}</p>}
         {account?.user ? (
           <>
-            {account.user.username && <p>{account.user.username}</p>}
-            <p>{account.user.email ?? 'You’re signed in.'}</p>
-            <p className="small-note">Free account. Your resume stays in this tab.</p>
             {confirmDelete ? (
               <form
                 className="account-form account-delete-confirmation"
@@ -284,6 +287,7 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
                 aria-busy={loading}
               >
                 <h3>Delete your account?</h3>
+                <p>{account.user.email ?? 'You’re signed in.'}</p>
                 <p className="small-note">
                   This permanently removes your account and sign-in details, signs you out of all
                   sessions, and clears the resume from this tab. This cannot be undone.
@@ -301,18 +305,6 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
                 </label>
                 <div className="account-actions">
                   <button
-                    className="secondary-button"
-                    type="button"
-                    disabled={loading}
-                    onClick={() => {
-                      setConfirmDelete(false);
-                      setDeleteText('');
-                      setError('');
-                    }}
-                  >
-                    Keep my account
-                  </button>
-                  <button
                     className="account-danger-button"
                     type="submit"
                     disabled={loading || deleteText !== 'DELETE'}
@@ -322,33 +314,35 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
                 </div>
               </form>
             ) : (
-              <div className="account-actions">
-                <button
-                  className="secondary-button"
-                  disabled={loading}
-                  onClick={() => {
-                    void endAccount();
-                  }}
-                >
-                  Sign out
-                </button>
-                <button
-                  className="account-danger-button"
-                  disabled={loading}
-                  onClick={() => {
-                    setConfirmDelete(true);
-                    setDeleteText('');
-                    setError('');
-                  }}
-                >
-                  Delete account
-                </button>
-              </div>
+              <>
+                <p>{account.user.email ?? 'You’re signed in.'}</p>
+                <div className="account-actions">
+                  <button
+                    className="secondary-button"
+                    disabled={loading}
+                    onClick={() => {
+                      void endAccount();
+                    }}
+                  >
+                    Sign out
+                  </button>
+                  <button
+                    className="account-danger-button"
+                    disabled={loading}
+                    onClick={() => {
+                      setConfirmDelete(true);
+                      setDeleteText('');
+                      setError('');
+                    }}
+                  >
+                    Delete account
+                  </button>
+                </div>
+              </>
             )}
           </>
         ) : (
           <>
-            <p className="small-note">Your resume stays in this tab.</p>
             {open && (
               <EmailAccountForm
                 available={emailAvailable}

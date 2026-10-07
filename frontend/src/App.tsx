@@ -159,6 +159,21 @@ export function App() {
         </a>
         <nav aria-label="Main navigation">
           <AccountMenu
+            onDeleted={() => {
+              update({
+                view: null,
+                job: null,
+                company: null,
+                from: null,
+                q: null,
+                category: null,
+                workplace: null,
+                country: null,
+                city: null,
+              });
+
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }}
             onSessionEnd={() => {
               resumeState.clear();
               setReviewedAnalysis(null);

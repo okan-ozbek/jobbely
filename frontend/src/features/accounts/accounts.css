@@ -148,3 +148,28 @@
     font-size: 12px;
   }
 }
+.verification-code {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.verification-code legend {
+  padding: 0;
+  margin-bottom: 8px;
+}
+
+.verification-code-inputs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.verification-code-inputs input {
+  padding: 0;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+}

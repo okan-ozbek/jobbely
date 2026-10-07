@@ -256,7 +256,7 @@ export function registerAccountRoutes(
         response: {
           200: Type.Object({
             user: Type.Union([
-              Type.Object({ id: Type.String(), email: nullableString, username: nullableString }),
+              Type.Object({ id: Type.String(), email: nullableString }),
               Type.Null(),
             ]),
             csrfToken: nullableString,
@@ -281,7 +281,6 @@ export function registerAccountRoutes(
           ? {
               id: session.user.id,
               email: session.user.email,
-              username: session.user.username ?? null,
             }
           : null,
         csrfToken: session?.csrfToken ?? null,
@@ -376,7 +375,6 @@ export function registerAccountRoutes(
           {
             email: emailInput,
             password: passwordInput,
-            username: Type.Optional(Type.String({ maxLength: 30 })),
           },
           strict,
         ),

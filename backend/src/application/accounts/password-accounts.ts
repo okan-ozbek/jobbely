@@ -5,7 +5,11 @@ import type {
   AccountEmailCipher,
 } from '../../ports/password-accounts.js';
 import type { EmailCodePurpose, NewAccountSession } from '../../domain/accounts/password.js';
-import { emailCodeLifetimeMs, PasswordAccountError } from '../../domain/accounts/password.js';
+import {
+  emailCodeLifetimeMs,
+  PasswordAccountError,
+  validNewPassword,
+} from '../../domain/accounts/password.js';
 import { sessionAbsoluteMs, sessionIdleMs } from '../../domain/accounts/identity.js';
 import { accountSecretHash } from './accounts.js';
 
@@ -41,8 +45,11 @@ export class PasswordAccounts {
   private password(input: string) {
     const password = input.normalize('NFC');
 
-    if ([...password].length < 15 || [...password].length > 128) {
-      throw new PasswordAccountError('invalid_input', 'Use a password with 15–128 characters.');
+    if (!validNewPassword(password)) {
+      throw new PasswordAccountError(
+        'invalid_input',
+        'Password is not valid. Use 8–128 characters, including a number and a symbol.',
+      );
     }
 
     return password;
@@ -87,7 +94,6 @@ export class PasswordAccounts {
     input: {
       email: string;
       password?: string;
-      username?: string;
     },
     ip: string,
     browserBinding?: string,
@@ -98,15 +104,6 @@ export class PasswordAccounts {
 
     const passwordHash =
       purpose === 'register' ? await this.hasher.hash(this.password(input.password ?? '')) : null;
-
-    const username = input.username?.trim() || null;
-
-    if (username && !/^[A-Za-z0-9_]{3,30}$/.test(username)) {
-      throw new PasswordAccountError(
-        'invalid_input',
-        'Username must be 3–30 letters, numbers or underscores.',
-      );
-    }
 
     const token = opaque();
     const browser = browserBinding && validOpaque(browserBinding) ? browserBinding : opaque();
@@ -122,7 +119,7 @@ export class PasswordAccounts {
         email,
         purpose,
         passwordHash,
-        username,
+        username: null,
         codeHash: this.digest('code', tokenHash, purpose, code),
         expiresAt,
         createdAt: now.toISOString(),

@@ -17,7 +17,7 @@ const connectionString = process.env['TEST_DATABASE_URL'];
 const integration = connectionString ? describe : describe.skip;
 const secret = 'isolated-synthetic-test-secret-with-32-chars';
 const cipher = new EncryptedAccountEmail(secret);
-const password = 'synthetic-long-passphrase';
+const password = 'synthetic-long-passphrase1!';
 
 // Flow/concurrency tests isolate cryptographic cost; real scrypt is tested separately.
 const hasher: PasswordHasher = {
@@ -115,11 +115,7 @@ integration('native registration, recovery and transactional email queue', () =>
   }
 
   async function registered(to = email()) {
-    const start = await native.requestCode(
-      'register',
-      { email: to, password, username: 'synthetic_user' },
-      randomUUID(),
-    );
+    const start = await native.requestCode('register', { email: to, password }, randomUUID());
 
     const mail = await delivered(to);
     const session = await native.confirm(start.challenge, mail.code, start.browser, randomUUID());
@@ -306,7 +302,7 @@ integration('native registration, recovery and transactional email queue', () =>
     await native.reset(
       reset.challenge,
       mail.code,
-      'another-synthetic-passphrase',
+      'another-synthetic-passphrase1!',
       reset.browser,
       randomUUID(),
     );
@@ -323,11 +319,11 @@ integration('native registration, recovery and transactional email queue', () =>
     expect(
       (
         await native.login(
-          { email: user.to, password: 'another-synthetic-passphrase' },
+          { email: user.to, password: 'another-synthetic-passphrase1!' },
           randomUUID(),
         )
       ).session.user.username,
-    ).toBe('synthetic_user');
+    ).toBeNull();
 
     await expect(
       native.reset(reset.challenge, mail.code, password, reset.browser, randomUUID()),
@@ -340,7 +336,7 @@ integration('native registration, recovery and transactional email queue', () =>
 
     const duplicate = await native.requestCode(
       'register',
-      { email: user.to, password: 'untrusted-new-passphrase' },
+      { email: user.to, password: 'untrusted-new-passphrase1!' },
       randomUUID(),
     );
 
@@ -525,7 +521,7 @@ integration('native registration, recovery and transactional email queue', () =>
       await native.reset(
         reset.challenge,
         mail.code,
-        'another-synthetic-passphrase',
+        'another-synthetic-passphrase1!',
         reset.browser,
         randomUUID(),
       );
@@ -676,6 +672,27 @@ integration('native registration, recovery and transactional email queue', () =>
         ).statusCode,
       ).toBe(400);
 
+      const obsoleteUsername = await app.inject({
+        method: 'POST',
+        url: '/api/v1/auth/register',
+        headers: { origin },
+        payload: { email: email(), password, username: 'synthetic_user' },
+      });
+
+      expect(obsoleteUsername.statusCode).toBe(400);
+
+      for (const invalidPassword of ['Abcde1!', 'Abcdefgh!', 'Abcdefg1']) {
+        const invalid = await app.inject({
+          method: 'POST',
+          url: '/api/v1/auth/register',
+          headers: { origin },
+          payload: { email: email(), password: invalidPassword },
+        });
+
+        expect(invalid.statusCode).toBe(400);
+        expect(invalid.json().message).toContain('Password is not valid');
+      }
+
       const started = await app.inject({
         method: 'POST',
         url: '/api/v1/auth/register',
@@ -741,7 +758,7 @@ integration('native registration, recovery and transactional email queue', () =>
         payload: {
           challenge: reset.json().challenge,
           code: resetMail.code,
-          password: 'new-synthetic-passphrase',
+          password: 'new-synthetic-passphrase1!',
         },
       });
 

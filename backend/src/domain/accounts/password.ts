@@ -8,6 +8,13 @@ export const emailCodeAttempts = 5;
 
 export const emailCodeSends = 3;
 
+export function validNewPassword(input: string): boolean {
+  const password = input.normalize('NFC');
+  const length = [...password].length;
+
+  return length >= 8 && length <= 128 && /[0-9]/.test(password) && /[\p{P}\p{S}]/u.test(password);
+}
+
 export interface EmailChallenge {
   tokenHash: string;
   browserHash: string;

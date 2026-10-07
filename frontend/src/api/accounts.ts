@@ -44,7 +44,7 @@ function accountResult<T>(result: { data?: T; error?: { message: string; code: s
 }
 
 export async function registerPasswordAccount(
-  body: { email: string; password: string; username?: string },
+  body: { email: string; password: string },
   signal: AbortSignal,
 ) {
   return accountResult(
