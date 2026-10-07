@@ -46,7 +46,23 @@ export interface PasswordAccountRepository {
     passwordHash: string,
     now: Date,
   ): Promise<boolean>;
-  credential(email: string): Promise<{ passwordHash: string; state: string } | null>;
+  createEmailChange(
+    challenge: EmailChallenge,
+    sealedEmail: string,
+    session: AccountSession,
+    now: Date,
+  ): Promise<boolean>;
+  confirmEmailChange(
+    tokenHash: string,
+    browserHash: string,
+    codeHash: string,
+    authorization: AccountSession,
+    session: NewAccountSession,
+    now: Date,
+  ): Promise<AccountSession | null>;
+  credential(
+    email: string,
+  ): Promise<{ userId: string; passwordHash: string; state: string } | null>;
   createPasswordSession(
     email: string,
     expectedHash: string,

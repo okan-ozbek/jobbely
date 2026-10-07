@@ -7,6 +7,7 @@
   },
   "scripts": {
     "worker:email": "pnpm --filter @jobbely/backend run worker:email",
+    "billing:setup:test": "pnpm --filter @jobbely/backend run billing:setup:test",
     "dev": "pnpm --parallel --filter @jobbely/backend --filter @jobbely/frontend dev",
     "build": "pnpm --filter @jobbely/backend build && pnpm contracts && pnpm --filter @jobbely/frontend build",
     "contracts": "pnpm --filter @jobbely/backend export:openapi && pnpm --filter @jobbely/frontend generate:api",

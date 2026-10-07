@@ -18,7 +18,13 @@ export function registerEmailPreviewRoutes(
         description:
           'Unprotected HTML template preview using a fixed sample code. Does not send email or access account data. Admin authorization is deferred.',
         params: Type.Object(
-          { purpose: Type.Union([Type.Literal('register'), Type.Literal('reset')]) },
+          {
+            purpose: Type.Union([
+              Type.Literal('register'),
+              Type.Literal('reset'),
+              Type.Literal('change-email'),
+            ]),
+          },
           { additionalProperties: false },
         ),
         querystring: Type.Object({}, { additionalProperties: false }),
@@ -36,7 +42,7 @@ export function registerEmailPreviewRoutes(
 
         reply.header(
           'Content-Security-Policy',
-          "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'",
+          "default-src 'none'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'",
         );
 
         reply.header('X-Content-Type-Options', 'nosniff');
@@ -60,7 +66,10 @@ export function registerEmailPreviewRoutes(
 
       reply.type('text/html; charset=utf-8');
 
-      return email.html;
+      return email.html.replace(
+        '</head>',
+        '<link rel="stylesheet" href="/fonts/galdeano.css"></head>',
+      );
     },
   );
 }

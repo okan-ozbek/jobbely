@@ -2,6 +2,8 @@
 
 **Status:** First account foundation implemented, 5 October 2026, Europe/Amsterdam; self-service deletion added 7 October 2026. Live provider configuration and remaining billing/admin phases are pending.
 
+The 7 October [account settings and sandbox billing increment](BILLING_TEST.md) adds Your details and Plans & billing sections, masked passwords, native recovery and verified email changes, public monthly/quarterly/yearly pricing and configurable Stripe test checkout. Accounts retain free access during sandbox testing.
+
 ## Decision and rationale
 
 The user selected application-owned accounts instead of a separate managed-auth supplier. GitHub and LinkedIn verify external identity; [EMAIL_ACCOUNTS](EMAIL_ACCOUNTS.md) adds email/password registration, confirmation codes, password recovery and a separate SMTP queue worker. Jobbely owns accounts and sessions; providers receive no resume access. The approved Pro offer is US$7.95 monthly, stored as 795 USD minor units. See [the delivery plan](ACCOUNT_BILLING_PLAN.md).
@@ -48,7 +50,7 @@ Contracts include provider discovery, POST start, GET callback, GET account, POS
 
 Synthetic tests cover settled coverage, historical plans, owner/environment mismatches, restrictions, browser/provider/state binding, replay, minimal scopes, JWT nonce/audience/expiry/signature/subject failures, optional email, no email merging, hashing, cookies, CSRF/origin/schema guards, admission, revocation and expiry. Dedicated PostgreSQL tests exercise concurrent first registration, one-time attempt consumption, refresh/logout races, disabled users and absolute expiry across independent clients. Default tests skip database checks without an isolated `TEST_DATABASE_URL`; use `jobbely_test_*` per [QUALITY](QUALITY.md).
 
-Live consent/callback journeys require app credentials and remain unverified. Native delivery requires SMTP configuration and the running email worker; native credential admission is durable across instances, while distributed OAuth admission remains pending. Production retention/session cleanup, account export/linking, admin grants/MFA and provisioning are pending. No Stripe customer/Checkout/Portal/webhook, paid projection, preview receipt, paywall, moderation, admin dashboard or analytics collection is enabled. Do not deploy this as completed production billing.
+Live consent/callback journeys require app credentials and remain unverified. Native delivery requires SMTP configuration and the running email worker; native credential admission is durable across instances, while distributed OAuth admission remains pending. Production retention/session cleanup, account export/linking, admin grants/MFA and provisioning are pending. Configurable sandbox Checkout is implemented in [BILLING_TEST](BILLING_TEST.md). Production Stripe customer persistence, Portal/webhooks, paid projection, preview receipts, paywall, moderation, administration and analytics remain pending. Do not deploy this as completed production billing.
 
 On 5 October 2026, root `pnpm check` passed formatting, boundaries, logos, zero-warning lint, strict types, generated contracts and both builds. All 588 backend and 35 frontend tests passed, including 14 PostgreSQL tests against the isolated `jobbely_test_accounts` database. The local additive migration also applied successfully. Manual browser checks confirmed provider-unavailable state, dialog dismissal/focus return and responsive fit at an observed 390px viewport. Live SSO remains a separate verification gate.
 

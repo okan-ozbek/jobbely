@@ -21,6 +21,7 @@
     "matching:shadow": "tsx src/cli/shadow-job.ts",
     "worker": "tsx src/worker/main.ts",
     "worker:email": "tsx src/worker/account-email.ts",
+    "billing:setup:test": "tsx src/cli/setup-stripe-test.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy"
   },
@@ -40,6 +41,7 @@
     "pg-boss": "^12.0.0",
     "robots-parser": "^3.0.1",
     "sanitize-html": "^2.17.0",
+    "stripe": "^23.0.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

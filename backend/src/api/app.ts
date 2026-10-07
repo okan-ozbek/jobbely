@@ -16,6 +16,7 @@ import type { Accounts } from '../application/accounts/accounts.js';
 import type { PasswordAccounts } from '../application/accounts/password-accounts.js';
 import type { AccountEmail } from '../ports/password-accounts.js';
 import { registerEmailPreviewRoutes } from './email-preview-routes.js';
+import type { TestBilling } from '../application/accounts/test-billing.js';
 import {
   companySchema,
   errorSchema,
@@ -35,6 +36,7 @@ export async function createApp(dependencies: {
   closeFeatures?: () => Promise<void>;
   accounts?: Accounts;
   passwordAccounts?: PasswordAccounts;
+  billing?: TestBilling;
   closeAccounts?: () => Promise<void>;
   renderAccountEmail?: (message: AccountEmail) => { html: string };
 }) {
@@ -278,6 +280,7 @@ export async function createApp(dependencies: {
     dependencies.accounts,
     dependencies.origin ?? 'http://127.0.0.1:5173',
     dependencies.passwordAccounts,
+    dependencies.billing,
   );
 
   registerEmailPreviewRoutes(app, dependencies.renderAccountEmail);

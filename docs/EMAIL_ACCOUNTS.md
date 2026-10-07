@@ -20,6 +20,14 @@ Use a purpose-specific PostgreSQL outbox beside the existing account tables. Cha
 
 ## Queue delivery and retention
 
+### Verified email changes (7 October 2026)
+
+Native users can request a new email from account settings using their current password, session, exact Origin and CSRF token. `/api/v1/account/email/change` sends an encrypted-outbox code to the new address; `/confirm` and `/resend` require the same authenticated owner and browser binding. `change-email` has its own purpose-bound HMAC and HTML/plaintext copy, also previewable at `/api/v1/email-preview/change-email`. Five attempts, three sends, a ten-minute lifetime and durable IP/address/owner admission limits apply.
+
+The [email-change migration](../backend/prisma/migrations/202610070001_email_change/migration.sql) adds owner and previous-email fields and extends purpose/shape constraints. The [repository](../backend/src/infrastructure/storage/password-accounts-postgres.ts) locks old/new email addresses in sorted order and rechecks the active session, owner and password hash in the transaction. Confirmation updates the same credential/user, consumes pending codes, revokes all old sessions and issues a fresh HttpOnly session atomically. Changed passwords, revoked/expired sessions, wrong owners/browsers and occupied native addresses cannot complete the change. SSO accounts never merge by address. Deletion also removes owner-bound pending change emails. The public account response exposes `hasPassword`, never a hash or password.
+
+The settings/password placeholder UI and sandbox pricing are documented in [BILLING_TEST](BILLING_TEST.md). Password reset remains the existing recovery-code workflow and signs out current sessions after completion.
+
 On 7 October 2026, confirmation and recovery emails gained a shared HTML template with the application's lavender palette, rounded card and prominent six-digit code. Both retain a plain-text alternative, use no remote assets and escape dynamic HTML. Resends explain expiry relative to the first request. [Template](../backend/src/infrastructure/accounts/account-email-template.ts), [SMTP transport](../backend/src/infrastructure/accounts/smtp.ts).
 
 The dialog now collects only email/password, shows `example@jobbely.com` in email fields and names the recipient in the registration receipt. Six individually labelled digit fields advance automatically, support keyboard correction and distribute pasted full codes from any field. New passwords are checked in the client and server; existing credentials remain usable for login regardless of the new creation policy. [Code input](../frontend/src/features/accounts/VerificationCodeInput.tsx), [password policy](../backend/src/domain/accounts/password.ts).

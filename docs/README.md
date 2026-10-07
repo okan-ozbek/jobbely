@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+[BILLING_TEST.md](BILLING_TEST.md) records the account settings and public pricing interface, monthly/quarterly/yearly offers, and the implemented Stripe sandbox checkout integration. Configuration and external payment verification remain pending; live billing and entitlements remain proposed.
+
 The 7 October [account deletion increment](ACCOUNTS.md#permanent-account-deletion-7-october-2026) adds permanent deletion, recent-sign-in/Origin/CSRF guards, atomic account/native-mail cleanup and transient browser state clearing.
 
 [SYNTHESIA.md](SYNTHESIA.md) records official public Ashby widget discovery, 44 specific jobs with native compensation, one general-application exclusion and scheduled refreshes, retaining partial inventory/attribution coverage and pending employer reviews.
@@ -54,7 +56,7 @@ The 7 October [account deletion increment](ACCOUNTS.md#permanent-account-deletio
 
 [DOCKER.md](DOCKER.md) records the implemented local container stack: static frontend, API, migration job, PostgreSQL and optional ingestion/email workers. The document parser remains in the browser and is served with its required isolation headers.
 
-[ACCOUNT_BILLING_PLAN.md](ACCOUNT_BILLING_PLAN.md) tracks five free resume matches, native and GitHub/LinkedIn sign-in, US$7.95 monthly Pro, Stripe and administration. [ACCOUNTS.md](ACCOUNTS.md) records the implemented account/session/dialog and draft-offer foundation. [EMAIL_ACCOUNTS.md](EMAIL_ACCOUNTS.md) records password registration, email verification/reset codes, durable admission and the separate SMTP queue worker. Paywall enforcement, Stripe, admin controls and analytics remain pending.
+[ACCOUNT_BILLING_PLAN.md](ACCOUNT_BILLING_PLAN.md) tracks five free resume matches, native and GitHub/LinkedIn sign-in, US$7.95 monthly Pro, Stripe and administration. [ACCOUNTS.md](ACCOUNTS.md) records the implemented account/session/dialog and draft-offer foundation. [EMAIL_ACCOUNTS.md](EMAIL_ACCOUNTS.md) records password registration, email verification/reset/change codes, durable admission and the separate SMTP queue worker. [BILLING_TEST.md](BILLING_TEST.md) records sandbox checkout; paywall enforcement, live billing, admin controls and analytics remain pending.
 
 The 7 October account interface update removes username collection, uses an eight-character minimum with number/symbol checks, splits code entry into six fields, adds HTML email alternatives and returns home after account deletion; see the account documents above.
 

@@ -16,13 +16,19 @@ export function EmailAccountForm({
   available,
   onSignedIn,
   onPasswordReset,
+  initialMode = 'login',
+  initialEmail = '',
+  onBack,
 }: {
   available: boolean;
   onSignedIn: () => Promise<void>;
   onPasswordReset: () => Promise<void>;
+  initialMode?: 'login' | 'reset';
+  initialEmail?: string;
+  onBack?: () => void;
 }) {
-  const [mode, setMode] = useState<Mode>('login');
-  const [email, setEmail] = useState('');
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
   const [code, setCode] = useState('');
@@ -256,6 +262,7 @@ export function EmailAccountForm({
             {mode === 'reset-confirm' ? 'New password' : 'Password'}
             <input
               type="password"
+              placeholder="••••••••"
               autoComplete={newPassword ? 'new-password' : 'current-password'}
               required
               maxLength={256}
@@ -272,6 +279,7 @@ export function EmailAccountForm({
             Confirm password
             <input
               type="password"
+              placeholder="••••••••"
               autoComplete="new-password"
               required
               maxLength={256}
@@ -332,9 +340,9 @@ export function EmailAccountForm({
       {(confirmation || mode === 'reset') && (
         <button
           className="account-text-button"
-          onClick={() => changeMode('login')}
+          onClick={() => (onBack ? onBack() : changeMode('login'))}
         >
-          Back to sign in
+          {onBack ? 'Back to your details' : 'Back to sign in'}
         </button>
       )}
     </div>

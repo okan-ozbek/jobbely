@@ -6,11 +6,11 @@
 
 The home page centers on one resume composer: paste text or attach a PDF/DOCX, explicitly request analysis, review the profile, then request job matches. A soft lavender/blue gradient, translucent surfaces, rounded corners and restrained typography provide the requested Apple/Meta-inspired direction. Decorative lighting uses CSS rather than remote assets or continuous animation.
 
-Companies is the single header navigation action; the wordmark returns to the resume through SPA navigation. Existing public job search and detail routes remain available through company cards, recommendations and explicit `view=jobs` URLs. Profile state remains in tab memory across these views.
+The header offers Account/Sign in, Pricing and Companies; the wordmark returns to the resume through SPA navigation. Existing public job search and detail routes remain available through company cards, recommendations and explicit `view=jobs` URLs. Profile state remains in tab memory across these views.
 
 ## Tokens and typography
 
-Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6fb`, dark ink `#232538`, muted text `#62677c` and purple `#514abe` for small interactive text. DM Sans is locally hosted with system sans-serif fallbacks; display and body text share the same family. Directory logos use flat brand colors on transparent wrappers; the home logo row retains brand colors at 65% opacity. See [LOGOS](LOGOS.md) for sources and the Radix text fallback.
+Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6fb`, dark ink `#232538`, muted text `#62677c` and purple `#514abe` for small interactive text. Galdeano is locally hosted with system sans-serif fallbacks; display, body and form controls share the same family. Its regular 400 face uses synthesized heavier weights for existing headings. HTML email previews load the same local face; delivered emails use Arial when Galdeano is unavailable. Directory logos use flat brand colors on transparent wrappers; the home logo row retains brand colors at 65% opacity. See [LOGOS](LOGOS.md) for sources and the Radix text fallback.
 
 Glass surfaces use white gradients, fine white borders, subtle shadows and backdrop blur. Solid pale backgrounds remain readable without blur support. Shared searchable glass listboxes replace native select popups, retaining labels, keyboard navigation and visible focus. Catalog search keeps its original transparent background on focus and uses the search icon color as its focus cue without an added outline.
 

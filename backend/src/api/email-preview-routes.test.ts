@@ -31,6 +31,7 @@ describe('public account email previews', () => {
   it.each([
     ['register', 'Confirm your email', 'Welcome to Jobbely'],
     ['reset', 'Reset your password', 'set a new password'],
+    ['change-email', 'Confirm your new email', 'confirm your new email address'],
   ])(
     'renders the %s template without a session or database reads',
     async (purpose, heading, copy) => {
@@ -43,6 +44,8 @@ describe('public account email previews', () => {
       expect(response.body).toContain(heading);
       expect(response.body).toContain(copy);
       expect(response.body).toContain('012345');
+      expect(response.body).toContain('href="/fonts/galdeano.css"');
+      expect(response.headers['content-security-policy']).toContain("font-src 'self'");
       expect(response.headers['cache-control']).toBe('no-store');
       expect(response.headers['content-security-policy']).toContain("default-src 'none'");
       expect(response.headers['x-content-type-options']).toBe('nosniff');
