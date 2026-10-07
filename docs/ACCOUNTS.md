@@ -1,6 +1,6 @@
 # Decision: application-owned accounts and sessions
 
-**Status:** First account foundation implemented, 5 October 2026, Europe/Amsterdam. Live provider configuration and remaining billing/admin phases are pending.
+**Status:** First account foundation implemented, 5 October 2026, Europe/Amsterdam; self-service deletion added 7 October 2026. Live provider configuration and remaining billing/admin phases are pending.
 
 ## Decision and rationale
 
@@ -16,6 +16,16 @@ The user selected application-owned accounts instead of a separate managed-auth 
 - The Free/Pro offer catalog returns the approved draft price, capabilities, `purchasable: false` and `matchingPolicy.enabled: false`. Current matching remains unchanged until preview enforcement and an upgrade journey can launch together. No payment is collected.
 
 The pure entitlement policy admits only known published/historical retired paid revisions with settled, unexpired coverage, active/past-due status, matching owner/environment and no full-refund/dispute restriction. Status alone, future periods, success URLs, trials, invalid coverage and unapproved revisions never grant access. Retired subscribers keep purchased capabilities. This policy is tested but not connected to a Stripe projection; every current session is Free.
+
+## Permanent account deletion, 7 October 2026
+
+Signed-in users can delete their account through the dialog after typing `DELETE`. `POST /api/v1/account/delete` requires a sign-in within ten minutes, active session, exact Origin, session CSRF and strict `{ "confirm": true }` input. Clients cannot select a user ID; session refresh does not satisfy reauthentication. The repository rechecks ownership, creation time, CSRF, revocation, account state and expiry inside the deletion transaction. Credential/identity locks follow sign-in ordering, preventing stale native logins from issuing surviving sessions for a deleted user.
+
+Deletion removes the user, all sessions, native credential and linked SSO identities. Native accounts also remove email challenges and their associated outbox jobs under the email lock. An SSO email never establishes ownership of a separate native account or its mail. Short-lived HMAC rate windows remain to prevent deletion/re-registration bypassing admission. Unbound OAuth attempts and already detached expired outbox metadata follow existing bounded cleanup; an SMTP attempt already in flight cannot be recalled. Public jobs remain available. Subsequent registration or SSO sign-in creates a new account. The current tab clears resume state through the existing session-end callback; other tabs clear on focus/refetch.
+
+Deletion covers implemented identity-only records. Future billing and analytics must extend this lifecycle before launch. Tests cover confirmation/Origin/CSRF guards, recent sign-in, atomic removal, cross-account isolation, native login races and fresh registration.
+
+Verification on 7 October: root `pnpm check` passed formatting, dependency boundaries, logos, zero-warning lint, strict types, contracts, both builds and all 801 tests (766 backend, 35 frontend), including the PostgreSQL suites against `jobbely_test_accounts`. Browser checks used a separate localhost UI/API and synthetic account: native login, exact `DELETE` enablement, cancellation and 390×844 dialog fit passed. An actual HTTP deletion removed the synthetic user, credential and every session. Docker API/web/email images were rebuilt and the local services reported healthy. The existing application account was preserved.
 
 ## Setup and operation
 
@@ -38,7 +48,7 @@ Contracts include provider discovery, POST start, GET callback, GET account, POS
 
 Synthetic tests cover settled coverage, historical plans, owner/environment mismatches, restrictions, browser/provider/state binding, replay, minimal scopes, JWT nonce/audience/expiry/signature/subject failures, optional email, no email merging, hashing, cookies, CSRF/origin/schema guards, admission, revocation and expiry. Dedicated PostgreSQL tests exercise concurrent first registration, one-time attempt consumption, refresh/logout races, disabled users and absolute expiry across independent clients. Default tests skip database checks without an isolated `TEST_DATABASE_URL`; use `jobbely_test_*` per [QUALITY](QUALITY.md).
 
-Live consent/callback journeys require app credentials and remain unverified. Native delivery requires SMTP configuration and the running email worker; native credential admission is durable across instances, while distributed OAuth admission remains pending. Production retention/session cleanup, account export/deletion/linking, admin grants/MFA and provisioning are pending. No Stripe customer/Checkout/Portal/webhook, paid projection, preview receipt, paywall, moderation, admin dashboard or analytics collection is enabled. Do not deploy this as completed production billing.
+Live consent/callback journeys require app credentials and remain unverified. Native delivery requires SMTP configuration and the running email worker; native credential admission is durable across instances, while distributed OAuth admission remains pending. Production retention/session cleanup, account export/linking, admin grants/MFA and provisioning are pending. No Stripe customer/Checkout/Portal/webhook, paid projection, preview receipt, paywall, moderation, admin dashboard or analytics collection is enabled. Do not deploy this as completed production billing.
 
 On 5 October 2026, root `pnpm check` passed formatting, boundaries, logos, zero-warning lint, strict types, generated contracts and both builds. All 588 backend and 35 frontend tests passed, including 14 PostgreSQL tests against the isolated `jobbely_test_accounts` database. The local additive migration also applied successfully. Manual browser checks confirmed provider-unavailable state, dialog dismissal/focus return and responsive fit at an observed 390px viewport. Live SSO remains a separate verification gate.
 

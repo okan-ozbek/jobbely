@@ -328,6 +328,30 @@ export function registerAccountRoutes(
     return passwords;
   }
 
+  app.post(
+    '/api/v1/account/delete',
+    {
+      ...options,
+      schema: {
+        operationId: 'deleteAccount',
+        body: Type.Object({ confirm: Type.Literal(true) }, strict),
+        response: { 200: Type.Object({ deleted: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      await service().deleteAccount(
+        readCookie(request, sessionCookie),
+        typeof request.headers['x-csrf-token'] === 'string'
+          ? request.headers['x-csrf-token']
+          : undefined,
+      );
+
+      reply.header('Set-Cookie', [cookie(sessionCookie, '', 0), cookie(browserCookie, '', 0)]);
+
+      return { deleted: true as const };
+    },
+  );
+
   const emailInput = Type.String({ minLength: 3, maxLength: 254 });
   const passwordInput = Type.String({ minLength: 1, maxLength: 256 });
 

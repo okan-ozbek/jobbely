@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import type { Account, SignInProvider } from '../../api/accounts.js';
-import { currentAccount, signInProviders, signOut, startSignIn } from '../../api/accounts.js';
+import {
+  currentAccount,
+  deleteAccount,
+  signInProviders,
+  signOut,
+  startSignIn,
+} from '../../api/accounts.js';
 import { ApiError } from '../../api/client.js';
 import './accounts.css';
 import { EmailAccountForm } from './EmailAccountForm.js';
@@ -15,11 +21,15 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteText, setDeleteText] = useState('');
+  const [notice, setNotice] = useState('');
   const [link, setLink] = useState<{ provider: SignInProvider; url: string } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const active = useRef<AbortController | null>(null);
   const readRequest = useRef<AbortController | null>(null);
   const userId = useRef<string | null>(null);
+  const mutating = useRef(false);
   const ended = useRef(onSessionEnd);
   const titleId = useId();
 
@@ -28,6 +38,10 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
   }, [onSessionEnd]);
 
   const refresh = useCallback(async () => {
+    if (mutating.current) {
+      return;
+    }
+
     readRequest.current?.abort();
 
     const controller = new AbortController();
@@ -43,6 +57,8 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
 
       if (userId.current && userId.current !== result.user?.id) {
         ended.current();
+        setConfirmDelete(false);
+        setDeleteText('');
       }
 
       if (!userId.current && result.user) {
@@ -150,21 +166,31 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
     }
   }
 
-  async function logout() {
+  async function endAccount(remove = false) {
     if (!account?.csrfToken) {
       return;
     }
 
+    if (remove && (!confirmDelete || deleteText !== 'DELETE')) {
+      return;
+    }
+
     active.current?.abort();
+    readRequest.current?.abort();
 
     const controller = new AbortController();
 
     active.current = controller;
+    mutating.current = true;
     setLoading(true);
     setError('');
 
     try {
-      await signOut(account.csrfToken, controller.signal);
+      if (remove) {
+        await deleteAccount(account.csrfToken, controller.signal);
+      } else {
+        await signOut(account.csrfToken, controller.signal);
+      }
 
       if (!controller.signal.aborted) {
         readRequest.current?.abort();
@@ -172,13 +198,29 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
         userId.current = null;
         setAccount(null);
         setLink(null);
-        setOpen(false);
+        setConfirmDelete(false);
+        setDeleteText('');
+        setNotice(remove ? 'Your account has been permanently deleted.' : '');
+        setOpen(remove);
       }
     } catch (failure) {
       if (!controller.signal.aborted) {
-        setError(failure instanceof Error ? failure.message : 'Could not sign out.');
+        if (remove && failure instanceof ApiError && failure.code === 'authentication_required') {
+          setConfirmDelete(false);
+          setDeleteText('');
+        }
+
+        setError(
+          failure instanceof Error
+            ? failure.message
+            : remove
+              ? 'Could not delete your account. Please try again.'
+              : 'Could not sign out.',
+        );
       }
     } finally {
+      mutating.current = false;
+
       if (!controller.signal.aborted) {
         setLoading(false);
       }
@@ -191,6 +233,9 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
         className="nav-link"
         onClick={() => {
           setLink(null);
+          setNotice('');
+          setConfirmDelete(false);
+          setDeleteText('');
           setOpen(true);
         }}
       >
@@ -200,8 +245,15 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
         className="account-dialog"
         ref={dialog}
         aria-labelledby={titleId}
+        onCancel={(event) => {
+          if (mutating.current) {
+            event.preventDefault();
+          }
+        }}
         onClose={() => {
           setOpen(false);
+          setConfirmDelete(false);
+          setDeleteText('');
           active.current?.abort();
         }}
       >
@@ -210,25 +262,89 @@ export function AccountMenu({ onSessionEnd }: { onSessionEnd: () => void }) {
           <button
             className="icon-button"
             aria-label="Close account dialog"
+            disabled={loading && mutating.current}
             onClick={() => setOpen(false)}
           >
             <X size={18} />
           </button>
         </div>
+        {notice && <p role="status">{notice}</p>}
         {account?.user ? (
           <>
             {account.user.username && <p>{account.user.username}</p>}
             <p>{account.user.email ?? 'You’re signed in.'}</p>
             <p className="small-note">Free account. Your resume stays in this tab.</p>
-            <button
-              className="secondary-button"
-              disabled={loading}
-              onClick={() => {
-                void logout();
-              }}
-            >
-              Sign out
-            </button>
+            {confirmDelete ? (
+              <form
+                className="account-form account-delete-confirmation"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void endAccount(true);
+                }}
+                aria-busy={loading}
+              >
+                <h3>Delete your account?</h3>
+                <p className="small-note">
+                  This permanently removes your account and sign-in details, signs you out of all
+                  sessions, and clears the resume from this tab. This cannot be undone.
+                </p>
+                <label>
+                  Type DELETE to confirm
+                  <input
+                    autoFocus
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={deleteText}
+                    onChange={(event) => setDeleteText(event.target.value)}
+                    disabled={loading}
+                  />
+                </label>
+                <div className="account-actions">
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    disabled={loading}
+                    onClick={() => {
+                      setConfirmDelete(false);
+                      setDeleteText('');
+                      setError('');
+                    }}
+                  >
+                    Keep my account
+                  </button>
+                  <button
+                    className="account-danger-button"
+                    type="submit"
+                    disabled={loading || deleteText !== 'DELETE'}
+                  >
+                    {loading ? 'Deleting…' : 'Permanently delete'}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="account-actions">
+                <button
+                  className="secondary-button"
+                  disabled={loading}
+                  onClick={() => {
+                    void endAccount();
+                  }}
+                >
+                  Sign out
+                </button>
+                <button
+                  className="account-danger-button"
+                  disabled={loading}
+                  onClick={() => {
+                    setConfirmDelete(true);
+                    setDeleteText('');
+                    setError('');
+                  }}
+                >
+                  Delete account
+                </button>
+              </div>
+            )}
           </>
         ) : (
           <>

@@ -41,6 +41,48 @@ function setup() {
 }
 
 describe('application-owned sign-in and sessions', () => {
+  it('requires a session and CSRF to delete, removes all sessions, and permits fresh registration', async () => {
+    const { service, repository, signIn } = setup();
+    const first = await signIn();
+    const second = await signIn();
+
+    await expect(service.deleteAccount(undefined, first.session.csrfToken)).rejects.toThrow(
+      'Refresh',
+    );
+
+    await expect(service.deleteAccount(first.token, 'wrong')).rejects.toThrow('Refresh');
+    expect(repository.users.size).toBe(1);
+
+    await service.deleteAccount(first.token, first.session.csrfToken);
+
+    expect(repository.users.size).toBe(0);
+    expect(repository.sessions.size).toBe(0);
+    await expect(service.current(second.token)).rejects.toThrow('Sign in again');
+
+    const replacement = await signIn();
+
+    expect(replacement.session.user.id).not.toBe(first.session.user.id);
+  });
+
+  it('requires a new sign-in for deletion after ten minutes even when the session was refreshed', async () => {
+    const { service, repository, signIn, setTime } = setup();
+    const first = await signIn();
+
+    setTime('2026-10-05T12:10:00Z');
+    await service.current(first.token);
+
+    await expect(service.deleteAccount(first.token, first.session.csrfToken)).rejects.toThrow(
+      'Sign out and sign in again',
+    );
+
+    expect(repository.users.size).toBe(1);
+
+    const recent = await signIn();
+
+    await service.deleteAccount(recent.token, recent.session.csrfToken);
+    expect(repository.users.size).toBe(0);
+  });
+
   it('registers by provider subject, stores only the session hash and rotates the secret on login', async () => {
     const { signIn, repository, service } = setup();
     const first = await signIn();

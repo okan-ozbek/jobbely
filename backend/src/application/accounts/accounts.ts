@@ -139,6 +139,12 @@ export class Accounts implements MatchingAccessProvider {
   }
 
   async logout(token: string | undefined, csrf: string | undefined) {
+    const session = await this.authorizedSession(token, csrf);
+
+    await this.repository.revokeSession(session.tokenHash, this.clock());
+  }
+
+  private async authorizedSession(token: string | undefined, csrf: string | undefined) {
     const session = await this.current(token);
     const expected = Buffer.from(session?.csrfToken ?? '');
     const actual = Buffer.from(csrf ?? '');
@@ -155,7 +161,25 @@ export class Accounts implements MatchingAccessProvider {
       );
     }
 
-    await this.repository.revokeSession(session.tokenHash, this.clock());
+    return session;
+  }
+
+  async deleteAccount(token: string | undefined, csrf: string | undefined) {
+    const session = await this.authorizedSession(token, csrf);
+
+    if (
+      !(await this.repository.deleteAccount(
+        session.user.id,
+        session.tokenHash,
+        session.csrfToken,
+        this.clock(),
+      ))
+    ) {
+      throw new AccountAccessError(
+        'authentication_required',
+        'Refresh your account and try again.',
+      );
+    }
   }
 
   async resolve(subject: MatchingSubject) {

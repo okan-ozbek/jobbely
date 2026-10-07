@@ -538,6 +538,108 @@ integration('native registration, recovery and transactional email queue', () =>
     }
   });
 
+  it('deletes native credentials, every session and pending mail without deleting an SSO account sharing the email', async () => {
+    const user = await registered();
+    const additional = await native.login({ email: user.to, password }, randomUUID());
+    const reset = await native.requestCode('reset', { email: user.to }, randomUUID());
+
+    const pendingRegistration = await native.requestCode(
+      'register',
+      { email: user.to, password },
+      randomUUID(),
+    );
+
+    const challenges = await first.client.emailChallenge.findMany({ where: { email: user.to } });
+
+    const sso = await accounts.createSession(
+      { issuer: 'https://github.com', subject: randomUUID(), provider: 'github', email: user.to },
+      { ...user.session.session, tokenHash: accountSecretHash(randomUUID()) },
+    );
+
+    try {
+      // Deleting an SSO account cannot cancel the unrelated native account's recovery.
+      expect(await accounts.deleteAccount(sso.user.id, sso.tokenHash, sso.csrfToken, now)).toBe(
+        true,
+      );
+
+      expect(await first.credential(user.to)).not.toBeNull();
+
+      expect(
+        await first.readChallenge(
+          accountSecretHash(reset.challenge),
+          accountSecretHash(reset.browser),
+          now,
+        ),
+      ).not.toBeNull();
+
+      const replacementSso = await accounts.createSession(
+        { issuer: 'https://github.com', subject: randomUUID(), provider: 'github', email: user.to },
+        { ...user.session.session, tokenHash: accountSecretHash(randomUUID()) },
+      );
+
+      try {
+        const passwordHash = (await first.credential(user.to))!.passwordHash;
+        const racedSession = { ...additional.session, tokenHash: accountSecretHash(randomUUID()) };
+
+        const loginRace = await Promise.all([
+          accounts.deleteAccount(
+            user.session.session.user.id,
+            user.session.session.tokenHash,
+            user.session.session.csrfToken,
+            now,
+          ),
+          second.createPasswordSession(user.to, passwordHash, racedSession),
+        ]);
+
+        expect(loginRace[0]).toBe(true);
+        expect(await accounts.readSession(additional.session.tokenHash, now)).toBeNull();
+        expect(await accounts.readSession(racedSession.tokenHash, now)).toBeNull();
+        expect(await first.credential(user.to)).toBeNull();
+
+        expect(
+          await first.client.accountUser.findUnique({
+            where: { id: user.session.session.user.id },
+          }),
+        ).toBeNull();
+
+        expect(await first.client.emailChallenge.count({ where: { email: user.to } })).toBe(0);
+
+        expect(
+          await first.client.accountEmailJob.count({
+            where: { challengeHash: { in: challenges.map((challenge) => challenge.tokenHash) } },
+          }),
+        ).toBe(0);
+
+        expect(await accounts.readSession(replacementSso.tokenHash, now)).not.toBeNull();
+
+        expect(
+          await first.readChallenge(
+            accountSecretHash(pendingRegistration.challenge),
+            accountSecretHash(pendingRegistration.browser),
+            now,
+          ),
+        ).toBeNull();
+
+        await expect(native.login({ email: user.to, password }, randomUUID())).rejects.toThrow(
+          'Email or password',
+        );
+
+        const replacement = await registered(user.to);
+
+        expect(replacement.session.session.user.id).not.toBe(user.session.session.user.id);
+      } finally {
+        await accounts.deleteAccount(
+          replacementSso.user.id,
+          replacementSso.tokenHash,
+          replacementSso.csrfToken,
+          now,
+        );
+      }
+    } finally {
+      await accounts.deleteAccount(sso.user.id, sso.tokenHash, sso.csrfToken, now);
+    }
+  });
+
   it('exposes guarded registration/confirmation/login/reset API without leaking passwords, codes or hashes', async () => {
     const repository = new MemoryJobRepository();
     const origin = 'https://example.invalid';

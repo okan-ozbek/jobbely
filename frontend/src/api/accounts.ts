@@ -122,3 +122,14 @@ export async function signOut(csrfToken: string, signal: AbortSignal) {
     throw new ApiError(result.error?.message ?? 'Could not sign out.', result.error?.code);
   }
 }
+
+export async function deleteAccount(csrfToken: string, signal: AbortSignal) {
+  return accountResult(
+    await client.POST('/api/v1/account/delete', {
+      headers: { 'x-csrf-token': csrfToken },
+      body: { confirm: true },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}

@@ -115,6 +115,30 @@
   font-size: 16px;
   margin: 20px 0 12px;
 }
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.account-danger-button {
+  min-height: var(--control-height);
+  padding: 0 16px;
+  border: 1px solid #b6254245;
+  border-radius: 14px;
+  background: #b6254208;
+  color: #b62542;
+  font-size: 13px;
+}
+.account-danger-button:hover:not(:disabled) {
+  background: #b6254215;
+}
+.account-delete-confirmation {
+  margin-top: 20px;
+}
+.account-delete-confirmation h3,
+.account-delete-confirmation p {
+  margin: 0;
+}
 @media (max-width: 480px) {
   .header nav {
     gap: 6px;

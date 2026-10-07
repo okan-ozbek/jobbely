@@ -115,6 +115,78 @@ integration('PostgreSQL account identity and session concurrency', () => {
     expect(results.filter(Boolean)).toHaveLength(1);
   });
 
+  it('rechecks revocation, expiry and CSRF before deletion and removes only the requested SSO account', async () => {
+    const claim = identity();
+    const initial = await first.createSession(claim, session());
+    const otherSession = await second.createSession(claim, session());
+    const unrelated = await create();
+
+    createdUsers.add(initial.user.id);
+
+    await client.query(
+      'UPDATE "ApplicationSession" SET "createdAt" = $1::timestamptz AT TIME ZONE \'UTC\' WHERE "tokenHash" = $2',
+      [new Date(now.getTime() - 10 * 60_000), initial.tokenHash],
+    );
+
+    await expect(
+      first.deleteAccount(initial.user.id, initial.tokenHash, initial.csrfToken, now),
+    ).rejects.toThrow('Sign out and sign in again');
+
+    await client.query(
+      'UPDATE "ApplicationSession" SET "createdAt" = $1::timestamptz AT TIME ZONE \'UTC\' WHERE "tokenHash" = $2',
+      [now, initial.tokenHash],
+    );
+
+    expect(await first.deleteAccount(initial.user.id, initial.tokenHash, 'wrong', now)).toBe(false);
+
+    expect(
+      await first.deleteAccount(unrelated.user.id, initial.tokenHash, initial.csrfToken, now),
+    ).toBe(false);
+
+    expect(
+      await first.deleteAccount(
+        initial.user.id,
+        initial.tokenHash,
+        initial.csrfToken,
+        new Date(initial.idleExpiresAt),
+      ),
+    ).toBe(false);
+
+    await second.revokeSession(initial.tokenHash, now);
+
+    expect(
+      await first.deleteAccount(initial.user.id, initial.tokenHash, initial.csrfToken, now),
+    ).toBe(false);
+
+    expect(await first.readSession(otherSession.tokenHash, now)).not.toBeNull();
+
+    expect(
+      await first.deleteAccount(
+        initial.user.id,
+        otherSession.tokenHash,
+        otherSession.csrfToken,
+        now,
+      ),
+    ).toBe(true);
+
+    expect(await first.readSession(otherSession.tokenHash, now)).toBeNull();
+    expect(await first.readSession(unrelated.tokenHash, now)).not.toBeNull();
+
+    for (const table of ['AccountUser', 'AccountIdentity', 'ApplicationSession']) {
+      const result = await client.query(
+        `SELECT count(*)::int AS count FROM "${table}" WHERE "${table === 'AccountUser' ? 'id' : 'userId'}" = $1`,
+        [initial.user.id],
+      );
+
+      expect(result.rows[0].count).toBe(0);
+    }
+
+    const replacement = await second.createSession(claim, session());
+
+    createdUsers.add(replacement.user.id);
+    expect(replacement.user.id).not.toBe(initial.user.id);
+  });
+
   it('never revives a revoked session after concurrent refresh and logout', async () => {
     const result = await create();
 

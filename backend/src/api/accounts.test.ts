@@ -65,6 +65,72 @@ async function setup(origin = 'http://127.0.0.1:5173') {
 }
 
 describe('account and offer API', () => {
+  it('deletes only the authenticated account after explicit confirmation, origin and CSRF validation', async () => {
+    const { app, login, origin, accountRepository } = await setup('https://example.invalid');
+    const first = await login();
+    const second = await login();
+    const current = await app.inject({ url: '/api/v1/account', headers: { cookie: first.cookie } });
+    const csrf = current.json().csrfToken;
+
+    for (const request of [
+      { headers: { origin }, payload: { confirm: true }, status: 401 },
+      { headers: { origin, cookie: first.cookie }, payload: { confirm: true }, status: 401 },
+      {
+        headers: { cookie: first.cookie, 'x-csrf-token': csrf },
+        payload: { confirm: true },
+        status: 403,
+      },
+      {
+        headers: { origin: 'https://attacker.invalid', cookie: first.cookie, 'x-csrf-token': csrf },
+        payload: { confirm: true },
+        status: 403,
+      },
+      { headers: { origin, cookie: first.cookie, 'x-csrf-token': csrf }, payload: {}, status: 400 },
+      {
+        headers: { origin, cookie: first.cookie, 'x-csrf-token': csrf },
+        payload: { confirm: false },
+        status: 400,
+      },
+      {
+        headers: { origin, cookie: first.cookie, 'x-csrf-token': csrf },
+        payload: { confirm: true, userId: 'other' },
+        status: 400,
+      },
+    ]) {
+      const response = await app.inject({
+        method: 'POST',
+        url: '/api/v1/account/delete',
+        headers: request.headers,
+        payload: request.payload,
+      });
+
+      expect(response.statusCode).toBe(request.status);
+      expect(accountRepository.users.size).toBe(1);
+    }
+
+    const removed = await app.inject({
+      method: 'POST',
+      url: '/api/v1/account/delete',
+      headers: { origin, cookie: first.cookie, 'x-csrf-token': csrf },
+      payload: { confirm: true },
+    });
+
+    expect(removed.statusCode).toBe(200);
+    expect(removed.json()).toEqual({ deleted: true });
+    expect(removed.headers['cache-control']).toBe('no-store');
+    expect(removed.cookies).toHaveLength(2);
+
+    expect(
+      removed.cookies.every((cookie) => cookie.maxAge === 0 && cookie.secure && cookie.httpOnly),
+    ).toBe(true);
+
+    expect(accountRepository.users.size).toBe(0);
+
+    expect(
+      (await app.inject({ url: '/api/v1/account', headers: { cookie: second.cookie } })).statusCode,
+    ).toBe(401);
+  });
+
   it('exposes a draft $7.95 monthly offer without enabling purchase or changing matching', async () => {
     const { app } = await setup();
     const plans = await app.inject('/api/v1/plans');

@@ -9,6 +9,7 @@ import type {
   VerifiedIdentity,
 } from '../../domain/accounts/identity.js';
 import { AccountAccessError } from '../../domain/accounts/access.js';
+import { accountDeletionSignInMs } from '../../domain/accounts/identity.js';
 
 interface SessionRow {
   tokenHash: string;
@@ -133,5 +134,67 @@ export class PostgresAccounts implements AccountRepository {
 
   async close() {
     await this.client.$disconnect();
+  }
+
+  async deleteAccount(userId: string, tokenHash: string, csrfToken: string, now: Date) {
+    return this.client.$transaction(async (transaction) => {
+      const credential = await transaction.passwordCredential.findUnique({ where: { userId } });
+      const identities = await transaction.accountIdentity.findMany({ where: { userId } });
+
+      // Follow sign-in's lock order: credential/identity locks, user, then sessions.
+      if (credential) {
+        await transaction.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${credential.email}, 2714))`;
+      }
+
+      for (const identity of identities.sort((a, b) =>
+        JSON.stringify([a.issuer, a.subject]).localeCompare(JSON.stringify([b.issuer, b.subject])),
+      )) {
+        await transaction.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${JSON.stringify([identity.issuer, identity.subject])}, 2713))`;
+      }
+
+      const [user] = await transaction.$queryRaw<{ id: string }[]>`
+        SELECT "id" FROM "AccountUser" WHERE "id" = ${userId} AND "state" = 'active' FOR UPDATE`;
+
+      if (!user) {
+        return false;
+      }
+
+      const [session] = await transaction.$queryRaw<{ tokenHash: string; createdAt: Date }[]>`
+        SELECT "tokenHash", "createdAt" FROM "ApplicationSession" WHERE "tokenHash" = ${tokenHash}
+        AND "userId" = ${userId} AND "csrfToken" = ${csrfToken} AND "revokedAt" IS NULL
+        AND "idleExpiresAt" > ${now} AND "absoluteExpiresAt" > ${now} FOR UPDATE`;
+
+      if (!session) {
+        return false;
+      }
+
+      if (session.createdAt.getTime() <= now.getTime() - accountDeletionSignInMs) {
+        throw new AccountAccessError(
+          'authentication_required',
+          'Sign out and sign in again before deleting your account.',
+        );
+      }
+
+      // Only native credentials own email challenges; matching SSO emails never imply ownership.
+      if (credential) {
+        const challenges = await transaction.emailChallenge.findMany({
+          where: { email: credential.email },
+          select: { tokenHash: true },
+        });
+
+        await transaction.accountEmailJob.deleteMany({
+          where: { challengeHash: { in: challenges.map((challenge) => challenge.tokenHash) } },
+        });
+
+        await transaction.emailChallenge.deleteMany({ where: { email: credential.email } });
+        await transaction.passwordCredential.deleteMany({ where: { userId } });
+      }
+
+      await transaction.applicationSession.deleteMany({ where: { userId } });
+      await transaction.accountIdentity.deleteMany({ where: { userId } });
+      await transaction.accountUser.delete({ where: { id: userId } });
+
+      return true;
+    });
   }
 }

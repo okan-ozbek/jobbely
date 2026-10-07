@@ -4,6 +4,8 @@ Recorded: 30 September 2026. These references describe the current first impleme
 
 ## Decisions by concern
 
+The 7 October [account deletion increment](ACCOUNTS.md#permanent-account-deletion-7-october-2026) adds permanent deletion, recent-sign-in/Origin/CSRF guards, atomic account/native-mail cleanup and transient browser state clearing.
+
 [SYNTHESIA.md](SYNTHESIA.md) records official public Ashby widget discovery, 44 specific jobs with native compensation, one general-application exclusion and scheduled refreshes, retaining partial inventory/attribution coverage and pending employer reviews.
 
 [LINEAR.md](LINEAR.md) records public Ashby reuse, native UUID and board-alias reconciliation, 31 imported jobs and seven regional identity gaps, retaining partial coverage, pending employer review and enabled schedules.

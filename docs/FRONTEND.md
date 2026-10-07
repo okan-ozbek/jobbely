@@ -39,6 +39,8 @@ Development proxies `/api` to the local backend. Production uses a same-origin r
 
 ## Resume workbench
 
+The account dialog also offers permanent deletion with a `DELETE` confirmation and cancellation. Success clears the account and transient workbench, then shows a deletion receipt beside sign-in controls. Dismissal is blocked during account mutation, replaced reads are aborted, and focus refresh waits for the mutation to finish. A session older than ten minutes is asked to sign out and sign in again before deletion.
+
 The [Resume feature](../frontend/src/features/resume/ResumeWorkbench.tsx) remains in tab memory across SPA navigation. Analysis debounces corrections by 350 ms and aborts replaced requests. Local PDF/DOCX workers extract bounded text with CSP preflight and cancellation. A selected file replaces the paste input and attachment control; remove it before selecting another. Raw reading previews are omitted. Skills and competencies share removable chips; location, roles and dates remain editable. The matching controls contain only a function dropdown and button. Clicking Find matching jobs confirms the current analysis for the matching allowlist and job-description comparisons; edits/function changes/pending analysis invalidate results, review confirmation and pagination. Full reload/Clear loses private state; storage and URL parameters contain no candidate fields. Job details preserve original sanitized employer markup and put comparison explanations on focusable highlighted terms. See [RESUME_TESTING](RESUME_TESTING.md), [DOCUMENTS](DOCUMENTS.md) and [MATCHING](MATCHING.md).
 
 ## Implementation, limits and verification
