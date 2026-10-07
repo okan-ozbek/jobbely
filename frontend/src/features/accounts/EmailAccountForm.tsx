@@ -19,6 +19,7 @@ export function EmailAccountForm({
   initialMode = 'login',
   initialEmail = '',
   onBack,
+  showHeading = true,
 }: {
   available: boolean;
   onSignedIn: () => Promise<void>;
@@ -26,6 +27,7 @@ export function EmailAccountForm({
   initialMode?: 'login' | 'reset';
   initialEmail?: string;
   onBack?: () => void;
+  showHeading?: boolean;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState(initialEmail);
@@ -216,7 +218,7 @@ export function EmailAccountForm({
           </button>
         </div>
       )}
-      {(confirmation || mode === 'reset') && (
+      {showHeading && (confirmation || mode === 'reset') && (
         <h3>{mode === 'confirm' ? 'Confirm your email' : 'Reset your password'}</h3>
       )}
       {message && (

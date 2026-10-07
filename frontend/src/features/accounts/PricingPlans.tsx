@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Check } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Compass, LockKeyhole, Sparkles } from 'lucide-react';
 import { createTestCheckout, currentAccount, listPlans } from '../../api/accounts.js';
 import type { BillingPeriod, Plans } from '../../api/accounts.js';
 import { ApiError } from '../../api/client.js';
+import { PlanCard } from './PlanCard.js';
 import './pricing.css';
 
 const names = { monthly: 'Monthly', quarterly: 'Quarterly', yearly: 'Yearly' };
@@ -118,95 +119,132 @@ export function PricingPlans({
     }
   }
 
+  const periods = ['monthly', 'quarterly', 'yearly'] as const;
   const offer = plans?.billingOptions.find((item) => item.key === period);
 
   return (
     <div
       className="pricing-plans"
-      aria-busy={!plans || busy}
+      aria-busy={(!plans && !error) || busy}
     >
       <div
         className="billing-periods"
+        role="group"
         aria-label="Billing frequency"
       >
-        {(['monthly', 'quarterly', 'yearly'] as const).map((key) => (
-          <button
-            key={key}
-            aria-pressed={period === key}
-            disabled={busy}
-            onClick={() => {
-              setPeriod(key);
-              setCheckout(null);
-            }}
-          >
-            {names[key]}
-            {key !== 'monthly' && <span>Save {key === 'quarterly' ? '10' : '25'}%</span>}
-          </button>
-        ))}
+        <span
+          className="billing-indicator"
+          aria-hidden="true"
+          style={{ transform: `translateX(${periods.indexOf(period) * 100}%)` }}
+        />
+        {periods.map((key) => {
+          const discount = plans?.billingOptions.find((item) => item.key === key)?.discountPercent;
+
+          return (
+            <button
+              key={key}
+              aria-pressed={period === key}
+              disabled={busy}
+              onClick={() => {
+                setPeriod(key);
+                setCheckout(null);
+                setError('');
+              }}
+            >
+              {names[key]}
+              {!!discount && <span>Save {discount}%</span>}
+            </button>
+          );
+        })}
       </div>
       {plans && offer ? (
         <>
           <div className="pricing-grid">
-            <section className="pricing-card">
-              <span className="plan-eyebrow">A place to start</span>
-              <h3>Basic</h3>
-              <p className="plan-amount">
-                {money(0)}
-                <span>/ month</span>
-              </p>
-              <p>Find your next opportunity, at your own pace.</p>
-              <ul>
-                <li>
-                  <Check size={16} />
-                  Public jobs and company directory
-                </li>
-                <li>
-                  <Check size={16} />
-                  Resume review and matching
-                </li>
-                <li>
-                  <Check size={16} />
-                  Links to original job listings
-                </li>
-              </ul>
+            <PlanCard>
+              <div className="plan-card-top">
+                <span className="plan-icon">
+                  <Compass size={24} />
+                </span>
+                <span className="plan-tag">Free to get started</span>
+              </div>
+              <h2>Basic</h2>
+              <p className="plan-description">A clearer starting point for your next move.</p>
+              <div className="plan-price-block">
+                <p className="plan-amount">
+                  {money(0)}
+                  <span>/ month</span>
+                </p>
+                <p className="billing-total">Free today. No card needed.</p>
+              </div>
               <button
                 className="secondary-button"
                 disabled={signedIn}
                 onClick={onSignIn}
               >
-                {signedIn ? 'Your current plan' : 'Create a free account'}
+                {signedIn ? 'Your current plan' : 'Start with Basic'}{' '}
+                {!signedIn && <ArrowRight size={16} />}
               </button>
-            </section>
-            <section className="pricing-card pricing-card-pro">
-              <span className="plan-eyebrow">Your next chapter</span>
-              <h3>Pro</h3>
-              <p className="plan-amount">
-                {money(Math.round(offer.amount / offer.months))}
-                <span>/ month</span>
-              </p>
-              <p className="billing-total">
-                {money(offer.amount)} billed{' '}
-                {period === 'monthly'
-                  ? 'every month'
-                  : period === 'quarterly'
-                    ? 'every 3 months'
-                    : 'every year'}
-                {offer.discountPercent > 0 && ` · Save ${offer.discountPercent}%`}
-              </p>
+              <div className="plan-divider" />
+              <span className="plan-list-heading">Your essentials, covered</span>
               <ul>
                 <li>
-                  <Check size={16} />
-                  Everything in Basic
+                  <Check size={17} />
+                  Public jobs and company directory
                 </li>
                 <li>
-                  <Check size={16} />
-                  All eligible matches — planned
+                  <Check size={17} />
+                  Resume review and job matching
                 </li>
                 <li>
-                  <Check size={16} />
-                  Full match comparisons — planned
+                  <Check size={17} />
+                  Explained comparisons
+                </li>
+                <li>
+                  <Check size={17} />
+                  Apply on the original company site
                 </li>
               </ul>
+              <p className="plan-bottom-note">Space to explore. A place to begin.</p>
+            </PlanCard>
+            <PlanCard pro>
+              <div className="plan-card-top">
+                <span className="plan-icon">
+                  <Sparkles size={24} />
+                </span>
+                <span className="plan-tag">Your next chapter · Preview</span>
+              </div>
+              <h2>
+                Pro
+                <span
+                  className="pro-title-star"
+                  aria-hidden="true"
+                >
+                  ✦
+                </span>
+              </h2>
+              <p className="plan-description">More room for the possibilities ahead.</p>
+              <div
+                className="plan-price-block"
+                key={period}
+              >
+                <p className="plan-amount">
+                  {money(Math.round(offer.amount / offer.months))}
+                  <span>/ month</span>
+                </p>
+                <p className="billing-total">
+                  {money(offer.amount)} billed{' '}
+                  {period === 'monthly'
+                    ? 'monthly'
+                    : period === 'quarterly'
+                      ? 'every 3 months'
+                      : 'yearly'}
+                </p>
+                {offer.discountPercent > 0 && (
+                  <span className="plan-saving">
+                    Save {offer.discountPercent}% compared with monthly
+                  </span>
+                )}
+              </div>
               {checkout?.period === period ? (
                 <a
                   className="primary-button"
@@ -227,31 +265,61 @@ export function PricingPlans({
                   {busy
                     ? 'Preparing checkout…'
                     : plans.billing.checkoutAvailable
-                      ? 'Try Pro in test mode'
-                      : 'Test checkout coming soon'}
+                      ? 'Explore Pro in test mode'
+                      : 'Pro checkout coming soon'}
+                  <ArrowRight size={16} />
                 </button>
               )}
-            </section>
+              <div className="plan-divider" />
+              <span className="plan-list-heading">Built around your next step</span>
+              <ul>
+                <li>
+                  <Check size={17} />
+                  Everything in Basic
+                </li>
+                <li>
+                  <Sparkles size={17} />
+                  All eligible matches<span className="feature-preview">Planned</span>
+                </li>
+                <li>
+                  <Sparkles size={17} />
+                  Full match comparisons<span className="feature-preview">Planned</span>
+                </li>
+                <li>
+                  <Check size={17} />A choice of monthly, quarterly or yearly billing
+                </li>
+              </ul>
+              <p className="plan-bottom-note">A thoughtful investment in what comes next.</p>
+            </PlanCard>
+          </div>
+          <div className="pricing-assurance">
+            <LockKeyhole size={15} />
+            <span>Hosted checkout with Stripe</span>
+            <span aria-hidden="true">·</span>
+            <span>No card details stored by Jobbely</span>
           </div>
           <p className="pricing-test-note">
-            Test mode · No real payment. Your account stays on Basic while subscriptions are being
-            tested. Matching is currently available to everyone.
+            Pro is in preview. Checkout uses Stripe test mode, with no real payment or plan change.
+            Matching is currently available to everyone on Basic.
           </p>
         </>
       ) : (
         !error && (
-          <p
+          <div
+            className="pricing-grid pricing-loading"
             role="status"
-            className="small-note"
+            aria-label="Loading pricing"
           >
-            Loading pricing…
-          </p>
+            <div className="pricing-card" />
+            <div className="pricing-card" />
+            <span className="sr-only">Loading pricing…</span>
+          </div>
         )
       )}
       {error && (
         <p
           role="alert"
-          className="account-error"
+          className="account-error pricing-status"
         >
           {error}{' '}
           {!plans && (

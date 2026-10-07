@@ -9,73 +9,6 @@
   color: var(--ink);
   box-shadow: 0 14px 40px #34355b24;
 }
-.account-dialog-settings {
-  width: min(760px, calc(100vw - 32px));
-}
-.account-details {
-  padding: 4px 0 12px;
-}
-.account-details h3 {
-  margin: 0 0 8px;
-  font-size: 16px;
-}
-.account-detail-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--border);
-}
-.account-detail-row > div {
-  min-width: 0;
-}
-.account-detail-row p {
-  margin: 6px 0 0;
-  overflow-wrap: anywhere;
-}
-.account-detail-row button {
-  flex-shrink: 0;
-}
-.account-current-plan {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 18px 0;
-  padding: 20px;
-  border: 1px solid #d7d0f5;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #f0edff, #f7f7ff);
-}
-.account-current-plan h3 {
-  margin: 8px 0;
-  font-size: 22px;
-}
-.account-current-plan h3 span {
-  margin-left: 10px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.account-current-plan p {
-  margin: 0;
-}
-.account-current-plan button {
-  flex-shrink: 0;
-}
-.account-footer-actions {
-  margin-top: 20px;
-  padding-top: 4px;
-  border-top: 1px solid var(--border);
-}
-@media (max-width: 480px) {
-  .account-detail-row,
-  .account-current-plan {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-  }
-}
 .account-dialog::backdrop {
   background: #292b4933;
   backdrop-filter: blur(4px);
@@ -222,6 +155,23 @@
   margin: 0;
 }
 
+@media (max-width: 360px) {
+  .header {
+    gap: 8px;
+  }
+  .header nav {
+    gap: 4px;
+  }
+  .header .nav-link {
+    min-height: var(--control-height);
+    padding: 10px 9px;
+    font-size: 11px;
+  }
+  .header .brand {
+    font-size: 23px;
+  }
+}
+
 .verification-code legend {
   padding: 0;
   margin-bottom: 8px;
@@ -239,4 +189,13 @@
   text-align: center;
   font-size: 22px;
   font-weight: 600;
+}
+
+.account-dialog-redirect {
+  padding-top: 18px;
+}
+.account-dialog-redirect p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
 }

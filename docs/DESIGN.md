@@ -8,6 +8,16 @@ The home page centers on one resume composer: paste text or attach a PDF/DOCX, e
 
 The header offers Account/Sign in, Pricing and Companies; the wordmark returns to the resume through SPA navigation. Existing public job search and detail routes remain available through company cards, recommendations and explicit `view=jobs` URLs. Profile state remains in tab memory across these views.
 
+## Pricing and account workspace, 8 October 2026
+
+Pricing uses contrasting Basic glass and dark lavender Pro cards, a sliding billing selector, short entrance/price transitions, and restrained pointer tilt/light on hover. Cards stack on mobile. Pointer tilt is limited to hover-capable devices; reduced motion removes animations and transitions, with keyboard focus preserved. Idle cards do not animate continuously. Amounts and discounts come from the API, and sandbox/planned features stay explicit. A matching glass CTA on the resume home links to Pricing without replacing the composer.
+
+Account is a dedicated page with a desktop sidebar and a horizontally scrollable section nav on narrow screens. Overview, details, billing, resume and preferences have distinct headings/surfaces. The page retains the shared Galdeano family, ink/lavender tokens, rounded glass panels and original header/company/resume routes. Profile data uses real account fields; password masks do not represent a stored plaintext password.
+
+The overview chart has selectable periods/data points, readable counts and explicitly fictional company activity. Resume-library and email/notification controls are labeled demos, with visible feedback and no file/network/persistence side effects. Billing presents an honest unavailable history/payment-details state until that integration exists. Credential changes and deletion use the existing native dialogs; close/Escape and destructive confirmation remain available. See [FRONTEND](FRONTEND.md#account-workspace-and-pricing-8-october-2026) and [BILLING_TEST](BILLING_TEST.md#accountpricing-presentation-8-october-2026).
+
+[Pricing](../frontend/src/features/accounts/PricingPage.tsx), [cards](../frontend/src/features/accounts/PricingPlans.tsx), [pointer interaction](../frontend/src/features/accounts/PlanCard.tsx), [home CTA](../frontend/src/features/accounts/PricingTeaser.tsx), [account page](../frontend/src/features/accounts/AccountPage.tsx), [account styles](../frontend/src/features/accounts/account-page.css), [pricing styles](../frontend/src/features/accounts/pricing.css).
+
 ## Tokens and typography
 
 Central tokens in [styles.css](../frontend/src/styles.css) use pale grey `#f5f6fb`, dark ink `#232538`, muted text `#62677c` and purple `#514abe` for small interactive text. Galdeano is locally hosted with system sans-serif fallbacks; display, body and form controls share the same family. Its regular 400 face uses synthesized heavier weights for existing headings. HTML email previews load the same local face; delivered emails use Arial when Galdeano is unavailable. Directory logos use flat brand colors on transparent wrappers; the home logo row retains brand colors at 65% opacity. See [LOGOS](LOGOS.md) for sources and the Radix text fallback.

@@ -14,7 +14,11 @@ import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
 import { useResumeAnalysis } from './features/resume/useResumeAnalysis.js';
 import { JobProfileComparison } from './features/resume/JobProfileComparison.js';
 import { AccountMenu } from './features/accounts/AccountMenu.js';
+import type { AccountAction } from './features/accounts/AccountMenu.js';
+import type { Account } from './api/accounts.js';
+import { AccountPage } from './features/accounts/AccountPage.js';
 import { PricingPage } from './features/accounts/PricingPage.js';
+import { PricingTeaser } from './features/accounts/PricingTeaser.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -35,7 +39,12 @@ export function App() {
   const [reviewedAnalysis, setReviewedAnalysis] = useState<ResumeAnalysis | null>(null);
   const [privateSessionRevision, setPrivateSessionRevision] = useState(0);
   const [accountOpenRequest, setAccountOpenRequest] = useState(0);
-  const [accountUserId, setAccountUserId] = useState<string | null>(null);
+  const [account, setAccount] = useState<Account | null | undefined>(undefined);
+  const [accountBusy, setAccountBusy] = useState(false);
+  const [accountError, setAccountError] = useState('');
+  const [accountNotice, setAccountNotice] = useState('');
+  const [accountAction, setAccountAction] = useState<AccountAction | null>(null);
+  const accountUserId = account?.user?.id ?? null;
 
   const comparisonAnalysis =
     reviewedAnalysis === resumeState.analysis && !resumeState.loading && !resumeState.error
@@ -43,15 +52,17 @@ export function App() {
       : null;
 
   const view =
-    params.get('view') === 'pricing'
-      ? 'pricing'
-      : params.get('view') === 'resume'
-        ? 'resume'
-        : params.get('view') === 'companies'
-          ? 'companies'
-          : params.get('view') === 'jobs' || params.has('job') || params.has('company')
-            ? 'jobs'
-            : 'resume';
+    params.get('view') === 'account'
+      ? 'account'
+      : params.get('view') === 'pricing'
+        ? 'pricing'
+        : params.get('view') === 'resume'
+          ? 'resume'
+          : params.get('view') === 'companies'
+            ? 'companies'
+            : params.get('view') === 'jobs' || params.has('job') || params.has('company')
+              ? 'jobs'
+              : 'resume';
 
   const selectedId = view === 'jobs' ? params.get('job') : null;
 
@@ -157,7 +168,7 @@ export function App() {
           aria-label="Jobbely home"
           onClick={(event) => {
             event.preventDefault();
-            update({ view: 'resume', job: null, company: null, from: null });
+            update({ view: 'resume', job: null, company: null, from: null, section: null });
           }}
         >
           jobbely<span className="brand-dot">.</span>
@@ -165,7 +176,16 @@ export function App() {
         <nav aria-label="Main navigation">
           <AccountMenu
             openRequest={accountOpenRequest}
-            onAccountChange={setAccountUserId}
+            onAccountChange={setAccount}
+            isAccountPage={view === 'account'}
+            onOpenAccount={() =>
+              update({ view: 'account', section: null, job: null, company: null, from: null })
+            }
+            actionRequest={accountAction}
+            onActionHandled={() => setAccountAction(null)}
+            onMutationChange={setAccountBusy}
+            onErrorChange={setAccountError}
+            onNoticeChange={setAccountNotice}
             onDeleted={() => {
               update({
                 view: null,
@@ -177,6 +197,9 @@ export function App() {
                 workplace: null,
                 country: null,
                 city: null,
+                section: null,
+                checkout_session_id: null,
+                checkout: null,
               });
 
               window.scrollTo({ top: 0, behavior: 'instant' });
@@ -190,14 +213,16 @@ export function App() {
           <button
             className={view === 'pricing' ? 'nav-link active' : 'nav-link'}
             aria-current={view === 'pricing' ? 'page' : undefined}
-            onClick={() => update({ view: 'pricing', job: null, from: null, company: null })}
+            onClick={() =>
+              update({ view: 'pricing', job: null, from: null, company: null, section: null })
+            }
           >
             Pricing
           </button>
           <button
             className={view === 'companies' ? 'nav-link active' : 'nav-link'}
             aria-current={view === 'companies' ? 'page' : undefined}
-            onClick={() => update({ view: 'companies', job: null, from: null })}
+            onClick={() => update({ view: 'companies', job: null, from: null, section: null })}
           >
             Companies
           </button>
@@ -264,8 +289,33 @@ export function App() {
             onReviewed={setReviewedAnalysis}
             openJob={(id) => update({ view: 'jobs', job: id, from: 'resume' })}
           />
+          {!resumeState.analysis && (
+            <PricingTeaser
+              onPricing={() =>
+                update({ view: 'pricing', job: null, company: null, from: null, section: null })
+              }
+            />
+          )}
         </div>
-        {view === 'pricing' ? (
+        {view === 'account' ? (
+          <AccountPage
+            key={accountUserId ?? 'guest'}
+            account={account}
+            error={accountError}
+            notice={accountNotice}
+            busy={accountBusy}
+            section={params.get('section')}
+            onSection={(section) => {
+              update({ section });
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }}
+            onAction={setAccountAction}
+            onSignIn={() => setAccountOpenRequest((value) => value + 1)}
+            onPricing={() =>
+              update({ view: 'pricing', job: null, company: null, from: null, section: null })
+            }
+          />
+        ) : view === 'pricing' ? (
           <PricingPage
             accountKey={accountUserId}
             onSignIn={() => setAccountOpenRequest((value) => value + 1)}

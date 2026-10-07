@@ -7,10 +7,12 @@ export function AccountEmailChangeForm({
   csrfToken,
   onChanged,
   onCancel,
+  showHeading = true,
 }: {
   csrfToken: string;
   onChanged: () => Promise<void>;
   onCancel: () => void;
+  showHeading?: boolean;
 }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -105,7 +107,7 @@ export function AccountEmailChangeForm({
 
   return (
     <section className="account-settings-form">
-      <h3>Change your email</h3>
+      {showHeading && <h3>Change your email</h3>}
       <p className="small-note">
         Confirm your current password, then verify your new email address. Your other sessions will
         be signed out.
