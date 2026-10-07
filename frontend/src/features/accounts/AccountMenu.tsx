@@ -55,6 +55,7 @@ export function AccountMenu({
   const [notice, setNotice] = useState('');
   const [link, setLink] = useState<{ provider: SignInProvider; url: string } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const backdropPressed = useRef(false);
   const active = useRef<AbortController | null>(null);
   const readRequest = useRef<AbortController | null>(null);
   const userId = useRef<string | null>(null);
@@ -341,6 +342,36 @@ export function AccountMenu({
         className={`account-dialog${!account?.user ? ' account-dialog-auth' : ''}`}
         ref={dialog}
         aria-labelledby={titleId}
+        onPointerDown={(event) => {
+          const bounds = event.currentTarget.getBoundingClientRect();
+
+          backdropPressed.current =
+            event.target === event.currentTarget &&
+            (event.clientX < bounds.left ||
+              event.clientX > bounds.right ||
+              event.clientY < bounds.top ||
+              event.clientY > bounds.bottom);
+        }}
+        onClick={(event) => {
+          const startedOutside = backdropPressed.current;
+
+          backdropPressed.current = false;
+
+          if (account?.user || !startedOutside || event.target !== event.currentTarget) {
+            return;
+          }
+
+          const bounds = event.currentTarget.getBoundingClientRect();
+
+          if (
+            event.clientX < bounds.left ||
+            event.clientX > bounds.right ||
+            event.clientY < bounds.top ||
+            event.clientY > bounds.bottom
+          ) {
+            setOpen(false);
+          }
+        }}
         onCancel={(event) => {
           if (mutating.current) {
             event.preventDefault();

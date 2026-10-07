@@ -1,4 +1,4 @@
-import { ArrowUpRight, Compass, Sparkles } from 'lucide-react';
+import { Compass, Sparkles, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import './auth.css';
 
@@ -17,14 +17,19 @@ export function AuthShell({
 
   return (
     <div className="auth-layout">
+      <button
+        className="icon-button auth-close"
+        type="button"
+        aria-label="Close account dialog"
+        onClick={onClose}
+      >
+        <X size={19} />
+      </button>
       <aside className="auth-story">
         <div className="auth-story-top">
           <span className="auth-wordmark">
             jobbely<span>.</span>
           </span>
-          <button onClick={onClose}>
-            Back to website <ArrowUpRight size={15} />
-          </button>
         </div>
         <div
           className="auth-landscape"

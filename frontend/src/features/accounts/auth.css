@@ -14,6 +14,17 @@
   grid-template-columns: 0.95fr 1.05fr;
   min-height: 620px;
 }
+.account-dialog .auth-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  background: #ffffffd9;
+  border: 1px solid #dcdde980;
+}
+.account-dialog .auth-close:hover {
+  background: #fff;
+}
 .auth-story {
   position: relative;
   display: flex;
@@ -42,23 +53,6 @@
 }
 .auth-wordmark span {
   color: #d4cdfc;
-}
-.auth-story-top button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid #ffffff24;
-  border-radius: 30px;
-  background: #ffffff14;
-  color: #fff;
-  font-size: 12px;
-  transition: background 180ms;
-}
-.auth-story-top button:hover {
-  background: #ffffff28;
 }
 .auth-landscape {
   position: absolute;
@@ -352,10 +346,6 @@
   .auth-story-top {
     gap: 8px;
   }
-  .auth-story-top button {
-    font-size: 11px;
-    padding: 0 9px;
-  }
   .auth-story-copy h2 {
     font-size: 24px;
   }
@@ -364,7 +354,6 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .auth-story-top button,
   .auth-email-account .account-form .primary-button {
     transition: none;
   }
