@@ -265,6 +265,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [SECURITY](docs/SECURITY.md): trust boundaries and HTML preparation.
 - [API](docs/API.md): public contract, query behavior and pagination.
 - [ACCOUNT_BILLING_PLAN](docs/ACCOUNT_BILLING_PLAN.md): delivery plan for GitHub/LinkedIn sign-in, five free matches, US$7.95 monthly Pro, Stripe and administration; [ACCOUNTS](docs/ACCOUNTS.md) records the implemented account foundation and setup.
+- [BILLING_TEST](docs/BILLING_TEST.md): account settings, monthly/quarterly/yearly pricing and Stripe sandbox checkout. Set the backend test secret, run `pnpm billing:setup:test` and restart the API when ready to test; live billing and paid access remain pending.
 - [ANALYTICS_PLAN](docs/ANALYTICS_PLAN.md): proposed admin audience, registration, observed active users, funnel, retention, subscription metrics and privacy controls.
 - [FRONTEND](docs/FRONTEND.md): UI state, generated client and navigation.
 - [DESIGN](docs/DESIGN.md): visual tokens, locally hosted fonts, responsive layouts and interaction rules.
@@ -275,7 +276,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [FORMATTING](docs/FORMATTING.md): readable Prettier style, ESLint fixes and editor defaults.
 - [DEPLOYMENT](docs/DEPLOYMENT.md): configuration, hosting and operations.
 
-Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. The [account foundation](docs/ACCOUNTS.md) includes SSO and native email/password registration with optional username, verification/reset codes and a separate SMTP queue worker. Configure backend-only secrets/SMTP, apply `pnpm db:migrate`, then run `pnpm worker:email` separately; see [EMAIL_ACCOUNTS](docs/EMAIL_ACCOUNTS.md). Subscriptions/paywall/admin work remains in [ACCOUNT_BILLING_PLAN](docs/ACCOUNT_BILLING_PLAN.md). In-app job applications, paid data providers and AI classification remain outside the initial scope.
+Full 60-company onboarding, indexed database search, classification replay, raw-payload retention and operational monitoring remain MVP follow-ups. The [account foundation](docs/ACCOUNTS.md) includes SSO and native email/password registration with verification/reset codes, permanent account deletion and a separate SMTP queue worker. Configure backend-only secrets/SMTP, apply `pnpm db:migrate`, then run `pnpm worker:email` separately; see [EMAIL_ACCOUNTS](docs/EMAIL_ACCOUNTS.md). Subscriptions/paywall/admin work remains in [ACCOUNT_BILLING_PLAN](docs/ACCOUNT_BILLING_PLAN.md). In-app job applications, paid data providers and AI classification remain outside the initial scope.
 
 Resume matching interprets reviewed engineering activities through a 239-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.
 

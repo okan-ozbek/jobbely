@@ -1,0 +1,155 @@
+.pricing-page {
+  max-width: 900px;
+  margin: 40px auto 90px;
+}
+.pricing-heading {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.pricing-heading h1 {
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  margin: 18px 0;
+}
+.pricing-heading h1 span {
+  color: var(--signal-text);
+}
+.pricing-heading > p {
+  color: var(--muted);
+}
+.plan-eyebrow {
+  color: var(--signal-text);
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+.billing-periods {
+  display: flex;
+  gap: 6px;
+  padding: 5px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 24px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 16px;
+}
+.billing-periods button {
+  display: grid;
+  gap: 4px;
+  border: 1px solid transparent;
+  padding: 10px 24px;
+  color: var(--muted);
+  background: transparent;
+  border-radius: 12px;
+}
+.billing-periods button span {
+  font-size: 11px;
+  color: var(--signal-text);
+}
+.billing-periods button[aria-pressed='true'] {
+  color: var(--ink);
+  background: #ece9ff;
+  border-color: #746cde45;
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 28px;
+  border: 1px solid #fff;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 8px 30px #34355b0b;
+}
+.pricing-card-pro {
+  border-color: #bcb3ef;
+  background: linear-gradient(135deg, #fafaff, #f1edff);
+}
+.pricing-card h3 {
+  margin: 10px 0 12px;
+  font-size: 25px;
+}
+.pricing-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.pricing-card .plan-amount {
+  font-size: 36px;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+.plan-amount span {
+  font-size: 13px;
+  color: var(--muted);
+  margin-left: 6px;
+}
+.pricing-card ul {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 26px;
+  font-size: 13px;
+}
+.pricing-card li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pricing-card li svg {
+  flex-shrink: 0;
+  color: var(--signal-text);
+}
+.pricing-card .primary-button,
+.pricing-card .secondary-button {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 13px;
+}
+.pricing-card .secondary-button {
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--border);
+}
+.pricing-test-note {
+  max-width: 600px;
+  margin: 20px auto 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.pricing-status {
+  padding: 16px;
+  margin: 20px 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+@media (max-width: 600px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+  .billing-periods button {
+    padding: 10px 14px;
+  }
+  .pricing-card {
+    padding: 22px;
+  }
+  .pricing-page {
+    margin-top: 24px;
+  }
+}

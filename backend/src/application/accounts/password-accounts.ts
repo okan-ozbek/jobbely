@@ -5,9 +5,14 @@ import type {
   AccountEmailCipher,
 } from '../../ports/password-accounts.js';
 import type { EmailCodePurpose, NewAccountSession } from '../../domain/accounts/password.js';
-import { emailCodeLifetimeMs, PasswordAccountError } from '../../domain/accounts/password.js';
+import {
+  emailCodeLifetimeMs,
+  PasswordAccountError,
+  validNewPassword,
+} from '../../domain/accounts/password.js';
 import { sessionAbsoluteMs, sessionIdleMs } from '../../domain/accounts/identity.js';
 import { accountSecretHash } from './accounts.js';
+import type { AccountSession } from '../../domain/accounts/identity.js';
 
 const opaque = () => randomBytes(32).toString('base64url');
 
@@ -41,8 +46,11 @@ export class PasswordAccounts {
   private password(input: string) {
     const password = input.normalize('NFC');
 
-    if ([...password].length < 15 || [...password].length > 128) {
-      throw new PasswordAccountError('invalid_input', 'Use a password with 15–128 characters.');
+    if (!validNewPassword(password)) {
+      throw new PasswordAccountError(
+        'invalid_input',
+        'Password is not valid. Use 8–128 characters, including a number and a symbol.',
+      );
     }
 
     return password;
@@ -83,11 +91,10 @@ export class PasswordAccounts {
   }
 
   async requestCode(
-    purpose: EmailCodePurpose,
+    purpose: 'register' | 'reset',
     input: {
       email: string;
       password?: string;
-      username?: string;
     },
     ip: string,
     browserBinding?: string,
@@ -98,15 +105,6 @@ export class PasswordAccounts {
 
     const passwordHash =
       purpose === 'register' ? await this.hasher.hash(this.password(input.password ?? '')) : null;
-
-    const username = input.username?.trim() || null;
-
-    if (username && !/^[A-Za-z0-9_]{3,30}$/.test(username)) {
-      throw new PasswordAccountError(
-        'invalid_input',
-        'Username must be 3–30 letters, numbers or underscores.',
-      );
-    }
 
     const token = opaque();
     const browser = browserBinding && validOpaque(browserBinding) ? browserBinding : opaque();
@@ -122,7 +120,7 @@ export class PasswordAccounts {
         email,
         purpose,
         passwordHash,
-        username,
+        username: null,
         codeHash: this.digest('code', tokenHash, purpose, code),
         expiresAt,
         createdAt: now.toISOString(),
@@ -137,7 +135,7 @@ export class PasswordAccounts {
     return { challenge: token, browser };
   }
 
-  async resend(challenge: string, browser: string, ip: string) {
+  async resend(challenge: string, browser: string, ip: string, authorization?: AccountSession) {
     if (!validOpaque(challenge) || !validOpaque(browser)) {
       throw new PasswordAccountError('invalid_code', 'Request a new code and try again.');
     }
@@ -153,7 +151,18 @@ export class PasswordAccounts {
       throw new PasswordAccountError('invalid_code', 'Request a new code and try again.');
     }
 
+    if (
+      pending.purpose === 'change-email' &&
+      (!authorization || pending.userId !== authorization.user.id)
+    ) {
+      throw new PasswordAccountError('invalid_code', 'Sign in and request a new email change.');
+    }
+
     await this.admit(pending.purpose, ip, pending.email);
+
+    if (pending.purpose === 'change-email' && pending.previousEmail) {
+      await this.admit('change-email-owner', ip, pending.previousEmail);
+    }
 
     const code = newCode();
 
@@ -276,6 +285,109 @@ export class PasswordAccounts {
 
     if (!session) {
       throw new PasswordAccountError('invalid_credentials', 'Email or password is incorrect.');
+    }
+
+    return { token: issued.token, session };
+  }
+
+  async hasPassword(user: AccountSession['user']) {
+    const credential = user.email ? await this.repository.credential(user.email) : null;
+
+    return credential?.userId === user.id;
+  }
+
+  async requestEmailChange(
+    authorization: AccountSession,
+    input: { email: string; password: string },
+    ip: string,
+    browserBinding?: string,
+  ) {
+    const email = this.email(input.email);
+    const previousEmail = authorization.user.email;
+
+    await this.admit('change-email', ip, email);
+
+    if (!previousEmail || email === previousEmail) {
+      throw new PasswordAccountError('invalid_input', 'Enter a different email address.');
+    }
+
+    await this.admit('change-email-owner', ip, previousEmail);
+
+    const credential = await this.repository.credential(previousEmail);
+
+    const correct = await this.hasher.verify(
+      input.password.normalize('NFC'),
+      credential?.passwordHash ?? null,
+    );
+
+    if (!correct || credential?.userId !== authorization.user.id || credential.state !== 'active') {
+      throw new PasswordAccountError('invalid_credentials', 'Your current password is incorrect.');
+    }
+
+    const token = opaque();
+    const browser = browserBinding && validOpaque(browserBinding) ? browserBinding : opaque();
+    const now = this.clock();
+    const expiresAt = new Date(now.getTime() + emailCodeLifetimeMs).toISOString();
+    const code = newCode();
+    const tokenHash = accountSecretHash(token);
+
+    const created = await this.repository.createEmailChange(
+      {
+        tokenHash,
+        browserHash: accountSecretHash(browser),
+        email,
+        previousEmail,
+        userId: authorization.user.id,
+        purpose: 'change-email',
+        codeHash: this.digest('code', tokenHash, 'change-email', code),
+        passwordHash: credential.passwordHash,
+        username: null,
+        attempts: 0,
+        sends: 1,
+        createdAt: now.toISOString(),
+        expiresAt,
+        consumedAt: null,
+      },
+      this.cipher.seal({ to: email, code, purpose: 'change-email', expiresAt }),
+      authorization,
+      now,
+    );
+
+    if (!created) {
+      throw new PasswordAccountError(
+        'invalid_input',
+        'This email address cannot be used. Refresh your account or choose another address.',
+      );
+    }
+
+    return { challenge: token, browser };
+  }
+
+  async confirmEmailChange(
+    authorization: AccountSession,
+    challenge: string,
+    code: string,
+    browser: string,
+    ip: string,
+  ) {
+    const input = await this.codeInput(challenge, browser, code, 'change-email', ip);
+    const now = this.clock();
+    const issued = this.session(now);
+
+    const session = await this.repository.confirmEmailChange(
+      input.tokenHash,
+      input.browserHash,
+      input.codeHash,
+      authorization,
+      issued.session,
+      now,
+    );
+
+    if (!session) {
+      throw new PasswordAccountError(
+        'invalid_code',
+        'Invalid or expired code. Request a new email change if needed.',
+      );
     }
 
     return { token: issued.token, session };

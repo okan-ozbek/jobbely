@@ -1,5 +1,7 @@
 # Local fonts
 
+The active site font is [Galdeano](https://fonts.google.com/specimen/Galdeano), downloaded on 7 October 2026 from `https://fonts.gstatic.com/s/galdeano/v23/uU9MCBoQ4YOqOW1boAP2-vE.woff2`. [galdeano.css](galdeano.css) declares its regular Latin face; other scripts use system fallbacks. The [SIL Open Font License](galdeano-OFL.txt) comes from [Google's font repository](https://github.com/google/fonts/blob/main/ofl/galdeano/OFL.txt). Earlier font assets below remain available.
+
 Downloaded on 30 September 2026 from Google Fonts. Font files are served locally; their accompanying SIL Open Font License files must remain in this directory.
 
 | File                              | Google Fonts source                                                                     |

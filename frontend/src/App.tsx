@@ -14,6 +14,7 @@ import { ResumeWorkbench } from './features/resume/ResumeWorkbench.js';
 import { useResumeAnalysis } from './features/resume/useResumeAnalysis.js';
 import { JobProfileComparison } from './features/resume/JobProfileComparison.js';
 import { AccountMenu } from './features/accounts/AccountMenu.js';
+import { PricingPage } from './features/accounts/PricingPage.js';
 
 function relativeDate(value: string) {
   const hours = Math.max(0, Math.floor((Date.now() - Date.parse(value)) / 3_600_000));
@@ -33,6 +34,8 @@ export function App() {
   const resumeState = useResumeAnalysis();
   const [reviewedAnalysis, setReviewedAnalysis] = useState<ResumeAnalysis | null>(null);
   const [privateSessionRevision, setPrivateSessionRevision] = useState(0);
+  const [accountOpenRequest, setAccountOpenRequest] = useState(0);
+  const [accountUserId, setAccountUserId] = useState<string | null>(null);
 
   const comparisonAnalysis =
     reviewedAnalysis === resumeState.analysis && !resumeState.loading && !resumeState.error
@@ -40,15 +43,17 @@ export function App() {
       : null;
 
   const view =
-    params.get('view') === 'resume'
-      ? 'resume'
-      : params.get('view') === 'companies'
-        ? 'companies'
-        : params.get('view') === 'jobs' || params.has('job') || params.has('company')
-          ? 'jobs'
-          : 'resume';
+    params.get('view') === 'pricing'
+      ? 'pricing'
+      : params.get('view') === 'resume'
+        ? 'resume'
+        : params.get('view') === 'companies'
+          ? 'companies'
+          : params.get('view') === 'jobs' || params.has('job') || params.has('company')
+            ? 'jobs'
+            : 'resume';
 
-  const selectedId = view === 'resume' ? null : params.get('job');
+  const selectedId = view === 'jobs' ? params.get('job') : null;
 
   const [queryInput, setQueryInput] = useState(params.get('q') ?? '');
   const [companySearch, setCompanySearch] = useState('');
@@ -159,12 +164,36 @@ export function App() {
         </a>
         <nav aria-label="Main navigation">
           <AccountMenu
+            openRequest={accountOpenRequest}
+            onAccountChange={setAccountUserId}
+            onDeleted={() => {
+              update({
+                view: null,
+                job: null,
+                company: null,
+                from: null,
+                q: null,
+                category: null,
+                workplace: null,
+                country: null,
+                city: null,
+              });
+
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }}
             onSessionEnd={() => {
               resumeState.clear();
               setReviewedAnalysis(null);
               setPrivateSessionRevision((value) => value + 1);
             }}
           />
+          <button
+            className={view === 'pricing' ? 'nav-link active' : 'nav-link'}
+            aria-current={view === 'pricing' ? 'page' : undefined}
+            onClick={() => update({ view: 'pricing', job: null, from: null, company: null })}
+          >
+            Pricing
+          </button>
           <button
             className={view === 'companies' ? 'nav-link active' : 'nav-link'}
             aria-current={view === 'companies' ? 'page' : undefined}
@@ -178,13 +207,13 @@ export function App() {
         id="main-content"
         tabIndex={-1}
       >
-        {mode === 'demo' && view !== 'resume' && (
+        {mode === 'demo' && (view === 'jobs' || view === 'companies') && (
           <div className="demo-banner">
             <CircleHelp size={15} />
             <span>Preview mode. These are sample listings, not active vacancies.</span>
           </div>
         )}
-        {!selectedId && view !== 'resume' && (
+        {!selectedId && (view === 'jobs' || view === 'companies') && (
           <section className="hero">
             <div className="hero-title">
               <h1>
@@ -210,7 +239,7 @@ export function App() {
             </p>
           </section>
         )}
-        {error && view !== 'resume' && (
+        {error && (view === 'jobs' || view === 'companies') && (
           <div
             className="error-state"
             role="alert"
@@ -236,7 +265,14 @@ export function App() {
             openJob={(id) => update({ view: 'jobs', job: id, from: 'resume' })}
           />
         </div>
-        {view === 'resume' ? null : selectedId ? (
+        {view === 'pricing' ? (
+          <PricingPage
+            accountKey={accountUserId}
+            onSignIn={() => setAccountOpenRequest((value) => value + 1)}
+            checkoutId={params.get('checkout_session_id')}
+            canceled={params.get('checkout') === 'canceled'}
+          />
+        ) : view === 'resume' ? null : selectedId ? (
           <section className="detail-section">
             <button
               className="back-button"

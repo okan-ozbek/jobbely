@@ -6,6 +6,8 @@ import type { PasswordAccounts } from '../application/accounts/password-accounts
 import { PasswordAccountError } from '../domain/accounts/password.js';
 import { AccountAccessError, freeAccess, freeMatchLimit } from '../domain/accounts/access.js';
 import { initialPlans } from '../domain/accounts/plans.js';
+import { BillingError, proBillingOptions } from '../domain/accounts/plans.js';
+import type { TestBilling } from '../application/accounts/test-billing.js';
 import { sessionAbsoluteMs, signInAttemptMs } from '../domain/accounts/identity.js';
 import { errorSchema } from './schemas.js';
 import { privateResumeRoute } from './private-resume-route.js';
@@ -42,6 +44,7 @@ export function registerAccountRoutes(
   accounts: Accounts | undefined,
   origin: string,
   passwords?: PasswordAccounts,
+  billing?: TestBilling,
 ) {
   const app = server.withTypeProvider<TypeBoxTypeProvider>();
   const secure = new URL(origin).protocol === 'https:';
@@ -80,6 +83,12 @@ export function registerAccountRoutes(
       },
     ],
     errorHandler: (error: FastifyError, _request: FastifyRequest, reply: FastifyReply) => {
+      if (error instanceof BillingError) {
+        return reply
+          .code(error.code === 'billing_unavailable' ? 503 : 400)
+          .send({ code: error.code, message: error.message });
+      }
+
       if (error instanceof PasswordAccountError) {
         const status =
           error.code === 'invalid_credentials'
@@ -123,6 +132,22 @@ export function registerAccountRoutes(
         response: {
           200: Type.Object({
             matchingPolicy: Type.Object({ enabled: Type.Boolean(), previewLimit: Type.Integer() }),
+            billing: Type.Object({ mode: Type.Literal('test'), checkoutAvailable: Type.Boolean() }),
+            billingOptions: Type.Array(
+              Type.Object({
+                key: Type.Union([
+                  Type.Literal('monthly'),
+                  Type.Literal('quarterly'),
+                  Type.Literal('yearly'),
+                ]),
+                amount: Type.Integer(),
+                currency: Type.String(),
+                interval: Type.Union([Type.Literal('month'), Type.Literal('year')]),
+                intervalCount: Type.Integer(),
+                months: Type.Integer(),
+                discountPercent: Type.Integer(),
+              }),
+            ),
             items: Type.Array(
               Type.Object({
                 key: Type.String(),
@@ -141,6 +166,8 @@ export function registerAccountRoutes(
     },
     () => ({
       items: initialPlans,
+      billing: { mode: 'test' as const, checkoutAvailable: !!billing },
+      billingOptions: [...proBillingOptions],
       matchingPolicy: { enabled: false, previewLimit: freeMatchLimit },
     }),
   );
@@ -256,7 +283,11 @@ export function registerAccountRoutes(
         response: {
           200: Type.Object({
             user: Type.Union([
-              Type.Object({ id: Type.String(), email: nullableString, username: nullableString }),
+              Type.Object({
+                id: Type.String(),
+                email: nullableString,
+                hasPassword: Type.Boolean(),
+              }),
               Type.Null(),
             ]),
             csrfToken: nullableString,
@@ -281,7 +312,7 @@ export function registerAccountRoutes(
           ? {
               id: session.user.id,
               email: session.user.email,
-              username: session.user.username ?? null,
+              hasPassword: passwords ? await passwords.hasPassword(session.user) : false,
             }
           : null,
         csrfToken: session?.csrfToken ?? null,
@@ -328,6 +359,30 @@ export function registerAccountRoutes(
     return passwords;
   }
 
+  app.post(
+    '/api/v1/account/delete',
+    {
+      ...options,
+      schema: {
+        operationId: 'deleteAccount',
+        body: Type.Object({ confirm: Type.Literal(true) }, strict),
+        response: { 200: Type.Object({ deleted: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      await service().deleteAccount(
+        readCookie(request, sessionCookie),
+        typeof request.headers['x-csrf-token'] === 'string'
+          ? request.headers['x-csrf-token']
+          : undefined,
+      );
+
+      reply.header('Set-Cookie', [cookie(sessionCookie, '', 0), cookie(browserCookie, '', 0)]);
+
+      return { deleted: true as const };
+    },
+  );
+
   const emailInput = Type.String({ minLength: 3, maxLength: 254 });
   const passwordInput = Type.String({ minLength: 1, maxLength: 256 });
 
@@ -342,6 +397,171 @@ export function registerAccountRoutes(
     expiresInSeconds: Type.Integer(),
   });
 
+  async function authorization(request: FastifyRequest) {
+    return service().authorizedSession(
+      readCookie(request, sessionCookie),
+      typeof request.headers['x-csrf-token'] === 'string'
+        ? request.headers['x-csrf-token']
+        : undefined,
+    );
+  }
+
+  app.post(
+    '/api/v1/account/email/change',
+    {
+      ...options,
+      schema: {
+        operationId: 'requestEmailChange',
+        body: Type.Object({ email: emailInput, password: passwordInput }, strict),
+        response: { 200: codeResponse, ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      const result = await passwordService().requestEmailChange(
+        await authorization(request),
+        request.body,
+        request.ip,
+        readCookie(request, browserCookie),
+      );
+
+      reply.header('Set-Cookie', cookie(browserCookie, result.browser, signInAttemptMs));
+
+      return {
+        challenge: result.challenge,
+        message: 'Check your new email address for a confirmation code.',
+        expiresInSeconds: 600,
+      };
+    },
+  );
+
+  app.post(
+    '/api/v1/account/email/confirm',
+    {
+      ...options,
+      schema: {
+        operationId: 'confirmEmailChange',
+        body: Type.Object(codeInput, strict),
+        response: { 200: Type.Object({ changed: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request, reply) => {
+      const result = await passwordService().confirmEmailChange(
+        await authorization(request),
+        request.body.challenge,
+        request.body.code,
+        readCookie(request, browserCookie) ?? '',
+        request.ip,
+      );
+
+      reply.header('Set-Cookie', [
+        cookie(sessionCookie, result.token, sessionAbsoluteMs),
+        cookie(browserCookie, '', 0),
+      ]);
+
+      return { changed: true as const };
+    },
+  );
+
+  app.post(
+    '/api/v1/account/email/resend',
+    {
+      ...options,
+      schema: {
+        operationId: 'resendEmailChange',
+        body: Type.Object({ challenge: codeInput.challenge }, strict),
+        response: { 200: Type.Object({ accepted: Type.Literal(true) }), ...accountErrors },
+      },
+    },
+    async (request) => {
+      await passwordService().resend(
+        request.body.challenge,
+        readCookie(request, browserCookie) ?? '',
+        request.ip,
+        await authorization(request),
+      );
+
+      return { accepted: true as const };
+    },
+  );
+
+  function billingService() {
+    if (!billing) {
+      throw new BillingError(
+        'billing_unavailable',
+        'Stripe test checkout has not been configured yet.',
+      );
+    }
+
+    return billing;
+  }
+
+  app.post(
+    '/api/v1/billing/checkout',
+    {
+      ...options,
+      onRequest: [privateResumeRoute(origin, 10).onRequest, ...options.onRequest],
+      schema: {
+        operationId: 'createTestCheckout',
+        body: Type.Object(
+          {
+            period: Type.Union([
+              Type.Literal('monthly'),
+              Type.Literal('quarterly'),
+              Type.Literal('yearly'),
+            ]),
+            requestId: Type.String({ format: 'uuid' }),
+          },
+          strict,
+        ),
+        response: { 200: Type.Object({ id: Type.String(), url: Type.String() }), ...accountErrors },
+      },
+    },
+    async (request) => {
+      const session = await authorization(request);
+
+      return billingService().checkout(session, request.body.period, request.body.requestId);
+    },
+  );
+
+  app.get(
+    '/api/v1/billing/checkout/:id',
+    {
+      ...options,
+      schema: {
+        operationId: 'testCheckoutStatus',
+        params: Type.Object(
+          { id: Type.String({ pattern: '^cs_test_[A-Za-z0-9_]{1,240}$' }) },
+          strict,
+        ),
+        response: {
+          200: Type.Object({
+            mode: Type.Literal('test'),
+            period: Type.Union([
+              Type.Literal('monthly'),
+              Type.Literal('quarterly'),
+              Type.Literal('yearly'),
+            ]),
+            complete: Type.Boolean(),
+            paid: Type.Boolean(),
+          }),
+          ...accountErrors,
+        },
+      },
+    },
+    async (request) => {
+      const session = await service().current(readCookie(request, sessionCookie));
+
+      if (!session) {
+        throw new AccountAccessError(
+          'authentication_required',
+          'Sign in to check your test checkout.',
+        );
+      }
+
+      return billingService().status(session, request.params.id);
+    },
+  );
+
   app.post(
     '/api/v1/auth/register',
     {
@@ -352,7 +572,6 @@ export function registerAccountRoutes(
           {
             email: emailInput,
             password: passwordInput,
-            username: Type.Optional(Type.String({ maxLength: 30 })),
           },
           strict,
         ),

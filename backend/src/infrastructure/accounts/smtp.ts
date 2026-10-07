@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import type { AccountEmail } from '../../ports/password-accounts.js';
 import type { AccountMailer } from './account-email-queue.js';
+import { renderAccountEmail } from './account-email-template.js';
 
 export class SmtpAccountMailer implements AccountMailer {
   private readonly transport: ReturnType<typeof nodemailer.createTransport>;
@@ -43,7 +44,6 @@ export class SmtpAccountMailer implements AccountMailer {
   }
 
   async send(message: AccountEmail) {
-    const action = message.purpose === 'register' ? 'Confirm your email' : 'Reset your password';
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     try {
@@ -52,8 +52,7 @@ export class SmtpAccountMailer implements AccountMailer {
           .sendMail({
             from: { name: 'Jobbely', address: this.from },
             to: message.to,
-            subject: `${action} — Jobbely`,
-            text: `${action} with this code:\n\n${message.code}\n\nThe code expires in ten minutes from your request and can be used once. Never share it. If you did not request this, ignore this email.`,
+            ...renderAccountEmail(message),
           })
           .then((result) => {
             if (!result.accepted.length) {

@@ -38,6 +38,8 @@ export const sessionAbsoluteMs = 30 * 24 * 60 * 60_000;
 
 export const signInAttemptMs = 10 * 60_000;
 
+export const accountDeletionSignInMs = 10 * 60_000;
+
 export function sessionIsValid(session: AccountSession, now: Date): boolean {
   const idle = Date.parse(session.idleExpiresAt);
   const absolute = Date.parse(session.absoluteExpiresAt);

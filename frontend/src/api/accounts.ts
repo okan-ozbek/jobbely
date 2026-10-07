@@ -43,8 +43,83 @@ function accountResult<T>(result: { data?: T; error?: { message: string; code: s
   return result.data;
 }
 
+export async function requestEmailChange(
+  body: { email: string; password: string },
+  csrfToken: string,
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/account/email/change', {
+      body,
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export async function confirmEmailChange(
+  body: { challenge: string; code: string },
+  csrfToken: string,
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/account/email/confirm', {
+      body,
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export async function resendEmailChange(challenge: string, csrfToken: string, signal: AbortSignal) {
+  return accountResult(
+    await client.POST('/api/v1/account/email/resend', {
+      body: { challenge },
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export type Plans = paths['/api/v1/plans']['get']['responses'][200]['content']['application/json'];
+
+export type BillingPeriod = Plans['billingOptions'][number]['key'];
+
+export async function listPlans(signal: AbortSignal) {
+  return accountResult(await client.GET('/api/v1/plans', { signal, cache: 'no-store' }));
+}
+
+export async function createTestCheckout(
+  period: BillingPeriod,
+  requestId: string,
+  csrfToken: string,
+  signal: AbortSignal,
+) {
+  return accountResult(
+    await client.POST('/api/v1/billing/checkout', {
+      body: { period, requestId },
+      headers: { 'x-csrf-token': csrfToken },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
+export async function testCheckoutStatus(id: string, signal: AbortSignal) {
+  return accountResult(
+    await client.GET('/api/v1/billing/checkout/{id}', {
+      params: { path: { id } },
+      signal,
+      cache: 'no-store',
+    }),
+  );
+}
+
 export async function registerPasswordAccount(
-  body: { email: string; password: string; username?: string },
+  body: { email: string; password: string },
   signal: AbortSignal,
 ) {
   return accountResult(
@@ -121,4 +196,15 @@ export async function signOut(csrfToken: string, signal: AbortSignal) {
   if (!result.data) {
     throw new ApiError(result.error?.message ?? 'Could not sign out.', result.error?.code);
   }
+}
+
+export async function deleteAccount(csrfToken: string, signal: AbortSignal) {
+  return accountResult(
+    await client.POST('/api/v1/account/delete', {
+      headers: { 'x-csrf-token': csrfToken },
+      body: { confirm: true },
+      signal,
+      cache: 'no-store',
+    }),
+  );
 }

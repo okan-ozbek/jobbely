@@ -149,7 +149,13 @@ export class PostgresPasswordAccounts implements PasswordAccountRepository {
       return null;
     }
 
-    await this.lockEmail(tx, candidate.email);
+    for (const email of [
+      ...new Set(
+        [candidate.email, candidate.previousEmail].filter((value): value is string => !!value),
+      ),
+    ].sort()) {
+      await this.lockEmail(tx, email);
+    }
 
     const [row] = await tx.$queryRaw<
       ChallengeRow[]
@@ -186,9 +192,21 @@ export class PostgresPasswordAccounts implements PasswordAccountRepository {
         data: { codeHash, sends: { increment: 1 } },
       });
 
+      const owner = row.userId
+        ? await tx.passwordCredential.findUnique({
+            where: { userId: row.userId },
+            include: { user: true },
+          })
+        : null;
+
       if (
         row.purpose === 'register' ||
-        (await tx.passwordCredential.findUnique({ where: { email: row.email } }))
+        (row.purpose === 'reset' &&
+          (await tx.passwordCredential.findUnique({ where: { email: row.email } }))) ||
+        (row.purpose === 'change-email' &&
+          owner?.email === row.previousEmail &&
+          owner?.passwordHash === row.passwordHash &&
+          owner?.user.state === 'active')
       ) {
         await this.enqueue(tx, { ...row, codeHash }, sealedEmail, now);
       }
@@ -338,7 +356,176 @@ export class PostgresPasswordAccounts implements PasswordAccountRepository {
       include: { user: true },
     });
 
-    return row ? { passwordHash: row.passwordHash, state: row.user.state } : null;
+    return row
+      ? { userId: row.userId, passwordHash: row.passwordHash, state: row.user.state }
+      : null;
+  }
+
+  private async authorized(tx: Transaction, authorization: AccountSession, now: Date) {
+    const [user] = await tx.$queryRaw<
+      { state: string }[]
+    >`SELECT "state" FROM "AccountUser" WHERE "id" = ${authorization.user.id} FOR UPDATE`;
+
+    if (user?.state !== 'active') {
+      return false;
+    }
+
+    const [session] = await tx.$queryRaw<
+      { tokenHash: string }[]
+    >`SELECT "tokenHash" FROM "ApplicationSession" WHERE "tokenHash" = ${authorization.tokenHash} AND "userId" = ${authorization.user.id} AND "csrfToken" = ${authorization.csrfToken} AND "revokedAt" IS NULL AND "idleExpiresAt" > ${now} AND "absoluteExpiresAt" > ${now} FOR UPDATE`;
+
+    return !!session;
+  }
+
+  private async cancelChallenges(tx: Transaction, hashes: string[], now: Date) {
+    await tx.accountEmailJob.updateMany({
+      where: { challengeHash: { in: hashes } },
+      data: { state: 'canceled', sealedEmail: null },
+    });
+
+    await tx.emailChallenge.updateMany({
+      where: { tokenHash: { in: hashes } },
+      data: { consumedAt: now, passwordHash: null, username: null },
+    });
+  }
+
+  async createEmailChange(
+    challenge: EmailChallenge,
+    sealedEmail: string,
+    authorization: AccountSession,
+    now: Date,
+  ) {
+    if (
+      !challenge.previousEmail ||
+      challenge.userId !== authorization.user.id ||
+      challenge.purpose !== 'change-email' ||
+      !challenge.passwordHash
+    ) {
+      return false;
+    }
+
+    const previousEmail = challenge.previousEmail;
+
+    return this.client.$transaction(async (tx) => {
+      for (const email of [...new Set([previousEmail, challenge.email])].sort()) {
+        await this.lockEmail(tx, email);
+      }
+
+      const credential = await tx.passwordCredential.findUnique({
+        where: { userId: authorization.user.id },
+      });
+
+      if (
+        credential?.email !== previousEmail ||
+        credential.passwordHash !== challenge.passwordHash ||
+        !(await this.authorized(tx, authorization, now)) ||
+        (await tx.passwordCredential.findUnique({ where: { email: challenge.email } }))
+      ) {
+        return false;
+      }
+
+      const old = await tx.emailChallenge.findMany({
+        where: { userId: authorization.user.id, purpose: 'change-email', consumedAt: null },
+        select: { tokenHash: true },
+      });
+
+      await this.cancelChallenges(
+        tx,
+        old.map((row) => row.tokenHash),
+        now,
+      );
+
+      await tx.emailChallenge.create({
+        data: {
+          ...challenge,
+          createdAt: new Date(challenge.createdAt),
+          expiresAt: new Date(challenge.expiresAt),
+          consumedAt: null,
+        },
+      });
+
+      await this.enqueue(tx, challenge, sealedEmail, now);
+
+      return true;
+    });
+  }
+
+  async confirmEmailChange(
+    tokenHash: string,
+    browserHash: string,
+    codeHash: string,
+    authorization: AccountSession,
+    session: NewAccountSession,
+    now: Date,
+  ) {
+    return this.client.$transaction(async (tx) => {
+      const row = await this.lockedChallenge(tx, tokenHash, browserHash, now);
+
+      if (
+        !row ||
+        row.purpose !== 'change-email' ||
+        row.userId !== authorization.user.id ||
+        !row.previousEmail ||
+        !(await this.authorized(tx, authorization, now))
+      ) {
+        return null;
+      }
+
+      await tx.emailChallenge.update({
+        where: { tokenHash },
+        data: { attempts: { increment: 1 } },
+      });
+
+      if (!timingSafeEqual(Buffer.from(row.codeHash), Buffer.from(codeHash))) {
+        return null;
+      }
+
+      const credential = await tx.passwordCredential.findUnique({
+        where: { userId: authorization.user.id },
+      });
+
+      if (
+        credential?.email !== row.previousEmail ||
+        credential.passwordHash !== row.passwordHash ||
+        (await tx.passwordCredential.findUnique({ where: { email: row.email } }))
+      ) {
+        return null;
+      }
+
+      const pending = await tx.emailChallenge.findMany({
+        where: {
+          OR: [
+            { email: { in: [row.previousEmail, row.email] } },
+            { userId: authorization.user.id },
+          ],
+          consumedAt: null,
+        },
+        select: { tokenHash: true },
+      });
+
+      await this.cancelChallenges(
+        tx,
+        pending.map((item) => item.tokenHash),
+        now,
+      );
+
+      await tx.passwordCredential.update({
+        where: { userId: authorization.user.id },
+        data: { email: row.email, verifiedAt: now },
+      });
+
+      await tx.accountUser.update({
+        where: { id: authorization.user.id },
+        data: { email: row.email },
+      });
+
+      await tx.applicationSession.updateMany({
+        where: { userId: authorization.user.id, revokedAt: null },
+        data: { revokedAt: now },
+      });
+
+      return this.session(tx, { ...authorization.user, email: row.email }, session);
+    });
   }
 
   async createPasswordSession(email: string, expectedHash: string, session: NewAccountSession) {

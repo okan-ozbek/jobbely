@@ -7,7 +7,11 @@ import type {
   SignInProvider,
   VerifiedIdentity,
 } from '../../domain/accounts/identity.js';
-import { sessionIdleMs, sessionIsValid } from '../../domain/accounts/identity.js';
+import {
+  accountDeletionSignInMs,
+  sessionIdleMs,
+  sessionIsValid,
+} from '../../domain/accounts/identity.js';
 import { AccountAccessError } from '../../domain/accounts/access.js';
 
 /** Test-only adapter; never a persistent-mode fallback. */
@@ -16,6 +20,7 @@ export class MemoryAccounts implements AccountRepository {
   readonly sessions = new Map<string, AccountSession>();
   private readonly identities = new Map<string, string>();
   private readonly attempts = new Map<string, SignInAttempt>();
+  private readonly signedInAt = new Map<string, number>();
 
   async saveAttempt(attempt: SignInAttempt, now: Date) {
     for (const [key, value] of this.attempts) {
@@ -49,7 +54,7 @@ export class MemoryAccounts implements AccountRepository {
     return structuredClone(attempt);
   }
 
-  async createSession(identity: VerifiedIdentity, input: Omit<AccountSession, 'user'>) {
+  async createSession(identity: VerifiedIdentity, input: Omit<AccountSession, 'user'>, now: Date) {
     const key = JSON.stringify([identity.issuer, identity.subject]);
     const existingId = this.identities.get(key);
 
@@ -72,6 +77,7 @@ export class MemoryAccounts implements AccountRepository {
     const session = { ...input, user };
 
     this.sessions.set(session.tokenHash, session);
+    this.signedInAt.set(session.tokenHash, now.getTime());
 
     return structuredClone(session);
   }
@@ -99,4 +105,41 @@ export class MemoryAccounts implements AccountRepository {
   }
 
   async close() {}
+
+  async deleteAccount(userId: string, tokenHash: string, csrfToken: string, now: Date) {
+    const session = this.sessions.get(tokenHash);
+
+    if (
+      !session ||
+      session.user.id !== userId ||
+      session.csrfToken !== csrfToken ||
+      !sessionIsValid(session, now)
+    ) {
+      return false;
+    }
+
+    if ((this.signedInAt.get(tokenHash) ?? 0) <= now.getTime() - accountDeletionSignInMs) {
+      throw new AccountAccessError(
+        'authentication_required',
+        'Sign out and sign in again before deleting your account.',
+      );
+    }
+
+    for (const [key, value] of this.sessions) {
+      if (value.user.id === userId) {
+        this.sessions.delete(key);
+        this.signedInAt.delete(key);
+      }
+    }
+
+    for (const [key, value] of this.identities) {
+      if (value === userId) {
+        this.identities.delete(key);
+      }
+    }
+
+    this.users.delete(userId);
+
+    return true;
+  }
 }

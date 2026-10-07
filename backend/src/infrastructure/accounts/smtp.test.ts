@@ -84,7 +84,7 @@ async function localSmtp() {
 }
 
 describe('SMTP email transport', () => {
-  it('delivers a plain-text confirmation code through SMTP to a loopback capture server', async () => {
+  it('delivers HTML and plain-text confirmation through SMTP to a loopback capture server', async () => {
     const smtp = await localSmtp();
 
     const mailer = new SmtpAccountMailer('accounts@example.invalid', {
@@ -105,6 +105,9 @@ describe('SMTP email transport', () => {
       expect(smtp.messages).toHaveLength(1);
       expect(smtp.messages[0]).toContain('012345');
       expect(smtp.messages[0]).toContain('synthetic@example.invalid');
+      expect(smtp.messages[0]).toContain('multipart/alternative');
+      expect(smtp.messages[0]).toContain('Content-Type: text/html');
+      expect(smtp.messages[0]).toContain('Content-Type: text/plain');
       expect(smtp.messages[0]).not.toContain('passwordHash');
     } finally {
       mailer.close();

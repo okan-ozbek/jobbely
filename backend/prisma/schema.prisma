@@ -110,6 +110,8 @@ model EmailChallenge {
   codeHash String
   passwordHash String?
   username String?
+  userId String?
+  previousEmail String?
   attempts Int @default(0)
   sends Int @default(1)
   expiresAt DateTime
@@ -117,6 +119,7 @@ model EmailChallenge {
   consumedAt DateTime?
   @@index([email, purpose])
   @@index([expiresAt])
+  @@index([userId])
 }
 
 model CredentialRateWindow {

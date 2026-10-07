@@ -8,6 +8,7 @@ import {
   completePasswordReset,
   resendEmailCode,
 } from '../../api/accounts.js';
+import { VerificationCodeInput } from './VerificationCodeInput.js';
 
 type Mode = 'login' | 'register' | 'reset' | 'confirm' | 'reset-confirm';
 
@@ -15,14 +16,19 @@ export function EmailAccountForm({
   available,
   onSignedIn,
   onPasswordReset,
+  initialMode = 'login',
+  initialEmail = '',
+  onBack,
 }: {
   available: boolean;
   onSignedIn: () => Promise<void>;
   onPasswordReset: () => Promise<void>;
+  initialMode?: 'login' | 'reset';
+  initialEmail?: string;
+  onBack?: () => void;
 }) {
-  const [mode, setMode] = useState<Mode>('login');
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  const [mode, setMode] = useState<Mode>(initialMode);
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
   const [code, setCode] = useState('');
@@ -65,6 +71,20 @@ export function EmailAccountForm({
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const normalizedPassword = password.normalize('NFC');
+
+    if (
+      newPassword &&
+      ([...normalizedPassword].length < 8 ||
+        [...normalizedPassword].length > 128 ||
+        !/[0-9]/.test(normalizedPassword) ||
+        !/[\p{P}\p{S}]/u.test(normalizedPassword))
+    ) {
+      setError('Password is not valid. Use 8–128 characters, including a number and a symbol.');
+
+      return;
+    }
+
     if (newPassword && password !== repeat) {
       setError('Passwords do not match.');
 
@@ -94,7 +114,6 @@ export function EmailAccountForm({
                 {
                   email: email.trim(),
                   password,
-                  ...(username.trim() ? { username: username.trim() } : {}),
                 },
                 controller.signal,
               )
@@ -105,7 +124,13 @@ export function EmailAccountForm({
         }
 
         setChallenge(result.challenge);
-        setMessage(result.message);
+
+        setMessage(
+          mode === 'register'
+            ? `Check ${email.trim()} for your confirmation email. If you already have an account, sign in instead.`
+            : result.message,
+        );
+
         setPassword('');
         setRepeat('');
         setCode('');
@@ -216,6 +241,7 @@ export function EmailAccountForm({
             <input
               type="email"
               autoComplete="email"
+              placeholder="example@jobbely.com"
               required
               maxLength={254}
               value={email}
@@ -223,54 +249,28 @@ export function EmailAccountForm({
             />
           </label>
         )}
-        {mode === 'register' && (
-          <label>
-            <span>
-              Username <span className="small-note">(optional)</span>
-            </span>
-            <input
-              autoComplete="username"
-              minLength={3}
-              maxLength={30}
-              pattern="[A-Za-z0-9_]+"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-            />
-          </label>
-        )}
         {confirmation && (
-          <label>
-            Verification code
-            <input
-              autoFocus
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              required
-              pattern="[0-9]{6}"
-              maxLength={6}
-              value={code}
-              onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
-            />
-            <span className="small-note">
-              Enter the six-digit code sent to {email}. It expires ten minutes after your first
-              request.
-            </span>
-          </label>
+          <VerificationCodeInput
+            value={code}
+            onChange={setCode}
+            email={email.trim()}
+            disabled={busy}
+          />
         )}
         {(mode === 'login' || newPassword) && (
           <label>
             {mode === 'reset-confirm' ? 'New password' : 'Password'}
             <input
               type="password"
+              placeholder="••••••••"
               autoComplete={newPassword ? 'new-password' : 'current-password'}
               required
-              minLength={newPassword ? 15 : 1}
               maxLength={256}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
             {newPassword && (
-              <span className="small-note">15–128 characters. A long passphrase works well.</span>
+              <span className="small-note">8–128 characters, including a number and a symbol.</span>
             )}
           </label>
         )}
@@ -279,6 +279,7 @@ export function EmailAccountForm({
             Confirm password
             <input
               type="password"
+              placeholder="••••••••"
               autoComplete="new-password"
               required
               maxLength={256}
@@ -339,9 +340,9 @@ export function EmailAccountForm({
       {(confirmation || mode === 'reset') && (
         <button
           className="account-text-button"
-          onClick={() => changeMode('login')}
+          onClick={() => (onBack ? onBack() : changeMode('login'))}
         >
-          Back to sign in
+          {onBack ? 'Back to your details' : 'Back to sign in'}
         </button>
       )}
     </div>

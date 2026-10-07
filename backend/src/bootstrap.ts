@@ -23,12 +23,16 @@ import { OAuthIdentityProvider } from './infrastructure/accounts/oauth.js';
 import { PasswordAccounts } from './application/accounts/password-accounts.js';
 import { PostgresPasswordAccounts } from './infrastructure/storage/password-accounts-postgres.js';
 import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
+import { renderAccountEmail } from './infrastructure/accounts/account-email-template.js';
 import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
 import { RefreshWaves } from './application/refresh-waves.js';
 import { FileWaveAudits, FileWaveRefreshReports } from './infrastructure/audits/wave-refresh.js';
 import { PostgresCoverage } from './infrastructure/storage/coverage-postgres.js';
 import { loadAuditPlans } from './infrastructure/audits/registry.js';
 import { configurationHash } from './infrastructure/audits/model.js';
+import Stripe from 'stripe';
+import { StripeTestBilling } from './infrastructure/accounts/stripe-test-billing.js';
+import { TestBilling } from './application/accounts/test-billing.js';
 
 export const config = z
   .object({
@@ -47,6 +51,22 @@ export const config = z
     LINKEDIN_CLIENT_ID: z.string().min(1).optional(),
     LINKEDIN_CLIENT_SECRET: z.string().min(1).optional(),
     AUTH_CODE_SECRET: z.string().min(32).optional(),
+    STRIPE_SECRET_KEY: z
+      .string()
+      .regex(/^sk_test_[A-Za-z0-9]+$/)
+      .optional(),
+    STRIPE_PRICE_MONTHLY: z
+      .string()
+      .regex(/^price_[A-Za-z0-9]+$/)
+      .optional(),
+    STRIPE_PRICE_QUARTERLY: z
+      .string()
+      .regex(/^price_[A-Za-z0-9]+$/)
+      .optional(),
+    STRIPE_PRICE_YEARLY: z
+      .string()
+      .regex(/^price_[A-Za-z0-9]+$/)
+      .optional(),
     SMTP_HOST: z.string().min(1).optional(),
     SMTP_FROM: z.email().optional(),
     SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(587),
@@ -85,7 +105,12 @@ export const config = z
       });
     }
 
-    if (value.GITHUB_CLIENT_ID || value.LINKEDIN_CLIENT_ID || value.AUTH_CODE_SECRET) {
+    if (
+      value.GITHUB_CLIENT_ID ||
+      value.LINKEDIN_CLIENT_ID ||
+      value.AUTH_CODE_SECRET ||
+      value.STRIPE_SECRET_KEY
+    ) {
       const origin = new URL(value.FRONTEND_ORIGIN);
 
       if (
@@ -193,6 +218,25 @@ export async function bootstrap() {
   return {
     companies,
     sources,
+    renderAccountEmail,
+    ...(config.STRIPE_SECRET_KEY &&
+    config.STRIPE_PRICE_MONTHLY &&
+    config.STRIPE_PRICE_QUARTERLY &&
+    config.STRIPE_PRICE_YEARLY
+      ? {
+          billing: new TestBilling(
+            new StripeTestBilling(
+              new Stripe(config.STRIPE_SECRET_KEY, { timeout: 10_000, maxNetworkRetries: 1 }),
+              {
+                monthly: config.STRIPE_PRICE_MONTHLY,
+                quarterly: config.STRIPE_PRICE_QUARTERLY,
+                yearly: config.STRIPE_PRICE_YEARLY,
+              },
+              config.FRONTEND_ORIGIN,
+            ),
+          ),
+        }
+      : {}),
     repository,
     adapters,
     ...(accountRepository ? { accounts: new Accounts(accountRepository, providers) } : {}),

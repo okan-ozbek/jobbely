@@ -6,7 +6,7 @@ const messageSchema = z
   .object({
     to: z.email().max(254),
     code: z.string().regex(/^\d{6}$/),
-    purpose: z.enum(['register', 'reset']),
+    purpose: z.enum(['register', 'reset', 'change-email']),
     expiresAt: z.iso.datetime(),
   })
   .strict();
