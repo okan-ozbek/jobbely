@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Check, Circle, Eye, EyeOff } from 'lucide-react';
 import { ApiError } from '../../api/client.js';
 import {
   registerPasswordAccount,
@@ -11,6 +11,7 @@ import {
   resendEmailCode,
 } from '../../api/accounts.js';
 import { VerificationCodeInput } from './VerificationCodeInput.js';
+import { passwordValidation } from './password-validation.js';
 
 type Mode = 'login' | 'register' | 'reset' | 'confirm' | 'reset-confirm';
 
@@ -50,9 +51,13 @@ export function EmailAccountForm({
   const [showPassword, setShowPassword] = useState(false);
   const passwordId = useId();
   const passwordHintId = useId();
+  const repeatId = useId();
+  const repeatHintId = useId();
   const active = useRef<AbortController | null>(null);
   const confirmation = mode === 'confirm' || mode === 'reset-confirm';
   const newPassword = mode === 'register' || mode === 'reset-confirm';
+  const validation = passwordValidation(password);
+  const mismatch = repeat.length > 0 && repeat !== password;
 
   useEffect(() => () => active.current?.abort(), []);
 
@@ -88,15 +93,7 @@ export function EmailAccountForm({
       return;
     }
 
-    const normalizedPassword = password.normalize('NFC');
-
-    if (
-      newPassword &&
-      ([...normalizedPassword].length < 8 ||
-        [...normalizedPassword].length > 128 ||
-        !/[0-9]/.test(normalizedPassword) ||
-        !/[\p{P}\p{S}]/u.test(normalizedPassword))
-    ) {
+    if (newPassword && !validation.valid) {
       setError('Password is not valid. Use 8–128 characters, including a number and a symbol.');
 
       return;
@@ -329,6 +326,7 @@ export function EmailAccountForm({
               <input
                 id={passwordId}
                 aria-describedby={newPassword ? passwordHintId : undefined}
+                aria-invalid={newPassword && password.length > 0 && !validation.valid}
                 type={showPassword ? 'text' : 'password'}
                 placeholder="••••••••"
                 autoComplete={newPassword ? 'new-password' : 'current-password'}
@@ -336,7 +334,10 @@ export function EmailAccountForm({
                 maxLength={256}
                 value={password}
                 disabled={busy}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError('');
+                }}
               />
               <button
                 type="button"
@@ -350,19 +351,48 @@ export function EmailAccountForm({
               </button>
             </div>
             {newPassword && (
-              <span
+              <div
                 id={passwordHintId}
-                className="small-note"
+                className="password-feedback"
               >
-                8–128 characters, including a number and a symbol.
-              </span>
+                <ul aria-label="Password requirements">
+                  {validation.rules.map((rule) => (
+                    <li
+                      key={rule.label}
+                      data-valid={rule.valid}
+                    >
+                      {rule.valid ? (
+                        <Check
+                          size={12}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Circle
+                          size={10}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span className="sr-only">{rule.valid ? 'Met: ' : 'Required: '}</span>
+                      {rule.label}
+                    </li>
+                  ))}
+                </ul>
+                {password.length > 0 && (
+                  <span className={validation.valid ? 'password-valid' : 'account-error'}>
+                    {validation.valid
+                      ? 'Password meets all requirements.'
+                      : 'Password is not valid yet. Complete the requirements above.'}
+                  </span>
+                )}
+              </div>
             )}
           </div>
         )}
         {newPassword && (
-          <label>
-            Confirm password
+          <div className="account-password-label">
+            <label htmlFor={repeatId}>Confirm password</label>
             <input
+              id={repeatId}
               type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               autoComplete="new-password"
@@ -370,9 +400,22 @@ export function EmailAccountForm({
               maxLength={256}
               value={repeat}
               disabled={busy}
-              onChange={(event) => setRepeat(event.target.value)}
+              aria-invalid={mismatch}
+              aria-describedby={repeat.length > 0 ? repeatHintId : undefined}
+              onChange={(event) => {
+                setRepeat(event.target.value);
+                setError('');
+              }}
             />
-          </label>
+            {repeat.length > 0 && (
+              <span
+                id={repeatHintId}
+                className={mismatch ? 'account-error' : 'password-valid'}
+              >
+                {mismatch ? 'Passwords do not match.' : 'Passwords match.'}
+              </span>
+            )}
+          </div>
         )}
         {error && (
           <p

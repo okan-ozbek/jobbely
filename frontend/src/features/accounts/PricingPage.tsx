@@ -34,7 +34,7 @@ export function PricingPage({
         if (!controller.signal.aborted) {
           setStatus(
             result.complete && result.paid
-              ? 'Your test payment was confirmed by Stripe. Your account stays on Basic during testing.'
+              ? 'Your test payment was confirmed by Stripe. Your account stays on Free during testing.'
               : 'Your test payment has not been confirmed yet. Refresh this page after completing checkout.',
           );
         }
@@ -85,7 +85,7 @@ export function PricingPage({
           className="pricing-status"
           role="status"
         >
-          Checkout canceled. Your account stays on Basic.
+          Checkout canceled. Your account stays on Free.
         </p>
       )}
       {error && (
@@ -98,7 +98,6 @@ export function PricingPage({
       )}
       <PricingPlans
         onSignIn={onSignIn}
-        signedIn={!!accountKey}
         accountKey={accountKey}
       />
       <div className="pricing-benefits">
@@ -128,7 +127,7 @@ export function PricingPage({
           {[
             [
               'Can I start for free?',
-              'Yes. Basic gives you public job discovery, resume review and matching. Matching is currently available to everyone, with no card required.',
+              'Yes. Free gives you public job discovery, resume review and matching. Matching is currently available to everyone, with no card required.',
             ],
             [
               'How do the billing options work?',
@@ -136,7 +135,7 @@ export function PricingPage({
             ],
             [
               'Is Pro available now?',
-              'Pro is in preview. Configured checkout uses Stripe test mode and does not charge real money or change your Basic access. The additional Pro features are planned.',
+              'Pro is in preview. Configured checkout uses Stripe test mode and does not charge real money or change your Free access. The additional Pro features are planned.',
             ],
             [
               'What happens to my resume?',

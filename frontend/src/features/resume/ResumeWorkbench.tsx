@@ -10,6 +10,7 @@ import { ResumeMatches } from './ResumeMatches.js';
 import { Disclosure } from '../../components/Disclosure.js';
 import { scrollToSection } from '../../components/motion.js';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
+import { moveSurface, resetSurface } from '../../components/surface-motion.js';
 import './resume.css';
 
 function formatDuration(duration: ResumeAnalysis['experience']['professional']) {
@@ -77,6 +78,8 @@ export function ResumeWorkbench({
         <section
           className="resume-composer"
           aria-label="Add your resume"
+          onPointerMove={moveSurface}
+          onPointerLeave={resetSurface}
         >
           <form
             onSubmit={(event) => {

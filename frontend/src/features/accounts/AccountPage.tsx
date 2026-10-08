@@ -164,7 +164,7 @@ export function AccountPage({
             </div>
             <span className="account-member-badge">
               <ShieldCheck size={14} />
-              Basic member
+              Free member
             </span>
           </div>
           {error && (
@@ -195,7 +195,7 @@ export function AccountPage({
                     <div>
                       <span className="plan-eyebrow">Your current plan</span>
                       <h2>
-                        Basic<span>Free</span>
+                        Free<span>Included</span>
                       </h2>
                       <p>All the essentials for a clearer next step.</p>
                     </div>

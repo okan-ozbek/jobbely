@@ -46,7 +46,7 @@ export function AccountBilling({
           </span>
           <span className="plan-eyebrow">Your current plan</span>
           <h2>
-            Basic<span>Free</span>
+            Free<span>Included</span>
           </h2>
           <p>A clear starting point. Public jobs, resume review and matching.</p>
         </div>
@@ -86,8 +86,8 @@ export function AccountBilling({
                 {plans.billing.checkoutAvailable ? 'Test checkout ready' : 'Awaiting configuration'}
               </span>
               <p className="dashboard-body-copy">
-                Pro checkout is a sandbox preview. It does not charge real money or change your
-                Basic plan.
+                Pro checkout is a sandbox preview. It does not charge real money or change your Free
+                plan.
               </p>
             </>
           ) : error ? (

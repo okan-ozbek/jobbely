@@ -174,6 +174,22 @@ export function App() {
           jobbely<span className="brand-dot">.</span>
         </a>
         <nav aria-label="Main navigation">
+          <button
+            className={view === 'pricing' ? 'nav-link active' : 'nav-link'}
+            aria-current={view === 'pricing' ? 'page' : undefined}
+            onClick={() =>
+              update({ view: 'pricing', job: null, from: null, company: null, section: null })
+            }
+          >
+            Pricing
+          </button>
+          <button
+            className={view === 'companies' ? 'nav-link active' : 'nav-link'}
+            aria-current={view === 'companies' ? 'page' : undefined}
+            onClick={() => update({ view: 'companies', job: null, from: null, section: null })}
+          >
+            Companies
+          </button>
           <AccountMenu
             openRequest={accountOpenRequest}
             onAccountChange={setAccount}
@@ -210,22 +226,6 @@ export function App() {
               setPrivateSessionRevision((value) => value + 1);
             }}
           />
-          <button
-            className={view === 'pricing' ? 'nav-link active' : 'nav-link'}
-            aria-current={view === 'pricing' ? 'page' : undefined}
-            onClick={() =>
-              update({ view: 'pricing', job: null, from: null, company: null, section: null })
-            }
-          >
-            Pricing
-          </button>
-          <button
-            className={view === 'companies' ? 'nav-link active' : 'nav-link'}
-            aria-current={view === 'companies' ? 'page' : undefined}
-            onClick={() => update({ view: 'companies', job: null, from: null, section: null })}
-          >
-            Companies
-          </button>
         </nav>
       </header>
       <main
@@ -479,7 +479,6 @@ export function App() {
                 <label className="filter-field">
                   <span>Company</span>
                   <GlassSelect
-                    disabled={loading}
                     aria-label="Filter by company"
                     value={params.get('company') ?? ''}
                     onValueChange={(value) => update({ company: value || null })}
@@ -498,7 +497,6 @@ export function App() {
                 <label className="filter-field">
                   <span>Function</span>
                   <GlassSelect
-                    disabled={loading}
                     aria-label="Filter by function"
                     value={params.get('category') ?? ''}
                     onValueChange={(value) => update({ category: value || null })}
@@ -517,7 +515,6 @@ export function App() {
                 <label className="filter-field">
                   <span>Workplace</span>
                   <GlassSelect
-                    disabled={loading}
                     aria-label="Filter by workplace"
                     value={params.get('workplace') ?? ''}
                     onValueChange={(value) => update({ workplace: value || null })}
@@ -536,7 +533,6 @@ export function App() {
                 <label className="filter-field">
                   <span>Country</span>
                   <GlassSelect
-                    disabled={loading}
                     aria-label="Filter by country"
                     value={countryFilter ?? ''}
                     onValueChange={(value) => update({ country: value || null, city: null })}
@@ -555,7 +551,6 @@ export function App() {
                 <label className="filter-field">
                   <span>City</span>
                   <GlassSelect
-                    disabled={loading}
                     aria-label="Filter by city"
                     value={cityFilter ?? ''}
                     onValueChange={(value) => update({ city: value || null })}

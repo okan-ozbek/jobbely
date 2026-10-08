@@ -13,11 +13,9 @@ const money = (cents: number) =>
 
 export function PricingPlans({
   onSignIn,
-  signedIn = false,
   accountKey,
 }: {
   onSignIn: () => void;
-  signedIn?: boolean;
   accountKey?: string | null;
 }) {
   const [plans, setPlans] = useState<Plans | null>(null);
@@ -167,7 +165,7 @@ export function PricingPlans({
                 </span>
                 <span className="plan-tag">Free to get started</span>
               </div>
-              <h2>Basic</h2>
+              <h2>Free</h2>
               <p className="plan-description">A clearer starting point for your next move.</p>
               <div className="plan-price-block">
                 <p className="plan-amount">
@@ -176,14 +174,6 @@ export function PricingPlans({
                 </p>
                 <p className="billing-total">Free today. No card needed.</p>
               </div>
-              <button
-                className="secondary-button"
-                disabled={signedIn}
-                onClick={onSignIn}
-              >
-                {signedIn ? 'Your current plan' : 'Start with Basic'}{' '}
-                {!signedIn && <ArrowRight size={16} />}
-              </button>
               <div className="plan-divider" />
               <span className="plan-list-heading">Your essentials, covered</span>
               <ul>
@@ -275,7 +265,7 @@ export function PricingPlans({
               <ul>
                 <li>
                   <Check size={17} />
-                  Everything in Basic
+                  Everything in Free
                 </li>
                 <li>
                   <Sparkles size={17} />
@@ -300,7 +290,7 @@ export function PricingPlans({
           </div>
           <p className="pricing-test-note">
             Pro is in preview. Checkout uses Stripe test mode, with no real payment or plan change.
-            Matching is currently available to everyone on Basic.
+            Matching is currently available to everyone on Free.
           </p>
         </>
       ) : (

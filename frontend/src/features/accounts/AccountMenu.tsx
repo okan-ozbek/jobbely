@@ -13,6 +13,7 @@ import './accounts.css';
 import { EmailAccountForm } from './EmailAccountForm.js';
 import { AccountEmailChangeForm } from './AccountEmailChangeForm.js';
 import { AuthShell } from './AuthShell.js';
+import { AccountAvatarMenu } from './AccountAvatarMenu.js';
 
 export type AccountAction = 'email' | 'reset' | 'delete' | 'signout' | 'refresh';
 
@@ -361,24 +362,31 @@ export function AccountMenu({
 
   return (
     <>
-      <button
-        className={`nav-link${isAccountPage ? ' active' : ''}`}
-        aria-current={isAccountPage ? 'page' : undefined}
-        onClick={() => {
-          if (account?.user) {
-            onOpenAccount();
-
-            return;
-          }
-
-          setLink(null);
-          setConfirmDelete(false);
-          setDeleteText('');
-          setOpen(true);
-        }}
-      >
-        {account?.user ? 'Account' : 'Sign in'}
-      </button>
+      {account?.user ? (
+        <AccountAvatarMenu
+          key={account.user.id}
+          email={account.user.email}
+          busy={loading}
+          error={error}
+          active={isAccountPage}
+          onAccount={onOpenAccount}
+          onSignOut={() => {
+            void endAccount();
+          }}
+        />
+      ) : (
+        <button
+          className="nav-link"
+          onClick={() => {
+            setLink(null);
+            setConfirmDelete(false);
+            setDeleteText('');
+            setOpen(true);
+          }}
+        >
+          Sign in
+        </button>
+      )}
       <dialog
         className={`account-dialog${!account?.user ? ' account-dialog-auth' : ''}`}
         ref={dialog}
