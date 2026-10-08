@@ -212,7 +212,8 @@ describe('platform qualification contrasts', () => {
 
     const result = scoreJob({ ...featureJob(), requirements }, candidate(), [], false);
 
-    expect(result.fitScore).toBeNull();
+    expect(result.fitScore).toBeGreaterThan(0);
+    expect(result.fitScore).toBeLessThan(100);
     expect(result.unresolvedRequirements).toBeGreaterThan(0);
     expect(result.experience[0]?.status).toBe('uncertain');
   });
@@ -245,9 +246,7 @@ describe('platform qualification contrasts', () => {
           : 'another domain preferred',
       ]);
 
-      expect(
-        scoreJob({ ...featureJob(), requirements }, candidate(), [], false).fitScore,
-      ).toBeNull();
+      expect(scoreJob({ ...featureJob(), requirements }, candidate(), [], false).fitScore).toBe(25);
     }
   });
 

@@ -183,7 +183,8 @@ describe('evidence-backed requirement extraction', () => {
     expect(result).toMatchObject({
       band: 'review',
       assessmentCoverage: { assessed: 0, total: 0, percentage: null },
-      baseScore: 100,
+      baseScore: 0,
+      fitScore: null,
     });
   });
 

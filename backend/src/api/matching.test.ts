@@ -143,7 +143,7 @@ describe('private matching API and public requirements', () => {
     });
 
     expect(item).not.toHaveProperty('completeness');
-    expect(item.fitScore).toBeNull();
+    expect(item.fitScore).toBe(62.5);
 
     const compared = await app.inject({
       method: 'POST',
@@ -153,7 +153,7 @@ describe('private matching API and public requirements', () => {
 
     expect(compared.statusCode).toBe(200);
     expect(compared.json().comparison.assessmentCoverage).toEqual(item.assessmentCoverage);
-    expect(compared.json().comparison.fitScore).toBeNull();
+    expect(compared.json().comparison.fitScore).toBe(item.fitScore);
   });
 
   it('compares degree and duration annotations, includes responsibility skills and keeps candidate metadata transient', async () => {

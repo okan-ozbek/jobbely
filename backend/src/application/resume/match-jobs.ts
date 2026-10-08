@@ -238,7 +238,7 @@ export class MatchJobs {
                   : match.status === 'below'
                     ? ('red' as const)
                     : ('yellow' as const),
-              credit: Number(match.status === 'met'),
+              credit: match.status === 'met' ? 1 : match.status === 'uncertain' ? 0.25 : 0,
               sourceId: null,
               sourceName: null,
               path: [],
@@ -275,7 +275,7 @@ export class MatchJobs {
                   : match.status === 'below'
                     ? ('red' as const)
                     : ('yellow' as const),
-              credit: Number(match.status === 'met'),
+              credit: match.status === 'met' ? 1 : match.status === 'uncertain' ? 0.25 : 0,
               sourceId: null,
               sourceName: null,
               path: [],

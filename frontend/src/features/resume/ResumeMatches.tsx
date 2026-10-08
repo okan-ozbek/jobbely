@@ -202,13 +202,17 @@ export function ResumeMatches({
                     </div>
                   </div>
                   <span className="resume-status">
-                    {item.band === 'review' ? 'Needs review' : item.band}
+                    {item.band === 'review'
+                      ? item.fitScore === null
+                        ? 'Score unavailable'
+                        : 'Partial assessment'
+                      : item.band}
                   </span>
                 </div>
                 <MatchMetrics comparison={item} />
                 <p className="small-note">
                   {item.requiredGaps} recognized required gap(s) · {item.unresolvedRequirements}{' '}
-                  unresolved requirement(s) · checked{' '}
+                  unassessable qualification(s) · checked{' '}
                   {new Date(item.job.lastSeenAt).toLocaleString()}
                   <br />
                   {item.coverage}

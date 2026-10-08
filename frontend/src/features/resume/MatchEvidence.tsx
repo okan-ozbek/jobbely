@@ -6,10 +6,10 @@ type Comparison = JobMatchResponse['comparison'];
 export function ConfidenceLegend() {
   return (
     <p className="confidence-legend">
-      <span className="confidence-green">Green · full match</span>
-      <span className="confidence-yellow">Yellow · partial or uncertain</span>
-      <span className="confidence-purple">Purple · possible unmentioned skill</span>
-      <span className="confidence-red">Red · no evidence</span>
+      <span className="confidence-green">Green · full match · 100%</span>
+      <span className="confidence-yellow">Yellow · partial or uncertain · 25%</span>
+      <span className="confidence-purple">Purple · possible unmentioned skill · 0%</span>
+      <span className="confidence-red">Red · no evidence · 0%</span>
     </p>
   );
 }
@@ -117,7 +117,7 @@ export function MatchEvidence({
       ))}
       {comparison.uncertainties.length > 0 && (
         <details>
-          <summary>Other requirements to review ({comparison.uncertainties.length})</summary>
+          <summary>Uncertainty details ({comparison.uncertainties.length})</summary>
           <ul>
             {comparison.uncertainties.map((value, index) => (
               <li key={index}>{value}</li>

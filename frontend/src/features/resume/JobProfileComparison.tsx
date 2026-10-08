@@ -61,7 +61,11 @@ export function JobProfileComparison({
           <h2>Your resume against this role</h2>
           {data && (
             <span className="resume-status">
-              {data.comparison.band === 'review' ? 'Needs review' : data.comparison.band}
+              {data.comparison.band === 'review'
+                ? data.comparison.fitScore === null
+                  ? 'Score unavailable'
+                  : 'Partial assessment'
+                : data.comparison.band}
             </span>
           )}
         </div>
@@ -93,7 +97,7 @@ export function JobProfileComparison({
                 <MatchMetrics comparison={data.comparison} />
                 <p className="small-note">
                   {data.comparison.requiredGaps} recognized required gaps ·{' '}
-                  {data.comparison.unresolvedRequirements} to review
+                  {data.comparison.unresolvedRequirements} unassessable qualifications
                 </p>
                 <details className="comparison-source small-note">
                   <summary>

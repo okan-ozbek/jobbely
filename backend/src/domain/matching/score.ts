@@ -4,9 +4,9 @@ import { summarizeExperience } from '../resume/experience.js';
 import type { FeatureJob, MatchExplanation, MatchProfile } from './model.js';
 import { projectSkills, skillMatch, relationsVersion } from './skill-relations.js';
 import { degreeNames, degreeRank } from '../resume/qualifications.js';
-import { assessmentCoverage, assessmentRatio } from './assessment-coverage.js';
+import { qualificationAssessment, assessmentRatio } from './assessment-coverage.js';
 
-export const scoringVersion = `score-7:${relationsVersion}`;
+export const scoringVersion = `score-8:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -54,7 +54,7 @@ export function scoreJob(
   context: boolean,
   prepared = prepareCandidate(profile, employers),
 ): MatchExplanation {
-  const { durations, matches, functions } = prepared;
+  const { durations, matches } = prepared;
 
   const result: MatchExplanation = {
     job,
@@ -77,10 +77,6 @@ export function scoreJob(
     employerAdjustment: { points: 0, reasons: [], version: contextVersion },
   };
 
-  let skillTotal = 0;
-  let skillCredit = 0;
-  let experienceCredit = 0;
-  let experienceAssessed = 0;
   let contextCredit = 0;
   let contextTotal = 0;
   let unresolvedMandatory = job.requirements.truncated;
@@ -92,8 +88,6 @@ export function scoreJob(
   }
 
   for (const group of job.requirements.skills) {
-    const weight = group.importance === 'required' ? 3 : 1;
-
     const alternatives = group.alternatives
       .map((alternative) => ({
         id: alternative.id,
@@ -119,7 +113,7 @@ export function scoreJob(
       }
 
       contextTotal++;
-      contextCredit += best.credit;
+      contextCredit += best.confidence === 'green' ? 1 : best.confidence === 'yellow' ? 0.25 : 0;
     }
 
     if (
@@ -135,16 +129,13 @@ export function scoreJob(
       );
     }
 
-    if (
-      group.importance !== 'contextual' &&
-      (!group.unresolvedAlternatives?.length || best.credit === 1)
-    ) {
-      skillTotal += weight;
-      skillCredit += weight * best.credit;
-    }
-
     result.skills.push({
       ...best,
+      ...(group.importance !== 'contextual' &&
+      group.unresolvedAlternatives?.length &&
+      best.credit < 1
+        ? { confidence: 'yellow' as const, decision: 'partial' as const }
+        : {}),
       ...(group.id ? { requirementId: group.id } : {}),
       evidenceRefs:
         [...profile.skills, ...(profile.competencies ?? [])].find(
@@ -233,14 +224,7 @@ export function scoreJob(
       excerpt: requirement.evidence.excerpt,
     });
 
-    if (status !== 'uncertain') {
-      experienceAssessed++;
-
-      experienceCredit +=
-        status === 'met'
-          ? 1
-          : Math.min(1, range.maximumMonths / Math.max(1, requirement.minimumMonths));
-    } else {
+    if (status === 'uncertain') {
       result.unresolvedRequirements++;
 
       result.uncertainties.push(
@@ -256,11 +240,6 @@ export function scoreJob(
       result.requiredGaps++;
     }
   }
-
-  let locationAssessed = 0;
-  let locationCredit = 0;
-  let educationAssessed = 0;
-  let educationCredit = 0;
 
   const educationRequirements = job.requirements.constraints.filter(
     (item) => item.education && item.importance !== 'contextual',
@@ -317,9 +296,6 @@ export function scoreJob(
       result.unresolvedRequirements++;
       unresolvedMandatory ||= requirement.importance === 'required';
       result.uncertainties.push(reason);
-    } else {
-      educationAssessed++;
-      educationCredit += Number(met);
     }
 
     if (status === 'below' && requirement.importance === 'required') {
@@ -349,9 +325,6 @@ export function scoreJob(
     );
 
   if (sameLocation && locationConstraints.length === 0) {
-    locationAssessed = 1;
-    locationCredit = 1;
-
     result.location =
       'Current location overlaps a listed location; authorization still needs checking.';
   } else {
@@ -381,39 +354,15 @@ export function scoreJob(
     unresolvedMandatory ||= statement.importance === 'required';
   }
 
-  const functionAssessed = functions.size > 0 ? 1 : 0;
-  const functionCredit = functions.has(job.requirements.category) ? 1 : 0;
-
-  const unknownWeight = job.requirements.unparsed.reduce(
-    (total, item) => total + (item.importance === 'required' ? 3 : 1),
-    0,
-  );
-
-  const skillCoverage = skillTotal ? skillTotal / (skillTotal + unknownWeight) : 0;
-
-  const assessedWeight =
-    50 * skillCoverage +
-    (thresholds.length ? (20 * experienceAssessed) / thresholds.length : 0) +
-    15 * functionAssessed +
-    10 * locationAssessed +
-    (educationRequirements.length ? (10 * educationAssessed) / educationRequirements.length : 0);
-
-  const credit =
-    (skillTotal ? (50 * skillCoverage * skillCredit) / skillTotal : 0) +
-    (thresholds.length ? (20 * experienceCredit) / thresholds.length : 0) +
-    15 * functionCredit +
-    10 * locationCredit +
-    (educationRequirements.length ? (10 * educationCredit) / educationRequirements.length : 0);
-
   const rolePoints = contextTotal ? Math.round((5 * contextCredit) / contextTotal) : 0;
 
   result.roleRelevancePoints = rolePoints;
 
-  result.baseScore = assessedWeight
-    ? Math.min(100, Math.round((100 * credit) / assessedWeight) + rolePoints)
-    : 0;
+  const assessment = qualificationAssessment(job.requirements, result);
 
-  result.assessmentCoverage = assessmentCoverage(job.requirements, result);
+  result.assessmentCoverage = assessment.coverage;
+  result.fitScore = assessment.fitScore;
+  result.baseScore = result.fitScore === null ? 0 : Math.min(100, result.fitScore + rolePoints);
 
   result.unresolvedRequirements =
     result.assessmentCoverage.total - result.assessmentCoverage.assessed;
@@ -429,29 +378,26 @@ export function scoreJob(
     );
   }
 
-  // Unknowns cannot disappear from a headline fit percentage. Context remains a ranking aid.
-  if (
-    mandatoryComparison &&
-    assessedWeight > 0 &&
-    !result.assessmentCoverage.limited &&
-    result.assessmentCoverage.total > 0 &&
-    result.unresolvedRequirements === 0
-  ) {
-    result.fitScore = (100 * credit) / assessedWeight;
-  }
-
   result.band =
-    assessmentRatio(result.assessmentCoverage) < 0.6 || unresolvedMandatory || !mandatoryComparison
+    result.fitScore === null ||
+    assessmentRatio(result.assessmentCoverage) < 0.6 ||
+    unresolvedMandatory ||
+    !mandatoryComparison
       ? 'review'
       : result.requiredGaps
         ? 'exploratory'
-        : result.baseScore >= 80
+        : result.fitScore >= 80
           ? 'strong'
-          : result.baseScore >= 60
+          : result.fitScore >= 60
             ? 'possible'
             : 'exploratory';
 
-  if (context && result.requiredGaps === 0 && result.band !== 'review') {
+  if (
+    context &&
+    result.requiredGaps === 0 &&
+    result.unresolvedRequirements === 0 &&
+    result.band !== 'review'
+  ) {
     if (prepared.contextKeys.has(`${job.companySlug}:${job.requirements.category}`)) {
       result.employerAdjustment = {
         points: 3,
@@ -477,9 +423,12 @@ export function compareMatches(left: RankedMatch, right: RankedMatch) {
   const rightCoverage = assessmentRatio(right.assessmentCoverage);
 
   return (
+    Number(left.assessmentCoverage.limited || left.assessmentCoverage.total === 0) -
+      Number(right.assessmentCoverage.limited || right.assessmentCoverage.total === 0) ||
+    right.baseScore +
+      right.employerAdjustment.points -
+      (left.baseScore + left.employerAdjustment.points) ||
     bands[left.band] - bands[right.band] ||
-    (right.baseScore + right.employerAdjustment.points) * rightCoverage -
-      (left.baseScore + left.employerAdjustment.points) * leftCoverage ||
     rightCoverage - leftCoverage ||
     right.baseScore - left.baseScore ||
     right.job.lastSeenAt.localeCompare(left.job.lastSeenAt) ||

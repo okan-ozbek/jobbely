@@ -111,8 +111,8 @@ describe('identified requirement assessment coverage', () => {
   });
 });
 
-describe('coverage-aware ranking', () => {
-  it('ranks a more fully assessed lower fit above a sparse perfect fit within the same band', () => {
+describe('qualification-weighted ranking', () => {
+  it('includes unknowns once in fit without an additional coverage penalty', () => {
     const sparse = compare(
       'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL required.',
     );
@@ -123,13 +123,13 @@ describe('coverage-aware ranking', () => {
 
     expect(sparse.band).toBe('review');
     expect(broader.band).toBe('review');
-    expect(sparse.baseScore).toBe(100);
+    expect(sparse.baseScore).toBe(62.5);
     expect(broader.baseScore).toBeLessThan(sparse.baseScore);
-    expect(compareMatches(broader, sparse)).toBeLessThan(0);
-    expect(compareMatches(sparse, broader)).toBeGreaterThan(0);
+    expect(compareMatches(sparse, broader)).toBeLessThan(0);
+    expect(compareMatches(broader, sparse)).toBeGreaterThan(0);
   });
 
-  it('keeps review bands ahead of coverage and does not prioritize coverage alone', () => {
+  it('orders weighted fit ahead of the legacy review band while preserving deterministic ties', () => {
     const stronger = compare('Requirements\nTypeScript required.');
     const gaps = compare('Requirements\nDocker required.');
 
@@ -138,7 +138,7 @@ describe('coverage-aware ranking', () => {
     );
 
     expect(compareMatches(stronger, gaps)).toBeLessThan(0);
-    expect(compareMatches(gaps, review)).toBeLessThan(0);
+    expect(compareMatches(review, gaps)).toBeLessThan(0);
     expect(compareMatches(stronger, stronger)).toBe(0);
   });
 });

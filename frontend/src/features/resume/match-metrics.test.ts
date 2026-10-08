@@ -4,15 +4,15 @@ import { describe, expect, it } from 'vitest';
 import type { JobMatchResponse } from '../../api/client.js';
 import { MatchMetrics } from './MatchMetrics.js';
 
-function render(fitScore: number | null, total = 2) {
+function render(fitScore: number | null, total = 2, limited = false) {
   const comparison: JobMatchResponse['comparison'] = {
     baseScore: 100,
     fitScore,
     assessmentCoverage: {
-      assessed: fitScore === null ? 1 : total,
+      assessed: total ? total - 1 : 0,
       total,
       percentage: 50,
-      limited: false,
+      limited,
     },
     band: 'review',
     requiredGaps: 0,
@@ -28,10 +28,13 @@ function render(fitScore: number | null, total = 2) {
 }
 
 describe('fit presentation', () => {
-  it('withholds a sparse perfect ranking score when comparison is unresolved', () => {
-    const html = render(null);
+  it('shows weighted qualification fit and an unassessable count instead of needs review', () => {
+    const html = render(62.5);
 
-    expect(html).toContain('<dd>Needs review</dd>');
+    expect(html).toContain('<dd>62.5%</dd>');
+    expect(html).toContain('1 unassessable');
+    expect(html).toContain('yellow or unassessable qualifications 25%');
+    expect(html).not.toContain('Needs review');
     expect(html).not.toContain('<dd>100%</dd>');
   });
 
@@ -43,5 +46,12 @@ describe('fit presentation', () => {
 
   it('describes a job with no identified criteria as insufficient information', () => {
     expect(render(null, 0)).toContain('<dd>Not enough information</dd>');
+  });
+
+  it('withholds percentages for truncated analysis without presenting it as a review task', () => {
+    const html = render(null, 2, true);
+
+    expect(html).toContain('<dd>Analysis incomplete</dd>');
+    expect(html).not.toContain('<dd>100%</dd>');
   });
 });

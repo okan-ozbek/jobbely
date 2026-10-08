@@ -42,7 +42,7 @@ describe('honest qualification baseline', () => {
     expect(result.education[0]?.status).toBe('uncertain');
     expect(result.requiredGaps).toBeGreaterThan(0);
     expect(result.unresolvedRequirements).toBeGreaterThan(0);
-    expect(result.fitScore).toBeNull();
+    expect(result.fitScore).toBe(35);
     expect(result.band).toBe('review');
     expect(result.assessmentCoverage.total).toBeGreaterThan(2);
 
@@ -99,7 +99,7 @@ describe('honest qualification baseline', () => {
       false,
     );
 
-    expect(result).toMatchObject({ fitScore: null, band: 'review', unresolvedRequirements: 1 });
+    expect(result).toMatchObject({ fitScore: 62.5, band: 'review', unresolvedRequirements: 1 });
     expect(result.job.requirements.clauses[1]?.disposition).toBe('needs-review');
   });
 
@@ -129,7 +129,7 @@ describe('honest qualification baseline', () => {
 
     expect(job.requirements.constraints[0]?.importance).toBe('required');
     expect(job.requirements.clauses[0]?.disposition).toBe('contextual');
-    expect(scoreJob(job, candidate(), [], false).fitScore).toBeNull();
+    expect(scoreJob(job, candidate(), [], false).fitScore).toBe(12.5);
   });
 
   it('treats illustrative language alternatives as one requirement', () => {
@@ -202,7 +202,7 @@ describe('honest qualification baseline', () => {
 
     expect(result.experience[0]?.status).toBe('uncertain');
     expect(result.education[0]?.status).toBe('uncertain');
-    expect(result.fitScore).toBeNull();
+    expect(result.fitScore).toBe(25);
     expect(result.requiredGaps).toBe(0);
   });
 
