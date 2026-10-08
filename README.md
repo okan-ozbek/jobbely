@@ -243,6 +243,9 @@ pnpm --filter @jobbely/frontend run format
 
 Start with [the documentation index](docs/README.md). Each decision reference records rationale, invariants, implementation links, and known limitations:
 
+- [RANKED_SYNC_PLAN](docs/RANKED_SYNC_PLAN.md): proposed financial-size ranking, parallel round-robin company sync and retirement of waves.
+- [RESUME_PERFORMANCE_PLAN](docs/RESUME_PERFORMANCE_PLAN.md): measured local query/freshness problems and a phased plan for usable analysis and scalable matching.
+
 - [ARCHITECTURE](docs/ARCHITECTURE.md): layers, dependency direction and composition.
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
 - [RESUME](docs/RESUME.md): deterministic analysis, review and the initial complete matching flow.

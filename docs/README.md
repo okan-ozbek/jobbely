@@ -31,6 +31,8 @@ For semantic scopes/confirmation read [SEMANTICS](SEMANTICS.md); for degree, ten
 
 ## Plans and evidence: read on demand
 
+- Performance and scheduling changes: [RANKED_SYNC_PLAN](RANKED_SYNC_PLAN.md) proposes financial-size ranking, four round-robin workers and wave retirement; [RESUME_PERFORMANCE_PLAN](RESUME_PERFORMANCE_PLAN.md) records local bottlenecks and prioritizes freshness recovery, narrow catalog reads, public caching and exact matching optimization. These are proposed work, not deployed behavior.
+
 - Product scope/new feature planning: [MVP_PLAN](../MVP_PLAN.md), [RESUME_PLAN](../RESUME_PLAN.md), [ACCOUNT_BILLING_PLAN](ACCOUNT_BILLING_PLAN.md), [ANALYTICS_PLAN](ANALYTICS_PLAN.md). [ACCOUNTS_BILLING_PLAN](ACCOUNTS_BILLING_PLAN.md) is a compatibility link.
 - New semantic matching work: [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md) owns the delivery roadmap. [SEMANTIC_MATCHING_PLAN](SEMANTIC_MATCHING_PLAN.md) and [LLM_MATCHING](LLM_MATCHING.md) retain earlier proposals/diagnoses; their remaining delivery sequences are superseded. Use the implemented owner documents above for current behavior.
 - Provider/source work: [WAVE_B](WAVE_B.md), [WAVE_C](WAVE_C.md), [WAVE_D](WAVE_D.md), [WAVE_REFRESH](WAVE_REFRESH.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md). Read the applicable provider family, source lifecycle and employer references; collection is not evidence of complete coverage or closure eligibility.
