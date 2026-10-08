@@ -13,6 +13,47 @@
   background: #292b4933;
   backdrop-filter: blur(4px);
 }
+.account-dialog-auth[open]:not([data-closing]) {
+  animation: account-popup-in 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.account-dialog-auth[open]::backdrop {
+  animation: account-backdrop-in 240ms ease-out both;
+}
+.account-dialog-auth[data-closing]::backdrop {
+  animation: account-backdrop-out 160ms ease-in both;
+}
+@keyframes account-popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes account-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes account-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-dialog-auth[open]:not([data-closing]),
+  .account-dialog-auth[open]::backdrop {
+    animation: none;
+  }
+}
 .account-dialog-heading {
   display: flex;
   align-items: center;

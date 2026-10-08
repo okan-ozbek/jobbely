@@ -47,6 +47,7 @@ export function AccountMenu({
   const [providers, setProviders] = useState<{ name: SignInProvider; available: boolean }[]>([]);
   const [emailAvailable, setEmailAvailable] = useState(false);
   const [open, setOpen] = useState(false);
+  const [present, setPresent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -56,6 +57,7 @@ export function AccountMenu({
   const [link, setLink] = useState<{ provider: SignInProvider; url: string } | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const backdropPressed = useRef(false);
+  const animatedGuestDialog = useRef(false);
   const active = useRef<AbortController | null>(null);
   const readRequest = useRef<AbortController | null>(null);
   const userId = useRef<string | null>(null);
@@ -187,10 +189,49 @@ export function AccountMenu({
 
   useEffect(() => {
     if (!open) {
-      dialog.current?.close();
+      const element = dialog.current;
 
-      return;
+      active.current?.abort();
+
+      if (
+        !element?.open ||
+        !animatedGuestDialog.current ||
+        !element.classList.contains('account-dialog-auth') ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ) {
+        element?.close();
+        setPresent(false);
+
+        return;
+      }
+
+      const appearance = getComputedStyle(element);
+      const from = { opacity: appearance.opacity, transform: appearance.transform };
+
+      element.dataset.closing = 'true';
+
+      const animation = element.animate(
+        [from, { opacity: 0, transform: 'translateY(10px) scale(0.98)' }],
+        { duration: 160, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' },
+      );
+
+      void animation.finished
+        .then(() => {
+          element.close();
+          setPresent(false);
+        })
+        .catch(() => {});
+
+      return () => {
+        animation.cancel();
+        delete element.dataset.closing;
+      };
     }
+
+    setPresent(true);
+
+    animatedGuestDialog.current =
+      dialog.current?.classList.contains('account-dialog-auth') ?? false;
 
     dialog.current?.showModal();
 
@@ -341,6 +382,7 @@ export function AccountMenu({
       <dialog
         className={`account-dialog${!account?.user ? ' account-dialog-auth' : ''}`}
         ref={dialog}
+        inert={!open}
         aria-labelledby={titleId}
         onPointerDown={(event) => {
           const bounds = event.currentTarget.getBoundingClientRect();
@@ -373,11 +415,14 @@ export function AccountMenu({
           }
         }}
         onCancel={(event) => {
-          if (mutating.current) {
-            event.preventDefault();
+          event.preventDefault();
+
+          if (!mutating.current) {
+            setOpen(false);
           }
         }}
         onClose={() => {
+          setPresent(false);
           setOpen(false);
           setConfirmDelete(false);
           setDeleteText('');
@@ -491,7 +536,7 @@ export function AccountMenu({
             )
           ) : (
             <>
-              {open && (
+              {present && (
                 <EmailAccountForm
                   workspace
                   headingId={titleId}
