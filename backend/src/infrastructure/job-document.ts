@@ -53,7 +53,12 @@ export const htmlJobDocumentReader: JobDocumentReader = {
         }
 
         ancestry.push(heading);
-        section = jobHeading(heading.text) ?? section;
+
+        section = ancestry
+          .map((entry) => jobHeading(entry.text))
+          .reverse()
+          .find((entry) => entry !== null) ?? { role: 'unknown', importance: 'contextual' };
+
         block.kind = 'heading';
       } else if (block.kind === 'heading') {
         section = jobHeading(block.text) ?? section;

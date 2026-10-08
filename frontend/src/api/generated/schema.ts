@@ -1293,6 +1293,8 @@ export interface operations {
                                 logic: "all-of" | "any-of";
                                 groupIds: string[];
                                 unresolvedAlternatives: string[];
+                                disposition: "contextual" | "represented" | "needs-review";
+                                exampleIds: string[];
                                 evidence: {
                                     blockId?: string;
                                     clauseId?: string;
@@ -1331,6 +1333,7 @@ export interface operations {
                                 minimumMonths: number;
                                 maximumMonths?: number;
                                 alternativeIds?: string[];
+                                alternativeEvidence?: boolean;
                                 scope: "professional" | "function" | "skill";
                                 skillId: string | null;
                                 importance: "required" | "preferred" | "contextual";
@@ -1359,6 +1362,7 @@ export interface operations {
                                 education?: {
                                     level: "bachelor" | "master" | "doctorate";
                                     field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                                    fields?: ("computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown")[];
                                     related: boolean;
                                     alternativeExperience: boolean;
                                 };
@@ -1442,6 +1446,7 @@ export interface operations {
                         }[];
                         comparison: {
                             baseScore: number;
+                            fitScore: number | null;
                             assessmentCoverage: {
                                 assessed: number;
                                 total: number;
@@ -1661,6 +1666,8 @@ export interface operations {
                             logic: "all-of" | "any-of";
                             groupIds: string[];
                             unresolvedAlternatives: string[];
+                            disposition: "contextual" | "represented" | "needs-review";
+                            exampleIds: string[];
                             evidence: {
                                 blockId?: string;
                                 clauseId?: string;
@@ -1699,6 +1706,7 @@ export interface operations {
                             minimumMonths: number;
                             maximumMonths?: number;
                             alternativeIds?: string[];
+                            alternativeEvidence?: boolean;
                             scope: "professional" | "function" | "skill";
                             skillId: string | null;
                             importance: "required" | "preferred" | "contextual";
@@ -1727,6 +1735,7 @@ export interface operations {
                             education?: {
                                 level: "bachelor" | "master" | "doctorate";
                                 field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                                fields?: ("computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown")[];
                                 related: boolean;
                                 alternativeExperience: boolean;
                             };
@@ -1885,6 +1894,8 @@ export interface operations {
                                         logic: "all-of" | "any-of";
                                         groupIds: string[];
                                         unresolvedAlternatives: string[];
+                                        disposition: "contextual" | "represented" | "needs-review";
+                                        exampleIds: string[];
                                         evidence: {
                                             blockId?: string;
                                             clauseId?: string;
@@ -1923,6 +1934,7 @@ export interface operations {
                                         minimumMonths: number;
                                         maximumMonths?: number;
                                         alternativeIds?: string[];
+                                        alternativeEvidence?: boolean;
                                         scope: "professional" | "function" | "skill";
                                         skillId: string | null;
                                         importance: "required" | "preferred" | "contextual";
@@ -1951,6 +1963,7 @@ export interface operations {
                                         education?: {
                                             level: "bachelor" | "master" | "doctorate";
                                             field: "computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown";
+                                            fields?: ("computer-science" | "engineering" | "mathematics" | "physics" | "business" | "other" | "unknown")[];
                                             related: boolean;
                                             alternativeExperience: boolean;
                                         };
@@ -1974,6 +1987,7 @@ export interface operations {
                                 };
                             };
                             baseScore: number;
+                            fitScore: number | null;
                             assessmentCoverage: {
                                 assessed: number;
                                 total: number;

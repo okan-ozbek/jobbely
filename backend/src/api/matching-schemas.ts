@@ -54,6 +54,10 @@ export const requirementsSchema = Type.Object({
       logic: Type.Union([Type.Literal('all-of'), Type.Literal('any-of')]),
       groupIds: Type.Array(Type.String()),
       unresolvedAlternatives: Type.Array(Type.String()),
+      disposition: Type.Union(
+        ['contextual', 'represented', 'needs-review'].map((value) => Type.Literal(value)),
+      ),
+      exampleIds: Type.Array(Type.String()),
       evidence,
     }),
   ),
@@ -82,6 +86,7 @@ export const requirementsSchema = Type.Object({
       minimumMonths: Type.Integer(),
       maximumMonths: Type.Optional(Type.Integer()),
       alternativeIds: Type.Optional(Type.Array(Type.String())),
+      alternativeEvidence: Type.Optional(Type.Boolean()),
       scope: Type.Union(['professional', 'function', 'skill'].map((value) => Type.Literal(value))),
       skillId: Type.Union([Type.String(), Type.Null()]),
       importance,
@@ -101,6 +106,7 @@ export const requirementsSchema = Type.Object({
         Type.Object({
           level: degreeLevelSchema,
           field: degreeFieldSchema,
+          fields: Type.Optional(Type.Array(degreeFieldSchema)),
           related: Type.Boolean(),
           alternativeExperience: Type.Boolean(),
         }),
@@ -291,6 +297,7 @@ export const jobMatchResponseSchema = Type.Object({
   ),
   comparison: Type.Object({
     baseScore: Type.Integer(),
+    fitScore: Type.Union([Type.Number({ minimum: 0, maximum: 100 }), Type.Null()]),
     assessmentCoverage: assessmentCoverageSchema,
     band: Type.Union(
       ['strong', 'possible', 'exploratory', 'review'].map((item) => Type.Literal(item)),
@@ -345,6 +352,7 @@ export const matchItemSchema = Type.Object({
     requirements: requirementsSchema,
   }),
   baseScore: Type.Integer(),
+  fitScore: Type.Union([Type.Number({ minimum: 0, maximum: 100 }), Type.Null()]),
   assessmentCoverage: assessmentCoverageSchema,
   band: Type.Union(
     ['strong', 'possible', 'exploratory', 'review'].map((value) => Type.Literal(value)),

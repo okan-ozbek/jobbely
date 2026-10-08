@@ -4,9 +4,13 @@
 
 ## Structured evidence update, 2 October 2026
 
+The [9 October qualification baseline](MATCHING.md#qualification-baseline-9-october-2026) adds five testing concepts, illustrative example metadata and learning-versus-current-knowledge handling. Current versions and interpretation limits live in that owner. It adds no relation edges, model inference, inferred activity tenure or private persistence; earlier version records below remain dated history.
+
 [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
 
 ## Decision and rationale
+
+The 8 October [public-catalog vocabulary increment](VOCABULARY.md) extends the registry to 500 concepts, adds context guards and an operator-only discovery workflow. Current identity is `concepts-4:clauses-4`; public features must be backfilled. The earlier engineering counts below describe their original increment.
 
 Share a pure TypeScript concept registry and clause recognizer between resumes and job descriptions. The registry has 239 canonical concepts with stable IDs, aliases, kinds, families, definitions, supported facets and local provenance. Existing IDs are preserved. Reviewed engineering packs add compiler tools, memory/concurrency, distributed mechanisms, cloud services, backend practices and distinct delivery competencies. This introduces no runtime AI or external taxonomy service.
 

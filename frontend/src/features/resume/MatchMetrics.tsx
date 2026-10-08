@@ -7,11 +7,13 @@ export function MatchMetrics({ comparison }: { comparison: JobMatchResponse['com
     <div className="match-assessment">
       <dl className="match-metrics">
         <div>
-          <dt>Fit on assessed criteria</dt>
+          <dt>Qualification fit</dt>
           <dd>
-            {coverage.assessed > 0 && !coverage.limited
-              ? `${comparison.baseScore}%`
-              : 'Not enough information'}
+            {comparison.fitScore !== null
+              ? `${new Intl.NumberFormat('en', { maximumFractionDigits: 1, roundingMode: 'floor' }).format(comparison.fitScore)}%`
+              : coverage.limited
+                ? 'Analysis incomplete'
+                : 'Not enough information'}
           </dd>
         </div>
         <div>
@@ -22,22 +24,23 @@ export function MatchMetrics({ comparison }: { comparison: JobMatchResponse['com
               ? 'Description analysis is incomplete'
               : coverage.total === 0
                 ? 'No assessable criteria identified'
-                : `${coverage.assessed} of ${coverage.total} identified criteria assessed`}
+                : `${coverage.assessed} of ${coverage.total} identified criteria assessed · ${comparison.unresolvedRequirements} unassessable`}
           </span>
         </div>
       </dl>
       <details className="match-metrics-help small-note">
         <summary>About these scores</summary>
         <p>
-          Fit describes matches on the criteria we could assess, including up to five points for
-          relevant role skills. Coverage counts identified required and preferred criteria,
-          including gaps; unresolved criteria lower coverage. Repeated criteria count once, and
-          alternatives count as one criterion. Function and location overlap do not increase
-          coverage.
+          Green qualifications contribute 100%, yellow or unassessable qualifications 25%, and red
+          gaps 0%. Purple skill suggestions contribute 0% until confirmed. Required qualifications
+          carry three times the weight of preferred qualifications. Repeated criteria count once,
+          and alternatives count as one criterion. Role relevance helps rank results without adding
+          points to qualification fit.
         </p>
         <p>
           The parser can miss requirements. These numbers are not confidence or hiring
-          probabilities. Within each review band, ranking weighs fit by assessment coverage.
+          probabilities. Assessment coverage counts completed comparisons, including gaps;
+          unassessable qualifications remain visible and are not treated as satisfied.
         </p>
       </details>
     </div>

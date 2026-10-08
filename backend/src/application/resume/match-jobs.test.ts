@@ -72,17 +72,17 @@ async function setup(mode: 'demo' | 'postgres' = 'postgres') {
 }
 
 describe('stateless full matching flow', () => {
-  it('paginates coverage-adjusted ranking without skipping the sparse perfect-fit result', async () => {
+  it('paginates qualification-weighted ranking without skipping results with unknown criteria', async () => {
     const { dataset, backfill, matcher, input } = await setup();
 
     dataset.jobs[0] = storedJob(
       '1',
-      'Requirements\nTypeScript required.\nKnowledge of VHDL required.',
+      'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL required.',
     );
 
     dataset.jobs[1] = storedJob(
       '2',
-      'Requirements\nTypeScript required.\nKnowledge of VHDL required.\nPreferred qualifications\nDocker',
+      'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL required.\nPreferred qualifications\nDocker',
     );
 
     dataset.jobs[0]!.contentHash = 'changed-sparse';
@@ -94,13 +94,14 @@ describe('stateless full matching flow', () => {
 
     const first = await matcher.execute(input);
 
-    expect(first.items[0]?.job.id).toBe('2');
+    expect(first.items[0]?.job.id).toBe('1');
+    expect(first.items[0]?.fitScore).toBe(62.5);
     expect(first.nextCursor).toBeTruthy();
 
     const second = await matcher.execute({ ...input, cursor: first.nextCursor! });
 
-    expect(second.items[0]?.job.id).toBe('1');
-    expect(second.items[0]?.baseScore).toBeGreaterThan(first.items[0]!.baseScore);
+    expect(second.items[0]?.job.id).toBe('2');
+    expect(second.items[0]?.baseScore).toBeLessThan(first.items[0]!.baseScore);
     expect(second.nextCursor).toBeNull();
   });
 
