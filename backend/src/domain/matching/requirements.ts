@@ -8,7 +8,7 @@ import { skillsInText, vocabularyVersion } from '../resume/vocabulary.js';
 import { degreeMentions, degreeField, degreeRank } from '../resume/qualifications.js';
 import type { DegreeLevel, DegreeField } from '../resume/qualifications.js';
 
-export const requirementsVersion = 'requirements-17';
+export const requirementsVersion = 'requirements-19';
 
 export const featureVersion = `${requirementsVersion}:${vocabularyVersion}:${jobDocumentVersion}`;
 
@@ -92,7 +92,7 @@ export interface JobRequirements {
 
 function importance(text: string, section: Importance): Importance {
   if (
-    /\b(?:eagerness to learn|eager to learn|willingness to learn|curiosity about|interest in learning)\b/i.test(
+    /\b(?:eagerness to learn|eager to learn|willingness to learn|curiosity about|interest in learning|(?:don(?:'|’)t|do not) need (?:to be |deep )|curious and willing)\b/i.test(
       text,
     )
   ) {
@@ -498,7 +498,7 @@ export function extractRequirements(
       }
 
       const constraint =
-        /\b(?:must (?:be (?:based|located)|reside|live)|based in|residents? of|remote (?:only )?(?:in|within|from)|on[ -]?site (?:in|at)|hybrid in|work from|relocat(?:e|ion) to)\b/i.test(
+        /\b(?:must (?:be (?:based|located)|reside|live)|(?:exclusively |only )?based in|(?:exclusively|only) based (?:across|at)|residents? of|remote (?:only )?(?:in|within|from)|on[ -]?site (?:in|at)|hybrid in|work from|relocat(?:e|ion) to)\b/i.test(
           sentence,
         )
           ? 'location'
@@ -646,27 +646,34 @@ function unresolvedAlternatives(
   skills: ReturnType<typeof skillsInText>,
 ): string[] {
   const list = sentence.split(/\b(?:one of|either|any of)\s*:?[ ]*/i).at(-1)!;
+  let search = sentence.length - list.length;
 
   return list
     .split(/,|\bor\b|\//i)
-    .map((part) => part.trim().replace(/\.$/, ''))
+    .map((raw) => {
+      const start = sentence.indexOf(raw, search);
+
+      search = start + raw.length;
+
+      return { text: raw.trim().replace(/\.$/, ''), start, end: search };
+    })
     .filter(
       (part) =>
-        part &&
+        part.text &&
         !skills.some(
           (skill) =>
-            part.toLowerCase().includes(skill.name.toLowerCase()) ||
-            skillsInText(part).some((mention) => mention.id === skill.id),
+            // Preserve sentence-level disambiguation, including aliases crossing a slash.
+            skill.position < part.end && skill.position + skill.length > part.start,
         ) &&
-        !/^(?:required|preferred)$/i.test(part),
+        !/^(?:required|preferred)$/i.test(part.text),
     )
     .slice(0, 10)
-    .map((part) => part.slice(0, 100));
+    .map((part) => part.text.slice(0, 100));
 }
 
 function requirementSentences(text: string): string[] {
   const boundary =
-    /(?<=[.!?])\s+(?=[A-Z])|,?\s+and\s+(?=(?:an?\s+)?(?:eagerness to learn|willingness to learn|interest in learning)\b)|,\s+(?=(?:[Pp]referably|[Ii]deally|[Nn]ice.to.have|[Pp]referred)\b)|\s+(?=(?:[Pp]referably|[Ii]deally)\b)/g;
+    /(?<=[.!?])\s+(?=[A-Z])|,?\s+and\s+(?=(?:an?\s+)?(?:eagerness to learn|willingness to learn|interest in learning)\b)|\s+and\s+(?=(?:the )?ability to\b)|,\s+(?=(?:[Pp]referably|[Ii]deally|[Nn]ice.to.have|[Pp]referred)\b)|\s+(?=(?:[Pp]referably|[Ii]deally)\b)/g;
 
   const parts: string[] = [];
   let start = 0;

@@ -1,9 +1,26 @@
 // Ambiguous shorthand is accepted only in a nearby, explicit subject context.
 // A skills list does not disambiguate medical, financial or everyday homonyms.
+const softwareContext =
+  /\b(?:software|distributed|backend|infrastructure|infra|platforms?|systems?|services?|APIs?|code|engineering|observability|production|data|databases?|unit tests?|integration tests?)\b/i;
+
 const contexts: Record<string, RegExp> = {
+  'backend-development': softwareContext,
+  'system-reliability': softwareContext,
+  'system-performance': softwareContext,
+  'system-maintainability': softwareContext,
+  'data-consistency': softwareContext,
+  'system-latency': softwareContext,
+  'system-correctness': softwareContext,
+  'software-security': softwareContext,
+  'privacy-engineering': softwareContext,
+  'software-prototyping': softwareContext,
+  'marketplace-systems':
+    /\b(?:software|systems?|platform|engineering|backend|infrastructure|infra)\b/i,
+  initiative:
+    /\b(?:ownership|taking|take|took|show|showed|demonstrat\w*|proactive|self.starter)\b/i,
   espresso: /\b(?:Android|testing|tests?|frameworks?|UI|mobile|Playwright|Cypress|XCUITest)\b/i,
   'software-testing':
-    /\b(?:software|code|automated|unit|integration|concepts?|pyramid|CI\/CD|quality|frameworks?|Playwright|Cypress|Espresso|XCUITest)\b/i,
+    /\b(?:software|code|engineering|observability|automated|unit|integration|concepts?|pyramid|CI\/CD|quality|frameworks?|Playwright|Cypress|Espresso|XCUITest)\b/i,
   r: /\b(?:Python|SQL|SAS|statistics|statistical|programming|language|analysis|analytics|modeling|modelling|RStudio)\b/i,
   swift: /\b(?:iOS|SwiftUI|Objective-C|Xcode|programming|language|framework|mobile|Apple SDK)\b/i,
   spring: /\b(?:Java|Boot|MVC|framework|Hibernate|backend|microservices)\b/i,
@@ -50,6 +67,18 @@ const contexts: Record<string, RegExp> = {
 };
 
 const guardedAliases: Record<string, RegExp> = {
+  'backend-development': /^backend$/i,
+  'system-reliability': /^(?:reliable|reliability)$/i,
+  'system-performance': /^(?:performance|performant)$/i,
+  'system-maintainability': /^maintainability$/i,
+  'data-consistency': /^consistency$/i,
+  'system-latency': /^latency$/i,
+  'system-correctness': /^correctness$/i,
+  'software-security': /^security$/i,
+  'privacy-engineering': /^privacy$/i,
+  'software-prototyping': /^(?:rapid )?prototyping$/i,
+  'marketplace-systems': /^marketplaces$/i,
+  initiative: /^initiative$/i,
   'software-testing': /^testing$/i,
   r: /^R$/i,
   spring: /^Spring$/i,

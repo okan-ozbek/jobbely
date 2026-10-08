@@ -3,7 +3,7 @@ import { engineeringPacks } from './engineering.js';
 import { corpusPacks } from './corpus.js';
 import type { Concept, ConceptKind, SkillFacet } from './model.js';
 
-export const registryVersion = 'concepts-5';
+export const registryVersion = 'concepts-7';
 
 const languages = new Set([
   'typescript',

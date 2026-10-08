@@ -8,6 +8,96 @@ export const corpusPacks: {
   entries: [string, string, string[]][];
 }[] = [
   {
+    kind: 'capability',
+    family: 'platform-engineering',
+    entries: [
+      [
+        'async-task-execution',
+        'Asynchronous task execution',
+        [
+          'async task runner',
+          'asynchronous task runner',
+          'background task processing',
+          'background jobs',
+        ],
+      ],
+      [
+        'api-development',
+        'API development',
+        [
+          'develop APIs',
+          'developing APIs',
+          'developed APIs',
+          'build APIs',
+          'building APIs',
+          'built APIs',
+        ],
+      ],
+      [
+        'backend-development',
+        'Backend development',
+        ['backend engineering', 'backend development', 'backend'],
+      ],
+      [
+        'system-reliability',
+        'System reliability',
+        ['service reliability', 'reliability', 'reliable'],
+      ],
+      [
+        'system-performance',
+        'System performance',
+        ['software performance', 'performance', 'performant'],
+      ],
+      [
+        'system-maintainability',
+        'System maintainability',
+        ['software maintainability', 'long-term maintainability', 'maintainability'],
+      ],
+      ['data-consistency', 'Data consistency', ['consistency models', 'consistency']],
+      ['system-latency', 'System latency', ['request latency', 'response latency', 'latency']],
+      ['system-correctness', 'System correctness', ['software correctness', 'correctness']],
+      ['software-security', 'Software security', ['system security', 'security']],
+      ['privacy-engineering', 'Privacy engineering', ['privacy-preserving systems', 'privacy']],
+      ['software-prototyping', 'Software prototyping', ['rapid prototyping', 'prototyping']],
+      ['ads-systems', 'Advertising systems', ['ads systems', 'ad serving', 'ads delivery']],
+      ['marketplace-systems', 'Marketplace systems', ['marketplaces']],
+      [
+        'ml-infrastructure',
+        'ML infrastructure',
+        ['AI/ML infra', 'AI/ML infrastructure', 'machine learning infrastructure'],
+      ],
+    ],
+  },
+  {
+    kind: 'competency',
+    family: 'engineering-collaboration',
+    entries: [
+      [
+        'cross-team-collaboration',
+        'Cross-team collaboration',
+        [
+          'cross-functional collaboration',
+          'working cross-functionally',
+          'collaborating across teams',
+          'collaborate across engineering orgs',
+        ],
+      ],
+      ['systems-thinking', 'Systems thinking', ['systems thinker', 'think in systems']],
+      [
+        'problem-solving',
+        'Problem solving',
+        ['problem-solving', 'problem-solver', 'problem solver'],
+      ],
+      ['customer-empathy', 'Customer empathy', []],
+      ['initiative', 'Initiative', ['taking initiative']],
+      [
+        'clear-communication',
+        'Clear communication',
+        ['communicate clearly', 'communicates clearly', 'communicated clearly'],
+      ],
+    ],
+  },
+  {
     kind: 'language',
     family: 'application-development',
     entries: [

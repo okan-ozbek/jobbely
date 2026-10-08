@@ -8,7 +8,19 @@
 
 ## Decision and rationale
 
-The 5 October [qualification policy](QUALIFICATIONS.md) extends comparison with reviewed degrees, explicit skill years and at most five contextual responsibility points. The 8 October [vocabulary review](VOCABULARY.md) expands shared recognition; the 9 October baseline adds five testing concepts. Current analysis is `text-6`, public features `requirements-17:concepts-5:clauses-4:job-document-2` and scoring `score-7:relations-3`. The updates below supersede earlier display and dimension-weight completeness policies; authorization and language remain review items.
+The 5 October [qualification policy](QUALIFICATIONS.md) extends comparison with reviewed degrees, explicit skill years and at most five contextual responsibility points. The 8 October [vocabulary review](VOCABULARY.md) expands shared recognition; the 9 October increments add testing and platform concepts. Current analysis is `text-6`, public features `requirements-19:concepts-7:clauses-4:job-document-3` and scoring `score-7:relations-3`. The updates below supersede earlier display and dimension-weight completeness policies; authorization and language remain review items.
+
+### Platform qualification follow-up, 9 October 2026
+
+The reported public Notion (`06dcc14e-149b-4229-b579-c20b94242196`) and OpenAI (`d34995ed-a1ea-4a89-acfd-f31daacfc9f8`) descriptions exposed unrecognized qualification/responsibility labels and lost repeated highlights. `Skills You'll Need to Bring` and `You might thrive in this role if you` now establish qualification sections in plain text, heading HTML and bold paragraph labels; `What You'll Achieve` and `In this role, you will` establish contextual responsibilities. `Who We Are`, company AI notes and applicant privacy instructions are informational. Curiosity/explicit lack of an AI-expertise prerequisite does not establish a mandatory AI skill. Mixed tenure plus “and the ability to …” clauses split so the second qualification survives as a review item. Exclusive “based across” locations remain explicit review constraints.
+
+Twenty-one reviewed [platform/collaboration concepts](VOCABULARY.md#platform-and-collaboration-review-9-october-2026) add recognition without transfer edges, proficiency claims or inferred activity years. Existing IDs gain debug/failover/architecture/ownership forms. Generic reliability is separate from fault tolerance/SRE, latency from low latency, and API construction from API design. Undefined bonus domains and unsupported soft qualifications remain reviewable rather than silently counting as met.
+
+Alternative-list review uses recognized source spans from the full sentence, rather than re-recognizing each stripped fragment without its disambiguating context. This keeps Spring in Java context and a recognized AI/ML infrastructure phrase from becoming false unknown routes when split on commas/slashes. Genuine unknown alternatives remain reviewable; commercial marketplace experience alone does not claim engineering marketplace systems.
+
+Description annotations are recognized within each retained clause and use its original canonical offset. They include repeated mentions and named examples while criterion deduplication continues to prevent extra scoring weight. Clause scope prevents neighboring company prose from disambiguating an unrelated word. Qualification groups and colors still reflect candidate evidence, not employer assertions about the candidate.
+
+Verification: [platform contrasts](../backend/src/domain/matching/platform-baseline.test.ts) cover section/layout variants, duties versus qualifications, homonyms, original offsets, bonus alternatives, uncertain skill tenure, and shared fictional resume recognition. [API tests](../backend/src/api/matching.test.ts) verify repeated highlights with one scored criterion and excluded compensation prose. These are development regressions; P1 independent annotation and model comparisons in [ATS_QUALITY_PLAN](ATS_QUALITY_PLAN.md) remain outstanding.
 
 ### Qualification baseline, 9 October 2026
 
