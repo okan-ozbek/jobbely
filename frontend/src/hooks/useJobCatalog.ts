@@ -24,12 +24,15 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
   const [retry, setRetry] = useState(0);
   const [settled, setSettled] = useState<{ query: JobsQuery; retry: number } | null>(null);
   const sequence = useRef(0);
+  const pageRequest = useRef<AbortController | null>(null);
   // Hide old rows on the very first render of a new query, before effects run.
   const current = settled?.query === query && settled.retry === retry;
 
   useEffect(() => {
     const controller = new AbortController();
     const requestId = ++sequence.current;
+
+    pageRequest.current?.abort();
 
     setLoading(true);
     setError(null);
@@ -58,7 +61,7 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
         listFacets(cityQuery, controller.signal),
       ])
         .then(([list, companyList, categoryList, countryFacets, cityFacets]) => {
-          if (requestId !== sequence.current) {
+          if (controller.signal.aborted || requestId !== sequence.current) {
             return;
           }
 
@@ -86,6 +89,7 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
 
     return () => {
       controller.abort();
+      pageRequest.current?.abort();
       window.clearTimeout(timeout);
     };
   }, [query, retry]);
@@ -135,20 +139,24 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
     }
 
     const requestId = sequence.current;
+    const controller = new AbortController();
+
+    pageRequest.current?.abort();
+    pageRequest.current = controller;
 
     setLoadingMore(true);
 
     try {
-      const page = await listJobs({ ...query, cursor: nextCursor });
+      const page = await listJobs({ ...query, cursor: nextCursor }, controller.signal);
 
-      if (requestId !== sequence.current) {
+      if (controller.signal.aborted || requestId !== sequence.current) {
         return;
       }
 
       setJobs((previous) => [...previous, ...page.items]);
       setNextCursor(page.nextCursor);
     } catch (reason) {
-      if (requestId !== sequence.current) {
+      if (controller.signal.aborted || requestId !== sequence.current) {
         return;
       }
 
@@ -158,7 +166,7 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
         setError(reason instanceof Error ? reason.message : 'Could not load more listings.');
       }
     } finally {
-      if (requestId === sequence.current) {
+      if (!controller.signal.aborted && requestId === sequence.current) {
         setLoadingMore(false);
       }
     }

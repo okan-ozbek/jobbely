@@ -1256,3 +1256,98 @@
   width: fit-content;
   cursor: pointer;
 }
+
+.resume-start {
+  perspective: 1200px;
+}
+.view-resume .resume-hero > *,
+.view-resume .resume-composer,
+.view-resume .home-companies {
+  animation: resume-arrive 600ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.view-resume .resume-hero h1 {
+  animation-delay: 40ms;
+}
+.view-resume .resume-hero > p {
+  animation-delay: 80ms;
+}
+.view-resume .resume-composer {
+  animation-delay: 120ms;
+}
+.view-resume .home-companies {
+  animation-delay: 180ms;
+}
+.resume-composer {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform 250ms,
+    box-shadow 250ms,
+    border-color 250ms;
+}
+.resume-composer::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--card-x, 50%) var(--card-y, 0%),
+    #bdb2f630,
+    transparent 75%
+  );
+  opacity: 0;
+  transition: opacity 250ms;
+  pointer-events: none;
+}
+.resume-composer:hover::before,
+.resume-composer:focus-within::before {
+  opacity: 1;
+}
+.resume-composer:focus-within {
+  border-color: #c9c2ef;
+  box-shadow:
+    0 20px 60px #7366b525,
+    0 0 0 4px #c4b8ed14;
+}
+.home-companies img {
+  transition:
+    transform 220ms,
+    opacity 220ms;
+}
+.home-companies img:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+@keyframes resume-arrive {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .resume-composer:hover:not(:focus-within) {
+    transform: translateY(-5px) rotateX(var(--card-rotate-x, 0deg))
+      rotateY(var(--card-rotate-y, 0deg));
+    box-shadow: 0 24px 60px #7366b523;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .view-resume .resume-hero > *,
+  .view-resume .resume-composer,
+  .view-resume .home-companies {
+    animation: none;
+  }
+  .resume-composer,
+  .resume-composer::before,
+  .home-companies img {
+    transition: none;
+  }
+  .home-companies img:hover {
+    transform: none;
+  }
+}

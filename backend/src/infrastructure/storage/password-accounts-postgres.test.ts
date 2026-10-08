@@ -752,11 +752,29 @@ integration('native registration, recovery and transactional email queue', () =>
 
     const mail = await delivered(user.to);
 
+    const wrongCode = String((Number(mail.code) + 1) % 1_000_000).padStart(6, '0');
+
+    await expect(
+      native.confirm(duplicate.challenge, wrongCode, duplicate.browser, randomUUID()),
+    ).rejects.toMatchObject({ code: 'invalid_code' });
+
     await expect(
       native.confirm(duplicate.challenge, mail.code, duplicate.browser, randomUUID()),
-    ).rejects.toThrow();
+    ).rejects.toMatchObject({ code: 'account_exists' });
+
+    await expect(
+      native.confirm(duplicate.challenge, mail.code, duplicate.browser, randomUUID()),
+    ).rejects.toMatchObject({ code: 'invalid_code' });
 
     expect(await first.credential(user.to)).toEqual(firstCredential);
+
+    expect((await native.login({ email: user.to, password }, randomUUID())).session.user.id).toBe(
+      firstCredential?.userId,
+    );
+
+    await expect(
+      native.login({ email: user.to, password: 'untrusted-new-passphrase1!' }, randomUUID()),
+    ).rejects.toMatchObject({ code: 'invalid_credentials' });
 
     const missing = await native.requestCode('reset', { email: email() }, randomUUID());
 
@@ -1160,6 +1178,39 @@ integration('native registration, recovery and transactional email queue', () =>
 
       expect(login.statusCode).toBe(200);
       expect(login.cookies[0]?.value).not.toBe(confirm.cookies[0]?.value);
+
+      const duplicate = await app.inject({
+        remoteAddress: testIp,
+        method: 'POST',
+        url: '/api/v1/auth/register',
+        headers: { origin },
+        payload: { email: to, password: 'different-synthetic-password1!' },
+      });
+
+      expect(duplicate.statusCode).toBe(200);
+      expect(duplicate.json().message).not.toContain('already verified');
+
+      const duplicateMail = await delivered(to);
+      const duplicateBrowser = `${duplicate.cookies[0]!.name}=${duplicate.cookies[0]!.value}`;
+
+      const duplicateResult = await app.inject({
+        remoteAddress: testIp,
+        method: 'POST',
+        url: '/api/v1/auth/register/confirm',
+        headers: { origin, cookie: duplicateBrowser },
+        payload: { challenge: duplicate.json().challenge, code: duplicateMail.code },
+      });
+
+      expect(duplicateResult.statusCode).toBe(400);
+      expect(duplicateResult.json().code).toBe('account_exists');
+      expect(duplicateResult.json().message).toContain('already verified');
+      expect(duplicateResult.cookies).toHaveLength(0);
+      expect(duplicateResult.body).not.toContain(duplicateMail.code);
+
+      expect(
+        (await app.inject({ url: '/api/v1/account', headers: { cookie: sessionCookie } })).json()
+          .user.email,
+      ).toBe(to);
 
       const reset = await app.inject({
         remoteAddress: testIp,

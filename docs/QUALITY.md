@@ -56,17 +56,36 @@ Unit/behavior tests use fake transport and memory storage for malformed fields, 
 
 PostgreSQL tests require a dedicated `TEST_DATABASE_URL` whose database name starts with `jobbely_test_`. They initialize the initial schema when missing and use unique sources without deleting existing data. With no variable they are skipped, so a default test pass is not a database integration pass. Provision that database separately and keep its connection secret.
 
-The initial implementation passed 35 tests including four against PostgreSQL. Live checks covered three provider boards; browser checks exercised the working UI. These are dated results, not claims about future edits. Queue recovery, production hosting/load, full employer coverage and automated browser regression remain separate pending gates.
+Earlier test counts and browser observations are preserved in [historical verification results](REFERENCE_HISTORY.md#historical-verification-results). They do not establish correctness for subsequent edits.
 
-Wave B adds behavior coverage for Workday capped partitions, the later-page total sentinel, full hydration, immutable IDs, canonical tenant links, iCIMS employer scope, POST restrictions, stored request provenance and lease renewal. On 30 September 2026 (UTC), the complete suite passed 84 tests against a dedicated `jobbely_test_wave_b` PostgreSQL database. The default `pnpm check` run skips the six database tests when its environment lacks `TEST_DATABASE_URL`; a separate passing database run remains required evidence. See [WAVE_B.md](WAVE_B.md) and [SOURCE_CHECKS.md](SOURCE_CHECKS.md) for live-source limits.
+## Iteration and final verification
 
-Wave C adds literal HTML parsing, native location-posting identities, category partitions, public application-link variants, access gates and cross-batch transaction coverage. On 1 October 2026 (Europe/Amsterdam), all 112 tests passed against the dedicated PostgreSQL test database. The default root `pnpm check` passed 105 tests and skipped seven database tests; formatting, boundaries, logos, lint, strict types, contracts and both builds also passed. Live-source completion remains a separate gate: see [WAVE_C.md](WAVE_C.md) and [SOURCE_CHECKS.md](SOURCE_CHECKS.md).
+**Workflow update:** 8 October 2026. Scope the reading and development checks to the change, then retain every applicable completion gate. This changes when checks run, not the standard they must meet.
 
-## Change procedure
+| Change                       | Development and completion evidence                                                                                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Documentation only           | Format changed documents; validate local links/anchors and documented commands against manifests/code. Application tests/builds are unnecessary unless executable behavior also changed.                                                                                              |
+| Frontend behavior or styling | Frontend typecheck, relevant behavior tests where available, and browser checks of changed flows plus responsive layouts. The current frontend test script covers resume helpers/document parsing, not account or general UI rendering; passing it does not replace browser evidence. |
+| Backend policy/workflow      | Backend typecheck and relevant behavior tests; include adjacent callers/failure paths when the behavior affects them.                                                                                                                                                                 |
+| API/schema                   | `pnpm contracts`, typecheck both packages and affected route/consumer behavior. Do not hand-edit generated files.                                                                                                                                                                     |
+| Persistence/concurrency      | Relevant PostgreSQL tests with a dedicated `TEST_DATABASE_URL`, including transaction/retry/race behavior; memory tests alone cannot verify this.                                                                                                                                     |
+| Provider/source behavior     | Relevant adapter/transport/workflow tests and representative live audits; retain source coverage, access and lifecycle gates.                                                                                                                                                         |
+| Release/deployment           | Root `pnpm check` plus applicable database, live-source and browser verification above.                                                                                                                                                                                               |
 
-On 1 October 2026 (Europe/Amsterdam), the resume/matching increment passed root `pnpm check`: formatting, dependency boundaries, logos, zero-warning lint, strict types, contracts, both builds, 165 backend tests and 16 frontend document tests. Its default run skipped nine PostgreSQL tests; a separate final run against the dedicated `jobbely_test_*` database passed all **174 backend tests**, including those nine. Migration and versioned backfill completed against the local public-job database, inspecting/updating 13,162 postings.
+During implementation, use a focused test command rather than repeating the entire release suite after every small edit. For example, from the repository root:
 
-Manual browser checks verified DOCX extraction → profile analysis → fresh recommendations, explanation expansion, pagination, profile-edit invalidation and description/requirement navigation. PDF extraction also passed in the production preview with strict worker CSP. The requested 375px viewport override did not change the in-app browser's observed 1280px width, so mobile visual verification remains pending. Synthetic 25,000-feature tests establish a bounded regression check, not production load or held-out ranking quality. See [RESUME_TESTING](RESUME_TESTING.md), [DOCUMENTS](DOCUMENTS.md) and [MATCHING](MATCHING.md).
+```powershell
+pnpm --filter @jobbely/frontend typecheck
+pnpm --filter @jobbely/backend typecheck
+pnpm --filter @jobbely/backend exec vitest run src/api/accounts.test.ts
+pnpm --filter @jobbely/frontend exec vitest run --configLoader runner src/features/resume/skill-tenure.test.ts
+```
+
+Select actual affected tests, including meaningful neighboring behavior; the examples are not a fixed checklist for every task. Broaden after failures, cross-boundary changes or unresolved risk. Use [task routes](README.md#task-routes) to locate the owning code/decisions rather than reading all plans and employer histories.
+
+Finish the edits, format, inspect the diff, then run final checks. For a focused edit, apply the same shared formatters to the changed files (`pnpm exec eslint <code-files> --fix`, then `pnpm exec prettier <changed-files> --write`); use `pnpm format` for a repository-wide formatting task. Avoid rewriting unrelated work. Formatter fixes are code edits, so final root `pnpm lint` must follow them. `pnpm check` is the complete release gate and includes read-only formatting/lint checks.
+
+Reuse successful verification while code, dependencies and relevant configuration remain unchanged. Any subsequent edit requires final root lint again and the checks affected by that edit; before release, rerun the complete gate against the final state. External-service/database observations remain bounded to their environment and time. Report exactly what ran, what was skipped and what remains unverified.
 
 Agents must follow [AGENTS.md](../AGENTS.md): after writing or modifying code, run the root `pnpm lint` against the final code and require zero warnings before reporting completion. Rerun after any further code edits. A successful `pnpm check` includes this lint gate; formatting/autofix alone does not replace it. Report failures or blockers accurately.
 

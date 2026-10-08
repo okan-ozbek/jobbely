@@ -1032,3 +1032,84 @@ footer {
 .coverage-status[class] {
   background: none;
 }
+
+.directory-filter-row {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.directory-controls .search-input > svg {
+  flex-shrink: 0;
+}
+.company-grid {
+  perspective: 1200px;
+}
+.company-card {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform 220ms,
+    box-shadow 220ms,
+    background 220ms;
+  animation: company-arrive 420ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--card-delay, 0ms);
+}
+.company-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    350px circle at var(--card-x, 50%) var(--card-y, 0%),
+    #c6baf63b,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 220ms;
+  pointer-events: none;
+}
+.company-card:hover::before,
+.company-card:focus-within::before {
+  opacity: 1;
+}
+.company-card:focus-within {
+  box-shadow: 0 16px 40px #514abe1c;
+}
+@keyframes company-arrive {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+    scale: 0.97;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .company-card:hover {
+    transform: translateY(-5px) rotateX(var(--card-rotate-x, 0deg))
+      rotateY(var(--card-rotate-y, 0deg));
+    box-shadow: 0 20px 44px #514abe1c;
+  }
+}
+@media (max-width: 650px) {
+  .directory-filter-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+@media (max-width: 360px) {
+  .directory-filter-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .company-card {
+    animation: none;
+    transition: none;
+  }
+  .company-card::before {
+    transition: none;
+  }
+}

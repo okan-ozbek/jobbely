@@ -6,7 +6,7 @@
     "dev": "vite --configLoader runner --host 127.0.0.1",
     "build": "tsc --noEmit && vite build --configLoader runner",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --configLoader runner src/features/resume",
+    "test": "vitest run --configLoader runner src/features/resume src/features/accounts",
     "lint": "eslint src vite.config.ts --max-warnings 0",
     "lint:fix": "eslint src vite.config.ts --fix",
     "format": "pnpm lint:fix && prettier --write .",

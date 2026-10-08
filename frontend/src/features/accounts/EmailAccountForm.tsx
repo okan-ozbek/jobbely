@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
+import { ArrowRight, Check, Circle, Eye, EyeOff } from 'lucide-react';
+import { ApiError } from '../../api/client.js';
 import {
   registerPasswordAccount,
   confirmPasswordAccount,
@@ -9,6 +11,7 @@ import {
   resendEmailCode,
 } from '../../api/accounts.js';
 import { VerificationCodeInput } from './VerificationCodeInput.js';
+import { passwordValidation } from './password-validation.js';
 
 type Mode = 'login' | 'register' | 'reset' | 'confirm' | 'reset-confirm';
 
@@ -19,6 +22,9 @@ export function EmailAccountForm({
   initialMode = 'login',
   initialEmail = '',
   onBack,
+  showHeading = true,
+  workspace = false,
+  headingId,
 }: {
   available: boolean;
   onSignedIn: () => Promise<void>;
@@ -26,6 +32,9 @@ export function EmailAccountForm({
   initialMode?: 'login' | 'reset';
   initialEmail?: string;
   onBack?: () => void;
+  showHeading?: boolean;
+  workspace?: boolean;
+  headingId?: string;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState(initialEmail);
@@ -39,9 +48,16 @@ export function EmailAccountForm({
   const [resendAt, setResendAt] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [sends, setSends] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordId = useId();
+  const passwordHintId = useId();
+  const repeatId = useId();
+  const repeatHintId = useId();
   const active = useRef<AbortController | null>(null);
   const confirmation = mode === 'confirm' || mode === 'reset-confirm';
   const newPassword = mode === 'register' || mode === 'reset-confirm';
+  const validation = passwordValidation(password);
+  const mismatch = repeat.length > 0 && repeat !== password;
 
   useEffect(() => () => active.current?.abort(), []);
 
@@ -66,20 +82,18 @@ export function EmailAccountForm({
     setMessage('');
     setBusy(false);
     setSends(1);
+    setShowPassword(false);
+    setResendAt(0);
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const normalizedPassword = password.normalize('NFC');
+    if (busy) {
+      return;
+    }
 
-    if (
-      newPassword &&
-      ([...normalizedPassword].length < 8 ||
-        [...normalizedPassword].length > 128 ||
-        !/[0-9]/.test(normalizedPassword) ||
-        !/[\p{P}\p{S}]/u.test(normalizedPassword))
-    ) {
+    if (newPassword && !validation.valid) {
       setError('Password is not valid. Use 8–128 characters, including a number and a symbol.');
 
       return;
@@ -155,6 +169,17 @@ export function EmailAccountForm({
       }
     } catch (failure) {
       if (!controller.signal.aborted) {
+        if (
+          mode === 'confirm' &&
+          failure instanceof ApiError &&
+          failure.code === 'account_exists'
+        ) {
+          changeMode('login');
+          setMessage(failure.message);
+
+          return;
+        }
+
         setError(failure instanceof Error ? failure.message : 'Please try again.');
       }
     } finally {
@@ -197,8 +222,42 @@ export function EmailAccountForm({
   }
 
   return (
-    <div className="email-account">
-      {!confirmation && mode !== 'reset' && (
+    <div className={`email-account${workspace ? ' auth-email-account' : ''}`}>
+      {workspace && (
+        <div className="auth-form-heading">
+          <span className="auth-form-eyebrow">Your Jobbely account</span>
+          <h2 id={headingId}>
+            {mode === 'register'
+              ? 'Create an account.'
+              : mode === 'login'
+                ? 'Welcome back.'
+                : confirmation
+                  ? 'Check your inbox.'
+                  : 'A fresh start.'}
+          </h2>
+          {mode === 'login' || mode === 'register' ? (
+            <p>
+              {mode === 'login' ? 'New to Jobbely?' : 'Already have an account?'}{' '}
+              <button
+                className="auth-inline-link"
+                disabled={busy}
+                onClick={() => changeMode(mode === 'login' ? 'register' : 'login')}
+              >
+                {mode === 'login' ? 'Create an account' : 'Sign in'}
+              </button>
+            </p>
+          ) : (
+            <p>
+              {mode === 'confirm'
+                ? 'One small step. Confirm your email to get started.'
+                : mode === 'reset-confirm'
+                  ? 'Enter your email code and choose a new password.'
+                  : 'We’ll help you get back to your account.'}
+            </p>
+          )}
+        </div>
+      )}
+      {!workspace && !confirmation && mode !== 'reset' && (
         <div className="account-mode-buttons">
           <button
             type="button"
@@ -216,7 +275,7 @@ export function EmailAccountForm({
           </button>
         </div>
       )}
-      {(confirmation || mode === 'reset') && (
+      {!workspace && showHeading && (confirmation || mode === 'reset') && (
         <h3>{mode === 'confirm' ? 'Confirm your email' : 'Reset your password'}</h3>
       )}
       {message && (
@@ -245,6 +304,7 @@ export function EmailAccountForm({
               required
               maxLength={254}
               value={email}
+              disabled={busy}
               onChange={(event) => setEmail(event.target.value)}
             />
           </label>
@@ -258,35 +318,104 @@ export function EmailAccountForm({
           />
         )}
         {(mode === 'login' || newPassword) && (
-          <label>
-            {mode === 'reset-confirm' ? 'New password' : 'Password'}
-            <input
-              type="password"
-              placeholder="••••••••"
-              autoComplete={newPassword ? 'new-password' : 'current-password'}
-              required
-              maxLength={256}
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
+          <div className="account-password-label">
+            <label htmlFor={passwordId}>
+              {mode === 'reset-confirm' ? 'New password' : 'Password'}
+            </label>
+            <div className="auth-password-field">
+              <input
+                id={passwordId}
+                aria-describedby={newPassword ? passwordHintId : undefined}
+                aria-invalid={newPassword && password.length > 0 && !validation.valid}
+                type={showPassword ? 'text' : 'password'}
+                placeholder="••••••••"
+                autoComplete={newPassword ? 'new-password' : 'current-password'}
+                required
+                maxLength={256}
+                value={password}
+                disabled={busy}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setError('');
+                }}
+              />
+              <button
+                type="button"
+                className="auth-password-toggle"
+                disabled={busy}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                onClick={() => setShowPassword((value) => !value)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
             {newPassword && (
-              <span className="small-note">8–128 characters, including a number and a symbol.</span>
+              <div
+                id={passwordHintId}
+                className="password-feedback"
+              >
+                <ul aria-label="Password requirements">
+                  {validation.rules.map((rule) => (
+                    <li
+                      key={rule.label}
+                      data-valid={rule.valid}
+                    >
+                      {rule.valid ? (
+                        <Check
+                          size={12}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Circle
+                          size={10}
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span className="sr-only">{rule.valid ? 'Met: ' : 'Required: '}</span>
+                      {rule.label}
+                    </li>
+                  ))}
+                </ul>
+                {password.length > 0 && (
+                  <span className={validation.valid ? 'password-valid' : 'account-error'}>
+                    {validation.valid
+                      ? 'Password meets all requirements.'
+                      : 'Password is not valid yet. Complete the requirements above.'}
+                  </span>
+                )}
+              </div>
             )}
-          </label>
+          </div>
         )}
         {newPassword && (
-          <label>
-            Confirm password
+          <div className="account-password-label">
+            <label htmlFor={repeatId}>Confirm password</label>
             <input
-              type="password"
+              id={repeatId}
+              type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               autoComplete="new-password"
               required
               maxLength={256}
               value={repeat}
-              onChange={(event) => setRepeat(event.target.value)}
+              disabled={busy}
+              aria-invalid={mismatch}
+              aria-describedby={repeat.length > 0 ? repeatHintId : undefined}
+              onChange={(event) => {
+                setRepeat(event.target.value);
+                setError('');
+              }}
             />
-          </label>
+            {repeat.length > 0 && (
+              <span
+                id={repeatHintId}
+                className={mismatch ? 'account-error' : 'password-valid'}
+              >
+                {mismatch ? 'Passwords do not match.' : 'Passwords match.'}
+              </span>
+            )}
+          </div>
         )}
         {error && (
           <p
@@ -312,11 +441,13 @@ export function EmailAccountForm({
                   : mode === 'reset'
                     ? 'Send reset code'
                     : 'Save new password'}
+          {workspace && !busy && <ArrowRight size={17} />}
         </button>
       </form>
       {mode === 'login' && (
         <button
           className="account-text-button"
+          disabled={busy}
           onClick={() => changeMode('reset')}
         >
           Forgot password?
@@ -340,9 +471,19 @@ export function EmailAccountForm({
       {(confirmation || mode === 'reset') && (
         <button
           className="account-text-button"
+          disabled={busy}
           onClick={() => (onBack ? onBack() : changeMode('login'))}
         >
           {onBack ? 'Back to your details' : 'Back to sign in'}
+        </button>
+      )}
+      {mode === 'confirm' && (
+        <button
+          className="account-text-button"
+          disabled={busy}
+          onClick={() => changeMode('register')}
+        >
+          Start registration again
         </button>
       )}
     </div>

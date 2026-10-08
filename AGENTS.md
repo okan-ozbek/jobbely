@@ -2,14 +2,13 @@
 
 These instructions apply throughout this repository. Read this file before making changes, then consult the documentation for the affected concern.
 
-## Start here
+## Start with the task
 
-- [README.md](README.md): what the app does, local setup, commands and hosting overview.
-- [MVP_PLAN.md](MVP_PLAN.md): product scope and MVP boundaries.
-- [docs/README.md](docs/README.md): architecture reference index. Read the relevant decision documents before changing their implementation; verify their statements against current code.
-- [docs/QUALITY.md](docs/QUALITY.md) and [docs/FORMATTING.md](docs/FORMATTING.md): checks, code style and verification limits.
+1. Inspect the working tree; preserve user changes and work from other agents. Keep edits focused on the request.
+2. Select the affected rows in [task routes](docs/README.md#task-routes). Read their owner documents and follow the code links before editing. Expand to adjacent concerns when dependencies or behavior cross their boundaries.
+3. Use [QUALITY.md](docs/QUALITY.md#iteration-and-final-verification) to select checks. Consult [FORMATTING.md](docs/FORMATTING.md) when changing style/configuration or resolving formatter issues.
 
-Inspect the working tree before editing. Preserve existing user changes and work from other agents. Keep changes focused on the request.
+[README.md](README.md) is for setup/commands/hosting; [MVP_PLAN.md](MVP_PLAN.md) is for product scope decisions. Plans, employer inventories and dated history are on-demand references, not mandatory reading for every task. Reuse context already read in this task; reread when the file changes, scope expands or code contradicts it. Routing does not replace the relevant decision or its invariants.
 
 ## Project boundaries
 
@@ -19,31 +18,9 @@ Jobbely collects public employer job listings and categorizes them without AI. T
 - Keep domain policies pure and application workflows independent of concrete adapters/storage. Follow the dependency rules in [ARCHITECTURE.md](docs/ARCHITECTURE.md); bootstrap owns dependency wiring.
 - The frontend consumes the public API and generated OpenAPI types. Do not import backend internals or expose database/provider records directly.
 - Regenerate contracts with `pnpm contracts` after public API/schema changes. Do not hand-edit generated API or Prisma code.
-- Preserve stable company/source identifiers. A configured company, successful import or candidate board does not establish complete employer coverage. Follow the source-audit and lifecycle gates before enabling scheduling or closure.
+- Preserve stable company/source identifiers. Configuration, import or a candidate board does not establish complete employer coverage. Follow source-audit, scheduling and lifecycle decisions; the explicit schedule override does not override access, coverage or closure gates.
 - Demo listings must remain visibly synthetic. Preserve availability, coverage and original employer/application links.
 - Keep secrets, local database data and raw audit output out of committed files. Preserve existing environment settings.
-
-## Documentation by concern
-
-| Concern                                          | References                                                                                     |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| Layers, patterns and dependency direction        | [ARCHITECTURE.md](docs/ARCHITECTURE.md)                                                        |
-| Job-board adapters and network access            | [ADAPTER.md](docs/ADAPTER.md), [HTTP.md](docs/HTTP.md)                                         |
-| Enterprise integrations and Wave B limits        | [WAVE_B.md](docs/WAVE_B.md)                                                                    |
-| Native integrations and Wave C priority limits   | [WAVE_C.md](docs/WAVE_C.md)                                                                    |
-| Deferred employers and Wave D scope              | [WAVE_D.md](docs/WAVE_D.md)                                                                    |
-| Resume analysis and job matching                 | [RESUME_PLAN.md](RESUME_PLAN.md), [RESUME.md](docs/RESUME.md), [MATCHING.md](docs/MATCHING.md) |
-| Resume privacy and local file isolation          | [RESUME_PRIVACY.md](docs/RESUME_PRIVACY.md)                                                    |
-| Evidence-backed source activation                | [AUDITING.md](docs/AUDITING.md)                                                                |
-| Ingestion, workers, scheduling and source audits | [INGESTION.md](docs/INGESTION.md), [SOURCES.md](docs/SOURCES.md)                               |
-| Persistence, transactions and posting lifecycle  | [STORAGE.md](docs/STORAGE.md), [LIFECYCLE.md](docs/LIFECYCLE.md)                               |
-| Deterministic categorization                     | [CLASSIFICATION.md](docs/CLASSIFICATION.md)                                                    |
-| Public API, validation and security              | [API.md](docs/API.md), [SECURITY.md](docs/SECURITY.md)                                         |
-| React state, navigation and request handling     | [FRONTEND.md](docs/FRONTEND.md)                                                                |
-| Visual design, typography and local assets       | [DESIGN.md](docs/DESIGN.md), [LOGOS.md](docs/LOGOS.md)                                         |
-| Style and verification                           | [FORMATTING.md](docs/FORMATTING.md), [QUALITY.md](docs/QUALITY.md)                             |
-| Hosting and operations                           | [DEPLOYMENT.md](docs/DEPLOYMENT.md)                                                            |
-| Dated live-source evidence                       | [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md)                                                      |
 
 When changing an architecture decision, update its document and the reference index. For a new decision, add an uppercase concern filename in `/docs` with status/date, rationale, invariants, implementation links and verification. Distinguish proposed work from implemented behavior; dated evidence is not a permanent guarantee.
 
@@ -51,7 +28,7 @@ When changing an architecture decision, update its document and the reference in
 
 For skill inference, evidence colors and description comparison, read [docs/SKILL_RELATIONS.md](docs/SKILL_RELATIONS.md). Inferred skills must remain distinguishable from direct claims and must never establish activity-specific tenure.
 
-For resume changes, distinguish the implemented text/local-document/review/matching flow from proposed OCR, structured eligibility and production calibration work. Read [DOCUMENTS.md](docs/DOCUMENTS.md) for local worker isolation and [JOB_FEATURES.md](docs/JOB_FEATURES.md) for projection/backfill races. Use [RESUME_TESTING.md](docs/RESUME_TESTING.md) for synthetic evaluation and review checks; never add real candidate data to fixtures or logs.
+For resume changes, preserve transient candidate state and distinguish the implemented flow from proposed OCR, structured eligibility and production calibration work. Read [RESUME_PRIVACY.md](docs/RESUME_PRIVACY.md) and [RESUME_TESTING.md](docs/RESUME_TESTING.md). For parser/worker changes also read [DOCUMENTS.md](docs/DOCUMENTS.md); for feature projection/backfill/publication changes read [JOB_FEATURES.md](docs/JOB_FEATURES.md). Never add real candidate data to fixtures or logs.
 
 **After writing or modifying code, always run the root linter against the final code before reporting completion:**
 
@@ -65,7 +42,7 @@ pnpm lint
 - A successful `pnpm check` satisfies this requirement because it runs the root linter. An interrupted or failing run that never reaches the lint step does not.
 - If a check cannot run, report the exact command, blocker and unverified result. If existing unrelated work fails lint, identify it without overwriting that work or claiming lint passed.
 
-Use `pnpm format` for shared Prettier layout and ESLint blank-line rules. Keep functions, methods and logical variable groups readable. Prefer type-only imports, strict types and existing abstractions over duplicated provider logic or unnecessary layers.
+Use the shared Prettier/ESLint formatters, scoped to changed files as described in [QUALITY.md](docs/QUALITY.md#iteration-and-final-verification), or `pnpm format` for repository-wide work. Keep logical groups readable; prefer type-only imports, strict types and existing abstractions over duplicated provider logic or unnecessary layers.
 
 Run additional checks appropriate to the change: type checking and behavior tests for code, contract generation for API changes, PostgreSQL tests for persistence/concurrency changes, and browser checks for UI behavior and responsive layouts. Run `pnpm check` before a release. PostgreSQL tests skipped without `TEST_DATABASE_URL` are not evidence of database correctness. See [QUALITY.md](docs/QUALITY.md) for the complete procedure.
 
