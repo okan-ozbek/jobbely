@@ -9,9 +9,11 @@ export function MatchMetrics({ comparison }: { comparison: JobMatchResponse['com
         <div>
           <dt>Fit on assessed criteria</dt>
           <dd>
-            {coverage.assessed > 0 && !coverage.limited
-              ? `${comparison.baseScore}%`
-              : 'Not enough information'}
+            {comparison.fitScore !== null
+              ? `${new Intl.NumberFormat('en', { maximumFractionDigits: 1, roundingMode: 'floor' }).format(comparison.fitScore)}%`
+              : coverage.total > 0
+                ? 'Needs review'
+                : 'Not enough information'}
           </dd>
         </div>
         <div>
@@ -29,11 +31,11 @@ export function MatchMetrics({ comparison }: { comparison: JobMatchResponse['com
       <details className="match-metrics-help small-note">
         <summary>About these scores</summary>
         <p>
-          Fit describes matches on the criteria we could assess, including up to five points for
-          relevant role skills. Coverage counts identified required and preferred criteria,
-          including gaps; unresolved criteria lower coverage. Repeated criteria count once, and
-          alternatives count as one criterion. Function and location overlap do not increase
-          coverage.
+          Fit is shown when all identified criteria have been assessed. Relevant role skills help
+          rank results without adding points to this percentage. Coverage counts identified required
+          and preferred criteria, including gaps; unresolved criteria lower coverage. Repeated
+          criteria count once, and alternatives count as one criterion. Function and location
+          overlap do not increase coverage.
         </p>
         <p>
           The parser can miss requirements. These numbers are not confidence or hiring

@@ -5302,6 +5302,8 @@
                               "logic",
                               "groupIds",
                               "unresolvedAlternatives",
+                              "disposition",
+                              "exampleIds",
                               "evidence"
                             ],
                             "properties": {
@@ -5573,6 +5575,34 @@
                                   "type": "string"
                                 }
                               },
+                              "disposition": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "contextual"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "represented"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "needs-review"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "exampleIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
                               "evidence": {
                                 "type": "object",
                                 "required": [
@@ -5798,6 +5828,9 @@
                                 "items": {
                                   "type": "string"
                                 }
+                              },
+                              "alternativeEvidence": {
+                                "type": "boolean"
                               },
                               "scope": {
                                 "anyOf": [
@@ -6048,6 +6081,55 @@
                                         ]
                                       }
                                     ]
+                                  },
+                                  "fields": {
+                                    "type": "array",
+                                    "items": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "computer-science"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "engineering"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "mathematics"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "physics"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "business"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "other"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "unknown"
+                                          ]
+                                        }
+                                      ]
+                                    }
                                   },
                                   "related": {
                                     "type": "boolean"
@@ -6732,6 +6814,7 @@
                       "type": "object",
                       "required": [
                         "baseScore",
+                        "fitScore",
                         "assessmentCoverage",
                         "band",
                         "unresolvedRequirements",
@@ -6745,6 +6828,12 @@
                       "properties": {
                         "baseScore": {
                           "type": "integer"
+                        },
+                        "fitScore": {
+                          "minimum": 0,
+                          "maximum": 100,
+                          "type": "number",
+                          "nullable": true
                         },
                         "assessmentCoverage": {
                           "type": "object",
@@ -7824,6 +7913,8 @@
                           "logic",
                           "groupIds",
                           "unresolvedAlternatives",
+                          "disposition",
+                          "exampleIds",
                           "evidence"
                         ],
                         "properties": {
@@ -8095,6 +8186,34 @@
                               "type": "string"
                             }
                           },
+                          "disposition": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contextual"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "represented"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "needs-review"
+                                ]
+                              }
+                            ]
+                          },
+                          "exampleIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
                           "evidence": {
                             "type": "object",
                             "required": [
@@ -8320,6 +8439,9 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "alternativeEvidence": {
+                            "type": "boolean"
                           },
                           "scope": {
                             "anyOf": [
@@ -8570,6 +8692,55 @@
                                     ]
                                   }
                                 ]
+                              },
+                              "fields": {
+                                "type": "array",
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "computer-science"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "engineering"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "mathematics"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "physics"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "business"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "other"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "unknown"
+                                      ]
+                                    }
+                                  ]
+                                }
                               },
                               "related": {
                                 "type": "boolean"
@@ -10002,6 +10173,7 @@
                         "required": [
                           "job",
                           "baseScore",
+                          "fitScore",
                           "assessmentCoverage",
                           "band",
                           "requiredGaps",
@@ -10233,6 +10405,8 @@
                                         "logic",
                                         "groupIds",
                                         "unresolvedAlternatives",
+                                        "disposition",
+                                        "exampleIds",
                                         "evidence"
                                       ],
                                       "properties": {
@@ -10504,6 +10678,34 @@
                                             "type": "string"
                                           }
                                         },
+                                        "disposition": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "contextual"
+                                              ]
+                                            },
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "represented"
+                                              ]
+                                            },
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "needs-review"
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "exampleIds": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        },
                                         "evidence": {
                                           "type": "object",
                                           "required": [
@@ -10729,6 +10931,9 @@
                                           "items": {
                                             "type": "string"
                                           }
+                                        },
+                                        "alternativeEvidence": {
+                                          "type": "boolean"
                                         },
                                         "scope": {
                                           "anyOf": [
@@ -10980,6 +11185,55 @@
                                                 }
                                               ]
                                             },
+                                            "fields": {
+                                              "type": "array",
+                                              "items": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "computer-science"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "engineering"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "mathematics"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "physics"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "business"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "other"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "unknown"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            },
                                             "related": {
                                               "type": "boolean"
                                             },
@@ -11105,6 +11359,12 @@
                           },
                           "baseScore": {
                             "type": "integer"
+                          },
+                          "fitScore": {
+                            "minimum": 0,
+                            "maximum": 100,
+                            "type": "number",
+                            "nullable": true
                           },
                           "assessmentCoverage": {
                             "type": "object",

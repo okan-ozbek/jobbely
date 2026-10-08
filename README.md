@@ -257,6 +257,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [SEMANTICS](docs/SEMANTICS.md): implemented engineering concepts, clause interpretation and scoped skill questions.
 - [SEMANTIC_MATCHING_PLAN](docs/SEMANTIC_MATCHING_PLAN.md): historical engineering roadmap; future work follows RESUME_MATCHING_REWORK.
 - [RESUME_MATCHING_REWORK](docs/RESUME_MATCHING_REWORK.md): proposed semantic matching replacement, current-code findings, backend-hosted model experiments and phased acceptance gates.
+- [ATS_QUALITY_PLAN](docs/ATS_QUALITY_PLAN.md): reproduced Airbnb matching failure, rules/NLP/model options, independent quality benchmarks and proposed release gates.
 - [SEMANTIC_EXPERIMENTS](docs/SEMANTIC_EXPERIMENTS.md): development evaluation, requirement algebra and local-model public-job shadow tools; live matching remains deterministic.
 - [JOB_FEATURES](docs/JOB_FEATURES.md): indexed projection, backfill and hash/version invalidation.
 - [RESUME_PRIVACY](docs/RESUME_PRIVACY.md): transient processing, worker CSP and private API boundaries.

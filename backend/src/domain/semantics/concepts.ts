@@ -1,8 +1,9 @@
 import { coreSkills, coreCompetencies } from './core.js';
 import { engineeringPacks } from './engineering.js';
+import { corpusPacks } from './corpus.js';
 import type { Concept, ConceptKind, SkillFacet } from './model.js';
 
-export const registryVersion = 'concepts-3';
+export const registryVersion = 'concepts-5';
 
 const languages = new Set([
   'typescript',
@@ -91,7 +92,7 @@ export const concepts: readonly Concept[] = [
     ),
   ),
   ...coreCompetencies.map((row) => concept(row, 'competency', 'delivery')),
-  ...engineeringPacks.flatMap((pack) =>
+  ...[...engineeringPacks, ...corpusPacks].flatMap((pack) =>
     pack.entries.map((row) => concept(row, pack.kind, pack.family)),
   ),
 ];

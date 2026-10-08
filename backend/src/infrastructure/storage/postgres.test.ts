@@ -7,6 +7,7 @@ import { PostgresJobFeatures } from './feature-postgres.js';
 import { extractRequirements } from '../../domain/matching/requirements.js';
 import { MemoryJobRepository } from './memory.js';
 import type { NormalizedPosting, Source } from '../../domain/model.js';
+import { auditPublicVocabulary } from '../audits/vocabulary.js';
 
 const connectionString = process.env['TEST_DATABASE_URL'];
 const integration = connectionString ? describe : describe.skip;
@@ -111,6 +112,50 @@ integration('PostgreSQL transactions (isolated test database)', () => {
     },
     contentHash: 'unchanged',
   });
+
+  it('audits every public posting in two read-only passes without changing revisions', async () => {
+    const item = { ...source(), companySlug: `vocabulary-${randomUUID()}` };
+    const at = new Date().toISOString();
+    const run = await repository.startRun(item, at);
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: run!.id,
+      observedAt: at,
+      postings: [posting('a'), posting('b'), posting('c')].map((value) => ({
+        ...value,
+        descriptionText: 'Qualifications\nExperience with FictionalVocabularyDatabase required.',
+      })),
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const client = new pg.Client({ connectionString });
+
+    await client.connect();
+
+    try {
+      const before = await client.query('SELECT * FROM "DatasetVersion"');
+      const count = await client.query<{ count: string }>('SELECT count(*) FROM "Posting"');
+      const report = await auditPublicVocabulary(connectionString!);
+      const after = await client.query('SELECT * FROM "DatasetVersion"');
+      const term = report.candidates.find((entry) => entry.term === 'fictionalvocabularydatabase');
+
+      expect(report.postings).toBe(Number(count.rows[0]!.count));
+
+      expect(report.snapshot).toEqual({
+        version: before.rows[0].version,
+        featureGeneration: before.rows[0].featureGeneration,
+      });
+
+      expect(after.rows).toEqual(before.rows);
+      expect(term?.companies).toContain(item.companySlug);
+      expect(term?.examples.some((example) => example.companySlug === item.companySlug)).toBe(true);
+    } finally {
+      await client.end();
+    }
+  }, 30_000);
 
   it('returns compact catalog metadata and preserves literal search/filter semantics', async () => {
     const item = { ...source(), companySlug: `catalog-${randomUUID()}` };

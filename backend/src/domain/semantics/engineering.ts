@@ -269,7 +269,7 @@ export const engineeringPacks: {
     family: 'cloud',
     entries: [
       ['aws-ec2', 'Amazon EC2', ['Amazon EC2', 'AWS EC2']],
-      ['aws-s3', 'Amazon S3', ['Amazon S3', 'AWS S3']],
+      ['aws-s3', 'Amazon S3', ['Amazon S3', 'AWS S3', 'S3']],
       ['aws-ecs', 'Amazon ECS', ['Amazon ECS', 'AWS ECS']],
       ['aws-elasticache', 'Amazon ElastiCache', ['Amazon ElastiCache', 'AWS ElastiCache']],
       ['aws-lambda', 'AWS Lambda', ['AWS Lambda']],

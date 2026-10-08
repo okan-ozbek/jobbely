@@ -4,6 +4,8 @@
 
 ## Structured evidence update, 2 October 2026
 
+The [9 October baseline](MATCHING.md#qualification-baseline-9-october-2026) changes feature identity to `requirements-17:concepts-5:clauses-4:job-document-2`. Clause dispositions, example IDs and optional education/experience alternatives are public feature data. Regenerate contracts and backfill public features; release API and ingestion with the same version so an older worker cannot overwrite the projection. No database migration or private-profile backfill is required. Earlier version records below remain dated history.
+
 [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
 
 ## Storage and invariants

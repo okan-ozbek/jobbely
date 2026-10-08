@@ -6,7 +6,7 @@ import { projectSkills, skillMatch, relationsVersion } from './skill-relations.j
 import { degreeNames, degreeRank } from '../resume/qualifications.js';
 import { assessmentCoverage, assessmentRatio } from './assessment-coverage.js';
 
-export const scoringVersion = `score-6:${relationsVersion}`;
+export const scoringVersion = `score-7:${relationsVersion}`;
 
 export const contextVersion = 'context-1';
 
@@ -59,6 +59,7 @@ export function scoreJob(
   const result: MatchExplanation = {
     job,
     baseScore: 0,
+    fitScore: null,
     assessmentCoverage: { assessed: 0, total: 0, percentage: null, limited: false },
     band: 'review',
     requiredGaps: 0,
@@ -213,7 +214,9 @@ export function scoreJob(
     const status =
       range.minimumMonths >= requirement.minimumMonths
         ? 'met'
-        : range.maximumMonths < requirement.minimumMonths && range.unknownEntries === 0
+        : range.maximumMonths < requirement.minimumMonths &&
+            range.unknownEntries === 0 &&
+            !requirement.alternativeEvidence
           ? 'below'
           : 'uncertain';
 
@@ -241,7 +244,9 @@ export function scoreJob(
       result.unresolvedRequirements++;
 
       result.uncertainties.push(
-        'Experience cannot be resolved from the reviewed dates or skill-specific tenure.',
+        requirement.alternativeEvidence
+          ? 'The job welcomes internship or project experience without defining an equivalent duration. Review this alternative; professional tenure does not establish eligibility for it.'
+          : 'Experience cannot be resolved from the reviewed dates or skill-specific tenure.',
       );
 
       unresolvedMandatory ||= requirement.importance === 'required';
@@ -268,6 +273,7 @@ export function scoreJob(
 
     const matchesField = (field: string) =>
       degree.field === 'unknown' ||
+      degree.fields?.includes(field as typeof degree.field) ||
       (degree.field !== 'other' &&
         (field === degree.field ||
           (degree.related &&
@@ -421,6 +427,17 @@ export function scoreJob(
     result.uncertainties.push(
       'No recognized mandatory skills or experience comparisons. Review the description before treating this as a fit.',
     );
+  }
+
+  // Unknowns cannot disappear from a headline fit percentage. Context remains a ranking aid.
+  if (
+    mandatoryComparison &&
+    assessedWeight > 0 &&
+    !result.assessmentCoverage.limited &&
+    result.assessmentCoverage.total > 0 &&
+    result.unresolvedRequirements === 0
+  ) {
+    result.fitScore = (100 * credit) / assessedWeight;
   }
 
   result.band =

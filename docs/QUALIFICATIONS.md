@@ -4,6 +4,8 @@
 
 ## Decision and rationale
 
+The [9 October baseline](MATCHING.md#qualification-baseline-9-october-2026) supersedes the earlier displayed-fit policy: responsibility points affect ranking, while nullable `fitScore` excludes those points and is withheld for unresolved identified criteria. It also preserves bare degree equivalence, explicit alternative subjects and undefined internship/project eligibility routes. Professional and activity-specific tenure invariants remain unchanged. That owner records current versions and bounded interpretation limits.
+
 Degree and experience requirements are measurable qualifications rather than ordinary skill IDs. Keep them distinct from technical skills while including them in scoring, profile review and original-description highlights. Skills in responsibilities describe useful role knowledge and contribute a bounded benefit without becoming mandatory qualifications.
 
 ## Invariants

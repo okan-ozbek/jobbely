@@ -1,6 +1,7 @@
 import { concepts, conceptsById, defaultFacet } from './concepts.js';
 import { facetInText, interpretationFor, normalizeText, phraseRules } from './clauses.js';
 import type { ConceptMention } from './model.js';
+import { corpusAliasAllowed } from './corpus-guards.js';
 
 const escapePattern = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -102,11 +103,14 @@ export function recognizeConcepts(text: string, technicalList = false): ConceptM
     }
 
     for (const match of normalized.matchAll(pattern)) {
-      if (!allowed(concept.id, match[2]!, normalized, technicalList)) {
+      const position = match.index + match[1]!.length;
+
+      if (
+        !allowed(concept.id, match[2]!, normalized, technicalList) ||
+        !corpusAliasAllowed(concept.id, match[2]!, normalized, position, technicalList)
+      ) {
         continue;
       }
-
-      const position = match.index + match[1]!.length;
 
       mentions.push({
         id: concept.id,

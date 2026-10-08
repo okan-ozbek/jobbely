@@ -77,12 +77,12 @@ describe('stateless full matching flow', () => {
 
     dataset.jobs[0] = storedJob(
       '1',
-      'Requirements\nTypeScript required.\nKnowledge of VHDL required.',
+      'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL required.',
     );
 
     dataset.jobs[1] = storedJob(
       '2',
-      'Requirements\nTypeScript required.\nKnowledge of VHDL required.\nPreferred qualifications\nDocker',
+      'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL required.\nPreferred qualifications\nDocker',
     );
 
     dataset.jobs[0]!.contentHash = 'changed-sparse';

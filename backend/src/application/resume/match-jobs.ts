@@ -196,18 +196,32 @@ export class MatchJobs {
               ),
           ),
         )
-        .map((mention) => ({
-          ...mention,
-          ...skillMatch(prepared.matches, mention.id, mention.facet, mention.interpretation),
-          ...(!document.blocks.some(
-            (block) =>
-              isQualificationBlock(block) &&
-              mention.position >= block.start &&
-              mention.position < block.end,
-          )
-            ? { rule: `role-context:${mention.rule}` }
-            : {}),
-        })),
+        .map((mention) => {
+          const alternative = requirements.skills
+            .find(
+              (group) =>
+                mention.position >= (group.evidence.start ?? -1) &&
+                mention.position < (group.evidence.end ?? -1) &&
+                group.alternatives.some((item) => item.id === mention.id),
+            )
+            ?.alternatives.find((item) => item.id === mention.id);
+
+          const interpretation = alternative?.interpretation ?? mention.interpretation;
+
+          return {
+            ...mention,
+            interpretation,
+            ...skillMatch(prepared.matches, mention.id, mention.facet, interpretation),
+            ...(!document.blocks.some(
+              (block) =>
+                isQualificationBlock(block) &&
+                mention.position >= block.start &&
+                mention.position < block.end,
+            )
+              ? { rule: `role-context:${mention.rule}` }
+              : {}),
+          };
+        }),
       metrics: [
         ...requirements.constraints
           .filter((constraint) => constraint.education && constraint.importance !== 'contextual')
