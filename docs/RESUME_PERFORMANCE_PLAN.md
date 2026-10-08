@@ -1,12 +1,42 @@
 # Plan: restore usable resume analysis and scale matching
 
-**Status:** Proposed, 8 October 2026 (Europe/Amsterdam). Code review, primary-source research and bounded local read-only probes completed. No optimization, source refresh, schema migration or deployment performed.
+**Status:** In progress, 8 October 2026 (Europe/Amsterdam). Initial diagnosis/research completed; the first narrow-query and request-reduction increment is implemented. Remaining phases below are proposals. See the progress section for verification and recovery limits.
 
 **Scope:** Restore the present deterministic flow first, then provide a measured foundation for the semantic roadmap. [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md) still owns the semantic replacement; this plan sequences performance work without selecting or installing models.
 
 ## Findings: reliability, queries and matching are separate
 
 Inspection used a fictional short resume and a fictional structured Python profile. No real candidate document, account or private database record was inspected. Database probes ran read-only with statement timeouts. These are single local observations, not p95 benchmarks.
+
+This paragraph describes the original baseline inspection only. In the subsequent implementation turn, the owner supplied the failing PDF and authorized reproduction in the local app; that browser-only check is recorded below without resume contents.
+
+## Implementation progress, 8 October
+
+The supplied PDF successfully completed local parsing and text analysis in a separate browser tab. Matching completed with zero evaluated jobs and 70 sources excluded by freshness. This reproduces the unusable recommendation outcome, not a parser failure. The candidate document/profile was not copied into the repository, fixtures, diagnostic files or logs; no resume excerpts are recorded here.
+
+The first P1 increment replaces full posting/run snapshots in interactive catalog and coverage paths with narrow queries, loads only selected page/detail payloads, skips coverage for empty recommendations, deduplicates equal facet requests and avoids catalog loading on resume/pricing/account views. A transactional migration/backfill adds small location/workplace/observation fields derived atomically from canonical JSON by a database trigger, including older-worker writes. This avoids decompressing large descriptions for unfiltered catalog/facet metadata. Coverage semantics, literal substring behavior, conservative location policy and version-bound cursors remain intact. Publication also reads only the source being committed, a prerequisite shared with ranked-sync phase 3. Owners: [STORAGE](STORAGE.md), [FRONTEND](FRONTEND.md), [MATCHING](MATCHING.md).
+
+The isolated `jobbely_test_performance` PostgreSQL suite verifies predicate parity, compact metadata migration/backfill and protection against payload-only/direct-field write drift, coverage history, revision drift, source isolation and existing lease/rollback/lifecycle rules. Final test counts, build/browser checks and timings are recorded after completion below.
+
+After the owner explicitly approved live ingestion, `docker compose --profile ingestion up -d ingestion-worker` started the rebuilt image. An earlier automatic approval rejection was resolved by that authorization. The old exclusive cycle was in a delayed retry after timing out; pg-boss `update` moved that existing queued retry's `startAfter` to now, preserving its ID, limits and overlap policy. Thirteen sources then completed fresh successful exhaustive imports; OpenAI imported 816 postings and Anthropic 644. Wave A's feature backfill completed and the worker advanced to NVIDIA in B. These are dated observations, not completed full-cohort recovery. No freshness timestamps or source gates were falsified or relaxed.
+
+The supplied PDF then evaluated 498 fresh engineering jobs with zero awaiting analysis, returned recommendations, opened a job description/comparison and successfully appended a second page (40 displayed results). During active publication an older cursor correctly returned the existing restart message; restarting matching recovered the new revision. Directory/job navigation and successive workplace/function changes were also checked in the browser. The user's original tab was left untouched; candidate profile/evidence remained collapsed during verification.
+
+Final root `pnpm check` passed formatting, boundaries, logos, zero-warning lint, both package types, contracts and production builds, with 778 backend and 39 frontend tests passing (38 database-dependent tests skipped in that default run). The separate isolated affected suite passed 51 tests, including all 12 PostgreSQL storage tests. API/web rebuilds completed and the compact metadata migration/backfill was applied locally; real-database consistency queries reported zero metadata/payload mismatches, including after fresh imports.
+
+Internal HTTP spot checks on the final build, before ingestion recovery, returned HTTP 200:
+
+| Endpoint                          | Final samples              | Earlier comparable observation                                        |
+| --------------------------------- | -------------------------- | --------------------------------------------------------------------- |
+| Companies                         | 68 ms first, then 14/10 ms | 2,934 ms baseline                                                     |
+| Jobs, 20 rows                     | 56/39/35 ms                | 2,227 ms after narrow reads but before the stored metadata projection |
+| Facets                            | 181/140/139 ms             | 2,099 ms before the stored metadata projection                        |
+| NVIDIA jobs, 20 rows              | 12/11/10 ms                | No equivalent baseline recorded                                       |
+| Empty matching, synthetic profile | 66 ms                      | 2,534 ms baseline                                                     |
+
+After freshness recovery, a synthetic engineering profile evaluated 498 jobs with zero unenriched and returned 20 items in 611 ms. This is not the real candidate's measured latency or a full-corpus benchmark. At `2026-10-08T17:12:03Z`, the active compact catalog metadata query scanned 16,907 rows in 6.000 ms with `EXPLAIN (ANALYZE, BUFFERS)`. A post-matching API memory sample was 378.5 MiB; process restart, corpus changes and warm caches prevent treating this as a controlled comparison with the baseline. These probes are not p95/concurrency/load-test guarantees.
+
+Financial ranking, durable parallel queues, public caching, SQL pagination/location indexes and compact scoring have not yet landed. Full-corpus fresh matching, concurrent ingestion/cursor behavior and controlled load tests remain required before claiming production-scale capacity.
 
 | Observation on 8 October   | Result                                                                                                        | Implication                                                                                                                                    |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |

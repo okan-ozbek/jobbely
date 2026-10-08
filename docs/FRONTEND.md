@@ -26,7 +26,7 @@ The 5 October annotations add country/city catalog filters with dependent facet 
 
 [LoadingSkeleton](../frontend/src/components/LoadingSkeleton.tsx) supplies content-shaped placeholders for the job catalog, append pagination, initial company directory, job detail, requirement reading, profile comparison, local file reading, initial resume analysis, recalculated experience totals and matching. Existing catalog/recommendation rows remain visible only when appending to the same result set. Editable review controls stay mounted during recalculation. Skeletons contain no pretend employer/job data or interactive controls, announce a concise loading status and stop shimmering for reduced-motion preferences. Failure/empty states replace them when requests settle.
 
-The catalog currently fetches companies/categories alongside each filter refresh rather than caching metadata separately. This is simple for the first slice but should be reduced as traffic grows.
+The 8 October query increment makes catalog loading view-dependent: resume, pricing and account views issue no catalog requests; companies loads directory metadata, detail loads metadata without a job list/facets, and jobs loads its list and dependent facets. Company/category metadata no longer refetches on each filter change. Equal country/city facet queries share one request, and jobs render without awaiting facet or directory metadata. Abort/sequence protection and editable selectors remain in place. Directory coverage still refreshes every minute while visible. This is request reduction, not a persisted or cross-tab cache.
 
 ## Invariants and deployment behavior
 

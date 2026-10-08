@@ -92,9 +92,10 @@ export function registerMatchingRoutes(
       },
     },
     async (request) => {
-      const [result, companies] = await Promise.all([
-        matcher.execute(request.body),
-        catalog.coverage(),
+      const result = await matcher.execute(request.body);
+
+      const companies = await catalog.coverage([
+        ...new Set(result.items.map((item) => item.job.companySlug)),
       ]);
 
       return {

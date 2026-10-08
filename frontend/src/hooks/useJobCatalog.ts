@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ApiError, listCategories, listCompanies, listJobs, listFacets } from '../api/client.js';
 import type { Company, Job, JobsQuery } from '../api/client.js';
 
-export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
+export function useJobCatalog(query: JobsQuery, view: 'jobs' | 'companies' | 'detail' | 'none') {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [categories, setCategories] = useState<{ slug: string; name: string }[]>([]);
 
@@ -20,11 +20,16 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [metadataLoading, setMetadataLoading] = useState(false);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
 
   const [retry, setRetry] = useState(0);
   const [settled, setSettled] = useState<{ query: JobsQuery; retry: number } | null>(null);
   const sequence = useRef(0);
   const pageRequest = useRef<AbortController | null>(null);
+  const fetchJobs = view === 'jobs';
+  const fetchMetadata = view !== 'none';
+  const refreshCoverage = view === 'companies';
   // Hide old rows on the very first render of a new query, before effects run.
   const current = settled?.query === query && settled.retry === retry;
 
@@ -33,6 +38,12 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
     const requestId = ++sequence.current;
 
     pageRequest.current?.abort();
+
+    if (!fetchJobs) {
+      setLoading(false);
+
+      return () => controller.abort();
+    }
 
     setLoading(true);
     setError(null);
@@ -53,14 +64,8 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
     delete cityQuery.cursor;
 
     const timeout = window.setTimeout(() => {
-      void Promise.all([
-        listJobs(query, controller.signal),
-        listCompanies(controller.signal),
-        listCategories(controller.signal),
-        listFacets(countryQuery, controller.signal),
-        listFacets(cityQuery, controller.signal),
-      ])
-        .then(([list, companyList, categoryList, countryFacets, cityFacets]) => {
+      void listJobs(query, controller.signal)
+        .then((list) => {
           if (controller.signal.aborted || requestId !== sequence.current) {
             return;
           }
@@ -69,10 +74,6 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
           setTotal(list.total);
           setNextCursor(list.nextCursor);
           setMode(list.mode);
-
-          setCompanies(companyList);
-          setCategories(categoryList);
-          setLocations({ countries: countryFacets.countries, cities: cityFacets.cities });
         })
         .catch((reason) => {
           if (!controller.signal.aborted && requestId === sequence.current) {
@@ -85,6 +86,23 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
             setLoading(false);
           }
         });
+
+      const countryFacets = listFacets(countryQuery, controller.signal);
+
+      const cityFacets =
+        JSON.stringify(countryQuery) === JSON.stringify(cityQuery)
+          ? countryFacets
+          : listFacets(cityQuery, controller.signal);
+
+      void Promise.all([countryFacets, cityFacets])
+        .then(([countries, cities]) => {
+          if (!controller.signal.aborted && requestId === sequence.current) {
+            setLocations({ countries: countries.countries, cities: cities.cities });
+          }
+        })
+        .catch(() => {
+          // Results remain usable while facet metadata is temporarily unavailable.
+        });
     }, 200);
 
     return () => {
@@ -92,7 +110,42 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
       pageRequest.current?.abort();
       window.clearTimeout(timeout);
     };
-  }, [query, retry]);
+  }, [query, retry, fetchJobs]);
+
+  useEffect(() => {
+    if (!fetchMetadata) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    setMetadataLoading(true);
+    setMetadataError(null);
+
+    void Promise.all([listCompanies(controller.signal), listCategories(controller.signal)])
+      .then(([companyList, categoryList]) => {
+        if (!controller.signal.aborted) {
+          setCompanies(companyList);
+          setCategories(categoryList);
+
+          if (refreshCoverage) {
+            setMode(companyList.some((company) => company.status === 'demo') ? 'demo' : 'postgres');
+          }
+        }
+      })
+      .catch((reason: unknown) => {
+        if (!controller.signal.aborted) {
+          setMetadataError(reason instanceof Error ? reason.message : 'Could not load companies.');
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setMetadataLoading(false);
+        }
+      });
+
+    return () => controller.abort();
+  }, [fetchMetadata, refreshCoverage, retry]);
 
   useEffect(() => {
     if (!refreshCoverage) {
@@ -134,7 +187,7 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
   }, [refreshCoverage]);
 
   const loadMore = async () => {
-    if (!current || !nextCursor || loading || loadingMore) {
+    if (!fetchJobs || !current || !nextCursor || loading || loadingMore) {
       return;
     }
 
@@ -180,9 +233,9 @@ export function useJobCatalog(query: JobsQuery, refreshCoverage = false) {
     total: current ? total : 0,
     nextCursor: current ? nextCursor : null,
     mode,
-    loading: loading || !current,
+    loading: refreshCoverage ? metadataLoading : fetchJobs && (loading || !current),
     loadingMore: current && loadingMore,
-    error: current ? error : null,
+    error: metadataError ?? (fetchJobs && current ? error : null),
     loadMore,
     refresh: () => setRetry((value) => value + 1),
   };

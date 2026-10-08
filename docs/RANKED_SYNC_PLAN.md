@@ -1,6 +1,6 @@
 # Plan: ranked companies and parallel round-robin sync
 
-**Status:** Proposed, 8 October 2026 (Europe/Amsterdam). Planning and read-only inspection completed; scheduling, ranking and deployment have not changed.
+**Status:** Proposed, 8 October 2026 (Europe/Amsterdam), with a source-scoped publication prerequisite implemented alongside the first [resume performance increment](RESUME_PERFORMANCE_PLAN.md#implementation-progress-8-october). Scheduling and financial ranking have not changed; four-worker deployment remains pending.
 
 **Owner request:** Replace waves with four parallel workers. Use financial company size initially, then allow observed user popularity to become the priority input.
 
@@ -10,7 +10,9 @@ Replace cohort barriers with independently progressing company tasks. Ranking de
 
 The current [worker](../backend/src/worker/main.ts) consumes one exclusive `sync-waves` job with local concurrency one. [RefreshWaves](../backend/src/application/refresh-waves.ts) traverses A, B and C sequentially, synchronizes each company's boards, audits the company, and backfills after each wave. Runtime companies accept A–D, but the automatic traversal omits D. The [500-company backlog](TECH_COMPANIES_500.json) explicitly identifies its numbers as discovery row numbers, not financial ranks. Renaming these numbers would fabricate a ranking.
 
-Local inspection on 8 October found 81 registered companies, 70 scheduled sources and an exited ingestion container using an older backend image. Its final log records a database-connectivity startup failure; PostgreSQL is healthy now. The newest successful run finished at `2026-10-07T01:03:14.371Z`. All 70 sources failed matching's 36-hour freshness checks at inspection. This is an operational recovery prerequisite, not evidence that every adapter is broken. Do not restart or import sources as part of this planning change.
+Initial local inspection on 8 October found 81 registered companies, 70 scheduled sources and an exited ingestion container using an older backend image. Its final log recorded a database-connectivity startup failure; PostgreSQL was healthy. The newest successful run finished at `2026-10-07T01:03:14.371Z`. All 70 sources failed matching's 36-hour freshness checks at inspection. This was an operational recovery prerequisite, not evidence that every adapter was broken. The planning change performed no imports.
+
+In the subsequent implementation turn, the owner approved restarting ingestion with the rebuilt image. An existing delayed retry was brought forward through pg-boss without creating a competing cycle. Thirteen fresh sources and Wave A feature backfill were observed before the worker advanced to NVIDIA in B; full-cycle recovery remains unverified. [Resume performance progress](RESUME_PERFORMANCE_PLAN.md#implementation-progress-8-october) records the tests, local deployment and recovered PDF flow. Wave scheduling itself is still unchanged.
 
 Implemented scheduling and gates remain owned by [SCHEDULING](SCHEDULING.md), [WAVE_REFRESH](WAVE_REFRESH.md), [INGESTION](INGESTION.md), [SOURCES](SOURCES.md), [AUDITING](AUDITING.md) and [STORAGE](STORAGE.md) until migration lands.
 
@@ -57,7 +59,7 @@ Start with the current startup and 00:00/12:00 UTC trigger semantics, with catch
 ## Parallelism constraints
 
 - Both public-feed and official-audit request limits must be shared across processes by hostname. [PublicJsonTransport](../backend/src/infrastructure/http.ts) currently serializes requests and tracks its one-second spacing **in process memory**. Four independent containers would multiply that allowance. Add a distributed host reservation/lease behind the transport boundary, retaining robots crawl delays, Retry-After, allowlists, redirect/DNS checks and adapter time/size limits. Database locks must not stay open during network waits.
-- [commitSnapshot](../backend/src/infrastructure/storage/postgres.ts) currently holds global publication lock 721049 and loads the entire dataset before applying one source's snapshot. Four collectors still serialize here. First scope publication inputs to that source's postings, current run and latest valid baseline, retaining the pure lifecycle policy and atomic dataset increment. Keep the global lock until measured lock time justifies a separately verified concurrency redesign.
+- [commitSnapshot](../backend/src/infrastructure/storage/postgres.ts) retains global publication lock 721049. The first performance increment now scopes reads to the source's postings and run history, preserving pure lifecycle policy and atomic dataset increments. Reading only the current run/latest valid baseline is still a possible refinement. Four collectors will still serialize publication; keep the global lock until measured lock time justifies a separately verified concurrency redesign.
 - Enrichment remains an independent public workflow. Replace wave-end whole-dataset backfills with deduplicated changed-posting/source work and a bounded catch-up sweeper. Limit enrichment CPU and database connections separately from the four collectors. Preserve hash/version compare-and-publish and shared lock ordering in [JOB_FEATURES](JOB_FEATURES.md).
 - Queue data and logs contain public source metadata only. Scheduling still cannot approve blocked access, establish complete coverage or close jobs from candidate snapshots.
 

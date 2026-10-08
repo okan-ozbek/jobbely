@@ -124,7 +124,16 @@ export function App() {
     error,
     loadMore,
     refresh,
-  } = useJobCatalog(query, view === 'companies');
+  } = useJobCatalog(
+    query,
+    view === 'companies'
+      ? 'companies'
+      : view === 'jobs'
+        ? selectedId
+          ? 'detail'
+          : 'jobs'
+        : 'none',
+  );
 
   const { selected, detailError } = useJobDetail(selectedId);
 
@@ -689,7 +698,7 @@ export function App() {
         <span>
           {mode === 'demo'
             ? 'Sample listings · preview mode'
-            : mode === 'postgres'
+            : mode === 'postgres' || (view !== 'companies' && view !== 'jobs')
               ? 'Original listings. Direct sources.'
               : 'Connecting to company sources…'}
         </span>

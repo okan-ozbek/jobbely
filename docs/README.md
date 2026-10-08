@@ -31,7 +31,7 @@ For semantic scopes/confirmation read [SEMANTICS](SEMANTICS.md); for degree, ten
 
 ## Plans and evidence: read on demand
 
-- Performance and scheduling changes: [RANKED_SYNC_PLAN](RANKED_SYNC_PLAN.md) proposes financial-size ranking, four round-robin workers and wave retirement; [RESUME_PERFORMANCE_PLAN](RESUME_PERFORMANCE_PLAN.md) records local bottlenecks and prioritizes freshness recovery, narrow catalog reads, public caching and exact matching optimization. These are proposed work, not deployed behavior.
+- Performance and scheduling changes: [RANKED_SYNC_PLAN](RANKED_SYNC_PLAN.md) proposes financial-size ranking, four round-robin workers and wave retirement; [RESUME_PERFORMANCE_PLAN](RESUME_PERFORMANCE_PLAN.md) records local bottlenecks and delivery progress. The first narrow-query/request-reduction increment is implemented in [STORAGE](STORAGE.md) and [FRONTEND](FRONTEND.md); ranking, worker migration, caching and compact scoring remain proposed.
 
 - Product scope/new feature planning: [MVP_PLAN](../MVP_PLAN.md), [RESUME_PLAN](../RESUME_PLAN.md), [ACCOUNT_BILLING_PLAN](ACCOUNT_BILLING_PLAN.md), [ANALYTICS_PLAN](ANALYTICS_PLAN.md). [ACCOUNTS_BILLING_PLAN](ACCOUNTS_BILLING_PLAN.md) is a compatibility link.
 - New semantic matching work: [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md) owns the delivery roadmap. [SEMANTIC_MATCHING_PLAN](SEMANTIC_MATCHING_PLAN.md) and [LLM_MATCHING](LLM_MATCHING.md) retain earlier proposals/diagnoses; their remaining delivery sequences are superseded. Use the implemented owner documents above for current behavior.
