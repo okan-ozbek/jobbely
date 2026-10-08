@@ -1,10 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../../generated/prisma/client.js';
-import type { Prisma } from '../../generated/prisma/client.js';
+import { PrismaClient, Prisma } from '../../generated/prisma/client.js';
 import type { Dataset, Job, Source, SourceRun } from '../../domain/model.js';
 import type { JobRepository, SnapshotCommit } from '../../ports/ingestion.js';
 import { applySnapshot } from './snapshot.js';
+import type { CatalogEntry, CatalogFilter } from '../../ports/catalog.js';
 
 function json(value: unknown): Prisma.InputJsonValue {
   return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue;
@@ -25,11 +25,16 @@ export class PostgresJobRepository implements JobRepository {
     });
   }
 
-  private async readWithin(transaction: Prisma.TransactionClient): Promise<Dataset> {
+  private async readWithin(
+    transaction: Prisma.TransactionClient,
+    sourceId?: string,
+  ): Promise<Dataset> {
     const [version, postings, runs] = await Promise.all([
       transaction.datasetVersion.findUnique({ where: { id: 1 } }),
-      transaction.posting.findMany(),
-      transaction.run.findMany(),
+      sourceId
+        ? transaction.posting.findMany({ where: { sourceId } })
+        : transaction.posting.findMany(),
+      sourceId ? transaction.run.findMany({ where: { sourceId } }) : transaction.run.findMany(),
     ]);
 
     return {
@@ -43,6 +48,101 @@ export class PostgresJobRepository implements JobRepository {
     return this.client.$transaction((transaction) => this.readWithin(transaction), {
       isolationLevel: 'RepeatableRead',
     });
+  }
+
+  async findJob(id: string): Promise<Job | null> {
+    const row = await this.client.posting.findUnique({ where: { id }, select: { payload: true } });
+
+    return row ? (row.payload as unknown as Job) : null;
+  }
+
+  async searchCatalog(query: CatalogFilter) {
+    const conditions = [Prisma.sql`p."status" = 'active'`];
+
+    if (query.company) {
+      conditions.push(Prisma.sql`p."companySlug" = ANY(${query.company.split(',')}::text[])`);
+    }
+
+    if (query.category) {
+      conditions.push(Prisma.sql`p."category" = ANY(${query.category.split(',')}::text[])`);
+    }
+
+    if (query.workplace) {
+      conditions.push(Prisma.sql`p."workplace" = ANY(${query.workplace.split(',')}::text[])`);
+    }
+
+    if (query.q) {
+      conditions.push(Prisma.sql`
+        strpos(lower(concat(p."title", ' ', p."payload"->>'descriptionText', ' ',
+          (SELECT string_agg(value, ' ' ORDER BY ordinal) FROM jsonb_array_elements_text(p."payload"->'departments') WITH ORDINALITY d(value, ordinal)), ' ',
+          (SELECT string_agg(value, ' ' ORDER BY ordinal) FROM jsonb_array_elements_text(p."payload"->'locations') WITH ORDINALITY l(value, ordinal)))), ${query.q.toLowerCase()}) > 0
+      `);
+    }
+
+    return this.client.$transaction(
+      async (transaction) => {
+        const version = await transaction.datasetVersion.findUnique({ where: { id: 1 } });
+
+        const jobs = await transaction.$queryRaw<CatalogEntry[]>(Prisma.sql`
+          SELECT p."id", p."companySlug", p."category", p."locations", p."workplace", p."lastSeenAt"
+          FROM "Posting" p WHERE ${Prisma.join(conditions, ' AND ')}
+        `);
+
+        return { version: version?.version ?? 0, jobs };
+      },
+      { isolationLevel: 'RepeatableRead' },
+    );
+  }
+
+  async findJobs(ids: string[], version: number): Promise<Job[] | null> {
+    return this.client.$transaction(
+      async (transaction) => {
+        const current = await transaction.datasetVersion.findUnique({ where: { id: 1 } });
+
+        if ((current?.version ?? 0) !== version) {
+          return null;
+        }
+
+        const rows = await transaction.posting.findMany({
+          where: { id: { in: ids } },
+          select: { payload: true },
+        });
+
+        return rows.map((row) => row.payload as unknown as Job);
+      },
+      { isolationLevel: 'RepeatableRead' },
+    );
+  }
+
+  async coverageSnapshot(companySlugs: string[], sourceIds: string[]) {
+    return this.client.$transaction(
+      async (transaction) => {
+        const counts = await transaction.posting.groupBy({
+          by: ['companySlug'],
+          where: { companySlug: { in: companySlugs }, status: 'active' },
+          _count: { _all: true },
+        });
+
+        const rows = await transaction.$queryRaw<{ payload: SourceRun }[]>`
+          SELECT DISTINCT ON (r."id") r."id", r."payload" FROM (
+            (SELECT DISTINCT ON ("sourceId") "id", "payload" FROM "Run"
+              WHERE "sourceId" = ANY(${sourceIds}::text[])
+              ORDER BY "sourceId", "payload"->>'startedAt' DESC, "id" DESC)
+            UNION ALL
+            (SELECT DISTINCT ON ("sourceId") "id", "payload" FROM "Run"
+              WHERE "sourceId" = ANY(${sourceIds}::text[]) AND "status" = 'succeeded'
+                AND "payload"->>'enumerationComplete' = 'true'
+              ORDER BY "sourceId", "payload"->>'startedAt' DESC, "id" DESC)
+          ) r ORDER BY r."id"
+        `;
+
+        return {
+          counts: Object.fromEntries(counts.map((row) => [row.companySlug, row._count._all])),
+          runs: rows.map((row) => row.payload),
+        };
+      },
+      { isolationLevel: 'RepeatableRead' },
+    );
   }
 
   async startRun(source: Source, at: string) {
@@ -144,7 +244,7 @@ export class PostgresJobRepository implements JobRepository {
           throw new Error('Source lease was lost or expired');
         }
 
-        const before = await this.readWithin(transaction);
+        const before = await this.readWithin(transaction, commit.source.id);
         const result = applySnapshot(before, commit);
 
         const sourceJobs = result.dataset.jobs.filter((job) => job.sourceId === commit.source.id);

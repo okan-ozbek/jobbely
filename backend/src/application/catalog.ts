@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
-import type { Company, Dataset, Job, Source } from '../domain/model.js';
+import type { Company, Source } from '../domain/model.js';
 import type { JobRepository } from '../ports/ingestion.js';
+import type { CatalogEntry, CoverageSnapshot } from '../ports/catalog.js';
 import type { CoverageAssessment, CoverageRepository } from '../ports/coverage.js';
 import {
   catalogLocations,
@@ -45,15 +46,7 @@ export class QueryError extends Error {
  * @param query The query to match against.
  * @returns True if the job matches the query, false otherwise.
  */
-const matches = (job: Job, query: JobQuery) =>
-  job.status === 'active' &&
-  (!query.q ||
-    `${job.title} ${job.descriptionText} ${job.departments.join(' ')} ${job.locations.join(' ')}`
-      .toLowerCase()
-      .includes(query.q.toLowerCase())) &&
-  (!query.company || query.company.split(',').includes(job.companySlug)) &&
-  (!query.category || query.category.split(',').includes(job.classification.category)) &&
-  (!query.workplace || query.workplace.split(',').includes(job.workplace)) &&
+const matches = (job: CatalogEntry, query: JobQuery) =>
   matchesCatalogLocation(job.locations, query.country, query.city);
 
 /**
@@ -63,7 +56,7 @@ const matches = (job: Job, query: JobQuery) =>
  * @param b The second job to compare.
  * @returns A negative number if a should come before b, a positive number if a should come after b, or 0 if they are equal.
  */
-const order = (a: Job, b: Job) =>
+const order = (a: CatalogEntry, b: CatalogEntry) =>
   b.lastSeenAt.localeCompare(a.lastSeenAt) || a.id.localeCompare(b.id);
 
 /**
@@ -83,7 +76,7 @@ export class JobCatalog {
   ) {}
 
   async jobs(query: JobQuery) {
-    const dataset = await this.repository.read();
+    const dataset = await this.repository.searchCatalog(query);
 
     const fingerprint = createHash('sha256')
       .update(
@@ -141,7 +134,19 @@ export class JobCatalog {
       }
     }
 
-    const items = filtered.slice(start, start + (query.limit ?? 20));
+    const page = filtered.slice(start, start + (query.limit ?? 20));
+
+    const postings = await this.repository.findJobs(
+      page.map((job) => job.id),
+      dataset.version,
+    );
+
+    if (!postings) {
+      throw new QueryError('cursor_stale', 'Listings changed; restart pagination');
+    }
+
+    const byId = new Map(postings.map((job) => [job.id, job]));
+    const items = page.map((job) => byId.get(job.id)!);
     const last = items.at(-1);
 
     const nextCursor =
@@ -165,21 +170,27 @@ export class JobCatalog {
   }
 
   async job(id: string) {
-    return (await this.repository.read()).jobs.find((job) => job.id === id);
+    return this.repository.findJob(id);
   }
 
   async facets(query: JobQuery) {
-    const jobs = (await this.repository.read()).jobs.filter((job) => matches(job, query));
+    const jobs = (await this.repository.searchCatalog(query)).jobs.filter((job) =>
+      matches(job, query),
+    );
 
-    const count = (values: string[]) =>
-      [...new Set(values)].map((value) => ({
-        value,
-        count: values.filter((item) => item === value).length,
-      }));
+    const count = (values: string[]) => {
+      const counts = new Map<string, number>();
+
+      for (const value of values) {
+        counts.set(value, (counts.get(value) ?? 0) + 1);
+      }
+
+      return [...counts].map(([value, count]) => ({ value, count }));
+    };
 
     return {
       companies: count(jobs.map((job) => job.companySlug)),
-      categories: count(jobs.map((job) => job.classification.category)),
+      categories: count(jobs.map((job) => job.category)),
       workplaces: count(jobs.map((job) => job.workplace)),
       countries: count(
         jobs.flatMap((job) => [
@@ -207,11 +218,25 @@ export class JobCatalog {
     };
   }
 
-  async coverage() {
-    const dataset = await this.repository.read();
+  async coverage(slugs?: readonly string[]) {
+    const companies = this.companies.filter((company) => !slugs || slugs.includes(company.slug));
+
+    if (!companies.length) {
+      return [];
+    }
+
+    const sourceIds = this.sources
+      .filter((source) => companies.some((company) => company.slug === source.companySlug))
+      .map((source) => source.id);
+
+    const dataset = await this.repository.coverageSnapshot(
+      companies.map((company) => company.slug),
+      sourceIds,
+    );
+
     const assessments = (await this.coverageRepository?.read()) ?? [];
 
-    return this.companies.map((company) =>
+    return companies.map((company) =>
       this.companyCoverage(
         company,
         dataset,
@@ -220,7 +245,11 @@ export class JobCatalog {
     );
   }
 
-  private companyCoverage(company: Company, dataset: Dataset, assessment?: CoverageAssessment) {
+  private companyCoverage(
+    company: Company,
+    dataset: CoverageSnapshot,
+    assessment?: CoverageAssessment,
+  ) {
     const sources = this.sources.filter((source) => source.companySlug === company.slug);
 
     const latestRuns = sources.map(
@@ -292,9 +321,7 @@ export class JobCatalog {
     return {
       ...company,
       status,
-      jobs: dataset.jobs.filter(
-        (job) => job.companySlug === company.slug && job.status === 'active',
-      ).length,
+      jobs: dataset.counts[company.slug] ?? 0,
       lastCheckedAt:
         lastSuccess.every(Boolean) && lastSuccess.length
           ? ([...lastSuccess].sort()[0] ?? null)

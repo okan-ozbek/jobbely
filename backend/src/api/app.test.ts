@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from './app.js';
 import { JobCatalog } from '../application/catalog.js';
 import { MemoryJobRepository } from '../infrastructure/storage/memory.js';
@@ -29,6 +29,21 @@ async function setup() {
 }
 
 describe('read API and contract', () => {
+  it('serves directory, catalog, facets and details without reading full repository snapshots', async () => {
+    const { app, repository } = await setup();
+
+    vi.spyOn(repository, 'read').mockRejectedValue(new Error('Full snapshot should not be read'));
+
+    expect((await app.inject('/api/v1/companies')).statusCode).toBe(200);
+    expect((await app.inject('/api/v1/jobs/facets')).statusCode).toBe(200);
+
+    const list = await app.inject('/api/v1/jobs?limit=1');
+
+    expect(list.statusCode).toBe(200);
+    expect((await app.inject(`/api/v1/jobs/${list.json().items[0].id}`)).statusCode).toBe(200);
+    expect(repository.read).not.toHaveBeenCalled();
+  });
+
   it('lists all registered companies and explicitly labels demo data', async () => {
     const { app } = await setup();
 

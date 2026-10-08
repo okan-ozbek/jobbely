@@ -42,6 +42,9 @@ model Posting {
   status String
   title String
   contentHash String
+  locations Json @default("[]")
+  workplace String @default("unknown")
+  lastSeenAt String @default("")
   payload Json
   versions PostingVersion[]
   features JobFeature?

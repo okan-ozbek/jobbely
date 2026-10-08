@@ -5,6 +5,7 @@ import pg from 'pg';
 import { PostgresJobRepository } from './postgres.js';
 import { PostgresJobFeatures } from './feature-postgres.js';
 import { extractRequirements } from '../../domain/matching/requirements.js';
+import { MemoryJobRepository } from './memory.js';
 import type { NormalizedPosting, Source } from '../../domain/model.js';
 
 const connectionString = process.env['TEST_DATABASE_URL'];
@@ -45,6 +46,22 @@ integration('PostgreSQL transactions (isolated test database)', () => {
         await readFile(
           new URL(
             '../../../prisma/migrations/202610010001_job_features/migration.sql',
+            import.meta.url,
+          ),
+          'utf8',
+        ),
+      );
+    }
+
+    const catalogColumn = await client.query(
+      `SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='Posting' AND column_name='lastSeenAt'`,
+    );
+
+    if (!catalogColumn.rowCount) {
+      await client.query(
+        await readFile(
+          new URL(
+            '../../../prisma/migrations/202610080001_catalog_metadata/migration.sql',
             import.meta.url,
           ),
           'utf8',
@@ -93,6 +110,127 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       version: '1',
     },
     contentHash: 'unchanged',
+  });
+
+  it('returns compact catalog metadata and preserves literal search/filter semantics', async () => {
+    const item = { ...source(), companySlug: `catalog-${randomUUID()}` };
+    const at = new Date().toISOString();
+
+    const records = [
+      {
+        ...posting('literal'),
+        title: 'Engineer 100%_ready',
+        descriptionText: 'Python services with Café tooling',
+        departments: ['Platform', 'Engineering'],
+        locations: ['Amsterdam, Netherlands', 'Berlin, Germany'],
+        workplace: 'remote' as const,
+      },
+      { ...posting('plain'), title: 'Designer', contentHash: 'different' },
+    ];
+
+    const memory = new MemoryJobRepository();
+
+    for (const target of [repository, memory]) {
+      const run = await target.startRun(item, at);
+
+      await target.commitSnapshot({
+        source: item,
+        runId: run!.id,
+        observedAt: at,
+        postings: records,
+        rawResponses: [],
+        excluded: 0,
+        enumerationComplete: true,
+      });
+    }
+
+    for (const query of [
+      {},
+      { q: '100%_' },
+      { q: '100Xready' },
+      { q: 'PYTHON' },
+      { q: 'café' },
+      { q: 'Platform Engineering' },
+      { q: 'Netherlands Berlin' },
+      { workplace: 'remote,hybrid' },
+      { category: 'engineering,people' },
+      { category: 'sales' },
+    ]) {
+      const filter = { ...query, company: item.companySlug };
+      const actual = await repository.searchCatalog(filter);
+      const expected = await memory.searchCatalog(filter);
+
+      const metadata = (rows: typeof actual.jobs) =>
+        rows
+          .map((row) => ({ ...row, id: 'repository-specific' }))
+          .sort((a, b) => a.workplace.localeCompare(b.workplace));
+
+      expect(metadata(actual.jobs)).toEqual(metadata(expected.jobs));
+      expect(actual.jobs.every((job) => !('descriptionText' in job))).toBe(true);
+    }
+
+    const snapshot = await repository.searchCatalog({ company: item.companySlug });
+    const page = await repository.findJobs([snapshot.jobs[0]!.id], snapshot.version);
+
+    expect(page).toHaveLength(1);
+    expect(await repository.findJob(page![0]!.id)).toEqual(page![0]);
+    expect(await repository.findJob('not-present')).toBeNull();
+
+    const coverage = await repository.coverageSnapshot([item.companySlug], [item.id]);
+
+    expect(coverage.counts[item.companySlug]).toBe(2);
+    expect(coverage.runs).toHaveLength(1);
+
+    const failed = await repository.startRun(item, new Date(Date.parse(at) + 1000).toISOString());
+
+    await repository.failRun(
+      failed!.id,
+      new Date(Date.parse(at) + 2000).toISOString(),
+      'Synthetic failure',
+    );
+
+    const updatedCoverage = await repository.coverageSnapshot([item.companySlug], [item.id]);
+
+    expect(updatedCoverage.runs.map((run) => run.status).sort()).toEqual(['failed', 'succeeded']);
+    expect(updatedCoverage.counts).toEqual(coverage.counts);
+    expect(await repository.coverageSnapshot([], [])).toEqual({ counts: {}, runs: [] });
+  });
+
+  it('rejects page materialization after a revision change without disturbing another source', async () => {
+    const first = source();
+    const other = source();
+    const at = new Date().toISOString();
+
+    for (const item of [first, other]) {
+      const run = await repository.startRun(item, at);
+
+      await repository.commitSnapshot({
+        source: item,
+        runId: run!.id,
+        observedAt: at,
+        postings: [posting('stable')],
+        rawResponses: [],
+        excluded: 0,
+        enumerationComplete: true,
+      });
+    }
+
+    const snapshot = await repository.searchCatalog({});
+    const otherJob = (await repository.read()).jobs.find((job) => job.sourceId === other.id)!;
+    const run = await repository.startRun(first, at);
+
+    await repository.commitSnapshot({
+      source: first,
+      runId: run!.id,
+      observedAt: at,
+      postings: [{ ...posting('stable'), title: 'Changed', contentHash: 'changed' }],
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    expect(await repository.findJobs([otherJob.id], snapshot.version)).toBeNull();
+    expect(await repository.findJob(otherJob.id)).toEqual(otherJob);
   });
 
   it('grants one lease across independent clients', async () => {
@@ -291,6 +429,55 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       ]);
 
       expect(result.rows[0]?.payload).toEqual({ format: 'http-exchange-v1', request, body });
+    } finally {
+      await client.end();
+    }
+  });
+
+  it('keeps compact metadata equal to canonical JSON after backfill and payload-only writes', async () => {
+    const item = source();
+    const at = new Date().toISOString();
+    const run = await repository.startRun(item, at);
+
+    await repository.commitSnapshot({
+      source: item,
+      runId: run!.id,
+      observedAt: at,
+      postings: [posting('metadata')],
+      rawResponses: [],
+      excluded: 0,
+      enumerationComplete: true,
+    });
+
+    const client = new pg.Client({ connectionString });
+
+    await client.connect();
+
+    try {
+      await client.query(
+        `UPDATE "Posting" SET "payload" = "payload" || $2::jsonb WHERE "sourceId" = $1`,
+        [
+          item.id,
+          JSON.stringify({ locations: ['Berlin, Germany'], workplace: 'remote', lastSeenAt: at }),
+        ],
+      );
+
+      // Direct metadata writes cannot disagree with the canonical payload either.
+      await client.query(`UPDATE "Posting" SET "workplace" = 'onsite' WHERE "sourceId" = $1`, [
+        item.id,
+      ]);
+
+      const result = await client.query(
+        `SELECT count(*)::int AS count FROM "Posting" WHERE "locations" IS DISTINCT FROM "payload"->'locations' OR "workplace" IS DISTINCT FROM "payload"->>'workplace' OR "lastSeenAt" IS DISTINCT FROM "payload"->>'lastSeenAt'`,
+      );
+
+      expect(result.rows[0]?.count).toBe(0);
+
+      expect(
+        (
+          await repository.searchCatalog({ company: item.companySlug, workplace: 'remote' })
+        ).jobs.some((job) => job.locations.includes('Berlin, Germany')),
+      ).toBe(true);
     } finally {
       await client.end();
     }

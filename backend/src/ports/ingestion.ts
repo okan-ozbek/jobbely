@@ -6,6 +6,7 @@ import type {
   Source,
   SourceRun,
 } from '../domain/model.js';
+import type { CatalogLookups } from './catalog.js';
 
 export interface JsonTransport {
   get(url: string): Promise<RawResponse>;
@@ -41,7 +42,7 @@ export interface SnapshotCommit {
   enumerationComplete: boolean;
 }
 
-export interface JobRepository {
+export interface JobRepository extends CatalogLookups {
   read(): Promise<Dataset>;
   startRun(source: Source, at: string): Promise<SourceRun | null>;
   renewRun(sourceId: string, runId: string, at: string): Promise<boolean>;

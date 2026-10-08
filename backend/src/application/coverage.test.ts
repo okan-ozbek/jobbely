@@ -51,7 +51,10 @@ function setup(runs = [run], result = assessment, sources = [source]) {
   const repository = new MemoryJobRepository();
   const dataset: Dataset = { version: 1, jobs: [], runs };
 
-  vi.spyOn(repository, 'read').mockResolvedValue(dataset);
+  vi.spyOn(repository, 'coverageSnapshot').mockImplementation(async () => ({
+    counts: {},
+    runs: dataset.runs,
+  }));
 
   const coverage = { read: async () => [result], save: async () => {}, close: async () => {} };
   const catalog = new JobCatalog(repository, [company], sources, 'postgres', () => now, coverage);
