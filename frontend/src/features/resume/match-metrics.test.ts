@@ -33,7 +33,7 @@ describe('fit presentation', () => {
 
     expect(html).toContain('<dd>62.5%</dd>');
     expect(html).toContain('1 unassessable');
-    expect(html).toContain('yellow or unassessable qualifications 25%');
+    expect(html).not.toContain('About these scores');
     expect(html).not.toContain('Needs review');
     expect(html).not.toContain('<dd>100%</dd>');
   });

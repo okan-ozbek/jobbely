@@ -16,6 +16,8 @@ The [session reader](../frontend/src/features/resume/documents/reader.ts) accept
 
 ## Reading order and limits
 
+The 14 October [reviewer](RESUME_REVIEWER.md) also receives bounded PDF page count, inferred column pages and pages with predominantly small extracted text heights. Heights are a readability heuristic, not exact font-size measurement. Existing DOCX block kinds provide table and header/footer hints. These additions do not render PDFs, add OCR, change reading order or upload file bytes.
+
 PDF groups positioned words by baseline, sorts within rows, and infers two columns when enough separated rows support them. It reads a left column before the right column within bands separated by spanning headings. The midpoint heuristic can misread asymmetric columns, sidebars or poorly encoded fonts; warnings and editable profile corrections are necessary. Since 5 October the file composer omits raw text/reading previews; remove the attachment and paste text when direct text correction is needed. Fragmented text remains visible rather than inventing missing words. Every block has a page number.
 
 DOCX follows document XML order, prepending headers and appending footers once. Tables produce row blocks with cells separated by `|`. Headings/paragraphs remain text; floating shapes and unconventional namespaces/layouts can need corrections. External hyperlink relationships are rejected, including ordinary resume links stored as external relationships; remove links or paste visible text. Text URLs alone are not fetched.

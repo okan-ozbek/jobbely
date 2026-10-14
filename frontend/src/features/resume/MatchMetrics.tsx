@@ -1,6 +1,13 @@
 import type { JobMatchResponse } from '../../api/client.js';
+import type { ReactNode } from 'react';
 
-export function MatchMetrics({ comparison }: { comparison: JobMatchResponse['comparison'] }) {
+export function MatchMetrics({
+  comparison,
+  children,
+}: {
+  comparison: JobMatchResponse['comparison'];
+  children?: ReactNode;
+}) {
   const coverage = comparison.assessmentCoverage;
 
   return (
@@ -28,21 +35,7 @@ export function MatchMetrics({ comparison }: { comparison: JobMatchResponse['com
           </span>
         </div>
       </dl>
-      <details className="match-metrics-help small-note">
-        <summary>About these scores</summary>
-        <p>
-          Green qualifications contribute 100%, yellow or unassessable qualifications 25%, and red
-          gaps 0%. Purple skill suggestions contribute 0% until confirmed. Required qualifications
-          carry three times the weight of preferred qualifications. Repeated criteria count once,
-          and alternatives count as one criterion. Role relevance helps rank results without adding
-          points to qualification fit.
-        </p>
-        <p>
-          The parser can miss requirements. These numbers are not confidence or hiring
-          probabilities. Assessment coverage counts completed comparisons, including gaps;
-          unassessable qualifications remain visible and are not treated as satisfied.
-        </p>
-      </details>
+      {children}
     </div>
   );
 }

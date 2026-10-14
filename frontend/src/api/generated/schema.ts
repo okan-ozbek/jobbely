@@ -518,6 +518,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/jobs/{id}/resume-assessment": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["assessResumeRole"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/resume-review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["resumeReviewAvailability"];
+        put?: never;
+        post: operations["reviewResume"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/email-preview/{purpose}": {
         parameters: {
             query?: never;
@@ -4075,6 +4107,410 @@ export interface operations {
                     "application/json": {
                         /** @enum {boolean} */
                         accepted: true;
+                    };
+                };
+            };
+            /** @description Default Response */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    assessResumeRole: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    text: string;
+                    /** @enum {boolean} */
+                    aiConsent: true;
+                };
+            };
+        };
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        aiStatus: "completed" | "failed" | "unavailable";
+                        ats: {
+                            alignment: "strong" | "partial" | "limited" | "unknown";
+                            confidence: "high" | "moderate" | "low";
+                            evidenceCount: number;
+                            requiredGaps: number;
+                            screening: "potential_fit" | "needs_clarification" | "requirements_not_demonstrated" | "insufficient_context";
+                        };
+                        recruiter: {
+                            alignment: "strong" | "partial" | "limited" | "unknown";
+                            confidence: "high" | "moderate" | "low";
+                            evidenceCount: number;
+                            requiredGaps: number;
+                            screening: "potential_fit" | "needs_clarification" | "requirements_not_demonstrated" | "insufficient_context";
+                        };
+                        coverage: "all_identified" | "partial";
+                        evidence: {
+                            area: "ats" | "recruiter";
+                            status: "supported" | "partial" | "not_evidenced" | "contradicted";
+                            priority: "required" | "preferred" | "responsibility";
+                            jobQuote: string;
+                            resumeQuote: string | null;
+                            line: number | null;
+                            explanation: string;
+                            suggestion: string;
+                            rewrite: string | null;
+                        }[];
+                        limitations: string[];
+                    };
+                };
+            };
+            /** @description Default Response */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    resumeReviewAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        signedIn: boolean;
+                        enabled: boolean;
+                        aiAvailable: boolean;
+                        aiProvider: "openai-api" | "codex-local" | (never | null);
+                    };
+                };
+            };
+            /** @description Default Response */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+            /** @description Default Response */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        code: string;
+                        message: string;
+                    };
+                };
+            };
+        };
+    };
+    reviewResume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    text: string;
+                    aiConsent: boolean;
+                    language: "en-US" | "en-GB" | "nl-NL";
+                    targetCountry: string;
+                    jobDescription: string;
+                    layout?: {
+                        format: "pdf" | "docx";
+                        pages: number | null;
+                        columnPages: number[];
+                        smallTextPages: number[];
+                        tableRows: number;
+                        contactInHeaderFooter: boolean;
+                    };
+                };
+            };
+        };
+        responses: {
+            /** @description Default Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        version: "review-1";
+                        aiStatus: "not_requested" | "unavailable" | "completed" | "failed";
+                        findings: {
+                            id: string;
+                            source: "rule" | "ai";
+                            severity: "error" | "risk" | "suggestion";
+                            category: string;
+                            title: string;
+                            explanation: string;
+                            suggestion: string;
+                            quote: string | null;
+                            line: number | null;
+                            page: number | null;
+                            rewrite: string | null;
+                        }[];
+                        limitations: string[];
                     };
                 };
             };

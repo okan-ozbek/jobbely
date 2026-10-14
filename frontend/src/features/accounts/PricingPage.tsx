@@ -8,11 +8,13 @@ export function PricingPage({
   checkoutId,
   canceled,
   accountKey,
+  proPreview = false,
 }: {
   onSignIn: () => void;
   checkoutId: string | null;
   canceled: boolean;
   accountKey: string | null;
+  proPreview?: boolean;
 }) {
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
@@ -34,7 +36,7 @@ export function PricingPage({
         if (!controller.signal.aborted) {
           setStatus(
             result.complete && result.paid
-              ? 'Your test payment was confirmed by Stripe. Your account stays on Free during testing.'
+              ? 'Your test payment was confirmed by Stripe. Test checkout does not determine your account access.'
               : 'Your test payment has not been confirmed yet. Refresh this page after completing checkout.',
           );
         }
@@ -85,7 +87,7 @@ export function PricingPage({
           className="pricing-status"
           role="status"
         >
-          Checkout canceled. Your account stays on Free.
+          Checkout canceled. Your account access has not changed.
         </p>
       )}
       {error && (
@@ -97,6 +99,7 @@ export function PricingPage({
         </p>
       )}
       <PricingPlans
+        proPreview={proPreview}
         onSignIn={onSignIn}
         accountKey={accountKey}
       />

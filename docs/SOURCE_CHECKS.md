@@ -1,5 +1,15 @@
 # Source checks
 
+## Local refresh recovery — 15 October 2026
+
+The local API retained 19,378 active stored postings, but its newest observation was 9 October, so none passed the 36-hour recommendation freshness gate. The ingestion service was stopped. A normal current-code `sync --company openai` completed with 799 observed postings, zero exclusions, complete enumeration and no removal quarantine (run `cccb9732-6605-4127-9032-760982f49550`, finished 15 October at 00:34 CEST). Its public requirement backfill inspected/updated 1,642 projections. A fictional engineering profile then received 20 recommendations from 139 evaluated jobs with zero unenriched postings. These are dated runtime observations, not complete employer coverage.
+
+The current backend image was built and the existing Docker ingestion service restarted without restarting API/database/email. Its persisted schedule was confirmed as `0 */12 * * *`, UTC. On startup, pg-boss expired the abandoned 8 October wave job; the initial exclusive startup enqueue had been suppressed while that old job still appeared active. After normal expiration, a new cycle was submitted through pg-boss, not by rewriting queue records. Job `e0b01bd0-8b52-4632-ae49-7d76bcf5afdf` was confirmed active with a current heartbeat. A subsequent fictional browser check evaluated 2,318 fresh engineering jobs, with zero awaiting analysis, and rendered 20 recommendations. The worker continues the remaining waves; individual source failures and coverage/closure gates remain in place. Freshness policy was not relaxed.
+
+The image build passed both packages' production builds and contract generation. No persistence code/schema was changed, and this operational verification is not a substitute for database integration tests. The historical checks below retain their original observation dates and counts.
+
+## Initial feed checks — 30 September 2026
+
 Observed on 30 September 2026. Counts are observations of public feeds at that time, not promises about future vacancy counts or a claim of complete employer coverage.
 
 | Company   | Provider and public feed                                                                        | Advertised postings | Excluded | Result                                                    |

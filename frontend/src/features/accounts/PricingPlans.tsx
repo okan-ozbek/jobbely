@@ -14,9 +14,11 @@ const money = (cents: number) =>
 export function PricingPlans({
   onSignIn,
   accountKey,
+  proPreview = false,
 }: {
   onSignIn: () => void;
   accountKey?: string | null;
+  proPreview?: boolean;
 }) {
   const [plans, setPlans] = useState<Plans | null>(null);
   const [period, setPeriod] = useState<BillingPeriod>('monthly');
@@ -183,7 +185,7 @@ export function PricingPlans({
                 </li>
                 <li>
                   <Check size={17} />
-                  Resume review and job matching
+                  Resume profile analysis and job matching
                 </li>
                 <li>
                   <Check size={17} />
@@ -235,7 +237,14 @@ export function PricingPlans({
                   </span>
                 )}
               </div>
-              {checkout?.period === period ? (
+              {proPreview ? (
+                <p
+                  className="pricing-status"
+                  role="status"
+                >
+                  Your temporary Pro access is active. No checkout needed.
+                </p>
+              ) : checkout?.period === period ? (
                 <a
                   className="primary-button"
                   href={checkout.url}
@@ -266,6 +275,11 @@ export function PricingPlans({
                 <li>
                   <Check size={17} />
                   Everything in Free
+                </li>
+                <li>
+                  <Sparkles size={17} />
+                  Resume mistake checks and optional AI feedback
+                  <span className="feature-preview">Requires paid access</span>
                 </li>
                 <li>
                   <Sparkles size={17} />

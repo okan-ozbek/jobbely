@@ -6,15 +6,21 @@ import { matchProfile } from './match-profile.js';
 import { ConfidenceLegend } from './MatchEvidence.js';
 import { HighlightedDescription } from './HighlightedDescription.js';
 import { MatchMetrics } from './MatchMetrics.js';
+import type { Account } from '../../api/accounts.js';
+import { RoleAlignmentAssessment } from './RoleAlignmentAssessment.js';
 
 export function JobProfileComparison({
   job,
   analysis,
   reviewResume,
+  resumeText,
+  account,
 }: {
   job: Job;
   analysis: ResumeAnalysis | null;
   reviewResume: () => void;
+  resumeText: string;
+  account: Account | null | undefined;
 }) {
   const [response, setResponse] = useState<{
     jobId: string;
@@ -95,28 +101,16 @@ export function JobProfileComparison({
             ) : (
               <>
                 <MatchMetrics comparison={data.comparison} />
-                <p className="small-note">
-                  {data.comparison.requiredGaps} recognized required gaps ·{' '}
-                  {data.comparison.unresolvedRequirements} unassessable qualifications
-                </p>
-                <details className="comparison-source small-note">
-                  <summary>
-                    {data.recommendationEligible
-                      ? 'Available for matching'
-                      : 'Description comparison only'}{' '}
-                    · Source checked{' '}
-                    {new Date(data.lastSeenAt).toLocaleDateString(undefined, {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </summary>
-                  <p>
-                    {data.availability} Checked {new Date(data.lastSeenAt).toLocaleString()}.
-                  </p>
-                </details>
               </>
             )}
           </>
+        )}
+        {analysis && (
+          <RoleAlignmentAssessment
+            jobId={job.id}
+            text={resumeText}
+            account={account}
+          />
         )}
       </section>
       <HighlightedDescription

@@ -1,0 +1,112 @@
+.role-ai-assessment {
+  margin-top: 20px;
+}
+.role-ai-assessment .resume-secondary-button {
+  border-radius: 12px;
+  background: #ffffff99;
+}
+.role-ai-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 18px 0;
+}
+.role-ai-summary > div {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  background: #ffffffb3;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.role-ai-summary span,
+.role-ai-summary small {
+  color: var(--muted);
+  font-size: 13px;
+}
+.role-ai-summary strong {
+  font-size: 20px;
+  font-weight: 500;
+}
+.role-ai-evidence {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.role-ai-evidence > li {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fffa;
+}
+.role-ai-evidence blockquote {
+  margin: 8px 0 16px;
+  padding-left: 12px;
+  border-left: 3px solid #aca5df;
+  white-space: pre-wrap;
+}
+.role-ai-evidence small {
+  display: block;
+  margin-top: 14px;
+  color: var(--muted);
+}
+.role-ai-evidence .resume-diff-proposed > small {
+  margin-top: 0;
+}
+.role-evidence-priority {
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.role-screening-gap {
+  border: 1px solid #dfb8b8;
+  border-radius: 12px;
+  padding: 14px;
+  color: #7e303a;
+  background: #fff0ef;
+}
+.role-evidence-contradicted {
+  background: #ffe5e3;
+  color: #8f303a;
+}
+.role-evidence-status {
+  display: inline-flex;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  background: #edeaf7;
+  color: #59546c;
+}
+.role-evidence-supported {
+  background: #e2f1e7;
+  color: #176237;
+}
+.role-evidence-partial {
+  background: #fff0d4;
+  color: #854600;
+}
+.role-ai-progress {
+  margin: 16px 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #e9e4ff;
+}
+.role-ai-spinner {
+  animation: role-ai-spin 1s linear infinite;
+}
+@keyframes role-ai-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 650px) {
+  .role-ai-summary {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .role-ai-spinner {
+    animation: none;
+  }
+}

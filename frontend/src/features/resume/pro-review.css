@@ -1,0 +1,68 @@
+.pro-review-panel {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 24px;
+  overflow-wrap: anywhere;
+  border: 1px solid #dcd8ee;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 0% 0%, #e9e1fc66, transparent 65%),
+    radial-gradient(ellipse at 100% 15%, #e1effa66, transparent 65%),
+    radial-gradient(ellipse at 65% 100%, #fae7ef55, transparent 70%), #fcfbff;
+  box-shadow:
+    0 8px 30px #65549a0a,
+    inset 0 1px 0 #fff;
+}
+.pro-review-heading,
+.pro-review-heading-actions,
+.pro-review-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pro-review-heading {
+  justify-content: space-between;
+  gap: 16px;
+}
+.pro-review-title {
+  min-width: 0;
+  gap: 8px;
+}
+.pro-review-panel .pro-review-title :is(h2, h3) {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+.pro-review-emblem {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  color: #716496;
+}
+.pro-review-badge {
+  padding: 5px 12px;
+  border: 1px solid #9d8cce;
+  border-radius: 20px;
+  background: #e6defa;
+  color: #4c347c;
+  font-size: 12px;
+  font-weight: 600;
+}
+.pro-review-heading-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 650px) {
+  .pro-review-panel {
+    padding: 18px;
+  }
+  .pro-review-panel .pro-review-title :is(h2, h3) {
+    font-size: 16px;
+  }
+}

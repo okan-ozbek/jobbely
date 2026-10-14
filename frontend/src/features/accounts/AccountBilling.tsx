@@ -6,9 +6,11 @@ import type { Plans } from '../../api/accounts.js';
 export function AccountBilling({
   accountKey,
   onPricing,
+  proPreview = false,
 }: {
   accountKey: string;
   onPricing: () => void;
+  proPreview?: boolean;
 }) {
   const [plans, setPlans] = useState<Plans | null>(null);
   const [error, setError] = useState('');
@@ -46,15 +48,20 @@ export function AccountBilling({
           </span>
           <span className="plan-eyebrow">Your current plan</span>
           <h2>
-            Free<span>Included</span>
+            {proPreview ? 'Pro' : 'Free'}
+            <span>{proPreview ? 'Temporary preview' : 'Included'}</span>
           </h2>
-          <p>A clear starting point. Public jobs, resume review and matching.</p>
+          <p>
+            {proPreview
+              ? 'Temporary local Pro access is active. No payment was collected.'
+              : 'A clear starting point. Public jobs, profile analysis and matching.'}
+          </p>
         </div>
         <button
           className="dashboard-button"
           onClick={onPricing}
         >
-          Explore Pro <ArrowUpRight size={16} />
+          {proPreview ? 'View plans' : 'Explore Pro'} <ArrowUpRight size={16} />
         </button>
       </section>
       <div className="billing-detail-grid">
@@ -86,8 +93,8 @@ export function AccountBilling({
                 {plans.billing.checkoutAvailable ? 'Test checkout ready' : 'Awaiting configuration'}
               </span>
               <p className="dashboard-body-copy">
-                Pro checkout is a sandbox preview. It does not charge real money or change your Free
-                plan.
+                Pro checkout is a sandbox preview. It does not charge real money or determine
+                account access.
               </p>
             </>
           ) : error ? (

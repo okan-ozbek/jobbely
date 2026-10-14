@@ -19,6 +19,19 @@ The user selected application-owned accounts instead of a separate managed-auth 
 
 The pure entitlement policy admits only known published/historical retired paid revisions with settled, unexpired coverage, active/past-due status, matching owner/environment and no full-refund/dispute restriction. Status alone, future periods, success URLs, trials, invalid coverage and unapproved revisions never grant access. Retired subscribers keep purchased capabilities. This policy is tested but not connected to a Stripe projection; every current session is Free.
 
+## Temporary local Pro preview, 14 October 2026
+
+At the user's explicit request, `TEMPORARY_PRO_ACCESS=true` gives every active signed-in account all Pro capabilities for up to 24 hours after the API process starts. Bootstrap rejects the override in production or with non-loopback API/frontend hosts. Defaults remain Free, guests stay guests, and revoked/expired sessions or disabled/deleted users remain blocked. The resolver returns `local-pro-preview` with expiry bounded by both the preview deadline and session absolute expiry. No subscription/payment/user record is changed; restarting without the flag removes access immediately. The UI labels the temporary preview, and pricing does not ask preview users to check out. This is an explicit development exception to settled-subscription admission, not evidence of payment. AI configuration/consent and private-route CSRF/Origin/quotas remain required.
+
+Enable only in the process running the local development server:
+
+```powershell
+$env:TEMPORARY_PRO_ACCESS = 'true'
+pnpm dev
+```
+
+To disable, stop that server, remove the process variable (`Remove-Item Env:TEMPORARY_PRO_ACCESS`) and restart. Existing environment files and account data are preserved. The [Accounts workflow](../backend/src/application/accounts/accounts.ts) tests grants for multiple users, default Free behavior, automatic preview expiry, guest/forged-session rejection and revocation/disabled-account enforcement.
+
 ## Permanent account deletion, 7 October 2026
 
 Signed-in users can delete their account through the dialog after typing `DELETE`. `POST /api/v1/account/delete` requires a sign-in within ten minutes, active session, exact Origin, session CSRF and strict `{ "confirm": true }` input. Clients cannot select a user ID; session refresh does not satisfy reauthentication. The repository rechecks ownership, creation time, CSRF, revocation, account state and expiry inside the deletion transaction. Credential/identity locks follow sign-in ordering, preventing stale native logins from issuing surviving sessions for a deleted user.

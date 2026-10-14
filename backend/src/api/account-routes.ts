@@ -26,7 +26,7 @@ const accountErrors = {
   503: errorSchema,
 };
 
-function readCookie(request: FastifyRequest, name: string): string | undefined {
+export function readCookie(request: FastifyRequest, name: string): string | undefined {
   const values = (request.headers.cookie ?? '')
     .split(';')
     .map((item) => item.trim())
@@ -307,6 +307,11 @@ export function registerAccountRoutes(
       const token = readCookie(request, sessionCookie);
       const session = token !== undefined ? await service().current(token) : null;
 
+      const access =
+        token !== undefined
+          ? await service().resolve({ kind: 'account', binding: token })
+          : freeAccess();
+
       return {
         user: session
           ? {
@@ -316,7 +321,7 @@ export function registerAccountRoutes(
             }
           : null,
         csrfToken: session?.csrfToken ?? null,
-        access: { ...freeAccess(session?.user.id ?? null), capabilities: [] },
+        access: { ...access, capabilities: [...access.capabilities] },
       };
     },
   );
