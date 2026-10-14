@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ClipboardCheck, LockKeyhole } from 'lucide-react';
+import { ClipboardCheck, LoaderCircle, LockKeyhole } from 'lucide-react';
 import type { Account } from '../../api/accounts.js';
 import { reviewAvailability, reviewResume } from '../../api/resume-review.js';
 import type {
@@ -30,7 +30,6 @@ export function ResumeReviewer({
   const [accessError, setAccessError] = useState('');
   const [language, setLanguage] = useState<ResumeReviewInput['language']>('en-GB');
   const [targetCountry, setTargetCountry] = useState('');
-  const [jobDescription, setJobDescription] = useState('');
   const [aiConsent, setAiConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -51,10 +50,10 @@ export function ResumeReviewer({
       aiConsent,
       language,
       targetCountry,
-      jobDescription,
+      jobDescription: '',
       ...(layout ? { layout } : {}),
     }),
-    [text, aiConsent, language, targetCountry, jobDescription, layout],
+    [text, aiConsent, language, targetCountry, layout],
   );
 
   const result = availability?.enabled && receipt?.input === input ? receipt.result : null;
@@ -171,8 +170,8 @@ export function ResumeReviewer({
         <span className="resume-status">Pro</span>
       </div>
       <p>
-        Check common mistakes and formatting risks. Add optional AI feedback on clarity,
-        contribution and relevance.
+        Check common mistakes and formatting risks. Add optional AI feedback on clarity, grammar and
+        contribution.
       </p>
       {accessError ? (
         <p
@@ -233,18 +232,6 @@ export function ResumeReviewer({
               />
             </label>
           </div>
-          <Disclosure summary="Compare writing with a job description (optional)">
-            <label className="reviewer-job">
-              <span>Public job description</span>
-              <textarea
-                value={jobDescription}
-                maxLength={12_000}
-                rows={5}
-                onChange={(event) => setJobDescription(event.target.value)}
-                placeholder="Paste the job description to focus AI suggestions on relevant experience."
-              />
-            </label>
-          </Disclosure>
           <label className="reviewer-consent">
             <input
               type="checkbox"
@@ -256,9 +243,8 @@ export function ResumeReviewer({
           </label>
           {availability.aiAvailable ? (
             <p className="small-note">
-              Opting in sends selected resume text and the optional job description to OpenAI.
-              Obvious contact lines and the first resume line are omitted; this does not fully
-              anonymize your resume.
+              Opting in sends selected resume text to OpenAI. Obvious contact lines and the first
+              resume line are omitted; this does not fully anonymize your resume.
               {availability.aiProvider === 'codex-local'
                 ? ' This local test uses your signed-in Codex account. Text is processed by OpenAI; your ChatGPT account data controls apply. Each review starts a temporary Codex session, but this is not a guarantee of zero provider retention.'
                 : ' API content is not used for training by default, but provider logs may retain it for up to 30 days, subject to exceptions.'}{' '}
@@ -284,8 +270,16 @@ export function ResumeReviewer({
             <button
               type="submit"
               className="primary-button"
+              aria-busy={loading}
               disabled={!text.trim() || text.length > 40_000 || pending || loading || !csrf}
             >
+              {loading && (
+                <LoaderCircle
+                  className="reviewer-spinner"
+                  size={16}
+                  aria-hidden="true"
+                />
+              )}
               {loading ? 'Reviewing…' : aiConsent ? 'Review with AI' : 'Check my resume'}
             </button>
             {loading && (
@@ -308,12 +302,35 @@ export function ResumeReviewer({
         </form>
       )}
       {loading && (
-        <p
+        <div
+          className="reviewer-progress"
           role="status"
           aria-live="polite"
+          aria-atomic="true"
         >
-          Checking your resume…
-        </p>
+          <div
+            className="reviewer-scan"
+            aria-hidden="true"
+          >
+            <ClipboardCheck size={28} />
+          </div>
+          <div className="reviewer-progress-copy">
+            <strong>
+              {aiConsent ? 'Reviewing your resume with AI…' : 'Checking your resume…'}
+            </strong>
+            <p>
+              {aiConsent
+                ? 'Checking clarity, grammar and contribution. This can take a moment.'
+                : 'Looking for common mistakes and formatting risks.'}
+            </p>
+            <div
+              className="reviewer-progress-track"
+              aria-hidden="true"
+            >
+              <span />
+            </div>
+          </div>
+        </div>
       )}
       {error && (
         <p

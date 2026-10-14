@@ -1,6 +1,8 @@
 .resume-reviewer {
-  margin: 28px auto;
-  max-width: 900px;
+  margin: 24px 0;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   padding: 24px;
   background: linear-gradient(135deg, #ffffffd9, #f1efffcc);
   border: 1px solid var(--border);
@@ -34,15 +36,13 @@
   gap: 16px;
   margin: 20px 0;
 }
-.reviewer-settings label,
-.reviewer-job {
+.reviewer-settings label {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
 }
-.reviewer-settings input,
-.reviewer-job textarea {
+.reviewer-settings input {
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
@@ -55,9 +55,6 @@
 }
 .reviewer-settings input {
   min-height: var(--control-height);
-}
-.reviewer-job {
-  margin: 12px 0;
 }
 .resume-reviewer .reviewer-consent {
   display: flex;
@@ -74,6 +71,103 @@
 .reviewer-actions {
   justify-content: flex-start;
   margin: 18px 0;
+}
+.resume-reviewer .secondary-button {
+  min-height: var(--control-height);
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #ffffffb3;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.resume-reviewer .secondary-button:hover {
+  background: white;
+}
+.reviewer-spinner {
+  flex-shrink: 0;
+  animation: reviewer-spin 1s linear infinite;
+}
+.reviewer-progress {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #dcd8f5;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #f8f7ff, #eef4ff);
+}
+.reviewer-scan {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 56px;
+  height: 64px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #fff9;
+  color: #514abe;
+}
+.reviewer-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 35%, #aba3ef40 48%, #8e84e8a6 50%, transparent 53%);
+  animation: reviewer-scan 2.4s ease-in-out infinite;
+}
+.reviewer-progress-copy {
+  flex: 1;
+  min-width: 0;
+}
+.reviewer-progress-copy p {
+  margin: 6px 0 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.reviewer-progress-track {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #dedbf2;
+}
+.reviewer-progress-track span {
+  display: block;
+  width: 35%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a297ee, #514abe);
+  animation: reviewer-progress 2s ease-in-out infinite;
+}
+@keyframes reviewer-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes reviewer-scan {
+  0%,
+  100% {
+    transform: translateY(-45%);
+  }
+  50% {
+    transform: translateY(45%);
+  }
+}
+@keyframes reviewer-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reviewer-spinner,
+  .reviewer-scan::after,
+  .reviewer-progress-track span {
+    animation: none;
+  }
 }
 .reviewer-findings {
   padding: 0;

@@ -242,14 +242,6 @@ export function ResumeWorkbench({
           </div>
         </div>
       </div>
-      <ResumeReviewer
-        key={account?.user?.id ?? 'guest'}
-        text={state.text}
-        document={documentInput.document}
-        account={account}
-        pending={documentInput.loading}
-        openPricing={openPricing}
-      />
       {(state.loading || analysis) && (
         <p
           className="resume-request-status"
@@ -286,7 +278,7 @@ export function ResumeWorkbench({
             className="profile-review"
             summary={
               <>
-                Review your profile <span>Skills, experience & location</span>
+                Review your profile <span>Skills, experience, location & resume feedback</span>
               </>
             }
           >
@@ -327,6 +319,14 @@ export function ResumeWorkbench({
                   </>
                 )}
               </div>
+              <ResumeReviewer
+                key={account?.user?.id ?? 'guest'}
+                text={state.text}
+                document={documentInput.document}
+                account={account}
+                pending={documentInput.loading}
+                openPricing={openPricing}
+              />
               {analysis.warnings.length > 0 && (
                 <aside
                   className="resume-warnings"
