@@ -18,7 +18,7 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer, ResumeRoleAs
   }
 
   async assess(input: Parameters<ResumeRoleAssessor['assess']>[0], signal: AbortSignal) {
-    return this.request(input, signal, roleFeedback, roleInstructions);
+    return this.request(input, signal, roleFeedback, roleInstructions, 8_000);
   }
 
   private async request<T>(
@@ -26,6 +26,7 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer, ResumeRoleAs
     signal: AbortSignal,
     schema: z.ZodType<T>,
     prompt: string,
+    maxCompletionTokens = 3_000,
   ): Promise<T> {
     signal.throwIfAborted();
 
@@ -39,7 +40,7 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer, ResumeRoleAs
       body: JSON.stringify({
         model: this.model,
         store: false,
-        max_completion_tokens: 3_000,
+        max_completion_tokens: maxCompletionTokens,
         messages: [
           { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(input) },

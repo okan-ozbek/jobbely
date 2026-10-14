@@ -2,7 +2,15 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Info } from 'lucide-react';
 
-export function ResumeReviewInfo({ limitations }: { limitations: readonly string[] }) {
+import './review-info.css';
+
+export function ResumeReviewInfo({
+  limitations,
+  title = 'What this review can assess',
+}: {
+  limitations: readonly string[];
+  title?: string | undefined;
+}) {
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const context = useRef<HTMLDivElement>(null);
@@ -84,7 +92,7 @@ export function ResumeReviewInfo({ limitations }: { limitations: readonly string
         ref={trigger}
         className="reviewer-info-button"
         type="button"
-        aria-label="What this review can assess"
+        aria-label={title}
         aria-describedby={rect ? id : undefined}
         aria-expanded={!!rect}
         onMouseEnter={show}
@@ -114,7 +122,7 @@ export function ResumeReviewInfo({ limitations }: { limitations: readonly string
               ...(below ? { top: rect.bottom + 8 } : { bottom: window.innerHeight - rect.top + 8 }),
             }}
           >
-            <strong>What this review can assess</strong>
+            <strong>{title}</strong>
             <ul>
               {limitations.map((limitation) => (
                 <li key={limitation}>{limitation}</li>

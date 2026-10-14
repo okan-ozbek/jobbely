@@ -1,38 +1,7 @@
 .role-ai-assessment {
   margin-top: 20px;
-  padding: 20px;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: linear-gradient(120deg, #ffffffb3, #f3f0ff);
 }
-.role-ai-heading,
-.role-ai-heading h3 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.role-ai-heading {
-  justify-content: space-between;
-}
-.role-ai-heading h3 {
-  margin: 0;
-  font-size: 17px;
-  font-weight: 500;
-}
-.role-ai-heading button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.role-ai-heading .resume-status {
-  border-radius: 20px;
-  background: #efedf8;
-  color: #68618d;
-  padding: 5px 10px;
-  font-size: 11px;
-}
-.role-ai-heading .resume-secondary-button {
+.role-ai-assessment .resume-secondary-button {
   border-radius: 12px;
   background: #ffffff99;
 }
@@ -78,7 +47,28 @@
   white-space: pre-wrap;
 }
 .role-ai-evidence small {
+  display: block;
+  margin-top: 14px;
   color: var(--muted);
+}
+.role-ai-evidence .resume-diff-proposed > small {
+  margin-top: 0;
+}
+.role-evidence-priority {
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.role-screening-gap {
+  border: 1px solid #dfb8b8;
+  border-radius: 12px;
+  padding: 14px;
+  color: #7e303a;
+  background: #fff0ef;
+}
+.role-evidence-contradicted {
+  background: #ffe5e3;
+  color: #8f303a;
 }
 .role-evidence-status {
   display: inline-flex;
@@ -111,9 +101,6 @@
   }
 }
 @media (max-width: 650px) {
-  .role-ai-assessment {
-    padding: 16px;
-  }
   .role-ai-summary {
     grid-template-columns: 1fr;
   }

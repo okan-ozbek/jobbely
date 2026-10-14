@@ -4227,20 +4227,27 @@ export interface operations {
                             alignment: "strong" | "partial" | "limited" | "unknown";
                             confidence: "high" | "moderate" | "low";
                             evidenceCount: number;
+                            requiredGaps: number;
+                            screening: "potential_fit" | "needs_clarification" | "requirements_not_demonstrated" | "insufficient_context";
                         };
                         recruiter: {
                             alignment: "strong" | "partial" | "limited" | "unknown";
                             confidence: "high" | "moderate" | "low";
                             evidenceCount: number;
+                            requiredGaps: number;
+                            screening: "potential_fit" | "needs_clarification" | "requirements_not_demonstrated" | "insufficient_context";
                         };
+                        coverage: "all_identified" | "partial";
                         evidence: {
                             area: "ats" | "recruiter";
-                            status: "supported" | "partial" | "not_evidenced";
+                            status: "supported" | "partial" | "not_evidenced" | "contradicted";
+                            priority: "required" | "preferred" | "responsibility";
                             jobQuote: string;
                             resumeQuote: string | null;
                             line: number | null;
                             explanation: string;
                             suggestion: string;
+                            rewrite: string | null;
                         }[];
                         limitations: string[];
                     };

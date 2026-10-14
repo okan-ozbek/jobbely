@@ -20,6 +20,8 @@ The overview chart has selectable periods/data points, readable counts and expli
 
 ## Tokens and typography
 
+The 15 October Pro review panels share a stronger lavender gradient, purple top accent, dark sparkles emblem and Pro pill through [ProReviewPanel](../frontend/src/features/resume/ProReviewPanel.tsx) and [styles](../frontend/src/features/resume/pro-review.css). **Pro resume reviewer** is their stable annotation name; the role variant adds screening context. Suggested edits use muted removal/addition panes with text labels, stacked on mobile, and an explanation below. Limits remain in a title-adjacent accessible info popover. Styling never changes paid access, consent or evidence policies; see [ROLE_ASSESSMENT](ROLE_ASSESSMENT.md).
+
 ### Sign-in and registration, 8 October 2026
 
 Guest account dialogs enter with a 320 ms fade, small upward lift and scale, alongside a backdrop fade. Dismissal preserves the form for a 160 ms exit before native closure restores focus and clears secrets. Closing dialogs are inert; Escape uses the same exit path as the X/backdrop. Reduced-motion users get immediate opening/closing. Exit cancellation prevents a previous close animation from hiding a reopened dialog. Identity changes and signed-in action dialogs close immediately, preserving the existing sign-in/deletion transitions.

@@ -3,7 +3,8 @@ import { LoaderCircle, Sparkles } from 'lucide-react';
 import type { Account } from '../../api/accounts.js';
 import { assessResumeRole, reviewAvailability } from '../../api/resume-review.js';
 import type { RoleAssessment, ReviewAvailability } from '../../api/resume-review.js';
-import { Disclosure } from '../../components/Disclosure.js';
+import { ProReviewPanel } from './ProReviewPanel.js';
+import { ResumeSuggestionDiff } from './ResumeSuggestionDiff.js';
 import './role-assessment.css';
 
 const labels = {
@@ -11,6 +12,13 @@ const labels = {
   partial: 'Partial overlap',
   limited: 'Limited evidence',
   unknown: 'Unavailable',
+};
+
+const screeningLabels = {
+  potential_fit: 'Requirements appear supported',
+  needs_clarification: 'Evidence needs clarification',
+  requirements_not_demonstrated: 'Required qualifications not demonstrated',
+  insufficient_context: 'Screening readiness unverified',
 };
 
 export function RoleAlignmentAssessment({
@@ -38,7 +46,11 @@ export function RoleAlignmentAssessment({
   const expiry = account?.access.accessEndsAt;
 
   const result =
-    availability?.enabled && receipt?.jobId === jobId && receipt.text === text
+    availability?.enabled &&
+    receipt?.jobId === jobId &&
+    receipt.text === text &&
+    receipt.data.ats.screening &&
+    receipt.data.recruiter.screening
       ? receipt.data
       : null;
 
@@ -131,58 +143,65 @@ export function RoleAlignmentAssessment({
   }
 
   return (
-    <section
+    <ProReviewPanel
       className="role-ai-assessment"
-      aria-labelledby="role-ai-heading"
-    >
-      <div className="role-ai-heading">
-        <h3 id="role-ai-heading">
-          <Sparkles
-            size={17}
-            aria-hidden="true"
-          />{' '}
-          AI role alignment <span className="resume-status">Pro</span>
-        </h3>
-        <button
-          type="button"
-          className="primary-button"
-          disabled={
-            loading ||
-            !availability?.enabled ||
-            !availability.aiAvailable ||
-            !text.trim() ||
-            text.length > 40_000
-          }
-          aria-busy={loading}
-          onClick={() => void assess()}
-        >
-          {loading ? (
-            <LoaderCircle
-              size={16}
-              className="role-ai-spinner"
-              aria-hidden="true"
-            />
-          ) : (
-            <Sparkles
-              size={16}
-              aria-hidden="true"
-            />
-          )}{' '}
-          {loading ? 'Assessing…' : 'Assess with AI'}
-        </button>
-        {loading && (
+      id="role-ai-heading"
+      title="Pro resume reviewer"
+      module="role"
+      infoTitle="Assessment limits"
+      limitations={
+        result?.limitations ?? [
+          'Rehearses stated job requirements against original resume evidence, with separate keyword and recruiter assessments.',
+          'Missing or contradicted required qualifications are screening gaps. Wording cannot replace experience or credentials.',
+          'Evidence confidence is qualitative, not a probability of passing. Employer ATS rules and recruiter decisions are unavailable.',
+          'Only fact-preserving wording is shown as an edit. Verify every suggestion before using it.',
+        ]
+      }
+      actions={
+        <>
           <button
             type="button"
-            className="resume-secondary-button"
-            onClick={() => {
-              active.current?.abort();
-              setLoading(false);
-            }}
+            className="primary-button"
+            disabled={
+              loading ||
+              !availability?.enabled ||
+              !availability.aiAvailable ||
+              !text.trim() ||
+              text.length > 40_000
+            }
+            aria-busy={loading}
+            onClick={() => void assess()}
           >
-            Cancel
+            {loading ? (
+              <LoaderCircle
+                size={16}
+                className="role-ai-spinner"
+                aria-hidden="true"
+              />
+            ) : (
+              <Sparkles
+                size={16}
+                aria-hidden="true"
+              />
+            )}{' '}
+            {loading ? 'Assessing…' : 'Assess with AI'}
           </button>
-        )}
-      </div>
+          {loading && (
+            <button
+              type="button"
+              className="resume-secondary-button"
+              onClick={() => {
+                active.current?.abort();
+                setLoading(false);
+              }}
+            >
+              Cancel
+            </button>
+          )}
+        </>
+      }
+    >
+      <p className="role-ai-intro">Screen your resume against this role’s requirements.</p>
       <p className="small-note">
         Uses your resume text and this job description. Processed by OpenAI. Alignment and evidence
         confidence are qualitative, not screening pass probabilities.
@@ -225,7 +244,13 @@ export function RoleAlignmentAssessment({
                   <span>
                     {area === 'ats' ? 'ATS keyword alignment' : 'Recruiter evidence alignment'}
                   </span>
-                  <strong>{labels[result[area].alignment]}</strong>
+                  <strong>{screeningLabels[result[area].screening]}</strong>
+                  <span>
+                    {labels[result[area].alignment]}
+                    {result[area].requiredGaps
+                      ? ` · ${result[area].requiredGaps} required gap${result[area].requiredGaps === 1 ? '' : 's'}`
+                      : ''}
+                  </span>
                   <small>
                     Evidence confidence: {result[area].confidence} · {result[area].evidenceCount}{' '}
                     observations
@@ -233,6 +258,22 @@ export function RoleAlignmentAssessment({
                 </div>
               ))}
             </div>
+            {(result.ats.requiredGaps > 0 || result.recruiter.requiredGaps > 0) && (
+              <p
+                className="role-screening-gap"
+                role="status"
+              >
+                Required evidence is missing or conflicts with the role. Resume wording cannot
+                resolve a substantive experience or qualification gap. Verify these requirements
+                before applying; consider roles closer to your demonstrated experience.
+              </p>
+            )}
+            {result.coverage === 'partial' && (
+              <p className="small-note">
+                Some requirements could not be fully reviewed. Screening readiness remains
+                unverified.
+              </p>
+            )}
             {(['ats', 'recruiter'] as const).map((area) => (
               <div key={area}>
                 <h4>
@@ -248,35 +289,42 @@ export function RoleAlignmentAssessment({
                             ? 'Overlap'
                             : row.status === 'partial'
                               ? 'Partial overlap'
-                              : 'Missing evidence'}
+                              : row.status === 'contradicted'
+                                ? 'Requirement conflict'
+                                : 'Missing evidence'}
                         </span>
-                        <p>{row.explanation}</p>
+                        <span className="role-evidence-priority">
+                          {row.priority === 'required'
+                            ? 'Required'
+                            : row.priority === 'preferred'
+                              ? 'Preferred'
+                              : 'Responsibility'}
+                        </span>
                         <small>Job requirement</small>
                         <blockquote>{row.jobQuote}</blockquote>
-                        {row.resumeQuote && (
-                          <>
-                            <small>Your resume · Line {row.line}</small>
-                            <blockquote>{row.resumeQuote}</blockquote>
-                          </>
-                        )}
+                        <ResumeSuggestionDiff
+                          before={row.resumeQuote}
+                          after={row.rewrite}
+                          line={row.line}
+                          guidance={row.suggestion}
+                        />
                         <p>
-                          <strong>Try this: </strong>
-                          {row.suggestion}
+                          <strong>Why this matters: </strong>
+                          {row.explanation}
                         </p>
+                        {row.rewrite && (
+                          <p>
+                            <strong>Try this: </strong>
+                            {row.suggestion}
+                          </p>
+                        )}
                       </li>
                     ))}
                 </ul>
               </div>
             ))}
-            <Disclosure summary="Assessment limits">
-              <ul>
-                {result.limitations.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </Disclosure>
           </div>
         ))}
-    </section>
+    </ProReviewPanel>
   );
 }

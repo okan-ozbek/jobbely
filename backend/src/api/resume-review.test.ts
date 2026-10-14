@@ -97,14 +97,17 @@ async function setup(
 
 async function roleSetup(paid = true) {
   const assess = vi.fn<ResumeRoleAssessor['assess']>().mockImplementation(async (input) => ({
+    coverage: 'all_identified',
     evidence: (['ats', 'recruiter'] as const).map((area) => ({
       area,
       status: 'supported',
+      priority: 'required',
       jobQuote: input.jobDescription.slice(0, 35),
       resumeQuote: 'Built reports.',
       line: 4,
       explanation: 'The excerpt describes a contribution.',
       suggestion: 'Add factual detail about the contribution.',
+      rewrite: 'Reports built.',
     })),
   }));
 
@@ -200,7 +203,7 @@ describe('private Pro role assessment', () => {
     ).toBe(404);
 
     expect(assess).not.toHaveBeenCalled();
-    assess.mockResolvedValueOnce({ evidence: [] });
+    assess.mockResolvedValueOnce({ coverage: 'partial', evidence: [] });
 
     expect(
       (await app.inject({ method: 'POST', url, headers, payload: body })).json(),
@@ -235,7 +238,7 @@ describe('private Pro role assessment', () => {
     changed.assess.mockImplementationOnce(async () => {
       changed.resolver.mockResolvedValue(freeAccess());
 
-      return { evidence: [] };
+      return { coverage: 'partial', evidence: [] };
     });
 
     expect(

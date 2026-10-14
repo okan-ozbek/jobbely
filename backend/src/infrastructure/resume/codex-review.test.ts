@@ -56,19 +56,21 @@ describe('isolated local Codex writing adapter', () => {
     const evidence = (['ats', 'recruiter'] as const).map((area) => ({
       area,
       status: 'supported',
+      priority: 'required',
       jobQuote: 'Python required.',
       resumeQuote: 'Built a fictional dashboard.',
       line: 3,
       explanation: 'Relevant evidence.',
       suggestion: 'Clarify the contribution.',
+      rewrite: null,
     }));
 
     const launch = (command: string, args: string[], options: SpawnOptionsWithoutStdio) => {
       const schema = JSON.parse(readFileSync(join(String(options.cwd), 'schema.json'), 'utf8'));
 
-      expect(schema.required).toEqual(['evidence']);
+      expect(schema.required).toEqual(['coverage', 'evidence']);
 
-      return fixture(events({ evidence }))(command, args, options);
+      return fixture(events({ coverage: 'all_identified', evidence }))(command, args, options);
     };
 
     const reviewer = new CodexResumeReviewer(process.execPath, 'gpt-6.1-sol', launch);
@@ -82,7 +84,7 @@ describe('isolated local Codex writing adapter', () => {
         },
         new AbortController().signal,
       ),
-    ).toEqual({ evidence });
+    ).toEqual({ coverage: 'all_identified', evidence });
   });
 
   it('uses stdin, an isolated schema-only directory, disabled tools and a restricted environment', async () => {

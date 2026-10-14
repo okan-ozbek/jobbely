@@ -18,16 +18,18 @@ describe('bounded OpenAI writing adapter', () => {
     const evidence = (['ats', 'recruiter'] as const).map((area) => ({
       area,
       status: 'supported',
+      priority: 'required',
       jobQuote: 'Python required.',
       resumeQuote: 'Built reports.',
       line: 3,
       explanation: 'Relevant evidence.',
       suggestion: 'Clarify the factual contribution.',
+      rewrite: null,
     }));
 
     const transport = vi
       .fn<typeof fetch>()
-      .mockResolvedValue(envelope(JSON.stringify({ evidence })));
+      .mockResolvedValue(envelope(JSON.stringify({ coverage: 'all_identified', evidence })));
 
     const reviewer = new OpenAiResumeReviewer('synthetic-key', 'explicit-model', transport);
 
@@ -40,13 +42,14 @@ describe('bounded OpenAI writing adapter', () => {
         },
         new AbortController().signal,
       ),
-    ).toEqual({ evidence });
+    ).toEqual({ coverage: 'all_identified', evidence });
 
     const body = JSON.parse(String(transport.mock.calls[0]![1]!.body));
 
-    expect(body.response_format.json_schema.schema.required).toEqual(['evidence']);
+    expect(body.response_format.json_schema.schema.required).toEqual(['coverage', 'evidence']);
     expect(body.messages[0].content).toContain('screening pass probabilities');
     expect(body.store).toBe(false);
+    expect(body.max_completion_tokens).toBe(8_000);
   });
 
   it('uses a fixed endpoint, nonstored structured output and no tools', async () => {

@@ -1,13 +1,5 @@
 .resume-reviewer {
   margin: 24px 0;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  padding: 24px;
-  background: linear-gradient(135deg, #ffffffd9, #f1efffcc);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  overflow-wrap: anywhere;
 }
 .reviewer-heading,
 .reviewer-finding-heading,
@@ -17,54 +9,6 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-}
-.reviewer-title,
-.reviewer-title h2 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.resume-reviewer .reviewer-title h2 {
-  margin: 0;
-  font-size: 16px;
-}
-.reviewer-info-button {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-}
-.reviewer-info-button:hover,
-.reviewer-info-button:focus-visible {
-  background: #e6e1ff;
-  color: #514abe;
-}
-.reviewer-context {
-  position: fixed;
-  z-index: 100;
-  padding: 18px;
-  box-sizing: border-box;
-  overflow: auto;
-  border: 1px solid #e0ddf1;
-  border-radius: 16px;
-  background: #faf9ff;
-  box-shadow: 0 16px 40px #29234224;
-  color: var(--ink);
-  font-size: 14px;
-  line-height: 1.5;
-}
-.reviewer-context ul {
-  padding-left: 18px;
-  margin-bottom: 0;
-}
-.reviewer-context li + li {
-  margin-top: 8px;
 }
 .reviewer-locked {
   display: flex;

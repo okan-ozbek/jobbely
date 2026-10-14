@@ -68,6 +68,7 @@ export class ReviewResume {
         segments,
         jobDescription,
         minimized.length > jobDescription.length,
+        response.coverage,
       );
     } catch {
       signal.throwIfAborted();

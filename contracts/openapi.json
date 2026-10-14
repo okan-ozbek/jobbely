@@ -16197,6 +16197,7 @@
                     "aiStatus",
                     "ats",
                     "recruiter",
+                    "coverage",
                     "evidence",
                     "limitations"
                   ],
@@ -16229,7 +16230,9 @@
                       "required": [
                         "alignment",
                         "confidence",
-                        "evidenceCount"
+                        "evidenceCount",
+                        "requiredGaps",
+                        "screening"
                       ],
                       "properties": {
                         "alignment": {
@@ -16284,8 +16287,41 @@
                         },
                         "evidenceCount": {
                           "minimum": 0,
-                          "maximum": 8,
+                          "maximum": 24,
                           "type": "integer"
+                        },
+                        "requiredGaps": {
+                          "minimum": 0,
+                          "maximum": 24,
+                          "type": "integer"
+                        },
+                        "screening": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "potential_fit"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "needs_clarification"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "requirements_not_demonstrated"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "insufficient_context"
+                              ]
+                            }
+                          ]
                         }
                       }
                     },
@@ -16295,7 +16331,9 @@
                       "required": [
                         "alignment",
                         "confidence",
-                        "evidenceCount"
+                        "evidenceCount",
+                        "requiredGaps",
+                        "screening"
                       ],
                       "properties": {
                         "alignment": {
@@ -16350,13 +16388,62 @@
                         },
                         "evidenceCount": {
                           "minimum": 0,
-                          "maximum": 8,
+                          "maximum": 24,
                           "type": "integer"
+                        },
+                        "requiredGaps": {
+                          "minimum": 0,
+                          "maximum": 24,
+                          "type": "integer"
+                        },
+                        "screening": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "potential_fit"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "needs_clarification"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "requirements_not_demonstrated"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "insufficient_context"
+                              ]
+                            }
+                          ]
                         }
                       }
                     },
+                    "coverage": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "all_identified"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "partial"
+                          ]
+                        }
+                      ]
+                    },
                     "evidence": {
-                      "maxItems": 8,
+                      "maxItems": 24,
                       "type": "array",
                       "items": {
                         "additionalProperties": false,
@@ -16364,11 +16451,13 @@
                         "required": [
                           "area",
                           "status",
+                          "priority",
                           "jobQuote",
                           "resumeQuote",
                           "line",
                           "explanation",
-                          "suggestion"
+                          "suggestion",
+                          "rewrite"
                         ],
                         "properties": {
                           "area": {
@@ -16406,6 +16495,34 @@
                                 "enum": [
                                   "not_evidenced"
                                 ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contradicted"
+                                ]
+                              }
+                            ]
+                          },
+                          "priority": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "required"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "preferred"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "responsibility"
+                                ]
                               }
                             ]
                           },
@@ -16433,6 +16550,12 @@
                           "suggestion": {
                             "maxLength": 600,
                             "type": "string"
+                          },
+                          "rewrite": {
+                            "minLength": 1,
+                            "maxLength": 600,
+                            "type": "string",
+                            "nullable": true
                           }
                         }
                       }

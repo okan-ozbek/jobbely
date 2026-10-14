@@ -39,6 +39,8 @@ For the personal localhost Codex writing provider, [RESUME_REVIEWER](RESUME_REVI
 
 For opt-in Pro ATS keyword/recruiter evidence alignment on job detail, read [ROLE_ASSESSMENT](ROLE_ASSESSMENT.md), [RESUME_REVIEWER](RESUME_REVIEWER.md), [RESUME_PRIVACY](RESUME_PRIVACY.md) and the matching route above. Start in the [assessment domain](../backend/src/domain/resume/role-assessment.ts), [gated route](../backend/src/api/resume-review-routes.ts) and [AI action](../frontend/src/features/resume/RoleAlignmentAssessment.tsx). Alignment confidence is not an ATS/recruiter pass probability.
 
+For shared **Pro resume reviewer** styling, AI icons, limits popovers and split-view suggestions, start in [ProReviewPanel](../frontend/src/features/resume/ProReviewPanel.tsx), [ResumeSuggestionDiff](../frontend/src/features/resume/ResumeSuggestionDiff.tsx) and [ResumeReviewInfo](../frontend/src/features/resume/ResumeReviewInfo.tsx). [ROLE_ASSESSMENT](ROLE_ASSESSMENT.md#evidence-and-confidence) owns required-gap screening outcomes and conservative role rewrite validation.
+
 ## Plans and evidence: read on demand
 
 - Performance and scheduling changes: [RANKED_SYNC_PLAN](RANKED_SYNC_PLAN.md) proposes financial-size ranking, four round-robin workers and wave retirement; [RESUME_PERFORMANCE_PLAN](RESUME_PERFORMANCE_PLAN.md) records local bottlenecks and delivery progress. The first narrow-query/request-reduction increment is implemented in [STORAGE](STORAGE.md) and [FRONTEND](FRONTEND.md); ranking, worker migration, caching and compact scoring remain proposed.

@@ -10,7 +10,8 @@ import type {
 import type { ExtractedDocument } from './documents/model.js';
 import { reviewLayout } from './review-layout.js';
 import { GlassSelect } from '../../components/GlassSelect.js';
-import { ResumeReviewInfo } from './ResumeReviewInfo.js';
+import { ProReviewPanel } from './ProReviewPanel.js';
+import { ResumeSuggestionDiff } from './ResumeSuggestionDiff.js';
 import './reviewer.css';
 
 export function ResumeReviewer({
@@ -156,31 +157,19 @@ export function ResumeReviewer({
   };
 
   return (
-    <section
+    <ProReviewPanel
+      id="writing-review-title"
+      title="Pro resume reviewer"
+      module="resume"
       className="resume-reviewer"
-      aria-labelledby="writing-review-title"
+      limitations={
+        result?.limitations ?? [
+          'Checks common document mistakes and offers optional AI feedback on spelling, grammar, clarity and contribution.',
+          'Formatting checks use extracted layout hints; exact margins, colors, clipping and images are not assessed.',
+          'Findings describe your document, not employability or an ATS pass score. Review AI suggestions before using them.',
+        ]
+      }
     >
-      <div className="reviewer-heading">
-        <div className="reviewer-title">
-          <h2 id="writing-review-title">
-            <ClipboardCheck
-              size={15}
-              aria-hidden="true"
-            />{' '}
-            Pro resume reviewer
-          </h2>
-          <ResumeReviewInfo
-            limitations={
-              result?.limitations ?? [
-                'Checks common document mistakes and offers optional AI feedback on spelling, grammar, clarity and contribution.',
-                'Formatting checks use extracted layout hints; exact margins, colors, clipping and images are not assessed.',
-                'Findings describe your document, not employability or an ATS pass score. Review AI suggestions before using them.',
-              ]
-            }
-          />
-        </div>
-        <span className="resume-status">Pro</span>
-      </div>
       <p>
         Check common mistakes and formatting risks. Add optional AI feedback on clarity, grammar and
         contribution.
@@ -276,9 +265,14 @@ export function ResumeReviewer({
               aria-busy={loading}
               disabled={!text.trim() || text.length > 40_000 || pending || loading || !csrf}
             >
-              {loading && (
+              {loading ? (
                 <LoaderCircle
                   className="reviewer-spinner"
+                  size={16}
+                  aria-hidden="true"
+                />
+              ) : (
+                <Sparkles
                   size={16}
                   aria-hidden="true"
                 />
@@ -379,16 +373,17 @@ export function ResumeReviewer({
                               : ''}
                         </span>
                       </div>
-                      {finding.quote && <blockquote>{finding.quote}</blockquote>}
+                      <ResumeSuggestionDiff
+                        before={finding.quote}
+                        after={finding.rewrite}
+                        line={finding.line}
+                        guidance={finding.suggestion}
+                      />
                       <p>{finding.explanation}</p>
-                      <p>
-                        <strong>Try this: </strong>
-                        {finding.suggestion}
-                      </p>
                       {finding.rewrite && (
-                        <p className="reviewer-rewrite">
-                          <strong>Suggested wording: </strong>
-                          {finding.rewrite}
+                        <p>
+                          <strong>Try this: </strong>
+                          {finding.suggestion}
                         </p>
                       )}
                     </li>
@@ -399,6 +394,6 @@ export function ResumeReviewer({
           })}
         </div>
       )}
-    </section>
+    </ProReviewPanel>
   );
 }

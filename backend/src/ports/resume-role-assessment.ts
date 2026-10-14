@@ -9,5 +9,5 @@ export interface ResumeRoleAssessor {
       jobDescription: string;
     },
     signal: AbortSignal,
-  ): Promise<{ evidence: RoleEvidence[] }>;
+  ): Promise<{ evidence: RoleEvidence[]; coverage: 'all_identified' | 'partial' }>;
 }
