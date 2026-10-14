@@ -283,6 +283,14 @@ export function ResumeWorkbench({
             }
           >
             <div className="profile-review-content">
+              <ResumeReviewer
+                key={account?.user?.id ?? 'guest'}
+                text={state.text}
+                document={documentInput.document}
+                account={account}
+                pending={documentInput.loading}
+                openPricing={openPricing}
+              />
               <div
                 className="resume-summary"
                 aria-busy={state.loading}
@@ -319,14 +327,6 @@ export function ResumeWorkbench({
                   </>
                 )}
               </div>
-              <ResumeReviewer
-                key={account?.user?.id ?? 'guest'}
-                text={state.text}
-                document={documentInput.document}
-                account={account}
-                pending={documentInput.loading}
-                openPricing={openPricing}
-              />
               {analysis.warnings.length > 0 && (
                 <aside
                   className="resume-warnings"

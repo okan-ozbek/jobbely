@@ -185,7 +185,7 @@ export function ResumeReviewer({
                   aria-hidden="true"
                 />
               )}
-              Review resume
+              Assess with AI
             </button>
             {loading && (
               <button
