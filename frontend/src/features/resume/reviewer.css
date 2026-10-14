@@ -18,9 +18,53 @@
   flex-wrap: wrap;
   gap: 12px;
 }
-.reviewer-heading h2 {
-  margin: 8px 0;
-  font-size: 25px;
+.reviewer-title,
+.reviewer-title h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.resume-reviewer .reviewer-title h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.reviewer-info-button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.reviewer-info-button:hover,
+.reviewer-info-button:focus-visible {
+  background: #e6e1ff;
+  color: #514abe;
+}
+.reviewer-context {
+  position: fixed;
+  z-index: 100;
+  padding: 18px;
+  box-sizing: border-box;
+  overflow: auto;
+  border: 1px solid #e0ddf1;
+  border-radius: 16px;
+  background: #faf9ff;
+  box-shadow: 0 16px 40px #29234224;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.reviewer-context ul {
+  padding-left: 18px;
+  margin-bottom: 0;
+}
+.reviewer-context li + li {
+  margin-top: 8px;
 }
 .reviewer-locked {
   display: flex;
@@ -99,23 +143,14 @@
   border-radius: 18px;
   background: linear-gradient(120deg, #f8f7ff, #eef4ff);
 }
-.reviewer-scan {
-  position: relative;
+.reviewer-progress-icon {
   display: grid;
   place-items: center;
   flex: 0 0 56px;
   height: 64px;
-  overflow: hidden;
   border-radius: 14px;
   background: #fff9;
   color: #514abe;
-}
-.reviewer-scan::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(transparent 35%, #aba3ef40 48%, #8e84e8a6 50%, transparent 53%);
-  animation: reviewer-scan 2.4s ease-in-out infinite;
 }
 .reviewer-progress-copy {
   flex: 1;
@@ -145,15 +180,6 @@
     transform: rotate(360deg);
   }
 }
-@keyframes reviewer-scan {
-  0%,
-  100% {
-    transform: translateY(-45%);
-  }
-  50% {
-    transform: translateY(45%);
-  }
-}
 @keyframes reviewer-progress {
   from {
     transform: translateX(-110%);
@@ -164,7 +190,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .reviewer-spinner,
-  .reviewer-scan::after,
   .reviewer-progress-track span {
     animation: none;
   }
@@ -174,6 +199,9 @@
   list-style: none;
   display: grid;
   gap: 12px;
+}
+.reviewer-results h3 {
+  font-size: 16px;
 }
 .reviewer-findings > li {
   padding: 18px;

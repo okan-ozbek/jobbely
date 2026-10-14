@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ClipboardCheck, LoaderCircle, LockKeyhole } from 'lucide-react';
+import { ClipboardCheck, LoaderCircle, LockKeyhole, Sparkles } from 'lucide-react';
 import type { Account } from '../../api/accounts.js';
 import { reviewAvailability, reviewResume } from '../../api/resume-review.js';
 import type {
@@ -10,7 +10,7 @@ import type {
 import type { ExtractedDocument } from './documents/model.js';
 import { reviewLayout } from './review-layout.js';
 import { GlassSelect } from '../../components/GlassSelect.js';
-import { Disclosure } from '../../components/Disclosure.js';
+import { ResumeReviewInfo } from './ResumeReviewInfo.js';
 import './reviewer.css';
 
 export function ResumeReviewer({
@@ -161,11 +161,23 @@ export function ResumeReviewer({
       aria-labelledby="writing-review-title"
     >
       <div className="reviewer-heading">
-        <div>
-          <span className="eyebrow">
-            <ClipboardCheck size={15} /> Pro resume reviewer
-          </span>
-          <h2 id="writing-review-title">Make your resume easier to read.</h2>
+        <div className="reviewer-title">
+          <h2 id="writing-review-title">
+            <ClipboardCheck
+              size={15}
+              aria-hidden="true"
+            />{' '}
+            Pro resume reviewer
+          </h2>
+          <ResumeReviewInfo
+            limitations={
+              result?.limitations ?? [
+                'Checks common document mistakes and offers optional AI feedback on spelling, grammar, clarity and contribution.',
+                'Formatting checks use extracted layout hints; exact margins, colors, clipping and images are not assessed.',
+                'Findings describe your document, not employability or an ATS pass score. Review AI suggestions before using them.',
+              ]
+            }
+          />
         </div>
         <span className="resume-status">Pro</span>
       </div>
@@ -241,16 +253,7 @@ export function ResumeReviewer({
             />
             <span>Include AI writing feedback</span>
           </label>
-          {availability.aiAvailable ? (
-            <p className="small-note">
-              Opting in sends selected resume text to OpenAI. Obvious contact lines and the first
-              resume line are omitted; this does not fully anonymize your resume.
-              {availability.aiProvider === 'codex-local'
-                ? ' This local test uses your signed-in Codex account. Text is processed by OpenAI; your ChatGPT account data controls apply. Each review starts a temporary Codex session, but this is not a guarantee of zero provider retention.'
-                : ' API content is not used for training by default, but provider logs may retain it for up to 30 days, subject to exceptions.'}{' '}
-              AI suggestions need your review.
-            </p>
-          ) : (
+          {!availability.aiAvailable && (
             <p className="small-note">
               AI feedback is not configured. Document checks are available.
             </p>
@@ -280,7 +283,7 @@ export function ResumeReviewer({
                   aria-hidden="true"
                 />
               )}
-              {loading ? 'Reviewing…' : aiConsent ? 'Review with AI' : 'Check my resume'}
+              Review resume
             </button>
             {loading && (
               <button
@@ -295,10 +298,6 @@ export function ResumeReviewer({
               </button>
             )}
           </div>
-          <p className="small-note">
-            This review checks the current resume document. Profile corrections do not rewrite it.
-            Jobbely does not save the review. AI feedback is limited to five requests per hour.
-          </p>
         </form>
       )}
       {loading && (
@@ -309,10 +308,10 @@ export function ResumeReviewer({
           aria-atomic="true"
         >
           <div
-            className="reviewer-scan"
+            className="reviewer-progress-icon"
             aria-hidden="true"
           >
-            <ClipboardCheck size={28} />
+            {aiConsent ? <Sparkles size={28} /> : <ClipboardCheck size={28} />}
           </div>
           <div className="reviewer-progress-copy">
             <strong>
@@ -345,11 +344,9 @@ export function ResumeReviewer({
           className="reviewer-results"
           aria-live="polite"
         >
-          <h3>
-            {result.findings.length
-              ? `${result.findings.length} points to review`
-              : 'No issues found by the available checks'}
-          </h3>
+          {result.findings.length === 0 && (
+            <p role="status">No issues found by the available checks.</p>
+          )}
           {(result.aiStatus === 'failed' || result.aiStatus === 'unavailable') && (
             <p role="status">
               AI feedback could not be completed. Document checks are shown below.
@@ -360,13 +357,14 @@ export function ResumeReviewer({
 
             return findings.length ? (
               <div key={severity}>
-                <h4>
+                <h3>
                   {severity === 'error'
                     ? 'Errors to fix'
                     : severity === 'risk'
                       ? 'Risks to review'
-                      : 'Suggestions to consider'}
-                </h4>
+                      : 'Suggestions to consider'}{' '}
+                  ({findings.length})
+                </h3>
                 <ul className="reviewer-findings">
                   {findings.map((finding) => (
                     <li key={finding.id}>
@@ -399,13 +397,6 @@ export function ResumeReviewer({
               </div>
             ) : null;
           })}
-          <Disclosure summary="What this review can assess">
-            <ul>
-              {result.limitations.map((limitation) => (
-                <li key={limitation}>{limitation}</li>
-              ))}
-            </ul>
-          </Disclosure>
         </div>
       )}
     </section>
