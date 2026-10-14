@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import type { ResumeWritingReviewer } from '../../ports/resume-review.js';
 import { feedback, instructions } from './review-contract.js';
+import type { ResumeRoleAssessor } from '../../ports/resume-role-assessment.js';
+import { roleFeedback, roleInstructions } from './role-contract.js';
 
-export class OpenAiResumeReviewer implements ResumeWritingReviewer {
+export class OpenAiResumeReviewer implements ResumeWritingReviewer, ResumeRoleAssessor {
   readonly provider = 'openai-api';
 
   constructor(
@@ -12,6 +14,19 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer {
   ) {}
 
   async review(input: Parameters<ResumeWritingReviewer['review']>[0], signal: AbortSignal) {
+    return (await this.request(input, signal, feedback, instructions)).findings;
+  }
+
+  async assess(input: Parameters<ResumeRoleAssessor['assess']>[0], signal: AbortSignal) {
+    return this.request(input, signal, roleFeedback, roleInstructions);
+  }
+
+  private async request<T>(
+    input: unknown,
+    signal: AbortSignal,
+    schema: z.ZodType<T>,
+    prompt: string,
+  ): Promise<T> {
     signal.throwIfAborted();
 
     const deadline = AbortSignal.any([signal, AbortSignal.timeout(30_000)]);
@@ -26,7 +41,7 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer {
         store: false,
         max_completion_tokens: 3_000,
         messages: [
-          { role: 'system', content: instructions },
+          { role: 'system', content: prompt },
           { role: 'user', content: JSON.stringify(input) },
         ],
         response_format: {
@@ -34,7 +49,7 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer {
           json_schema: {
             name: 'resume_review',
             strict: true,
-            schema: z.toJSONSchema(feedback, { target: 'draft-7' }),
+            schema: z.toJSONSchema(schema, { target: 'draft-7' }),
           },
         },
       }),
@@ -84,7 +99,7 @@ export class OpenAiResumeReviewer implements ResumeWritingReviewer {
         })
         .parse(JSON.parse(body));
 
-      return feedback.parse(JSON.parse(envelope.choices[0]!.message.content)).findings;
+      return schema.parse(JSON.parse(envelope.choices[0]!.message.content));
     } catch {
       throw new Error('Writing review unavailable');
     } finally {

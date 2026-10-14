@@ -11,6 +11,33 @@ export type ResumeReviewInput =
 export type ReviewAvailability =
   paths['/api/v1/resume-review']['get']['responses'][200]['content']['application/json'];
 
+export type RoleAssessment =
+  paths['/api/v1/jobs/{id}/resume-assessment']['post']['responses'][200]['content']['application/json'];
+
+export async function assessResumeRole(
+  jobId: string,
+  text: string,
+  csrf: string,
+  signal: AbortSignal,
+) {
+  const result = await client.POST('/api/v1/jobs/{id}/resume-assessment', {
+    params: { path: { id: jobId } },
+    body: { text, aiConsent: true },
+    headers: { 'x-csrf-token': csrf },
+    signal,
+    cache: 'no-store',
+  });
+
+  if (!result.data) {
+    throw new ApiError(
+      result.error?.message ?? 'Could not assess resume alignment.',
+      result.error?.code,
+    );
+  }
+
+  return result.data;
+}
+
 const client = createClient<paths>({
   baseUrl: import.meta.env.VITE_API_BASE_URL ?? '',
   credentials: 'include',

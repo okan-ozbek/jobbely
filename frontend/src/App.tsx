@@ -397,6 +397,8 @@ export function App() {
                   <JobProfileComparison
                     job={selected}
                     analysis={comparisonAnalysis}
+                    resumeText={comparisonAnalysis ? resumeState.text : ''}
+                    account={account}
                     reviewResume={() => update({ view: 'resume' })}
                   />
                   <aside className="detail-sidebar">

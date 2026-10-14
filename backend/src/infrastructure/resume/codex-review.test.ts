@@ -52,6 +52,39 @@ function fixture(output: string, tail = '') {
 afterEach(() => vi.unstubAllEnvs());
 
 describe('isolated local Codex writing adapter', () => {
+  it('uses the role schema while preserving the isolated CLI execution path', async () => {
+    const evidence = (['ats', 'recruiter'] as const).map((area) => ({
+      area,
+      status: 'supported',
+      jobQuote: 'Python required.',
+      resumeQuote: 'Built a fictional dashboard.',
+      line: 3,
+      explanation: 'Relevant evidence.',
+      suggestion: 'Clarify the contribution.',
+    }));
+
+    const launch = (command: string, args: string[], options: SpawnOptionsWithoutStdio) => {
+      const schema = JSON.parse(readFileSync(join(String(options.cwd), 'schema.json'), 'utf8'));
+
+      expect(schema.required).toEqual(['evidence']);
+
+      return fixture(events({ evidence }))(command, args, options);
+    };
+
+    const reviewer = new CodexResumeReviewer(process.execPath, 'gpt-6.1-sol', launch);
+
+    expect(
+      await reviewer.assess(
+        {
+          segments: input.segments,
+          jobTitle: 'Synthetic role',
+          jobDescription: 'Python required.',
+        },
+        new AbortController().signal,
+      ),
+    ).toEqual({ evidence });
+  });
+
   it('uses stdin, an isolated schema-only directory, disabled tools and a restricted environment', async () => {
     vi.stubEnv('DATABASE_URL', 'synthetic-database-secret');
     vi.stubEnv('RESUME_REVIEW_OPENAI_KEY', 'synthetic-api-secret');

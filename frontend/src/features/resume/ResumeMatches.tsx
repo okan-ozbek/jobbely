@@ -209,33 +209,27 @@ export function ResumeMatches({
                       : item.band}
                   </span>
                 </div>
-                <MatchMetrics comparison={item} />
-                <p className="small-note">
-                  {item.requiredGaps} recognized required gap(s) · {item.unresolvedRequirements}{' '}
-                  unassessable qualification(s) · checked{' '}
-                  {new Date(item.job.lastSeenAt).toLocaleString()}
-                  <br />
-                  {item.coverage}
-                </p>
-                <Disclosure
-                  summary="Why this result"
-                  className="match-explanation"
-                >
-                  <ConfidenceLegend />
-                  <MatchEvidence
-                    comparison={item}
-                    analysis={analysis}
-                  />
-                  <p>{formatLocation(item.location)}</p>
-                  {item.employerAdjustment.reasons.map((value, index) => (
-                    <p
-                      className="small-note"
-                      key={index}
-                    >
-                      {value}
-                    </p>
-                  ))}
-                </Disclosure>
+                <MatchMetrics comparison={item}>
+                  <Disclosure
+                    summary="Why this result"
+                    className="match-explanation"
+                  >
+                    <ConfidenceLegend />
+                    <MatchEvidence
+                      comparison={item}
+                      analysis={analysis}
+                    />
+                    <p>{formatLocation(item.location)}</p>
+                    {item.employerAdjustment.reasons.map((value, index) => (
+                      <p
+                        className="small-note"
+                        key={index}
+                      >
+                        {value}
+                      </p>
+                    ))}
+                  </Disclosure>
+                </MatchMetrics>
                 <div className="resume-actions">
                   <button
                     type="button"

@@ -14,6 +14,41 @@ const envelope = (content: string, finish_reason = 'stop') =>
   );
 
 describe('bounded OpenAI writing adapter', () => {
+  it('uses the role-specific strict contract through the same private transport', async () => {
+    const evidence = (['ats', 'recruiter'] as const).map((area) => ({
+      area,
+      status: 'supported',
+      jobQuote: 'Python required.',
+      resumeQuote: 'Built reports.',
+      line: 3,
+      explanation: 'Relevant evidence.',
+      suggestion: 'Clarify the factual contribution.',
+    }));
+
+    const transport = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(envelope(JSON.stringify({ evidence })));
+
+    const reviewer = new OpenAiResumeReviewer('synthetic-key', 'explicit-model', transport);
+
+    expect(
+      await reviewer.assess(
+        {
+          segments: input.segments,
+          jobTitle: 'Synthetic role',
+          jobDescription: 'Python required.',
+        },
+        new AbortController().signal,
+      ),
+    ).toEqual({ evidence });
+
+    const body = JSON.parse(String(transport.mock.calls[0]![1]!.body));
+
+    expect(body.response_format.json_schema.schema.required).toEqual(['evidence']);
+    expect(body.messages[0].content).toContain('screening pass probabilities');
+    expect(body.store).toBe(false);
+  });
+
   it('uses a fixed endpoint, nonstored structured output and no tools', async () => {
     const transport = vi.fn<typeof fetch>().mockResolvedValue(envelope('{"findings":[]}'));
     const reviewer = new OpenAiResumeReviewer('synthetic-key', 'explicit-model', transport);

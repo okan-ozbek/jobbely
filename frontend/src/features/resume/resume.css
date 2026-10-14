@@ -18,8 +18,21 @@
   font-size: 13px;
 }
 .confidence-legend span {
-  border-bottom: 2px solid currentColor;
-  padding-bottom: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #dce6dd;
+  background: #e5f2e8;
+}
+.confidence-legend .confidence-yellow {
+  background: #fff0d6;
+  border-color: #eeddb9;
+}
+.confidence-legend small {
+  font-size: 12px;
+  opacity: 0.75;
 }
 .keyword-green {
   background: #dceede;
@@ -67,24 +80,51 @@
 .comparison-heading .resume-status {
   white-space: nowrap;
 }
-.comparison-source summary {
-  cursor: pointer;
-}
 .match-explanation > .disclosure-toggle {
-  padding: 12px 14px;
-  border: 1px solid var(--border);
+  padding: 4px 0 4px 12px;
+  border: 0;
   border-radius: 12px;
-  background: #ffffff80;
-  font-size: 14px;
-  font-weight: 500;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
 }
 .match-explanation > .disclosure-toggle:hover {
   background: #ffffffb0;
 }
 .match-explanation > .disclosure-toggle > svg {
-  width: 23px;
-  height: 23px;
+  width: 14px;
+  height: 14px;
   color: var(--signal-text);
+}
+.match-assessment {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+.match-assessment > .match-metrics {
+  margin: 0;
+}
+.match-assessment > .match-explanation {
+  display: contents;
+}
+.match-assessment > .match-explanation > .disclosure-toggle {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+}
+.match-assessment > .match-explanation > .disclosure-grid {
+  grid-column: 1/-1;
+}
+@media (max-width: 650px) {
+  .match-assessment {
+    grid-template-columns: 1fr;
+  }
+  .match-assessment > .match-explanation > .disclosure-toggle {
+    grid-column: 1;
+    grid-row: 2;
+  }
 }
 .match-evidence {
   padding-left: 20px;
@@ -1250,11 +1290,6 @@
   margin: 4px 0;
   font-size: 20px;
   font-weight: 600;
-}
-
-.match-metrics-help summary {
-  width: fit-content;
-  cursor: pointer;
 }
 
 .resume-start {

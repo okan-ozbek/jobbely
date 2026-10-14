@@ -291,6 +291,7 @@ export async function createApp(dependencies: {
     dependencies.resumeReviewer ?? new ReviewResume(),
     dependencies.accounts,
     dependencies.origin ?? 'http://127.0.0.1:5173',
+    dependencies.catalog,
   );
 
   registerEmailPreviewRoutes(app, dependencies.renderAccountEmail);

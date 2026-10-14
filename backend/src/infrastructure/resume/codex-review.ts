@@ -6,6 +6,8 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { z } from 'zod';
 import type { ResumeWritingReviewer } from '../../ports/resume-review.js';
 import { feedback, instructions } from './review-contract.js';
+import type { ResumeRoleAssessor } from '../../ports/resume-role-assessment.js';
+import { roleFeedback, roleInstructions } from './role-contract.js';
 
 type Launch = (
   command: string,
@@ -73,7 +75,7 @@ function terminate(child: ChildProcessWithoutNullStreams) {
 }
 
 /** Personal localhost testing only. This process still sends text to OpenAI. */
-export class CodexResumeReviewer implements ResumeWritingReviewer {
+export class CodexResumeReviewer implements ResumeWritingReviewer, ResumeRoleAssessor {
   readonly provider = 'codex-local';
   private active = false;
 
@@ -86,6 +88,19 @@ export class CodexResumeReviewer implements ResumeWritingReviewer {
   ) {}
 
   async review(input: Parameters<ResumeWritingReviewer['review']>[0], signal: AbortSignal) {
+    return (await this.request(input, signal, feedback, instructions)).findings;
+  }
+
+  async assess(input: Parameters<ResumeRoleAssessor['assess']>[0], signal: AbortSignal) {
+    return this.request(input, signal, roleFeedback, roleInstructions);
+  }
+
+  private async request<T>(
+    input: unknown,
+    signal: AbortSignal,
+    contract: z.ZodType<T>,
+    instructions: string,
+  ): Promise<T> {
     signal.throwIfAborted();
 
     if (this.active) {
@@ -101,7 +116,7 @@ export class CodexResumeReviewer implements ResumeWritingReviewer {
 
       const schema = join(directory, 'schema.json');
 
-      await writeFile(schema, JSON.stringify(z.toJSONSchema(feedback, { target: 'draft-7' })), {
+      await writeFile(schema, JSON.stringify(z.toJSONSchema(contract, { target: 'draft-7' })), {
         mode: 0o600,
       });
 
@@ -143,128 +158,126 @@ export class CodexResumeReviewer implements ResumeWritingReviewer {
         windowsHide: true,
       });
 
-      return await new Promise<Awaited<ReturnType<ResumeWritingReviewer['review']>>>(
-        (accept, reject) => {
-          let bytes = 0;
-          let pending = '';
-          let message = '';
-          let completed = false;
-          let started = false;
-          let failed = false;
+      return await new Promise<T>((accept, reject) => {
+        let bytes = 0;
+        let pending = '';
+        let message = '';
+        let completed = false;
+        let started = false;
+        let failed = false;
 
-          const stop = () => {
-            if (!failed) {
-              failed = true;
-              terminate(child);
-            }
-          };
-
-          const event = (line: string) => {
-            if (!line.trim() || failed) {
-              return;
-            }
-
-            try {
-              const value = z
-                .object({
-                  type: z.string(),
-                  item: z
-                    .object({
-                      type: z.string(),
-                      text: z.string().optional(),
-                      message: z.string().optional(),
-                    })
-                    .optional(),
-                })
-                .parse(JSON.parse(line));
-
-              // This CLI reports the deliberately disabled host as a startup warning.
-              // It confirms Code Mode will fail closed; other error items remain fatal.
-              if (
-                !started &&
-                value.type === 'item.completed' &&
-                value.item?.type === 'error' &&
-                value.item.message ===
-                  'Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.'
-              ) {
-                return;
-              }
-
-              if (
-                value.type === 'error' ||
-                value.type === 'turn.failed' ||
-                (value.item && !['agent_message', 'reasoning'].includes(value.item.type))
-              ) {
-                stop();
-              } else if (value.type === 'turn.completed') {
-                completed = true;
-              } else if (value.type === 'turn.started') {
-                started = true;
-              } else if (value.type === 'item.completed' && value.item?.type === 'agent_message') {
-                message = value.item.text ?? '';
-              }
-            } catch {
-              stop();
-            }
-          };
-
-          child.stdout.setEncoding('utf8');
-
-          child.stdout.on('data', (data: string) => {
-            bytes += Buffer.byteLength(data);
-
-            if (bytes > 256 * 1024) {
-              stop();
-
-              return;
-            }
-
-            pending += data;
-
-            let end: number;
-
-            while ((end = pending.indexOf('\n')) >= 0) {
-              event(pending.slice(0, end));
-              pending = pending.slice(end + 1);
-            }
-          });
-
-          child.stderr.on('data', (data: Buffer) => {
-            bytes += data.byteLength;
-
-            if (bytes > 256 * 1024) {
-              stop();
-            }
-          });
-
-          child.stdin.once('error', stop);
-          child.once('error', () => reject(new Error('Writing review unavailable')));
-          deadline.addEventListener('abort', stop, { once: true });
-
-          child.once('close', (code) => {
-            deadline.removeEventListener('abort', stop);
-            event(pending);
-
-            try {
-              deadline.throwIfAborted();
-
-              if (failed || code !== 0 || !completed) {
-                throw new Error('Writing review unavailable');
-              }
-
-              accept(feedback.parse(JSON.parse(message)).findings);
-            } catch {
-              reject(new Error('Writing review unavailable'));
-            }
-          });
-
-          if (deadline.aborted) {
-            stop();
-          } else {
-            child.stdin.end(prompt);
+        const stop = () => {
+          if (!failed) {
+            failed = true;
+            terminate(child);
           }
-        },
-      );
+        };
+
+        const event = (line: string) => {
+          if (!line.trim() || failed) {
+            return;
+          }
+
+          try {
+            const value = z
+              .object({
+                type: z.string(),
+                item: z
+                  .object({
+                    type: z.string(),
+                    text: z.string().optional(),
+                    message: z.string().optional(),
+                  })
+                  .optional(),
+              })
+              .parse(JSON.parse(line));
+
+            // This CLI reports the deliberately disabled host as a startup warning.
+            // It confirms Code Mode will fail closed; other error items remain fatal.
+            if (
+              !started &&
+              value.type === 'item.completed' &&
+              value.item?.type === 'error' &&
+              value.item.message ===
+                'Code Mode is unavailable because code-mode host is disabled. Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`.'
+            ) {
+              return;
+            }
+
+            if (
+              value.type === 'error' ||
+              value.type === 'turn.failed' ||
+              (value.item && !['agent_message', 'reasoning'].includes(value.item.type))
+            ) {
+              stop();
+            } else if (value.type === 'turn.completed') {
+              completed = true;
+            } else if (value.type === 'turn.started') {
+              started = true;
+            } else if (value.type === 'item.completed' && value.item?.type === 'agent_message') {
+              message = value.item.text ?? '';
+            }
+          } catch {
+            stop();
+          }
+        };
+
+        child.stdout.setEncoding('utf8');
+
+        child.stdout.on('data', (data: string) => {
+          bytes += Buffer.byteLength(data);
+
+          if (bytes > 256 * 1024) {
+            stop();
+
+            return;
+          }
+
+          pending += data;
+
+          let end: number;
+
+          while ((end = pending.indexOf('\n')) >= 0) {
+            event(pending.slice(0, end));
+            pending = pending.slice(end + 1);
+          }
+        });
+
+        child.stderr.on('data', (data: Buffer) => {
+          bytes += data.byteLength;
+
+          if (bytes > 256 * 1024) {
+            stop();
+          }
+        });
+
+        child.stdin.once('error', stop);
+        child.once('error', () => reject(new Error('Writing review unavailable')));
+        deadline.addEventListener('abort', stop, { once: true });
+
+        child.once('close', (code) => {
+          deadline.removeEventListener('abort', stop);
+          event(pending);
+
+          try {
+            deadline.throwIfAborted();
+
+            if (failed || code !== 0 || !completed) {
+              throw new Error('Writing review unavailable');
+            }
+
+            accept(contract.parse(JSON.parse(message)));
+          } catch {
+            reject(new Error('Writing review unavailable'));
+          }
+        });
+
+        if (deadline.aborted) {
+          stop();
+        } else {
+          child.stdin.end(prompt);
+        }
+      });
     } catch {
       signal.throwIfAborted();
 

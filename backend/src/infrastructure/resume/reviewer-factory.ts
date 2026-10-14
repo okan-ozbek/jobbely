@@ -1,5 +1,6 @@
 import { isAbsolute } from 'node:path';
 import type { ResumeWritingReviewer } from '../../ports/resume-review.js';
+import type { ResumeRoleAssessor } from '../../ports/resume-role-assessment.js';
 import { CodexResumeReviewer } from './codex-review.js';
 import { OpenAiResumeReviewer } from './openai-review.js';
 
@@ -37,7 +38,9 @@ export function reviewConfigurationError(value: Settings): string | null {
   return null;
 }
 
-export function createResumeWritingReviewer(value: Settings): ResumeWritingReviewer | undefined {
+export function createResumeWritingReviewer(
+  value: Settings,
+): (ResumeWritingReviewer & ResumeRoleAssessor) | undefined {
   const error = reviewConfigurationError(value);
 
   if (error) {

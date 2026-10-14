@@ -8,6 +8,9 @@ import { MemoryJobRepository } from '../infrastructure/storage/memory.js';
 import { JobCatalog } from '../application/catalog.js';
 import { freeAccess } from '../domain/accounts/access.js';
 import type { ResumeWritingReviewer } from '../ports/resume-review.js';
+import type { ResumeRoleAssessor } from '../ports/resume-role-assessment.js';
+import { seedDemo } from '../infrastructure/demo.js';
+import { loadRegistry } from '../infrastructure/registry.js';
 
 const apps: FastifyInstance[] = [];
 const origin = 'http://127.0.0.1:5173';
@@ -24,7 +27,11 @@ afterEach(async () => {
   await Promise.all(apps.splice(0).map((app) => app.close()));
 });
 
-async function setup(paid = false, writer?: ResumeWritingReviewer, proPreview = false) {
+async function setup(
+  paid = false,
+  writer?: ResumeWritingReviewer & Partial<ResumeRoleAssessor>,
+  proPreview = false,
+) {
   const repository = new MemoryJobRepository();
 
   const accounts = new Accounts(
@@ -87,6 +94,162 @@ async function setup(paid = false, writer?: ResumeWritingReviewer, proPreview = 
     },
   };
 }
+
+async function roleSetup(paid = true) {
+  const assess = vi.fn<ResumeRoleAssessor['assess']>().mockImplementation(async (input) => ({
+    evidence: (['ats', 'recruiter'] as const).map((area) => ({
+      area,
+      status: 'supported',
+      jobQuote: input.jobDescription.slice(0, 35),
+      resumeQuote: 'Built reports.',
+      line: 4,
+      explanation: 'The excerpt describes a contribution.',
+      suggestion: 'Add factual detail about the contribution.',
+    })),
+  }));
+
+  const context = await setup(paid, { review: async () => [], assess });
+
+  await seedDemo(context.repository, loadRegistry().sources);
+
+  const job = (await context.repository.read()).jobs[0]!;
+
+  return {
+    ...context,
+    assess,
+    job,
+    url: `/api/v1/jobs/${job.id}/resume-assessment`,
+    body: { text: payload.text, aiConsent: true },
+  };
+}
+
+describe('private Pro role assessment', () => {
+  it('uses the stored job, verifies both excerpts and keeps outputs private', async () => {
+    const { app, headers, url, body, assess, job } = await roleSetup();
+    const response = await app.inject({ method: 'POST', url, headers, payload: body });
+
+    expect(response.statusCode).toBe(200);
+
+    expect(response.json()).toMatchObject({
+      aiStatus: 'completed',
+      ats: { confidence: 'moderate' },
+      recruiter: { confidence: 'moderate' },
+    });
+
+    expect(response.headers['cache-control']).toBe('no-store');
+    expect(assess.mock.calls[0]![0].jobDescription).toContain('Synthetic demonstration listing');
+    expect(assess.mock.calls[0]![0].jobTitle).toBe(job.title);
+
+    expect(assess.mock.calls[0]![0].segments.map((item) => item.text).join(' ')).not.toContain(
+      'Synthetic Candidate',
+    );
+  });
+
+  it('requires paid access, Origin, CSRF and explicit consent before calling AI', async () => {
+    const free = await roleSetup(false);
+
+    expect(
+      (
+        await free.app.inject({
+          method: 'POST',
+          url: free.url,
+          headers: free.headers,
+          payload: free.body,
+        })
+      ).statusCode,
+    ).toBe(403);
+
+    expect(free.assess).not.toHaveBeenCalled();
+
+    const { app, url, headers, body, assess } = await roleSetup();
+
+    for (const request of [
+      { headers: { origin }, payload: body, status: 401 },
+      { headers: { ...headers, origin: 'https://example.invalid' }, payload: body, status: 403 },
+      { headers: { ...headers, 'x-csrf-token': 'wrong' }, payload: body, status: 401 },
+      { headers, payload: { ...body, aiConsent: false }, status: 400 },
+      { headers, payload: { ...body, jobDescription: 'Client supplied role' }, status: 400 },
+    ]) {
+      expect(
+        (
+          await app.inject({
+            method: 'POST',
+            url,
+            headers: request.headers,
+            payload: request.payload,
+          })
+        ).statusCode,
+      ).toBe(request.status);
+    }
+
+    expect(assess).not.toHaveBeenCalled();
+  });
+
+  it('fails safely for missing jobs and invalid provider evidence', async () => {
+    const { app, url, headers, body, assess } = await roleSetup();
+
+    expect(
+      (
+        await app.inject({
+          method: 'POST',
+          url: '/api/v1/jobs/nonexistent/resume-assessment',
+          headers,
+          payload: body,
+        })
+      ).statusCode,
+    ).toBe(404);
+
+    expect(assess).not.toHaveBeenCalled();
+    assess.mockResolvedValueOnce({ evidence: [] });
+
+    expect(
+      (await app.inject({ method: 'POST', url, headers, payload: body })).json(),
+    ).toMatchObject({ aiStatus: 'failed', evidence: [] });
+  });
+
+  it('shares hourly admission with writing feedback and rechecks access after work', async () => {
+    const { app, url, headers, body, resolver, assess } = await roleSetup();
+
+    for (let index = 0; index < 5; index++) {
+      expect(
+        (
+          await app.inject({
+            method: 'POST',
+            url: '/api/v1/resume-review',
+            headers,
+            payload: { ...payload, aiConsent: true },
+          })
+        ).statusCode,
+      ).toBe(200);
+    }
+
+    expect((await app.inject({ method: 'POST', url, headers, payload: body })).statusCode).toBe(
+      429,
+    );
+
+    expect(assess).not.toHaveBeenCalled();
+    resolver.mockRestore();
+
+    const changed = await roleSetup();
+
+    changed.assess.mockImplementationOnce(async () => {
+      changed.resolver.mockResolvedValue(freeAccess());
+
+      return { evidence: [] };
+    });
+
+    expect(
+      (
+        await changed.app.inject({
+          method: 'POST',
+          url: changed.url,
+          headers: changed.headers,
+          payload: changed.body,
+        })
+      ).statusCode,
+    ).toBe(403);
+  });
+});
 
 describe('paid private resume reviewer', () => {
   it('unlocks the account and reviewer through the actual temporary Pro resolver', async () => {

@@ -302,7 +302,11 @@ export async function bootstrap() {
     },
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE, undefined, coverage),
     resume: new AnalyzeResume(companies),
-    resumeReviewer: new ReviewResume(createResumeWritingReviewer(config)),
+    resumeReviewer: new ReviewResume(
+      createResumeWritingReviewer(config),
+      undefined,
+      htmlJobDocumentReader,
+    ),
     matcher: new MatchJobs(
       features,
       companies,

@@ -4,6 +4,8 @@
 
 ## Rationale and boundaries
 
+The 15 October [role assessment](ROLE_ASSESSMENT.md) reuses this module's configured provider, active Pro capability and shared AI admission for job-specific keyword/recruiter evidence feedback. Its separate contract validates both job and resume quotations; it does not introduce screening pass probabilities or change deterministic matching.
+
 Use deterministic checks for observable document problems and optional hosted model feedback for writing. This is separate from profile analysis and job matching. The reviewer cannot change candidate claims, matching scores, qualifications or activity tenure. It reviews the original extracted/pasted text; profile corrections do not rewrite that document.
 
 [Rules](../backend/src/domain/resume/review.ts) check absent email/phone detection, common English/Dutch section headings, repeated/long bullets, bullet marker consistency, reversed year-only ranges, inferred PDF columns/small text heights, DOCX tables and header/footer contact hints. Missing contact details and layout heuristics are risks or suggestions, not proof of rejection. There are no blanket penalties for gaps, photos, page count or education dates. Exact font faces/sizes, margins, color, clipping, images, missing names and comprehensive date consistency are not assessed. Image-only documents retain existing paste-text guidance; OCR remains proposed.

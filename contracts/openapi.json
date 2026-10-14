@@ -16142,6 +16142,491 @@
         }
       }
     },
+    "/api/v1/jobs/{id}/resume-assessment": {
+      "post": {
+        "operationId": "assessResumeRole",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "text",
+                  "aiConsent"
+                ],
+                "properties": {
+                  "text": {
+                    "minLength": 1,
+                    "maxLength": 40000,
+                    "type": "string"
+                  },
+                  "aiConsent": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "type": "object",
+                  "required": [
+                    "aiStatus",
+                    "ats",
+                    "recruiter",
+                    "evidence",
+                    "limitations"
+                  ],
+                  "properties": {
+                    "aiStatus": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "completed"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "failed"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unavailable"
+                          ]
+                        }
+                      ]
+                    },
+                    "ats": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "alignment",
+                        "confidence",
+                        "evidenceCount"
+                      ],
+                      "properties": {
+                        "alignment": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "strong"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "partial"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "limited"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "unknown"
+                              ]
+                            }
+                          ]
+                        },
+                        "confidence": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "high"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "moderate"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "low"
+                              ]
+                            }
+                          ]
+                        },
+                        "evidenceCount": {
+                          "minimum": 0,
+                          "maximum": 8,
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "recruiter": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "alignment",
+                        "confidence",
+                        "evidenceCount"
+                      ],
+                      "properties": {
+                        "alignment": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "strong"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "partial"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "limited"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "unknown"
+                              ]
+                            }
+                          ]
+                        },
+                        "confidence": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "high"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "moderate"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "low"
+                              ]
+                            }
+                          ]
+                        },
+                        "evidenceCount": {
+                          "minimum": 0,
+                          "maximum": 8,
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "evidence": {
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "area",
+                          "status",
+                          "jobQuote",
+                          "resumeQuote",
+                          "line",
+                          "explanation",
+                          "suggestion"
+                        ],
+                        "properties": {
+                          "area": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ats"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "recruiter"
+                                ]
+                              }
+                            ]
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "supported"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "partial"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "not_evidenced"
+                                ]
+                              }
+                            ]
+                          },
+                          "jobQuote": {
+                            "minLength": 1,
+                            "maxLength": 600,
+                            "type": "string"
+                          },
+                          "resumeQuote": {
+                            "minLength": 1,
+                            "maxLength": 600,
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "line": {
+                            "minimum": 1,
+                            "maximum": 2000,
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "explanation": {
+                            "maxLength": 600,
+                            "type": "string"
+                          },
+                          "suggestion": {
+                            "maxLength": 600,
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "limitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/resume-review": {
       "get": {
         "operationId": "resumeReviewAvailability",

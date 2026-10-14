@@ -264,6 +264,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
 - [RESUME](docs/RESUME.md): deterministic analysis, review and the initial complete matching flow.
 - [RESUME_REVIEWER](docs/RESUME_REVIEWER.md): paid mistake checks, opt-in API writing feedback and a personal localhost Codex provider, with production entitlement/model launch gates.
+- [ROLE_ASSESSMENT](docs/ROLE_ASSESSMENT.md): opt-in Pro ATS keyword/recruiter evidence alignment, grounded quotations and qualitative confidence, separate from deterministic matching.
 - [DOCUMENTS](docs/DOCUMENTS.md): local PDF/DOCX adapters, reading order, limits and isolation.
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.

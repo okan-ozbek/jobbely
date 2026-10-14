@@ -9,12 +9,15 @@ import { readCookie } from './account-routes.js';
 import { privateResumeRoute } from './private-resume-route.js';
 import { errorSchema } from './schemas.js';
 import { resumeReviewInputSchema, resumeReviewSchema } from './resume-review-schemas.js';
+import { roleAssessmentInputSchema, roleAssessmentSchema } from './role-assessment-schemas.js';
+import type { JobCatalog } from '../application/catalog.js';
 
 export function registerResumeReviewRoutes(
   server: FastifyInstance,
   reviewer: ReviewResume,
   accounts: Accounts | undefined,
   origin: string,
+  catalog?: JobCatalog,
 ) {
   const app = server.withTypeProvider<TypeBoxTypeProvider>();
 
@@ -117,6 +120,77 @@ export function registerResumeReviewRoutes(
     429: errorSchema,
     503: errorSchema,
   };
+
+  app.post(
+    '/api/v1/jobs/:id/resume-assessment',
+    {
+      ...options,
+      schema: {
+        operationId: 'assessResumeRole',
+        params: Type.Object(
+          { id: Type.String({ minLength: 1, maxLength: 100 }) },
+          { additionalProperties: false },
+        ),
+        body: roleAssessmentInputSchema,
+        response: { 200: roleAssessmentSchema, 404: errorSchema, ...errors },
+      },
+    },
+    async (request, reply) => {
+      const current = await access(request, true);
+
+      if (!current) {
+        throw new AccountAccessError(
+          'authentication_required',
+          'Sign in to use the Pro AI assessment.',
+        );
+      }
+
+      if (!current.enabled) {
+        throw new AccountAccessError(
+          'upgrade_required',
+          'AI assessment requires active Pro access.',
+        );
+      }
+
+      const job = await catalog?.job(request.params.id);
+
+      if (!job) {
+        return reply.code(404).send({ code: 'not_found', message: 'Job not found.' });
+      }
+
+      const controller = new AbortController();
+
+      const disconnect = () => {
+        if (!reply.raw.writableEnded) {
+          controller.abort();
+        }
+      };
+
+      reply.raw.on('close', disconnect);
+
+      try {
+        const result = await reviewer.assessRole(
+          request.body.text,
+          job,
+          current.userId,
+          controller.signal,
+        );
+
+        const latest = await access(request, true);
+
+        if (!latest?.enabled || latest.userId !== current.userId) {
+          throw new AccountAccessError(
+            'upgrade_required',
+            'Your Pro access changed. Refresh your account.',
+          );
+        }
+
+        return result;
+      } finally {
+        reply.raw.off('close', disconnect);
+      }
+    },
+  );
 
   app.get(
     '/api/v1/resume-review',
