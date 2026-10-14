@@ -4199,6 +4199,7 @@ export interface operations {
                         signedIn: boolean;
                         enabled: boolean;
                         aiAvailable: boolean;
+                        aiProvider: "openai-api" | "codex-local" | (never | null);
                     };
                 };
             };

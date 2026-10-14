@@ -5,6 +5,7 @@ import type {
 } from '../domain/resume/review.js';
 
 export interface ResumeWritingReviewer {
+  readonly provider?: 'openai-api' | 'codex-local';
   review(
     input: {
       segments: ReturnType<typeof writingSegments>;

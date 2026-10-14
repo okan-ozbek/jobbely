@@ -101,6 +101,20 @@ pnpm --filter @jobbely/frontend run dev
 
 The frontend development server proxies `/api` to port 3001. No frontend `.env` is needed with the default ports. Stop the servers with `Ctrl+C`; stop the Compose database with `docker compose stop`. Stopping it preserves the database volume.
 
+### Personal Codex resume-review test
+
+With the installed Codex CLI signed in through ChatGPT, run this from a fresh PowerShell terminal. It uses Sol 6.1 for opted-in writing feedback and enables the existing temporary Pro preview for signed-in accounts:
+
+```powershell
+$env:RESUME_REVIEW_PROVIDER = "codex-local"
+$env:RESUME_REVIEW_MODEL = "gpt-6.1-sol"
+$env:RESUME_REVIEW_CODEX_COMMAND = (Get-Command codex -CommandType Application).Source
+$env:TEMPORARY_PRO_ACCESS = "true"
+pnpm dev
+```
+
+Open **http://127.0.0.1:5173/?view=resume**, sign in, and select **Include AI writing feedback** before reviewing. This starts a separate ephemeral CLI session; it does not reuse this chat's history. It sends minimized text to OpenAI using your signed-in account and its usage/data controls. The CLI must support the isolation flags tested by the adapter. This provider rejects production and non-loopback configurations; use the API provider for a hosted application. See [RESUME_REVIEWER](docs/RESUME_REVIEWER.md#personal-local-codex-provider) for the limits and verification.
+
 ## Host the application
 
 ### Run the app in Docker
@@ -249,7 +263,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [ARCHITECTURE](docs/ARCHITECTURE.md): layers, dependency direction and composition.
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
 - [RESUME](docs/RESUME.md): deterministic analysis, review and the initial complete matching flow.
-- [RESUME_REVIEWER](docs/RESUME_REVIEWER.md): paid mistake checks and opt-in hosted writing feedback, with production entitlement/model launch gates.
+- [RESUME_REVIEWER](docs/RESUME_REVIEWER.md): paid mistake checks, opt-in API writing feedback and a personal localhost Codex provider, with production entitlement/model launch gates.
 - [DOCUMENTS](docs/DOCUMENTS.md): local PDF/DOCX adapters, reading order, limits and isolation.
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.

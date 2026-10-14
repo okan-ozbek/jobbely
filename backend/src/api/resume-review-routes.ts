@@ -129,6 +129,11 @@ export function registerResumeReviewRoutes(
             signedIn: Type.Boolean(),
             enabled: Type.Boolean(),
             aiAvailable: Type.Boolean(),
+            aiProvider: Type.Union([
+              Type.Literal('openai-api'),
+              Type.Literal('codex-local'),
+              Type.Null(),
+            ]),
           }),
           ...errors,
         },
@@ -141,6 +146,7 @@ export function registerResumeReviewRoutes(
         signedIn: !!current,
         enabled: current?.enabled ?? false,
         aiAvailable: reviewer.aiAvailable,
+        aiProvider: reviewer.aiProvider,
       };
     },
   );

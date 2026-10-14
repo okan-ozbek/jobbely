@@ -21,6 +21,10 @@ export class ReviewResume {
     return !!this.writer;
   }
 
+  get aiProvider() {
+    return this.writer ? (this.writer.provider ?? 'openai-api') : null;
+  }
+
   async execute(
     input: ResumeReviewInput,
     userId: string,

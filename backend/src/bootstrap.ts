@@ -34,7 +34,10 @@ import Stripe from 'stripe';
 import { StripeTestBilling } from './infrastructure/accounts/stripe-test-billing.js';
 import { TestBilling } from './application/accounts/test-billing.js';
 import { ReviewResume } from './application/resume/review-resume.js';
-import { OpenAiResumeReviewer } from './infrastructure/resume/openai-review.js';
+import {
+  createResumeWritingReviewer,
+  reviewConfigurationError,
+} from './infrastructure/resume/reviewer-factory.js';
 
 export const config = z
   .object({
@@ -55,6 +58,8 @@ export const config = z
     MATCH_CURSOR_SECRET: z.string().min(32).optional(),
     RESUME_REVIEW_OPENAI_KEY: z.string().min(1).optional(),
     RESUME_REVIEW_MODEL: z.string().min(1).max(120).optional(),
+    RESUME_REVIEW_PROVIDER: z.enum(['openai-api', 'codex-local']).default('openai-api'),
+    RESUME_REVIEW_CODEX_COMMAND: z.string().min(1).optional(),
     GITHUB_CLIENT_ID: z.string().min(1).optional(),
     GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
     LINKEDIN_CLIENT_ID: z.string().min(1).optional(),
@@ -103,10 +108,12 @@ export const config = z
       });
     }
 
-    if (!!value.RESUME_REVIEW_OPENAI_KEY !== !!value.RESUME_REVIEW_MODEL) {
+    const reviewError = reviewConfigurationError(value);
+
+    if (reviewError) {
       context.addIssue({
         code: 'custom',
-        message: 'AI resume review requires both a backend API key and an explicit model.',
+        message: reviewError,
       });
     }
 
@@ -295,11 +302,7 @@ export async function bootstrap() {
     },
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE, undefined, coverage),
     resume: new AnalyzeResume(companies),
-    resumeReviewer: new ReviewResume(
-      config.RESUME_REVIEW_OPENAI_KEY && config.RESUME_REVIEW_MODEL
-        ? new OpenAiResumeReviewer(config.RESUME_REVIEW_OPENAI_KEY, config.RESUME_REVIEW_MODEL)
-        : undefined,
-    ),
+    resumeReviewer: new ReviewResume(createResumeWritingReviewer(config)),
     matcher: new MatchJobs(
       features,
       companies,
