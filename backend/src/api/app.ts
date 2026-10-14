@@ -17,6 +17,8 @@ import type { PasswordAccounts } from '../application/accounts/password-accounts
 import type { AccountEmail } from '../ports/password-accounts.js';
 import { registerEmailPreviewRoutes } from './email-preview-routes.js';
 import type { TestBilling } from '../application/accounts/test-billing.js';
+import { ReviewResume } from '../application/resume/review-resume.js';
+import { registerResumeReviewRoutes } from './resume-review-routes.js';
 import {
   companySchema,
   errorSchema,
@@ -37,6 +39,7 @@ export async function createApp(dependencies: {
   accounts?: Accounts;
   passwordAccounts?: PasswordAccounts;
   billing?: TestBilling;
+  resumeReviewer?: ReviewResume;
   closeAccounts?: () => Promise<void>;
   renderAccountEmail?: (message: AccountEmail) => { html: string };
 }) {
@@ -281,6 +284,13 @@ export async function createApp(dependencies: {
     dependencies.origin ?? 'http://127.0.0.1:5173',
     dependencies.passwordAccounts,
     dependencies.billing,
+  );
+
+  registerResumeReviewRoutes(
+    app,
+    dependencies.resumeReviewer ?? new ReviewResume(),
+    dependencies.accounts,
+    dependencies.origin ?? 'http://127.0.0.1:5173',
   );
 
   registerEmailPreviewRoutes(app, dependencies.renderAccountEmail);

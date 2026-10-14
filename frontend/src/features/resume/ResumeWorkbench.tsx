@@ -12,6 +12,8 @@ import { scrollToSection } from '../../components/motion.js';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import { moveSurface, resetSurface } from '../../components/surface-motion.js';
 import './resume.css';
+import type { Account } from '../../api/accounts.js';
+import { ResumeReviewer } from './ResumeReviewer.js';
 
 function formatDuration(duration: ResumeAnalysis['experience']['professional']) {
   const label = (months: number) => `${Math.floor(months / 12)}y ${months % 12}m`;
@@ -29,10 +31,14 @@ export function ResumeWorkbench({
   openJob,
   state,
   onReviewed,
+  account,
+  openPricing,
 }: {
   openJob: (id: string) => void;
   state: ReturnType<typeof useResumeAnalysis>;
   onReviewed: (analysis: ResumeAnalysis | null) => void;
+  account: Account | null | undefined;
+  openPricing: () => void;
 }) {
   const documentInput = useDocumentInput(state.setText);
   const [fileName, setFileName] = useState('');
@@ -159,7 +165,7 @@ export function ResumeWorkbench({
                 type="submit"
                 disabled={!state.text.trim() || state.loading || documentInput.loading}
               >
-                {state.loading ? 'Reading resume…' : 'Review my resume'} <ArrowRight size={16} />
+                {state.loading ? 'Reading resume…' : 'Analyze my resume'} <ArrowRight size={16} />
               </button>
             </div>
           </form>
@@ -236,6 +242,14 @@ export function ResumeWorkbench({
           </div>
         </div>
       </div>
+      <ResumeReviewer
+        key={account?.user?.id ?? 'guest'}
+        text={state.text}
+        document={documentInput.document}
+        account={account}
+        pending={documentInput.loading}
+        openPricing={openPricing}
+      />
       {(state.loading || analysis) && (
         <p
           className="resume-request-status"

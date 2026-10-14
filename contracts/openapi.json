@@ -16142,6 +16142,625 @@
         }
       }
     },
+    "/api/v1/resume-review": {
+      "get": {
+        "operationId": "resumeReviewAvailability",
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "signedIn",
+                    "enabled",
+                    "aiAvailable"
+                  ],
+                  "properties": {
+                    "signedIn": {
+                      "type": "boolean"
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "aiAvailable": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "reviewResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "text",
+                  "aiConsent",
+                  "language",
+                  "targetCountry",
+                  "jobDescription"
+                ],
+                "properties": {
+                  "text": {
+                    "minLength": 1,
+                    "maxLength": 40000,
+                    "type": "string"
+                  },
+                  "aiConsent": {
+                    "type": "boolean"
+                  },
+                  "language": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "en-US"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "en-GB"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "nl-NL"
+                        ]
+                      }
+                    ]
+                  },
+                  "targetCountry": {
+                    "maxLength": 80,
+                    "type": "string"
+                  },
+                  "jobDescription": {
+                    "maxLength": 12000,
+                    "type": "string"
+                  },
+                  "layout": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "format",
+                      "pages",
+                      "columnPages",
+                      "smallTextPages",
+                      "tableRows",
+                      "contactInHeaderFooter"
+                    ],
+                    "properties": {
+                      "format": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "pdf"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "docx"
+                            ]
+                          }
+                        ]
+                      },
+                      "pages": {
+                        "minimum": 1,
+                        "maximum": 20,
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "columnPages": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minimum": 1,
+                          "maximum": 20,
+                          "type": "integer"
+                        }
+                      },
+                      "smallTextPages": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minimum": 1,
+                          "maximum": 20,
+                          "type": "integer"
+                        }
+                      },
+                      "tableRows": {
+                        "minimum": 0,
+                        "maximum": 2000,
+                        "type": "integer"
+                      },
+                      "contactInHeaderFooter": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "aiStatus",
+                    "findings",
+                    "limitations"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string",
+                      "enum": [
+                        "review-1"
+                      ]
+                    },
+                    "aiStatus": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "not_requested"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unavailable"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "completed"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "failed"
+                          ]
+                        }
+                      ]
+                    },
+                    "findings": {
+                      "maxItems": 42,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "source",
+                          "severity",
+                          "category",
+                          "title",
+                          "explanation",
+                          "suggestion",
+                          "quote",
+                          "line",
+                          "page",
+                          "rewrite"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "source": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "rule"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ai"
+                                ]
+                              }
+                            ]
+                          },
+                          "severity": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "error"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "risk"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "suggestion"
+                                ]
+                              }
+                            ]
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "explanation": {
+                            "type": "string"
+                          },
+                          "suggestion": {
+                            "type": "string"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "line": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "page": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "rewrite": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "limitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/email-preview/{purpose}": {
       "get": {
         "operationId": "previewAccountEmail",

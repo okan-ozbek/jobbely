@@ -249,6 +249,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [ARCHITECTURE](docs/ARCHITECTURE.md): layers, dependency direction and composition.
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
 - [RESUME](docs/RESUME.md): deterministic analysis, review and the initial complete matching flow.
+- [RESUME_REVIEWER](docs/RESUME_REVIEWER.md): paid mistake checks and opt-in hosted writing feedback, with production entitlement/model launch gates.
 - [DOCUMENTS](docs/DOCUMENTS.md): local PDF/DOCX adapters, reading order, limits and isolation.
 - [RESUME_TESTING](docs/RESUME_TESTING.md): first increment, synthetic examples and manual/automated checkpoints.
 - [MATCHING](docs/MATCHING.md): requirements, explained fit, freshness and capped optional context.

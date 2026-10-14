@@ -295,6 +295,10 @@ export function App() {
           <ResumeWorkbench
             key={privateSessionRevision}
             state={resumeState}
+            account={account}
+            openPricing={() =>
+              update({ view: 'pricing', job: null, company: null, from: null, section: null })
+            }
             onReviewed={setReviewedAnalysis}
             openJob={(id) => update({ view: 'jobs', job: id, from: 'resume' })}
           />
@@ -326,6 +330,7 @@ export function App() {
           />
         ) : view === 'pricing' ? (
           <PricingPage
+            proPreview={account?.access.planRevisionId === 'local-pro-preview'}
             accountKey={accountUserId}
             onSignIn={() => setAccountOpenRequest((value) => value + 1)}
             checkoutId={params.get('checkout_session_id')}

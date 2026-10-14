@@ -49,6 +49,7 @@ export function AccountPage({
 }) {
   const active = sections.find((item) => item.key === section) ?? sections[0];
   const user = account?.user;
+  const proPreview = account?.access.planRevisionId === 'local-pro-preview';
 
   if (!user) {
     return (
@@ -164,7 +165,7 @@ export function AccountPage({
             </div>
             <span className="account-member-badge">
               <ShieldCheck size={14} />
-              Free member
+              {proPreview ? 'Pro preview member' : 'Free member'}
             </span>
           </div>
           {error && (
@@ -195,7 +196,8 @@ export function AccountPage({
                     <div>
                       <span className="plan-eyebrow">Your current plan</span>
                       <h2>
-                        Free<span>Included</span>
+                        {proPreview ? 'Pro' : 'Free'}
+                        <span>{proPreview ? 'Temporary preview' : 'Included'}</span>
                       </h2>
                       <p>All the essentials for a clearer next step.</p>
                     </div>
@@ -296,6 +298,7 @@ export function AccountPage({
               </>
             ) : active.key === 'billing' ? (
               <AccountBilling
+                proPreview={proPreview}
                 accountKey={user.id}
                 onPricing={onPricing}
               />

@@ -10,6 +10,8 @@ The 5 October [qualification update](QUALIFICATIONS.md) adds only degree level/f
 
 ## Boundary and rationale
 
+The 14 October [paid resume reviewer](RESUME_REVIEWER.md) adds a separate, explicitly opted-in hosted writing-feedback boundary. Original file bytes still stay local. Reviewer text/results stay transient in Jobbely, but minimized text can be sent to OpenAI only after active paid access, CSRF/Origin checks and per-request AI consent. Contact minimization is not full anonymization; provider retention is disclosed and is not covered by Jobbely's no-storage claim. No candidate model inference is added to matching. The provider configuration, production paid projection and live model-quality verification remain separate launch gates.
+
 Original file bytes remain on the candidate's device. A dedicated browser worker extracts bounded text and reading blocks; the candidate explicitly requests temporary backend analysis using Review my resume. Attached files show a file card instead of raw extracted text; profile fields are reviewed after analysis. This avoids exposing the API's filesystem, environment and database credentials to a document parser. Matching accepts only a small structured profile, never the full document or contact fields.
 
 React memory holds input, original reading blocks, corrections and results. No candidate database table, disk file, browser storage, service-worker cache, object store or candidate queue is created. Full reload/closing the tab clears state; SPA navigation retains review. Clear, replacement, cancellation and unmount abort work and release references. This does not promise physical erasure from browser memory, OS swap, crash dumps or client diagnostics.

@@ -4,6 +4,8 @@
 
 ## Run and inspect
 
+For the separate paid mistake reviewer, use the synthetic API/provider/layout cases and browser checkpoints in [RESUME_REVIEWER](RESUME_REVIEWER.md). The free profile-analysis action is now **Analyze my resume**; older dated checkpoints below retain their original label.
+
 For weighted matching, use a synthetic profile with a dated role describing Redis, C++ and a led cross-functional initiative. Review it, open a job description, and inspect the green/yellow/purple/red legend and keyword tooltips. Redis → cloud → AWS must stay weak/yellow and retain a required gap; unrelated skills must remain red. Hover, focus or tap highlighted terms to inspect match explanations and paths. Open a result explanation for independent industry/leadership thresholds. The employer HTML layout is always shown; the highlight toggle only changes annotations. Edit or clear the resume and verify that prior highlights disappear until the new profile is reviewed. Check keyboard navigation, wrapped legend/path text and small screens. Use synthetic data only. [SKILL_RELATIONS](SKILL_RELATIONS.md) owns the versioned policy and automated cases.
 
 Run the app using the existing [local setup](../README.md), then open the resume home page or `http://127.0.0.1:5173/?view=resume`. Both demo and PostgreSQL modes support analysis; it does not read or write candidate records in either mode. Use synthetic examples before private resumes.
