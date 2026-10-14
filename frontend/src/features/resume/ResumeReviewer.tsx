@@ -60,6 +60,10 @@ export function ResumeReviewer({
   const result = availability?.enabled && receipt?.input === input ? receipt.result : null;
 
   useEffect(() => {
+    setAiConsent(false);
+  }, [availability?.aiProvider]);
+
+  useEffect(() => {
     let controller = new AbortController();
 
     const refresh = () => {
@@ -254,9 +258,11 @@ export function ResumeReviewer({
             <p className="small-note">
               Opting in sends selected resume text and the optional job description to OpenAI.
               Obvious contact lines and the first resume line are omitted; this does not fully
-              anonymize your resume. API content is not used for training by default, but provider
-              logs may retain it for up to 30 days, subject to exceptions. AI suggestions need your
-              review.
+              anonymize your resume.
+              {availability.aiProvider === 'codex-local'
+                ? ' This local test uses your signed-in Codex account. Text is processed by OpenAI; your ChatGPT account data controls apply. Each review starts a temporary Codex session, but this is not a guarantee of zero provider retention.'
+                : ' API content is not used for training by default, but provider logs may retain it for up to 30 days, subject to exceptions.'}{' '}
+              AI suggestions need your review.
             </p>
           ) : (
             <p className="small-note">

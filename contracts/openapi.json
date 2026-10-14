@@ -16155,7 +16155,8 @@
                   "required": [
                     "signedIn",
                     "enabled",
-                    "aiAvailable"
+                    "aiAvailable",
+                    "aiProvider"
                   ],
                   "properties": {
                     "signedIn": {
@@ -16166,6 +16167,29 @@
                     },
                     "aiAvailable": {
                       "type": "boolean"
+                    },
+                    "aiProvider": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "openai-api"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "codex-local"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        }
+                      ]
                     }
                   }
                 }

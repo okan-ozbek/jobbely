@@ -116,12 +116,33 @@ describe('paid private resume reviewer', () => {
       signedIn: false,
       enabled: false,
       aiAvailable: false,
+      aiProvider: null,
     });
 
     const response = await app.inject({ url: '/api/v1/resume-review', headers });
 
-    expect(response.json()).toEqual({ signedIn: true, enabled: false, aiAvailable: false });
+    expect(response.json()).toEqual({
+      signedIn: true,
+      enabled: false,
+      aiAvailable: false,
+      aiProvider: null,
+    });
+
     expect(response.headers['cache-control']).toBe('no-store');
+  });
+
+  it('identifies the provider for informed AI consent without invoking it', async () => {
+    const review = vi.fn(async () => []);
+    const { app, headers } = await setup(true, { provider: 'codex-local', review });
+
+    expect((await app.inject({ url: '/api/v1/resume-review', headers })).json()).toEqual({
+      signedIn: true,
+      enabled: true,
+      aiAvailable: true,
+      aiProvider: 'codex-local',
+    });
+
+    expect(review).not.toHaveBeenCalled();
   });
 
   it('blocks guest and Free accounts before a model call', async () => {

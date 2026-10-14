@@ -33,6 +33,8 @@ For paid resume mistake checks and optional hosted writing feedback, read [RESUM
 
 For semantic scopes/confirmation read [SEMANTICS](SEMANTICS.md); for vocabulary/alias discovery read [VOCABULARY](VOCABULARY.md); for degree, tenure and role relevance read [QUALIFICATIONS](QUALIFICATIONS.md). The 9 October [qualification baseline](MATCHING.md#qualification-baseline-9-october-2026) owns clause dispositions, illustrative examples and equivalence review; [color-weighted fit](MATCHING.md#color-weighted-qualification-fit-9-october-2026) owns green 100%, yellow/unassessable 25%, red/purple 0%, qualification weighting and presentation. Local-model shadow/evaluation changes also require [SEMANTIC_EXPERIMENTS](SEMANTIC_EXPERIMENTS.md). These extend the matching route when those policies are affected.
 
+For the personal localhost Codex writing provider, [RESUME_REVIEWER](RESUME_REVIEWER.md#personal-local-codex-provider) owns its configuration, subprocess/data boundary and limits; it does not alter matching. Start at [provider wiring](../backend/src/infrastructure/resume/reviewer-factory.ts) and the [Codex adapter](../backend/src/infrastructure/resume/codex-review.ts).
+
 ## Plans and evidence: read on demand
 
 - Performance and scheduling changes: [RANKED_SYNC_PLAN](RANKED_SYNC_PLAN.md) proposes financial-size ranking, four round-robin workers and wave retirement; [RESUME_PERFORMANCE_PLAN](RESUME_PERFORMANCE_PLAN.md) records local bottlenecks and delivery progress. The first narrow-query/request-reduction increment is implemented in [STORAGE](STORAGE.md) and [FRONTEND](FRONTEND.md); ranking, worker migration, caching and compact scoring remain proposed.
