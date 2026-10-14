@@ -6,24 +6,15 @@
   box-sizing: border-box;
   padding: 24px;
   overflow-wrap: anywhere;
-  border: 1px solid #bab0ee;
+  border: 1px solid #dcd8ee;
   border-radius: 24px;
   background:
-    radial-gradient(ellipse at 100% 0%, #d9d0ff99, transparent 60%),
-    linear-gradient(135deg, #fdfcff, #eeeaff);
+    radial-gradient(ellipse at 0% 0%, #e9e1fc66, transparent 65%),
+    radial-gradient(ellipse at 100% 15%, #e1effa66, transparent 65%),
+    radial-gradient(ellipse at 65% 100%, #fae7ef55, transparent 70%), #fcfbff;
   box-shadow:
-    0 8px 30px #65549a12,
+    0 8px 30px #65549a0a,
     inset 0 1px 0 #fff;
-}
-.pro-review-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 28px;
-  right: 28px;
-  height: 3px;
-  border-radius: 0 0 4px 4px;
-  background: linear-gradient(90deg, #6e59c8, #b4a1f0, #6e59c8);
 }
 .pro-review-heading,
 .pro-review-heading-actions,
@@ -49,12 +40,9 @@
 .pro-review-emblem {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #7055c7, #45328d);
-  color: white;
-  box-shadow: 0 4px 12px #64539a26;
+  width: 22px;
+  height: 22px;
+  color: #716496;
 }
 .pro-review-badge {
   padding: 5px 12px;

@@ -20,7 +20,7 @@ The overview chart has selectable periods/data points, readable counts and expli
 
 ## Tokens and typography
 
-The 15 October Pro review panels share a stronger lavender gradient, purple top accent, dark sparkles emblem and Pro pill through [ProReviewPanel](../frontend/src/features/resume/ProReviewPanel.tsx) and [styles](../frontend/src/features/resume/pro-review.css). **Pro resume reviewer** is their stable annotation name; the role variant adds screening context. Suggested edits use muted removal/addition panes with text labels, stacked on mobile, and an explanation below. Limits remain in a title-adjacent accessible info popover. Styling never changes paid access, consent or evidence policies; see [ROLE_ASSESSMENT](ROLE_ASSESSMENT.md).
+The 15 October Pro review panels share a soft lavender/blue/blush background, thin border, inline sparkles icon and Pro pill through [ProReviewPanel](../frontend/src/features/resume/ProReviewPanel.tsx) and [styles](../frontend/src/features/resume/pro-review.css). **Pro resume reviewer** is their stable annotation name; the role variant adds screening context. Suggested edits use muted removal/addition panes with text labels, stacked on mobile, and an explanation below. Limits remain in a title-adjacent accessible info popover. Styling never changes paid access, consent or evidence policies; see [ROLE_ASSESSMENT](ROLE_ASSESSMENT.md).
 
 ### Sign-in and registration, 8 October 2026
 

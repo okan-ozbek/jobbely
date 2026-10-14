@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ClipboardCheck, LoaderCircle, LockKeyhole, Sparkles } from 'lucide-react';
 import type { Account } from '../../api/accounts.js';
 import { reviewAvailability, reviewResume } from '../../api/resume-review.js';
@@ -27,6 +27,7 @@ export function ResumeReviewer({
   pending: boolean;
   openPricing: () => void;
 }) {
+  const formId = useId();
   const [availability, setAvailability] = useState<ReviewAvailability | null>(null);
   const [accessError, setAccessError] = useState('');
   const [language, setLanguage] = useState<ResumeReviewInput['language']>('en-GB');
@@ -162,6 +163,45 @@ export function ResumeReviewer({
       title="Pro resume reviewer"
       module="resume"
       className="resume-reviewer"
+      actions={
+        availability?.enabled && (
+          <>
+            <button
+              type="submit"
+              form={formId}
+              className="primary-button"
+              aria-busy={loading}
+              disabled={!text.trim() || text.length > 40_000 || pending || loading || !csrf}
+            >
+              {loading ? (
+                <LoaderCircle
+                  className="reviewer-spinner"
+                  size={16}
+                  aria-hidden="true"
+                />
+              ) : (
+                <Sparkles
+                  size={16}
+                  aria-hidden="true"
+                />
+              )}
+              Review resume
+            </button>
+            {loading && (
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => {
+                  active.current?.abort();
+                  setLoading(false);
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </>
+        )
+      }
       limitations={
         result?.limitations ?? [
           'Checks common document mistakes and offers optional AI feedback on spelling, grammar, clarity and contribution.',
@@ -205,6 +245,7 @@ export function ResumeReviewer({
         </div>
       ) : (
         <form
+          id={formId}
           onSubmit={(event) => {
             event.preventDefault();
             void submit();
@@ -258,40 +299,6 @@ export function ResumeReviewer({
               The reviewer supports up to 40,000 characters. Use a shorter resume.
             </p>
           )}
-          <div className="reviewer-actions">
-            <button
-              type="submit"
-              className="primary-button"
-              aria-busy={loading}
-              disabled={!text.trim() || text.length > 40_000 || pending || loading || !csrf}
-            >
-              {loading ? (
-                <LoaderCircle
-                  className="reviewer-spinner"
-                  size={16}
-                  aria-hidden="true"
-                />
-              ) : (
-                <Sparkles
-                  size={16}
-                  aria-hidden="true"
-                />
-              )}
-              Review resume
-            </button>
-            {loading && (
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => {
-                  active.current?.abort();
-                  setLoading(false);
-                }}
-              >
-                Cancel
-              </button>
-            )}
-          </div>
         </form>
       )}
       {loading && (
