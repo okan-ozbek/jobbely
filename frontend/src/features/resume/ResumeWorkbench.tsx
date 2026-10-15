@@ -44,6 +44,11 @@ export function ResumeWorkbench({
   const [fileName, setFileName] = useState('');
   const analysis = state.analysis;
 
+  const hasInternships =
+    !!analysis &&
+    (analysis.experience.internships.maximumMonths > 0 ||
+      analysis.experience.internships.unknownEntries > 0);
+
   const fileWarnings =
     documentInput.document?.warnings.filter(
       (warning) => !warning.startsWith('Reading order is inferred'),
@@ -292,7 +297,7 @@ export function ResumeWorkbench({
                 openPricing={openPricing}
               />
               <div
-                className="resume-summary"
+                className={`resume-summary${hasInternships ? ' has-internships' : ''}`}
                 aria-busy={state.loading}
               >
                 {state.loading ? (
@@ -311,11 +316,13 @@ export function ResumeWorkbench({
                           ` ${analysis.experience.professional.unknownEntries} role(s) have unknown duration.`}
                       </small>
                     </div>
-                    <div>
-                      <span>Internships</span>
-                      <strong>{formatDuration(analysis.experience.internships)}</strong>
-                      <small>Separate from professional experience.</small>
-                    </div>
+                    {hasInternships && (
+                      <div>
+                        <span>Internships</span>
+                        <strong>{formatDuration(analysis.experience.internships)}</strong>
+                        <small>Separate from professional experience.</small>
+                      </div>
+                    )}
                     <div>
                       <span>Detected skills</span>
                       <strong>{analysis.skills.length + analysis.competencies.length}</strong>

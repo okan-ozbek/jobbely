@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { Sparkles } from 'lucide-react';
 import { ResumeReviewInfo } from './ResumeReviewInfo.js';
+import { ProBadge } from '../../components/ProBadge.js';
+import { moveSurface, resetSurface } from '../../components/surface-motion.js';
 import './pro-review.css';
 
 export function ProReviewPanel({
@@ -29,6 +31,8 @@ export function ProReviewPanel({
       className={`pro-review-panel ${className}`}
       aria-labelledby={id}
       data-review-module={module}
+      onPointerMove={moveSurface}
+      onPointerLeave={resetSurface}
     >
       <div className="pro-review-heading">
         <div className="pro-review-title">
@@ -45,7 +49,7 @@ export function ProReviewPanel({
           />
         </div>
         <div className="pro-review-heading-actions">
-          <span className="pro-review-badge">Pro</span>
+          <ProBadge />
           {actions}
         </div>
       </div>

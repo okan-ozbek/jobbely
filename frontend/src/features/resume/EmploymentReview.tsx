@@ -41,7 +41,7 @@ export function EmploymentReview({
         </h2>
         <button
           type="button"
-          className="resume-secondary-button"
+          className="primary-button"
           onClick={add}
         >
           Add a role

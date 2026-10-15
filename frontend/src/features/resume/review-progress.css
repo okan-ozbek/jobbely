@@ -1,0 +1,153 @@
+.review-progress {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #e0ddec;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #fbfaff, #f0f5fc);
+  transition:
+    transform 250ms,
+    box-shadow 250ms,
+    border-color 250ms;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .review-progress:hover {
+    transform: translateY(-5px) rotateX(var(--card-rotate-x, 0deg))
+      rotateY(var(--card-rotate-y, 0deg));
+    border-color: #d3ccea;
+    box-shadow: 0 24px 60px #7366b523;
+  }
+}
+.review-progress-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 0 60px;
+  height: 60px;
+  color: #7766ab;
+}
+.review-progress-halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, #d6c8f080, #dcebf340 50%, transparent 72%);
+  animation: review-breathe 3.8s ease-in-out infinite;
+}
+.review-progress-symbol {
+  display: grid;
+  place-items: center;
+  animation: review-float 3.8s ease-in-out infinite;
+}
+.review-progress-orbit {
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  animation: review-orbit 9s linear infinite;
+}
+.review-progress-orbit i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  top: 5px;
+  left: 6px;
+  background: #b2a2d8;
+  border-radius: 50%;
+}
+.review-progress-orbit i + i {
+  top: auto;
+  left: auto;
+  right: 2px;
+  bottom: 8px;
+  width: 3px;
+  height: 3px;
+  background: #a7c4d7;
+}
+.review-progress-copy {
+  flex: 1;
+  min-width: 0;
+}
+.review-progress-copy strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+.review-progress-copy p {
+  margin: 6px 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.review-progress-track {
+  height: 3px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #e5e0ef;
+}
+.review-progress-track span {
+  display: block;
+  width: 35%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #c5b7e4, #9baed2, #b3a1d5);
+  animation: review-stream 2.6s ease-in-out infinite;
+}
+.review-action-spinner {
+  flex-shrink: 0;
+  animation: review-orbit 1s linear infinite;
+}
+@keyframes review-float {
+  0%,
+  100% {
+    transform: translateY(3px) rotate(-5deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(5deg);
+  }
+}
+@keyframes review-breathe {
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+}
+@keyframes review-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes review-stream {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+@media (max-width: 650px) {
+  .review-progress {
+    gap: 12px;
+    padding: 16px;
+  }
+  .review-progress-visual {
+    flex-basis: 44px;
+    height: 52px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .review-progress {
+    transition: none;
+  }
+  .review-progress-halo,
+  .review-progress-orbit,
+  .review-progress-symbol,
+  .review-progress-track span,
+  .review-action-spinner {
+    animation: none;
+  }
+}

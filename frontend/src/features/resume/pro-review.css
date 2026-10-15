@@ -16,6 +16,29 @@
     0 8px 30px #65549a0a,
     inset 0 1px 0 #fff;
 }
+.pro-review-panel::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    320px circle at var(--card-x, 50%) var(--card-y, 50%),
+    #cfc1ee45,
+    #d8e8f326 45%,
+    transparent 75%
+  );
+  opacity: 0;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .pro-review-panel::before {
+    transition: opacity 180ms ease;
+  }
+  .pro-review-panel:hover::before {
+    opacity: 1;
+  }
+}
 .pro-review-heading,
 .pro-review-heading-actions,
 .pro-review-title {
@@ -43,15 +66,6 @@
   width: 22px;
   height: 22px;
   color: #716496;
-}
-.pro-review-badge {
-  padding: 5px 12px;
-  border: 1px solid #9d8cce;
-  border-radius: 20px;
-  background: #e6defa;
-  color: #4c347c;
-  font-size: 12px;
-  font-weight: 600;
 }
 .pro-review-heading-actions button {
   display: inline-flex;
