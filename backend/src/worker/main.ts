@@ -1,6 +1,16 @@
 import { PgBoss } from 'pg-boss';
 import { bootstrap, config } from '../bootstrap.js';
-import { configureSourceRefreshQueue, sourceRefreshQueue } from '../infrastructure/source-queue.js';
+import {
+  configureSourceRefreshQueue,
+  sourceRefreshQueue,
+  companyRefreshQueue,
+} from '../infrastructure/source-queue.js';
+import {
+  CompanyRefreshQueue,
+  refreshRegistryHash,
+} from '../infrastructure/company-refresh-queue.js';
+import type { CompanyRefreshTask } from '../infrastructure/company-refresh-queue.js';
+import { FileSourceRefreshReports } from '../infrastructure/audits/source-refresh.js';
 
 if (config.DATA_MODE !== 'postgres' || !config.DATABASE_URL) {
   throw new Error('Worker requires PostgreSQL configuration');
@@ -26,9 +36,35 @@ await boss.work('backfill-job-features', { localConcurrency: 1 }, async () => {
   await dependencies.backfill.execute();
 });
 
+await boss.work<CompanyRefreshTask>(
+  companyRefreshQueue,
+  { localConcurrency: 1, batchSize: 1 },
+  async (jobs) => {
+    const job = jobs[0]!;
+
+    if (
+      job.data.registryHash !== refreshRegistryHash(dependencies.companies, dependencies.sources)
+    ) {
+      throw new Error(
+        'Company refresh configuration changed; deploy identical registries to every replica',
+      );
+    }
+
+    return dependencies.refreshSources.executeCompany(job.id, job.data.companySlug, job.signal);
+  },
+);
+
+const coordinator = new CompanyRefreshQueue(
+  boss,
+  dependencies.companies,
+  dependencies.sources,
+  new FileSourceRefreshReports(),
+  dependencies.backfill,
+);
+
 await boss.work(sourceRefreshQueue, { localConcurrency: 1 }, async (jobs) => {
   for (const job of jobs) {
-    await dependencies.refreshSources.execute(job.id, job.signal, { scheduledOnly: true });
+    await coordinator.execute(job.id, job.signal);
   }
 });
 
@@ -36,7 +72,7 @@ await boss.schedule('backfill-job-features', '*/15 * * * *');
 await boss.schedule(sourceRefreshQueue, '0 */12 * * *', null, { tz: 'UTC' });
 await boss.send(sourceRefreshQueue);
 
-console.log('Worker ready; one ordered source refresh with automatic employer audits.');
+console.log('Worker ready; shared company queue, one import per replica, automatic audits.');
 
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.once(signal, () => {

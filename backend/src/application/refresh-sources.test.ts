@@ -86,6 +86,19 @@ function setup(registry = sources) {
 }
 
 describe('one ordered source refresh', () => {
+  it('runs only the claimed company without invoking the full backfill for each worker', async () => {
+    const test = setup();
+    const report = await test.workflow.executeCompany('task', 'd');
+
+    expect(test.events).toEqual(['sync:d', 'audit:d']);
+    expect(test.backfill.execute).not.toHaveBeenCalled();
+    expect(report.companies.map((company) => company.company)).toEqual(['d']);
+
+    await expect(test.workflow.executeCompany('unknown', 'missing')).rejects.toThrow(
+      'Unknown refresh company',
+    );
+  });
+
   it('awaits each company and board in manual order, including former D, and backfills once', async () => {
     const second = { ...sources[1]!, id: 'b-second' };
     const test = setup([...sources, second]);

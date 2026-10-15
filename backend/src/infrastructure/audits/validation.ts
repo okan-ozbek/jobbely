@@ -3,12 +3,14 @@ import type { PostingValidation, SourceAdapter } from '../../ports/ingestion.js'
 import { loadAuditPlans, requireVerifiedEvidence } from './registry.js';
 import { OfficialPageTransport } from './official-http.js';
 import { SourceAuditor, officialHosts } from './auditor.js';
+import type { HostBudget } from '../host-budget.js';
 
 export class AuditedPostingValidation implements PostingValidation {
   constructor(
     private readonly companies: Company[],
     private readonly sources: Source[],
     private readonly adapters: Readonly<Record<Provider, SourceAdapter>>,
+    private readonly budget?: HostBudget,
   ) {}
 
   async validate(source: Source, extraction: Extraction) {
@@ -35,7 +37,13 @@ export class AuditedPostingValidation implements PostingValidation {
       company,
       matching,
       plan,
-      new OfficialPageTransport(officialHosts(company, plan)),
+      new OfficialPageTransport(
+        officialHosts(company, plan),
+        undefined,
+        undefined,
+        undefined,
+        this.budget,
+      ),
       this.adapters,
     );
 

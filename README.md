@@ -130,22 +130,25 @@ on 5173. The existing PostgreSQL volume is reused. The API has no published port
 the frontend proxies `/api` under the same origin. PDF/DOCX parsing still happens
 locally in the browser, served as a bundled worker with the required isolation headers.
 
-Start the optional background workers independently:
+Start optional workers and the localhost database browser independently:
 
 ```powershell
-docker compose --profile ingestion up -d ingestion-worker
+docker compose --profile ingestion up -d --scale ingestion-worker=4 ingestion-worker
 docker compose --profile email up -d email-worker
+
+docker compose --profile tools up -d db-browser
 ```
 
 The email worker requires `AUTH_CODE_SECRET`, `SMTP_HOST` and `SMTP_FROM` in
-`backend/.env`; API and email worker receive the same secret. Ingestion runs sequential
-ordered source syncs with automatic audits on startup and twice daily. Progress and
+`backend/.env`; API and email worker receive the same secret. Ingestion shares company jobs across replicas with automatic audits on startup and twice daily. Progress and
 evidence persist in `ingestion-data`; candidate sources remain partial. See
 [INGESTION.md](docs/INGESTION.md). To start both workers with the app after configuration:
 
 ```powershell
 docker compose --profile ingestion --profile email up -d --build --wait
 ```
+
+Open [Adminer](http://127.0.0.1:8082/) to browse/query the existing database; [login and SQL examples](docs/DOCKER.md#database-browser) use the Compose development account. Change the `--scale ingestion-worker=4` value to adjust worker count.
 
 See [DOCKER.md](docs/DOCKER.md) for configuration, logs, refresh commands and restart
 steps. Stop with `docker compose --profile ingestion --profile email stop`; this

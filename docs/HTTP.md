@@ -49,7 +49,7 @@ allowlists, public DNS-address checks, robots rules, redirect rejection, host pa
 and elapsed time. It does not reuse the ATS JSON parser or bypass challenges. See
 [AUDITING.md](AUDITING.md) for its exact policy and limitations.
 
-Pacing is process-local. Multiple workers/transports may collectively exceed a provider's preferred rate, so broader concurrency requires shared limits. There is no conditional-request cache, ETag storage or request cancellation tied to graceful shutdown yet. A page traversal can exceed one request's timeout; the repository lease bounds publication ownership separately.
+PostgreSQL-wired imports and audits now share [PostgresHostBudget](../backend/src/infrastructure/host-budget.ts). Session advisory locks serialize each host through body consumption; persisted timestamps/cooldowns survive process restarts. Requests have at least a one-second completion gap, extended by observed robots crawl delays, with shared long Retry-After cooldowns. Different hosts proceed independently; database connection loss aborts in-flight work and fails closed. No SQL transaction spans network waits. Long shared cooldowns fail the current request for later retry rather than holding a worker indefinitely. Standalone database-free audit CLI commands retain their local pacing; do not run them concurrently with production collection. No conditional-response cache is added. Source leases still fence publication.
 
 The EU Lever host is allowed for a future adapter/configuration extension; the current Lever adapter uses the global host. Add allowlisted hosts deliberately alongside source/provider support, not through arbitrary user-supplied fetch URLs. Do not duplicate retry loops inside adapters.
 

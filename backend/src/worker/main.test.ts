@@ -1,12 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-type Job = { id: string; signal?: AbortSignal };
+type Job = {
+  id: string;
+  signal?: AbortSignal;
+  data?: { cycleId: string; companySlug: string; registryHash: string };
+};
 
 const test = vi.hoisted(() => {
   const handlers = new Map<string, (jobs: Job[]) => Promise<void>>();
 
   const dependencies = {
-    refreshSources: { execute: vi.fn() },
+    refreshSources: { executeCompany: vi.fn() },
+    companies: [],
+    sources: [],
     backfill: { execute: vi.fn() },
     sync: { execute: vi.fn() },
     closeFeatures: vi.fn(),
@@ -31,7 +37,7 @@ const test = vi.hoisted(() => {
     ),
   };
 
-  return { handlers, dependencies, boss };
+  return { handlers, dependencies, boss, coordinate: vi.fn() };
 });
 
 vi.mock('../bootstrap.js', () => ({
@@ -44,6 +50,13 @@ vi.mock('pg-boss', () => ({
     constructor() {
       return test.boss;
     }
+  },
+}));
+
+vi.mock('../infrastructure/company-refresh-queue.js', () => ({
+  refreshRegistryHash: () => 'same-registry',
+  CompanyRefreshQueue: class {
+    execute = test.coordinate;
   },
 }));
 
@@ -89,9 +102,30 @@ describe('single ingestion scheduler', () => {
 
     await test.handlers.get('sync-waves')!([{ id: 'cycle', signal }]);
 
-    expect(test.dependencies.refreshSources.execute).toHaveBeenCalledWith('cycle', signal, {
-      scheduledOnly: true,
-    });
+    expect(test.coordinate).toHaveBeenCalledWith('cycle', signal);
+
+    await test.handlers.get('sync-company')!([
+      {
+        id: 'company',
+        signal,
+        data: { cycleId: 'cycle', companySlug: 'example', registryHash: 'same-registry' },
+      },
+    ]);
+
+    expect(test.dependencies.refreshSources.executeCompany).toHaveBeenCalledWith(
+      'company',
+      'example',
+      signal,
+    );
+
+    await expect(
+      test.handlers.get('sync-company')!([
+        {
+          id: 'mismatch',
+          data: { cycleId: 'cycle', companySlug: 'example', registryHash: 'wrong' },
+        },
+      ]),
+    ).rejects.toThrow('configuration changed');
 
     await test.handlers.get('sync-source')!([{ id: 'legacy' }]);
     expect(test.dependencies.sync.execute).not.toHaveBeenCalled();

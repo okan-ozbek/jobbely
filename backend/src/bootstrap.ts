@@ -11,6 +11,7 @@ import { SyncSource } from './application/sync-source.js';
 import { LabelMappingStrategy, TitleRuleStrategy } from './domain/classification.js';
 import { loadRegistry } from './infrastructure/registry.js';
 import { PublicJsonTransport } from './infrastructure/http.js';
+import { PostgresHostBudget } from './infrastructure/host-budget.js';
 import { htmlPreparation } from './infrastructure/html.js';
 import { createAdapters } from './infrastructure/adapters/factory.js';
 import { MemoryJobRepository } from './infrastructure/storage/memory.js';
@@ -184,7 +185,10 @@ export async function bootstrap() {
     await seedDemo(repository, sources);
   }
 
-  const http = new PublicJsonTransport();
+  const hostBudget =
+    config.DATA_MODE === 'postgres' ? new PostgresHostBudget(config.DATABASE_URL!) : undefined;
+
+  const http = new PublicJsonTransport(undefined, undefined, hostBudget);
 
   const features =
     config.DATA_MODE === 'postgres'
@@ -244,7 +248,7 @@ export async function bootstrap() {
     htmlPreparation,
     [new LabelMappingStrategy(), new TitleRuleStrategy()],
     undefined,
-    new AuditedPostingValidation(companies, sources, adapters),
+    new AuditedPostingValidation(companies, sources, adapters, hostBudget),
   );
 
   const backfill = new BackfillJobFeatures(features, htmlJobDocumentReader);
@@ -320,11 +324,12 @@ export async function bootstrap() {
       companies,
       sources,
       sync,
-      new FileCompanyAudits(adapters, coverage),
-      new FileSourceRefreshReports(),
+      new FileCompanyAudits(adapters, coverage, undefined, hostBudget),
+      new FileSourceRefreshReports(undefined, false),
       backfill,
     ),
     closeFeatures: async () => {
+      await hostBudget?.close();
       await coverage?.close();
 
       if (features instanceof PostgresJobFeatures) {

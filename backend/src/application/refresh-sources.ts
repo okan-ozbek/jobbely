@@ -21,6 +21,25 @@ export class RefreshSources {
     private readonly clock: () => Date = () => new Date(),
   ) {}
 
+  async executeCompany(id: string, slug: string, signal?: AbortSignal) {
+    const company = this.companies.find((item) => item.slug === slug);
+
+    if (!company) {
+      throw new Error('Unknown refresh company');
+    }
+
+    // Keep all boards for audit scope, but import only scheduled boards.
+    return new RefreshSources(
+      [company],
+      this.sources,
+      this.sync,
+      this.audits,
+      this.reports,
+      { execute: async () => {} },
+      this.clock,
+    ).execute(id, signal, { scheduledOnly: true });
+  }
+
   async execute(id: string, signal?: AbortSignal, options: { scheduledOnly?: boolean } = {}) {
     const report: SourceRefreshReport = {
       id,

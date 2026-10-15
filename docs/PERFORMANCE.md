@@ -1,6 +1,6 @@
 # Performance: indexed reads without application caching
 
-**Status:** Implemented 15 October 2026. Replaces the older performance and ranked-worker proposals. Current ingestion is one manually ordered lane; financial ranking, four parallel lanes and application caching are not planned by this change.
+**Status:** Implemented 15 October 2026. Replaces the older performance and ranked-worker proposals. Ingestion now shares the ordered company queue across configurable replicas; financial ranking and fixed worker lanes remain unimplemented. [INGESTION](INGESTION.md) owns scaling and shared provider budgets.
 
 ## Read paths
 

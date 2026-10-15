@@ -1,4 +1,6 @@
 import { mkdir, rename, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import type { HostBudget } from '../host-budget.js';
 import type { Company, Extraction, Provider, Source } from '../../domain/model.js';
 import type { SourceAdapter } from '../../ports/ingestion.js';
 import type { CoverageAssessment, CoverageRepository } from '../../ports/coverage.js';
@@ -20,7 +22,7 @@ function segment(value: string) {
 }
 
 async function atomicJson(file: URL, value: unknown) {
-  const temporary = new URL(`${file.href}.tmp`);
+  const temporary = new URL(`${file.href}.${randomUUID()}.tmp`);
 
   await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`);
   await rename(temporary, file);
@@ -29,12 +31,16 @@ async function atomicJson(file: URL, value: unknown) {
 export class FileSourceRefreshReports implements SourceRefreshReports {
   constructor(
     private readonly directory = new URL('../../../data/source-sync/', import.meta.url),
+    private readonly publishLatest = true,
   ) {}
 
   async save(report: SourceRefreshReport) {
     await mkdir(this.directory, { recursive: true });
     await atomicJson(new URL(`${segment(report.id)}.json`, this.directory), report);
-    await atomicJson(new URL('latest.json', this.directory), report);
+
+    if (this.publishLatest) {
+      await atomicJson(new URL('latest.json', this.directory), report);
+    }
 
     console.log(
       JSON.stringify({
@@ -52,6 +58,7 @@ export class FileCompanyAudits implements CompanyAudits {
     private readonly adapters: Readonly<Record<Provider, SourceAdapter>>,
     private readonly coverage?: CoverageRepository,
     private readonly directory = new URL('../../../data/source-sync/', import.meta.url),
+    private readonly budget?: HostBudget,
   ) {}
 
   async verify(
@@ -75,7 +82,13 @@ export class FileCompanyAudits implements CompanyAudits {
       company,
       sources,
       plan,
-      new OfficialPageTransport(officialHosts(company, plan)),
+      new OfficialPageTransport(
+        officialHosts(company, plan),
+        undefined,
+        undefined,
+        undefined,
+        this.budget,
+      ),
       this.adapters,
     );
 

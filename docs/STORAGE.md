@@ -41,6 +41,8 @@ Catalog reads use repeatable-read transactions for a consistent dataset. The 8 O
 
 Publication now reads postings and run history only for the source being committed, together with the shared dataset version. The pure lifecycle transition, global/source lock order, lease fence, atomic writes and rollback remain unchanged. Publications still serialize globally to protect the shared version; this favors simple correctness over high write throughput.
 
+The [shared host budget migration](../backend/prisma/migrations/202610150002_shared_host_budget/migration.sql) adds `HttpHostBudget` (public hostname, last request/cooldown timestamps and minimum interval). Ingestion replicas use session advisory locks without keeping a database transaction open during network work. pg-boss owns the durable company jobs and their singleton claims; source publication leases/locks remain independent. See [INGESTION](INGESTION.md) and [HTTP](HTTP.md).
+
 ## Limits and extension points
 
 The legacy full `read()` remains available for bulk workflows. Interactive search uses the maintained lowercase `searchText` projection with a partial trigram GIN index, preserving literal substring semantics. Observation/missing status and original URLs are stored separately from large posting JSON. Location filtering, facets and ordering still run in the application. Source publication reads only its own posting/run history. Retention and SQL location pagination remain future work; see [PERFORMANCE](PERFORMANCE.md).

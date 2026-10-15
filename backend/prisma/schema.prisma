@@ -19,6 +19,13 @@ model SourceLease {
   expiresAt DateTime
 }
 
+model HttpHostBudget {
+  host String @id
+  startedAt DateTime @default(dbgenerated("'epoch'::timestamp with time zone")) @db.Timestamptz()
+  blockedUntil DateTime @default(dbgenerated("'epoch'::timestamp with time zone")) @db.Timestamptz()
+  intervalMs Int @default(1000)
+}
+
 model CompanyCoverage {
   companySlug String @id
   checkedAt DateTime
