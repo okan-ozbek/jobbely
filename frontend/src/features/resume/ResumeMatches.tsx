@@ -233,7 +233,7 @@ export function ResumeMatches({
                 <div className="resume-actions">
                   <button
                     type="button"
-                    className="resume-secondary-button"
+                    className="primary-button"
                     onClick={() => openJob(item.job.id)}
                   >
                     Description & requirements

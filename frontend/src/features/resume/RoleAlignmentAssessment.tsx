@@ -5,6 +5,7 @@ import { assessResumeRole, reviewAvailability } from '../../api/resume-review.js
 import type { RoleAssessment, ReviewAvailability } from '../../api/resume-review.js';
 import { ProReviewPanel } from './ProReviewPanel.js';
 import { ResumeSuggestionDiff } from './ResumeSuggestionDiff.js';
+import { ReviewProgress } from './ReviewProgress.js';
 import './role-assessment.css';
 
 const labels = {
@@ -175,7 +176,7 @@ export function RoleAlignmentAssessment({
             {loading ? (
               <LoaderCircle
                 size={16}
-                className="role-ai-spinner"
+                className="review-action-spinner"
                 aria-hidden="true"
               />
             ) : (
@@ -216,12 +217,10 @@ export function RoleAlignmentAssessment({
         <p role="alert">Use a resume of up to 40,000 characters for AI assessment.</p>
       )}
       {loading && (
-        <div
-          className="role-ai-progress"
-          role="status"
-        >
-          Comparing the resume and role requirements…
-        </div>
+        <ReviewProgress
+          title="Comparing your resume with this role…"
+          description="Reviewing requirements, experience and supporting evidence. This can take a moment."
+        />
       )}
       {error && (
         <p

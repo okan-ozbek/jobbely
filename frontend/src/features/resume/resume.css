@@ -247,12 +247,15 @@
 }
 .resume-summary {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
   padding: 28px;
   background: var(--surface);
   border: 1px solid var(--border);
   margin: 24px 0;
+}
+.resume-summary.has-internships {
+  grid-template-columns: 2fr 1fr 1fr;
 }
 .resume-summary > div {
   display: flex;
@@ -449,7 +452,8 @@
   }
 }
 @media (max-width: 600px) {
-  .resume-summary {
+  .resume-summary,
+  .resume-summary.has-internships {
     grid-template-columns: minmax(0, 1fr);
     padding: 20px;
   }

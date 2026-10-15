@@ -86,27 +86,8 @@
   background: #fff0d4;
   color: #854600;
 }
-.role-ai-progress {
-  margin: 16px 0;
-  padding: 14px;
-  border-radius: 12px;
-  background: #e9e4ff;
-}
-.role-ai-spinner {
-  animation: role-ai-spin 1s linear infinite;
-}
-@keyframes role-ai-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 @media (max-width: 650px) {
   .role-ai-summary {
     grid-template-columns: 1fr;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .role-ai-spinner {
-    animation: none;
   }
 }

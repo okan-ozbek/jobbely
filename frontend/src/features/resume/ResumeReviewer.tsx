@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { ClipboardCheck, LoaderCircle, LockKeyhole, Sparkles } from 'lucide-react';
+import { LoaderCircle, LockKeyhole, Sparkles } from 'lucide-react';
 import type { Account } from '../../api/accounts.js';
 import { reviewAvailability, reviewResume } from '../../api/resume-review.js';
 import type {
@@ -12,6 +12,7 @@ import { reviewLayout } from './review-layout.js';
 import { GlassSelect } from '../../components/GlassSelect.js';
 import { ProReviewPanel } from './ProReviewPanel.js';
 import { ResumeSuggestionDiff } from './ResumeSuggestionDiff.js';
+import { ReviewProgress } from './ReviewProgress.js';
 import './reviewer.css';
 
 export function ResumeReviewer({
@@ -175,7 +176,7 @@ export function ResumeReviewer({
             >
               {loading ? (
                 <LoaderCircle
-                  className="reviewer-spinner"
+                  className="review-action-spinner"
                   size={16}
                   aria-hidden="true"
                 />
@@ -302,35 +303,15 @@ export function ResumeReviewer({
         </form>
       )}
       {loading && (
-        <div
-          className="reviewer-progress"
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <div
-            className="reviewer-progress-icon"
-            aria-hidden="true"
-          >
-            {aiConsent ? <Sparkles size={28} /> : <ClipboardCheck size={28} />}
-          </div>
-          <div className="reviewer-progress-copy">
-            <strong>
-              {aiConsent ? 'Reviewing your resume with AI…' : 'Checking your resume…'}
-            </strong>
-            <p>
-              {aiConsent
-                ? 'Checking clarity, grammar and contribution. This can take a moment.'
-                : 'Looking for common mistakes and formatting risks.'}
-            </p>
-            <div
-              className="reviewer-progress-track"
-              aria-hidden="true"
-            >
-              <span />
-            </div>
-          </div>
-        </div>
+        <ReviewProgress
+          ai={aiConsent}
+          title={aiConsent ? 'Reviewing your resume with AI…' : 'Checking your resume…'}
+          description={
+            aiConsent
+              ? 'Checking clarity, grammar and contribution. This can take a moment.'
+              : 'Looking for common mistakes and formatting risks.'
+          }
+        />
       )}
       {error && (
         <p

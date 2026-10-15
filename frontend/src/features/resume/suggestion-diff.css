@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   overflow: hidden;
-  border: 1px solid #dadbe5;
+  border: 1px solid #e0ddeb;
   border-radius: 12px;
   margin: 14px 0;
   font-size: 14px;
@@ -11,22 +11,22 @@
   min-width: 0;
 }
 .resume-diff-original {
-  background: #fdf1f0;
+  background: #f6f5fa;
 }
 .resume-diff-proposed {
-  background: #f3f4fb;
-  border-left: 1px solid #dadbe5;
+  background: #f2effb;
+  border-left: 1px solid #e0ddeb;
 }
 .resume-diff-proposed.is-rewrite {
-  background: #eff9f2;
+  background: #eef3fc;
 }
 .resume-diff-label {
   padding: 9px 12px;
   font-size: 12px;
   font-weight: 600;
-  color: #596075;
-  border-bottom: 1px solid #dadbe5;
-  background: #ffffff80;
+  color: var(--muted);
+  border-bottom: 1px solid #e0ddeb;
+  background: #ffffff99;
 }
 .resume-diff-body {
   display: grid;
@@ -36,10 +36,10 @@
 }
 .resume-diff-body > span {
   font-family: monospace;
-  color: #925151;
+  color: #8a849d;
 }
 .resume-diff-proposed .resume-diff-body > span {
-  color: #406c50;
+  color: #7766ab;
 }
 .resume-suggestion-diff .resume-diff-body p {
   margin: 0;
@@ -58,6 +58,6 @@
   }
   .resume-diff-proposed {
     border-left: 0;
-    border-top: 1px solid #dadbe5;
+    border-top: 1px solid #e0ddeb;
   }
 }

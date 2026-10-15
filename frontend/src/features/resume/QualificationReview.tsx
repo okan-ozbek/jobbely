@@ -114,7 +114,7 @@ export function QualificationReview({
       ))}
       <button
         type="button"
-        className="resume-secondary-button"
+        className="primary-button"
         disabled={education.length >= 20 || !nextDegree}
         onClick={() =>
           nextDegree &&
