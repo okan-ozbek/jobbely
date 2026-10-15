@@ -12,7 +12,7 @@ The application owner's continuing onboarding request authorizes local integrati
 
 ## Runtime invariants
 
-- Stable company/source ID `runway`, Ashby board `runway-ml`, Wave C, canonical careers URL and shared N/A logo pending vector review. Scheduling follows [SCHEDULING.md](SCHEDULING.md) independently of verification.
+- Stable company/source ID `runway`, Ashby board `runway-ml`, Wave C, canonical careers URL and shared N/A logo pending vector review. Scheduling follows [INGESTION.md](INGESTION.md) independently of verification.
 - Reuse `https://api.ashbyhq.com/posting-api/job-board/runway-ml?includeCompensation=true` through the existing adapter and bounded transport. No new adapter, private API, credentials, transport allowlist or public API schema is required.
 - Preserve full sanitized HTML/text, posting UUIDs, titles, original job/application URLs, department/team, primary/secondary locations, employment/workplace labels, publication dates and native compensation. Unknown optional values remain unknown; no pay ranges are calculated.
 - Official visible full UUID links provide ATS inventory; the hosted shell supplies discovery only. The Studios form and Talent Network stay pending channels without source IDs, preventing a whole-employer coverage checkmark.
@@ -32,5 +32,5 @@ Root `pnpm check` passed formatting, boundaries, logos, zero-warning lint, stric
 The rebuilt local API and ingestion worker restarted healthy. API checks through `http://localhost:8080` confirmed 45 Runway jobs, complete detail HTML/text, native compensation and original Ashby application links, with partial coverage and unreviewed access. All 67 source flags remain scheduled/candidate across 64 configured companies. PostgreSQL inspection confirmed one exclusive `sync-waves` cron at `0 */12 * * *`, UTC, with no competing per-source cron entries. ElevenLabs' 137 jobs remain available. The configured browser origin is accepted; an actual Firefox UI session was not exercised. This employer import and scheduling check do not establish a successful fresh refresh for the entire cohort.
 
 - [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
-- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [native identity parser](../backend/src/infrastructure/audits/reconcile.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/wave-refresh.ts).
-- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](WAVE_C.md), [quality checks](QUALITY.md).
+- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [native identity parser](../backend/src/infrastructure/audits/reconcile.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/source-refresh.ts).
+- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](PROVIDERS.md), [quality checks](QUALITY.md).

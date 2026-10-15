@@ -1,12 +1,14 @@
 import { mkdir, rename, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import type { HostBudget } from '../host-budget.js';
 import type { Company, Extraction, Provider, Source } from '../../domain/model.js';
 import type { SourceAdapter } from '../../ports/ingestion.js';
 import type { CoverageAssessment, CoverageRepository } from '../../ports/coverage.js';
 import type {
-  WaveAudits,
-  WaveRefreshReport,
-  WaveRefreshReports,
-} from '../../ports/wave-refresh.js';
+  CompanyAudits,
+  SourceRefreshReport,
+  SourceRefreshReports,
+} from '../../ports/source-refresh.js';
 import { SourceAuditor, officialHosts } from './auditor.js';
 import { OfficialPageTransport } from './official-http.js';
 import { loadAuditPlans } from './registry.js';
@@ -20,23 +22,29 @@ function segment(value: string) {
 }
 
 async function atomicJson(file: URL, value: unknown) {
-  const temporary = new URL(`${file.href}.tmp`);
+  const temporary = new URL(`${file.href}.${randomUUID()}.tmp`);
 
   await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`);
   await rename(temporary, file);
 }
 
-export class FileWaveRefreshReports implements WaveRefreshReports {
-  constructor(private readonly directory = new URL('../../../data/wave-sync/', import.meta.url)) {}
+export class FileSourceRefreshReports implements SourceRefreshReports {
+  constructor(
+    private readonly directory = new URL('../../../data/source-sync/', import.meta.url),
+    private readonly publishLatest = true,
+  ) {}
 
-  async save(report: WaveRefreshReport) {
+  async save(report: SourceRefreshReport) {
     await mkdir(this.directory, { recursive: true });
     await atomicJson(new URL(`${segment(report.id)}.json`, this.directory), report);
-    await atomicJson(new URL('latest.json', this.directory), report);
+
+    if (this.publishLatest) {
+      await atomicJson(new URL('latest.json', this.directory), report);
+    }
 
     console.log(
       JSON.stringify({
-        event: 'wave-refresh',
+        event: 'source-refresh',
         id: report.id,
         status: report.status,
         current: report.current,
@@ -45,11 +53,12 @@ export class FileWaveRefreshReports implements WaveRefreshReports {
   }
 }
 
-export class FileWaveAudits implements WaveAudits {
+export class FileCompanyAudits implements CompanyAudits {
   constructor(
     private readonly adapters: Readonly<Record<Provider, SourceAdapter>>,
     private readonly coverage?: CoverageRepository,
-    private readonly directory = new URL('../../../data/wave-sync/', import.meta.url),
+    private readonly directory = new URL('../../../data/source-sync/', import.meta.url),
+    private readonly budget?: HostBudget,
   ) {}
 
   async verify(
@@ -73,11 +82,17 @@ export class FileWaveAudits implements WaveAudits {
       company,
       sources,
       plan,
-      new OfficialPageTransport(officialHosts(company, plan)),
+      new OfficialPageTransport(
+        officialHosts(company, plan),
+        undefined,
+        undefined,
+        undefined,
+        this.budget,
+      ),
       this.adapters,
     );
 
-    const artifactDirectory = `data/wave-sync/${runId}/${company.slug}/`;
+    const artifactDirectory = `data/source-sync/${runId}/${company.slug}/`;
     const reportPath = `${artifactDirectory}report.json`;
 
     const { report, rawPages, technicalBlockers } = await auditor.run(

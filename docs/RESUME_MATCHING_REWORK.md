@@ -6,7 +6,7 @@
 
 **Quality refinement, 9 October 2026:** [ATS_QUALITY_PLAN](ATS_QUALITY_PLAN.md) diagnoses the Airbnb sparse-perfect-score failure, compares rules, compact NLP, language-model and hybrid strategies, and defines independent labels, uncertainty-aware scoring and proposed quantitative release gates. It refines this roadmap; the benchmark/model selection and live replacement remain unfinished.
 
-**Execution authority:** This is the implementation roadmap for the new matching work. It supersedes the remaining delivery sequence in [LLM_MATCHING](LLM_MATCHING.md) and [SEMANTIC_MATCHING_PLAN](SEMANTIC_MATCHING_PLAN.md), while retaining their historical diagnoses. [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md), [MATCHING](MATCHING.md) and [RESUME_PRIVACY](RESUME_PRIVACY.md) continue to describe implemented behavior until explicitly updated alongside code.
+**Execution authority:** This is the implementation roadmap for new semantic matching work. Superseded structure-first/concept proposals were removed during documentation consolidation; Git retains their diagnoses. [STRUCTURED_MATCHING](STRUCTURED_MATCHING.md), [MATCHING](MATCHING.md) and [RESUME_PRIVACY](RESUME_PRIVACY.md) describe shipped behavior until updated alongside code.
 
 ## 1. Outcome and scope
 

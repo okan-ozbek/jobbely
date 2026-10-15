@@ -107,4 +107,26 @@ export class MemoryJobFeatures implements JobFeatureRepository {
         requirements: structuredClone(this.features.get(job.id)!.requirements),
       }));
   }
+
+  async featureDetails(ids: string[]) {
+    const dataset = await this.read();
+
+    return dataset.jobs
+      .filter(
+        (job) =>
+          ids.includes(job.id) &&
+          this.features.get(job.id)?.requirements.contentHash === job.contentHash &&
+          this.features.get(job.id)?.requirements.version === featureVersion,
+      )
+      .map((job) => ({
+        id: job.id,
+        sourceId: job.sourceId,
+        companySlug: job.companySlug,
+        title: job.title,
+        url: job.url,
+        applyUrl: job.applyUrl,
+        lastSeenAt: job.lastSeenAt,
+        requirements: structuredClone(this.features.get(job.id)!.requirements),
+      }));
+  }
 }

@@ -1,59 +1,53 @@
 import type { Company, Extraction, Source, SourceRun } from '../domain/model.js';
 
-export type RefreshWave = 'A' | 'B' | 'C';
-
-export interface WaveCompanyAudit {
+export interface CompanyAudit {
   status: 'passed' | 'blocked' | 'failed';
   blockers: string[];
   reportPath: string | null;
 }
 
-export interface WaveRefreshReport {
+export interface SourceRefreshReport {
   id: string;
   startedAt: string;
   finishedAt: string | null;
   status: 'running' | 'succeeded' | 'completed_with_issues' | 'failed';
   current: {
-    wave: RefreshWave;
     company: string | null;
     source: string | null;
     stage: 'sync' | 'audit' | 'backfill';
   } | null;
-  waves: {
-    wave: RefreshWave;
-    companies: {
-      company: string;
-      sources: {
-        source: string;
-        status: 'succeeded' | 'failed';
-        runId: string | null;
-        listings: number;
-        error: string | null;
-      }[];
-      audit: WaveCompanyAudit | null;
+  companies: {
+    company: string;
+    sources: {
+      source: string;
+      status: 'succeeded' | 'failed';
+      runId: string | null;
+      listings: number;
+      error: string | null;
     }[];
-    backfillError: string | null;
+    audit: CompanyAudit | null;
   }[];
+  backfillError: string | null;
   error: string | null;
 }
 
-export interface WaveSourceSync {
+export interface SourceSync {
   executeWithEvidence(
     source: Source,
     signal?: AbortSignal,
   ): Promise<{ run: SourceRun; extraction: Extraction }>;
 }
 
-export interface WaveAudits {
+export interface CompanyAudits {
   verify(
     runId: string,
     company: Company,
     sources: Source[],
     snapshots: ReadonlyMap<string, Extraction>,
     sourceRunIds: ReadonlyMap<string, string>,
-  ): Promise<WaveCompanyAudit>;
+  ): Promise<CompanyAudit>;
 }
 
-export interface WaveRefreshReports {
-  save(report: WaveRefreshReport): Promise<void>;
+export interface SourceRefreshReports {
+  save(report: SourceRefreshReport): Promise<void>;
 }

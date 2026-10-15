@@ -6,7 +6,7 @@ import { featureVersion } from '../../domain/matching/requirements.js';
 import type { FeatureFilter, JobFeatureRepository } from '../../ports/job-features.js';
 
 function where(filter: FeatureFilter) {
-  return Prisma.sql`p."status" = 'active' AND p."sourceId" = ANY(${filter.sourceIds}::text[]) AND p."category" = ANY(${filter.categories}::text[]) AND p."payload"->>'lastSeenAt' >= ${filter.cutoff} AND p."payload"->>'missingSince' IS NULL`;
+  return Prisma.sql`p."status" = 'active' AND p."sourceId" = ANY(${filter.sourceIds}::text[]) AND p."category" = ANY(${filter.categories}::text[]) AND p."lastSeenAt" >= ${filter.cutoff} AND p."missingSince" IS NULL`;
 }
 
 export class PostgresJobFeatures implements JobFeatureRepository {
@@ -93,9 +93,15 @@ export class PostgresJobFeatures implements JobFeatureRepository {
     );
   }
 
-  async featureJobs(filter: FeatureFilter, after: string, limit: number) {
+  async featureJobs(filter: FeatureFilter, after: string, limit: number, ranking = false) {
     return this.client.$queryRaw<
       FeatureJob[]
-    >`SELECT p."id", p."sourceId", p."companySlug", p."title", p."payload"->>'url' AS url, p."payload"->>'applyUrl' AS "applyUrl", p."payload"->>'lastSeenAt' AS "lastSeenAt", f."payload" AS requirements FROM "Posting" p JOIN "JobFeature" f ON p."id" = f."postingId" AND p."contentHash" = f."contentHash" AND f."version" = ${featureVersion} WHERE ${where(filter)} AND p."id" > ${after} ORDER BY p."id" LIMIT ${limit}`;
+    >`SELECT p."id", p."sourceId", p."companySlug", p."title", p."url", p."applyUrl", p."lastSeenAt", ${ranking ? Prisma.sql`f."ranking"` : Prisma.sql`f."payload"`} AS requirements FROM "Posting" p JOIN "JobFeature" f ON p."id" = f."postingId" AND p."contentHash" = f."contentHash" AND f."version" = ${featureVersion} WHERE ${where(filter)} AND p."id" > ${after} ORDER BY p."id" LIMIT ${limit}`;
+  }
+
+  async featureDetails(ids: string[]) {
+    return this.client.$queryRaw<
+      FeatureJob[]
+    >`SELECT p."id", p."sourceId", p."companySlug", p."title", p."url", p."applyUrl", p."lastSeenAt", f."payload" AS requirements FROM "Posting" p JOIN "JobFeature" f ON p."id" = f."postingId" AND p."contentHash" = f."contentHash" AND f."version" = ${featureVersion} WHERE p."id" = ANY(${ids}::text[])`;
   }
 }

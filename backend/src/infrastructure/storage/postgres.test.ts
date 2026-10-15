@@ -8,6 +8,8 @@ import { extractRequirements } from '../../domain/matching/requirements.js';
 import { MemoryJobRepository } from './memory.js';
 import type { NormalizedPosting, Source } from '../../domain/model.js';
 import { auditPublicVocabulary } from '../audits/vocabulary.js';
+import { scoreJob } from '../../domain/matching/score.js';
+import { candidate } from '../../test-fixtures/resume-matching.js';
 
 const connectionString = process.env['TEST_DATABASE_URL'];
 const integration = connectionString ? describe : describe.skip;
@@ -70,6 +72,22 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       );
     }
 
+    const rankingColumn = await client.query(
+      `SELECT 1 FROM information_schema.columns WHERE table_schema='public' AND table_name='JobFeature' AND column_name='ranking'`,
+    );
+
+    if (!rankingColumn.rowCount) {
+      await client.query(
+        await readFile(
+          new URL(
+            '../../../prisma/migrations/202610150001_read_projections/migration.sql',
+            import.meta.url,
+          ),
+          'utf8',
+        ),
+      );
+    }
+
     await client.end();
     repository = new PostgresJobRepository(connectionString);
     secondRepository = new PostgresJobRepository(connectionString);
@@ -115,6 +133,9 @@ integration('PostgreSQL transactions (isolated test database)', () => {
 
   it('audits every public posting in two read-only passes without changing revisions', async () => {
     const item = { ...source(), companySlug: `vocabulary-${randomUUID()}` };
+    // The isolated database deliberately survives runs; avoid filling the bounded
+    // example list with fixtures from previous executions of this test.
+    const vocabulary = `FictionalVocabularyDatabase${randomUUID().replaceAll('-', '')}`;
     const at = new Date().toISOString();
     const run = await repository.startRun(item, at);
 
@@ -124,7 +145,7 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       observedAt: at,
       postings: [posting('a'), posting('b'), posting('c')].map((value) => ({
         ...value,
-        descriptionText: 'Qualifications\nExperience with FictionalVocabularyDatabase required.',
+        descriptionText: `Qualifications\nExperience with ${vocabulary} required.`,
       })),
       rawResponses: [],
       excluded: 0,
@@ -140,7 +161,7 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       const count = await client.query<{ count: string }>('SELECT count(*) FROM "Posting"');
       const report = await auditPublicVocabulary(connectionString!);
       const after = await client.query('SELECT * FROM "DatasetVersion"');
-      const term = report.candidates.find((entry) => entry.term === 'fictionalvocabularydatabase');
+      const term = report.candidates.find((entry) => entry.term === vocabulary.toLowerCase());
 
       expect(report.postings).toBe(Number(count.rows[0]!.count));
 
@@ -165,7 +186,7 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       {
         ...posting('literal'),
         title: 'Engineer 100%_ready',
-        descriptionText: 'Python services with Café tooling',
+        descriptionText: 'Python services with Café tooling and literal \\paths',
         departments: ['Platform', 'Engineering'],
         locations: ['Amsterdam, Netherlands', 'Berlin, Germany'],
         workplace: 'remote' as const,
@@ -193,6 +214,9 @@ integration('PostgreSQL transactions (isolated test database)', () => {
       {},
       { q: '100%_' },
       { q: '100Xready' },
+      { q: '\\paths' },
+      { q: '100%' },
+      { q: '_ready' },
       { q: 'PYTHON' },
       { q: 'café' },
       { q: 'Platform Engineering' },
@@ -335,6 +359,14 @@ integration('PostgreSQL transactions (isolated test database)', () => {
 
     expect((await features.featureJobs(filter, '', 10))[0]!.id).toBe(job.id);
 
+    const [ranking] = await features.featureJobs(filter, '', 10, true);
+    const [detail] = await features.featureDetails([job.id]);
+
+    expect(scoreJob(ranking!, candidate(), [], false)).toMatchObject({
+      baseScore: scoreJob(detail!, candidate(), [], false).baseScore,
+      assessmentCoverage: scoreJob(detail!, candidate(), [], false).assessmentCoverage,
+    });
+
     const second = await repository.startRun(item, at);
 
     await repository.commitSnapshot({
@@ -355,6 +387,7 @@ integration('PostgreSQL transactions (isolated test database)', () => {
 
     expect((await features.featureSnapshot(filter)).unenriched).toBe(1);
     expect(await features.featureJobs(filter, '', 10)).toEqual([]);
+    expect(await features.featureDetails([job.id])).toEqual([]);
     expect(await features.saveFeatures([feature])).toBe(0);
 
     const changed = (await repository.read()).jobs.find((entry) => entry.id === job.id)!;
@@ -503,20 +536,35 @@ integration('PostgreSQL transactions (isolated test database)', () => {
         `UPDATE "Posting" SET "payload" = "payload" || $2::jsonb WHERE "sourceId" = $1`,
         [
           item.id,
-          JSON.stringify({ locations: ['Berlin, Germany'], workplace: 'remote', lastSeenAt: at }),
+          JSON.stringify({
+            locations: ['Berlin, Germany'],
+            workplace: 'remote',
+            lastSeenAt: at,
+            missingSince: at,
+            url: 'https://example.com/changed',
+            applyUrl: 'https://example.com/changed-apply',
+            descriptionText: 'FreshSearchMarker',
+          }),
         ],
       );
 
       // Direct metadata writes cannot disagree with the canonical payload either.
-      await client.query(`UPDATE "Posting" SET "workplace" = 'onsite' WHERE "sourceId" = $1`, [
-        item.id,
-      ]);
+      await client.query(
+        `UPDATE "Posting" SET "workplace" = 'onsite', "missingSince" = NULL, "url" = '', "applyUrl" = '', "searchText" = '' WHERE "sourceId" = $1`,
+        [item.id],
+      );
 
       const result = await client.query(
-        `SELECT count(*)::int AS count FROM "Posting" WHERE "locations" IS DISTINCT FROM "payload"->'locations' OR "workplace" IS DISTINCT FROM "payload"->>'workplace' OR "lastSeenAt" IS DISTINCT FROM "payload"->>'lastSeenAt'`,
+        `SELECT count(*)::int AS count FROM "Posting" WHERE "locations" IS DISTINCT FROM "payload"->'locations' OR "workplace" IS DISTINCT FROM "payload"->>'workplace' OR "lastSeenAt" IS DISTINCT FROM "payload"->>'lastSeenAt' OR "missingSince" IS DISTINCT FROM "payload"->>'missingSince' OR "url" IS DISTINCT FROM "payload"->>'url' OR "applyUrl" IS DISTINCT FROM "payload"->>'applyUrl'`,
       );
 
       expect(result.rows[0]?.count).toBe(0);
+
+      expect(
+        (
+          await repository.searchCatalog({ company: item.companySlug, q: 'FreshSearchMarker' })
+        ).jobs.some((job) => job.locations.includes('Berlin, Germany')),
+      ).toBe(true);
 
       expect(
         (

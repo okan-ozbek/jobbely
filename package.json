@@ -25,17 +25,10 @@
     "format": "pnpm lint:fix && prettier --write .",
     "format:check": "prettier --check .",
     "sync": "pnpm --filter @jobbely/backend sync",
-    "sync:waves": "pnpm --filter @jobbely/backend sync:waves",
-    "sync:wave-a": "pnpm --filter @jobbely/backend run sync --wave A",
-    "audit:wave-a": "pnpm --filter @jobbely/backend run audit --wave A",
     "db:generate": "pnpm --filter @jobbely/backend db:generate",
     "db:migrate": "pnpm --filter @jobbely/backend db:migrate",
-    "sync:wave-b": "pnpm --filter @jobbely/backend run sync --wave B",
-    "audit:wave-b": "pnpm --filter @jobbely/backend run audit --wave B",
-    "sync:wave-c": "pnpm --filter @jobbely/backend run sync --wave C",
-    "audit:wave-c": "pnpm --filter @jobbely/backend run audit --wave C",
-    "sync:wave-d": "pnpm --filter @jobbely/backend run sync --wave D",
-    "audit:wave-d": "pnpm --filter @jobbely/backend run audit --wave D"
+    "sync:refresh": "pnpm --filter @jobbely/backend sync:refresh",
+    "benchmark:reads": "pnpm --filter @jobbely/backend benchmark:reads"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",

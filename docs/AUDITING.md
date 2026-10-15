@@ -13,16 +13,14 @@ legal terms, approve employer scope, bypass challenges, or enable incomplete sou
 
 ## Commands
 
-Scheduling is now independent of verification after explicit application-owner authorization: [SCHEDULING.md](SCHEDULING.md). The activation commands below still require stronger audit/access evidence and govern verified status and removal eligibility.
+Scheduling is now independent of verification after explicit application-owner authorization: [INGESTION.md](INGESTION.md). The activation commands below still require stronger audit/access evidence and govern verified status and removal eligibility.
 
-[AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) now removes manual scope/access approval and `complete` flags from the technical badge path. The wave worker automatically traverses supported pagination and stores a separate technical result tied to imported run IDs. This document's review/activation commands retain their stronger access and removal-policy role; they are no longer required to show a passing coverage checkmark.
+[AUTOMATIC_COVERAGE.md](AUTOMATIC_COVERAGE.md) now removes manual scope/access approval and `complete` flags from the technical badge path. The ingestion worker automatically traverses supported pagination and stores a separate technical result tied to imported run IDs. This document's review/activation commands retain their stronger access and removal-policy role; they are no longer required to show a passing coverage checkmark.
 
-[WAVE_REFRESH.md](WAVE_REFRESH.md) now automates audit execution after each employer's source refresh within the ordered A/B/C worker cycle. It checks the exact imported snapshots and saves progress/evidence without separate manual audit commands. Reports do not invent scope/access approvals or auto-activate candidate sources; the activation CLI below remains a separate gate.
+[INGESTION.md](INGESTION.md) now automates audit execution after each employer's source refresh within the ordered source cycle. It checks the exact imported snapshots and saves progress/evidence without separate manual audit commands. Reports do not invent scope/access approvals or auto-activate candidate sources; the activation CLI below remains a separate gate.
 
 ```powershell
-pnpm audit:wave-a
-pnpm audit:wave-b
-pnpm audit:wave-c
+pnpm --filter @jobbely/backend audit --all-enabled
 pnpm --filter @jobbely/backend run audit --company discord
 ```
 
@@ -108,7 +106,7 @@ Edit the relevant entry in `backend/config/source-audits.json` after examining t
    pnpm --filter @jobbely/backend run audit --company discord --activate
    ```
 
-   `--wave A --activate` is also available, but every selected company must pass. Activation is
+   `--all-enabled --activate` is also available, but every selected company must pass. Activation is
    all-or-nothing for the selected cohort; it never promotes a partially passing batch. It validates
    current evidence/configuration, sets `auditStatus: "verified"` and `scheduled: true`, and replaces
    the source configuration atomically. Normal audits never change those flags.
@@ -137,9 +135,9 @@ scope fails the run before publication. Existing jobs and removal counters are p
 coverage reflects the failed run. Successful reconciliation evidence is stored with the database
 snapshot. Candidate manual imports remain available for investigation but cannot reconcile closure. An explicitly blocked access or display plan now fails candidate validation before atomic publication. Public feed retrieval remains possible for discovery/audit, but failed imports store no posting descriptions or successful snapshots. Pending reviews preserve the existing investigation path. See [Cohere](COHERE.md).
 
-Enterprise source endpoint, canonical host aliases and employer membership rules are included in the configuration hash. Workday official URL slugs are reconciled to immutable posting IDs through captured detail evidence, rather than inventing requisition/title equivalence. The expanded registry includes pending plans for every Wave B company; a configured plan is not an approval. See [WAVE_B.md](WAVE_B.md).
+Enterprise source endpoint, canonical host aliases and employer membership rules are included in the configuration hash. Workday official URL slugs are reconciled to immutable posting IDs through captured detail evidence, rather than inventing requisition/title equivalence. The expanded registry includes pending plans for every Wave B company; a configured plan is not an approval. See [PROVIDERS.md](PROVIDERS.md).
 
-The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix URLs establish posting identity through their public posting numbers, with an explicit `PIPE-` mapping for Apple's managed retail records. Meta and Google remain access-blocked. Native search pagination/HTML collection still needs reviewed official traversal before activation can pass. See [WAVE_C.md](WAVE_C.md).
+The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix URLs establish posting identity through their public posting numbers, with an explicit `PIPE-` mapping for Apple's managed retail records. Meta and Google remain access-blocked. Native search pagination/HTML collection still needs reviewed official traversal before activation can pass. See [PROVIDERS.md](PROVIDERS.md).
 
 [Hugging Face](HUGGING_FACE.md) adds a bounded parser for its explicitly advertised Workable jobs.md all-open-positions table. Official transport accepts Markdown only at that exact URL, retaining robots, DNS, timeout, size and redirect checks. Native titles/shortcodes are reconciled without executing scripts; malformed, duplicate or unproven empty rows fail inspection. Wild Card is excluded consistently from collection and official inventory. This exact-run technical verification remains separate from pending employer scope/access/display review.
 
@@ -160,7 +158,7 @@ The five Wave C priorities also have pending plans. Native Apple/Amazon/Netflix 
   checks are not connection-pinned; deployment egress controls remain recommended. Official HTML
   requests have no automatic retries; 403/429 are not bypassed.
 - Candidate imports are not subject to the verified inventory guard, but explicit blocked access/display plans prevent their publication. No source is approved merely
-  by setting a JSON flag, and no source has been activated for verified scheduling while its audit still has blockers. Cohere and Cursor local import/display were explicitly authorized by the application owner; employer review remains pending. The later all-source scheduling request enables candidate refresh attempts through [SCHEDULING.md](SCHEDULING.md), without changing verification, employer approvals or closure.
+  by setting a JSON flag, and no source has been activated for verified scheduling while its audit still has blockers. Cohere and Cursor local import/display were explicitly authorized by the application owner; employer review remains pending. The later all-source scheduling request enables candidate refresh attempts through [INGESTION.md](INGESTION.md), without changing verification, employer approvals or closure.
 - Source state requires process restart, and expired/missing evidence prevents normal startup with
   verified configuration. Restore valid evidence or explicitly downgrade the source before restart.
 

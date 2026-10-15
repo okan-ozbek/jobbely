@@ -233,6 +233,21 @@ describe('stateless full matching flow', () => {
     await expect(matcher.execute(input)).rejects.toMatchObject({ code: 'cursor_stale' });
   });
 
+  it('rejects publication during winner hydration instead of returning mixed evidence', async () => {
+    const { dataset, features, matcher, input } = await setup();
+    const hydrate = features.featureDetails.bind(features);
+
+    features.featureDetails = async (ids) => {
+      const jobs = await hydrate(ids);
+
+      dataset.version++;
+
+      return jobs;
+    };
+
+    await expect(matcher.execute(input)).rejects.toMatchObject({ code: 'cursor_stale' });
+  });
+
   it('scans 25,000 eligible features in bounded chunks and returns the best page', async () => {
     const total = 25_000;
 
@@ -267,6 +282,7 @@ describe('stateless full matching flow', () => {
         eligible: total,
         unenriched: 0,
       }),
+      featureDetails: async (ids) => ids.map((id) => ({ ...template, id })),
       featureJobs: async (_filter, after, limit) => {
         const start = after ? Number(after) + 1 : 0;
 

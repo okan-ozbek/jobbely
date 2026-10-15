@@ -11,6 +11,7 @@ import { SyncSource } from './application/sync-source.js';
 import { LabelMappingStrategy, TitleRuleStrategy } from './domain/classification.js';
 import { loadRegistry } from './infrastructure/registry.js';
 import { PublicJsonTransport } from './infrastructure/http.js';
+import { PostgresHostBudget } from './infrastructure/host-budget.js';
 import { htmlPreparation } from './infrastructure/html.js';
 import { createAdapters } from './infrastructure/adapters/factory.js';
 import { MemoryJobRepository } from './infrastructure/storage/memory.js';
@@ -25,8 +26,11 @@ import { PostgresPasswordAccounts } from './infrastructure/storage/password-acco
 import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
 import { renderAccountEmail } from './infrastructure/accounts/account-email-template.js';
 import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
-import { RefreshWaves } from './application/refresh-waves.js';
-import { FileWaveAudits, FileWaveRefreshReports } from './infrastructure/audits/wave-refresh.js';
+import { RefreshSources } from './application/refresh-sources.js';
+import {
+  FileCompanyAudits,
+  FileSourceRefreshReports,
+} from './infrastructure/audits/source-refresh.js';
 import { PostgresCoverage } from './infrastructure/storage/coverage-postgres.js';
 import { loadAuditPlans } from './infrastructure/audits/registry.js';
 import { configurationHash } from './infrastructure/audits/model.js';
@@ -51,10 +55,6 @@ export const config = z
       .default('false')
       .transform((value) => value === 'true'),
     FRONTEND_ORIGIN: z.url().default('http://127.0.0.1:5173'),
-    INGESTION_WAVE_SYNC: z
-      .enum(['true', 'false'])
-      .default('false')
-      .transform((value) => value === 'true'),
     MATCH_CURSOR_SECRET: z.string().min(32).optional(),
     RESUME_REVIEW_OPENAI_KEY: z.string().min(1).optional(),
     RESUME_REVIEW_MODEL: z.string().min(1).max(120).optional(),
@@ -185,7 +185,10 @@ export async function bootstrap() {
     await seedDemo(repository, sources);
   }
 
-  const http = new PublicJsonTransport();
+  const hostBudget =
+    config.DATA_MODE === 'postgres' ? new PostgresHostBudget(config.DATABASE_URL!) : undefined;
+
+  const http = new PublicJsonTransport(undefined, undefined, hostBudget);
 
   const features =
     config.DATA_MODE === 'postgres'
@@ -245,7 +248,7 @@ export async function bootstrap() {
     htmlPreparation,
     [new LabelMappingStrategy(), new TitleRuleStrategy()],
     undefined,
-    new AuditedPostingValidation(companies, sources, adapters),
+    new AuditedPostingValidation(companies, sources, adapters, hostBudget),
   );
 
   const backfill = new BackfillJobFeatures(features, htmlJobDocumentReader);
@@ -317,15 +320,16 @@ export async function bootstrap() {
       htmlJobDocumentReader,
     ),
     backfill,
-    refreshWaves: new RefreshWaves(
+    refreshSources: new RefreshSources(
       companies,
       sources,
       sync,
-      new FileWaveAudits(adapters, coverage),
-      new FileWaveRefreshReports(),
+      new FileCompanyAudits(adapters, coverage, undefined, hostBudget),
+      new FileSourceRefreshReports(undefined, false),
       backfill,
     ),
     closeFeatures: async () => {
+      await hostBudget?.close();
       await coverage?.close();
 
       if (features instanceof PostgresJobFeatures) {

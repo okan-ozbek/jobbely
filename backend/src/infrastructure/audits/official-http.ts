@@ -1,6 +1,8 @@
 import { lookup } from 'node:dns/promises';
 import { isIP, BlockList } from 'node:net';
 import { createRequire } from 'node:module';
+import type { HostBudget } from '../host-budget.js';
+import { HttpFailure } from '../http.js';
 
 // robots-parser ships CommonJS with declarations that do not model NodeNext's default import.
 const robotsParser = createRequire(import.meta.url)('robots-parser') as (
@@ -58,6 +60,7 @@ export class OfficialPageTransport {
   private readonly robots = new Map<string, Promise<{ body: string; status: number }>>();
   private readonly tails = new Map<string, Promise<unknown>>();
   private readonly nextRequest = new Map<string, number>();
+  private readonly crawlIntervals = new Map<string, number>();
   private readonly deadline = Date.now() + 4 * 60_000;
 
   constructor(
@@ -68,6 +71,7 @@ export class OfficialPageTransport {
       options: { all: true },
     ) => Promise<{ address: string; family: number }[]> = lookup,
     private readonly intervalMs = 1000,
+    private readonly budget?: HostBudget,
   ) {}
 
   async get(url: string): Promise<OfficialSnapshot> {
@@ -92,6 +96,8 @@ export class OfficialPageTransport {
     if (delay !== undefined && (!Number.isFinite(delay) || delay > 30)) {
       throw new Error('robots.txt crawl delay exceeds this audit request budget');
     }
+
+    this.crawlIntervals.set(parsed.hostname, Math.max(this.intervalMs, (delay ?? 0) * 1000));
 
     this.nextRequest.set(
       parsed.hostname,
@@ -137,100 +143,127 @@ export class OfficialPageTransport {
 
     const previous = this.tails.get(parsed.hostname) ?? Promise.resolve();
 
+    const execute = async (signal?: AbortSignal) => {
+      await new Promise<void>((resolve) =>
+        setTimeout(resolve, Math.max(0, (this.nextRequest.get(parsed.hostname) ?? 0) - Date.now())),
+      );
+
+      this.nextRequest.set(parsed.hostname, Date.now() + this.intervalMs);
+
+      const remaining = this.deadline - Date.now();
+      const markdownInventory = url === 'https://apply.workable.com/huggingface/jobs.md';
+
+      if (remaining <= 0) {
+        throw new Error('Official-site audit elapsed-time budget exhausted');
+      }
+
+      const response = await this.fetcher(url, {
+        redirect: 'error',
+        signal: AbortSignal.any([
+          AbortSignal.timeout(Math.min(30_000, remaining)),
+          ...(signal ? [signal] : []),
+        ]),
+        headers: {
+          'User-Agent': userAgent,
+          Accept: robots
+            ? 'text/plain'
+            : markdownInventory
+              ? 'text/markdown'
+              : 'text/html,application/javascript',
+        },
+      });
+
+      if (robots && [404, 410].includes(response.status)) {
+        await response.body?.cancel();
+
+        return { body: '', status: response.status };
+      }
+
+      if (!response.ok || !response.body) {
+        await response.body?.cancel();
+
+        if (response.status === 429 || response.status >= 500) {
+          const header = response.headers.get('retry-after');
+
+          const waitMs =
+            header && /^\d+$/.test(header)
+              ? Number(header) * 1000
+              : header
+                ? Math.max(0, Date.parse(header) - Date.now())
+                : 0;
+
+          throw new HttpFailure(
+            response.status,
+            `Official site HTTP ${response.status}: ${url}`,
+            Number.isFinite(waitMs) ? waitMs : 0,
+          );
+        }
+
+        throw new Error(`Official site HTTP ${response.status}: ${url}`);
+      }
+
+      const contentType = response.headers.get('content-type') ?? '';
+
+      if (
+        !(
+          robots
+            ? /text\/plain/i
+            : markdownInventory
+              ? /^text\/markdown(?:;|$)/i
+              : /text\/html|javascript/i
+        ).test(contentType)
+      ) {
+        await response.body.cancel();
+
+        throw new Error(`Unexpected official-site content type: ${contentType}`);
+      }
+
+      const reader = response.body.getReader();
+      const chunks: Uint8Array[] = [];
+      let bytes = 0;
+
+      for (;;) {
+        const chunk = await reader.read();
+
+        if (chunk.done) {
+          break;
+        }
+
+        bytes += chunk.value.length;
+
+        if (bytes > (robots ? 1024 * 1024 : 8 * 1024 * 1024)) {
+          await reader.cancel();
+
+          throw new Error('Official-site response exceeds audit byte budget');
+        }
+
+        chunks.push(chunk.value);
+      }
+
+      const body = Buffer.concat(chunks).toString('utf8');
+
+      if (
+        /cf-chl-|<title[^>]*>\s*(?:Just a moment|Access denied|Attention required)|<[^>]+>\s*Verify you are human/i.test(
+          body.slice(0, 12000),
+        )
+      ) {
+        throw new Error('Challenge page is not official listing evidence');
+      }
+
+      return { body, status: response.status };
+    };
+
     const current = previous
       .catch(() => undefined)
-      .then(async () => {
-        await new Promise<void>((resolve) =>
-          setTimeout(
-            resolve,
-            Math.max(0, (this.nextRequest.get(parsed.hostname) ?? 0) - Date.now()),
-          ),
-        );
-
-        this.nextRequest.set(parsed.hostname, Date.now() + this.intervalMs);
-
-        const remaining = this.deadline - Date.now();
-        const markdownInventory = url === 'https://apply.workable.com/huggingface/jobs.md';
-
-        if (remaining <= 0) {
-          throw new Error('Official-site audit elapsed-time budget exhausted');
-        }
-
-        const response = await this.fetcher(url, {
-          redirect: 'error',
-          signal: AbortSignal.timeout(Math.min(30_000, remaining)),
-          headers: {
-            'User-Agent': userAgent,
-            Accept: robots
-              ? 'text/plain'
-              : markdownInventory
-                ? 'text/markdown'
-                : 'text/html,application/javascript',
-          },
-        });
-
-        if (robots && [404, 410].includes(response.status)) {
-          await response.body?.cancel();
-
-          return { body: '', status: response.status };
-        }
-
-        if (!response.ok || !response.body) {
-          await response.body?.cancel();
-
-          throw new Error(`Official site HTTP ${response.status}: ${url}`);
-        }
-
-        const contentType = response.headers.get('content-type') ?? '';
-
-        if (
-          !(
-            robots
-              ? /text\/plain/i
-              : markdownInventory
-                ? /^text\/markdown(?:;|$)/i
-                : /text\/html|javascript/i
-          ).test(contentType)
-        ) {
-          await response.body.cancel();
-
-          throw new Error(`Unexpected official-site content type: ${contentType}`);
-        }
-
-        const reader = response.body.getReader();
-        const chunks: Uint8Array[] = [];
-        let bytes = 0;
-
-        for (;;) {
-          const chunk = await reader.read();
-
-          if (chunk.done) {
-            break;
-          }
-
-          bytes += chunk.value.length;
-
-          if (bytes > (robots ? 1024 * 1024 : 8 * 1024 * 1024)) {
-            await reader.cancel();
-
-            throw new Error('Official-site response exceeds audit byte budget');
-          }
-
-          chunks.push(chunk.value);
-        }
-
-        const body = Buffer.concat(chunks).toString('utf8');
-
-        if (
-          /cf-chl-|<title[^>]*>\s*(?:Just a moment|Access denied|Attention required)|<[^>]+>\s*Verify you are human/i.test(
-            body.slice(0, 12000),
-          )
-        ) {
-          throw new Error('Challenge page is not official listing evidence');
-        }
-
-        return { body, status: response.status };
-      });
+      .then(() =>
+        this.budget
+          ? this.budget.run(
+              parsed.hostname,
+              execute,
+              this.crawlIntervals.get(parsed.hostname) ?? this.intervalMs,
+            )
+          : execute(),
+      );
 
     this.tails.set(parsed.hostname, current);
 

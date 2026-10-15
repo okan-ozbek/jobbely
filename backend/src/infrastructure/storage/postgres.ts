@@ -72,11 +72,9 @@ export class PostgresJobRepository implements JobRepository {
     }
 
     if (query.q) {
-      conditions.push(Prisma.sql`
-        strpos(lower(concat(p."title", ' ', p."payload"->>'descriptionText', ' ',
-          (SELECT string_agg(value, ' ' ORDER BY ordinal) FROM jsonb_array_elements_text(p."payload"->'departments') WITH ORDINALITY d(value, ordinal)), ' ',
-          (SELECT string_agg(value, ' ' ORDER BY ordinal) FROM jsonb_array_elements_text(p."payload"->'locations') WITH ORDINALITY l(value, ordinal)))), ${query.q.toLowerCase()}) > 0
-      `);
+      const literal = query.q.toLowerCase().replace(/[\\%_]/g, '\\$&');
+
+      conditions.push(Prisma.sql`p."searchText" LIKE ${`%${literal}%`} ESCAPE '\\'`);
     }
 
     return this.client.$transaction(

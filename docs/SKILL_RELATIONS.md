@@ -48,6 +48,6 @@ Synthetic tests cover edge validity, strongest paths, cycles/hop bounds, direct/
 
 ## Limits and extension
 
-[SEMANTICS.md](SEMANTICS.md) owns the implemented engineering registry, clause rules, scope distinction and green/yellow/purple/red review flow. [SEMANTIC_MATCHING_PLAN.md](SEMANTIC_MATCHING_PLAN.md) retains the remaining evaluation and role-expansion roadmap.
+[SEMANTICS.md](SEMANTICS.md) owns the implemented engineering registry, clause rules, scope distinction and green/yellow/purple/red review flow. [RESUME_MATCHING_REWORK.md](RESUME_MATCHING_REWORK.md) retains the remaining evaluation and role-expansion roadmap.
 
 Relations are manually reviewed heuristics; tool familiarity does not prove systems-design competency. Ambiguous generic terms such as “performance” are not automatically classified as technical proficiency. Leadership-year thresholds remain uncertain until the profile supports reviewed activity intervals. Multi-language extraction, calibrated weights and richer temporal competency evidence require separate decisions and evaluation.

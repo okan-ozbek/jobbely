@@ -14,7 +14,6 @@
     "test": "vitest run",
     "export:openapi": "tsx src/cli/export-openapi.ts",
     "sync": "tsx src/cli/sync.ts",
-    "sync:waves": "tsx src/cli/sync-waves.ts",
     "audit": "tsx src/cli/audit-source.ts",
     "features:backfill": "tsx src/cli/backfill-features.ts",
     "vocabulary:audit": "tsx src/cli/audit-vocabulary.ts",
@@ -24,7 +23,9 @@
     "worker:email": "tsx src/worker/account-email.ts",
     "billing:setup:test": "tsx src/cli/setup-stripe-test.ts",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy"
+    "db:migrate": "prisma migrate deploy",
+    "sync:refresh": "tsx src/cli/refresh-sources.ts",
+    "benchmark:reads": "tsx src/cli/benchmark-reads.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.1.0",

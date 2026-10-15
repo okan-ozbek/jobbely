@@ -8,9 +8,9 @@ The [500-company technology employer backlog](docs/TECH_COMPANIES_500.md) propos
 
 The **Resume** page reads text or a local PDF/DOCX, shows reading order and claims, and lets you correct the profile before requesting explained job recommendations. It covers engineering, data/AI, product, sales and people, with explicit gaps, uncertainty and freshness. Candidate data stays transient; only public job features are persisted. Try the synthetic examples in [RESUME_TESTING](docs/RESUME_TESTING.md); see [RESUME_PLAN](RESUME_PLAN.md) for broader follow-ups.
 
-All 70 configured sources are now scheduled by explicit application-owner request, including candidate sources. The local worker refreshes A → B → C at 00:00 and 12:00 UTC; blocked feeds still report failures and audit/closure gates remain separate. See [scheduling](docs/SCHEDULING.md). The [dated onboarding results](docs/REFERENCE_HISTORY.md#employer-onboarding-overview) record their original source states.
+Scheduled sources refresh one by one in the order in [refresh-order.json](backend/config/refresh-order.json), at startup and 00:00/12:00 UTC. Blocked feeds still fail explicitly; audit and closure gates remain separate. See [ingestion](docs/INGESTION.md) and [performance](docs/PERFORMANCE.md).
 
-TypeScript lives in separate `/frontend` and `/backend` packages. Integrations support Greenhouse, Ashby, Lever, Workday, iCIMS/Jibe, SmartRecruiters, public Workable and native boards. Employer-specific counts and original source states are preserved in the [historical onboarding overview](docs/REFERENCE_HISTORY.md#employer-onboarding-overview); use the current registry and concern documents for implementation work.
+TypeScript lives in separate `/frontend` and `/backend` packages. [PROVIDERS](docs/PROVIDERS.md) summarizes supported integrations; the registry and source run reports establish current availability.
 
 ## Prerequisites
 
@@ -79,10 +79,10 @@ Use `Ctrl+C` to stop the servers. Environment variables override `backend/.env`;
    $env:DATA_MODE = "postgres"
    pnpm db:generate
    pnpm db:migrate
-   pnpm sync:wave-a
+   pnpm sync --all-enabled
    ```
 
-   This imports all 10 Wave A companies, including both Radix Trading boards. Run `pnpm sync:wave-b` to import Wave B. Large Workday boards take tens of minutes because every detail is retrieved with host pacing. NVIDIA and LinkedIn currently fail explicitly, producing a nonzero command exit code; other sources continue. For an individual company, use `pnpm --filter @jobbely/backend run sync --company openai` (or another configured company slug). These commands read the public feeds and write to your configured database. An empty database shows no real listings until ingestion succeeds.
+   This imports every scheduled source in the configured company order. Large boards can take hours because complete detail retrieval retains host pacing. Failed/restricted sources produce a nonzero exit code while other sources continue. For a quick targeted import use `pnpm sync --company openai`. An empty database shows no real listings until ingestion succeeds.
 
 5. Start both applications:
 
@@ -90,7 +90,7 @@ Use `Ctrl+C` to stop the servers. Environment variables override `backend/.env`;
    pnpm dev
    ```
 
-For the five original Wave C priorities plus Atlassian and Shopify, run `pnpm sync:wave-c`. Netflix, Amazon and Atlassian use public JSON feeds; Apple and Shopify read their public listing/detail pages. Apple's full initial detail import can take over 100 minutes at default pacing and fails if traversal changes or a required detail becomes unavailable. Meta and Google report access blockers, so the wave command returns a nonzero exit code while continuing other sources. See [WAVE_C.md](docs/WAVE_C.md) for exact limits and [SOURCE_CHECKS.md](docs/SOURCE_CHECKS.md) for which full imports have actually passed. Seven other Wave C companies remain unconfigured. Microsoft, Oracle, X (Twitter), IBM, JPMorgan Chase, Goldman Sachs and ABN AMRO are deferred to [Wave D](docs/WAVE_D.md). No integrations have been added for that cohort. The `sync:wave-d` and `audit:wave-d` aliases currently exit with "No matching sources for the requested selection." until sources are configured.
+See [PROVIDERS](docs/PROVIDERS.md) for traversal/access limits and [SOURCE_CHECKS](docs/SOURCE_CHECKS.md) for dated full-import evidence. Unconfigured companies need a real supported source before they can be fetched.
 
 For independent development, use separate terminals:
 
@@ -130,22 +130,25 @@ on 5173. The existing PostgreSQL volume is reused. The API has no published port
 the frontend proxies `/api` under the same origin. PDF/DOCX parsing still happens
 locally in the browser, served as a bundled worker with the required isolation headers.
 
-Start the optional background workers independently:
+Start optional workers and the localhost database browser independently:
 
 ```powershell
-docker compose --profile ingestion up -d ingestion-worker
+docker compose --profile ingestion up -d --scale ingestion-worker=4 ingestion-worker
 docker compose --profile email up -d email-worker
+
+docker compose --profile tools up -d db-browser
 ```
 
 The email worker requires `AUTH_CODE_SECRET`, `SMTP_HOST` and `SMTP_FROM` in
-`backend/.env`; API and email worker receive the same secret. Ingestion runs sequential
-Wave A → B → C syncs with automatic audits on startup and twice daily. Progress and
+`backend/.env`; API and email worker receive the same secret. Ingestion shares company jobs across replicas with automatic audits on startup and twice daily. Progress and
 evidence persist in `ingestion-data`; candidate sources remain partial. See
-[WAVE_REFRESH.md](docs/WAVE_REFRESH.md). To start both workers with the app after configuration:
+[INGESTION.md](docs/INGESTION.md). To start both workers with the app after configuration:
 
 ```powershell
 docker compose --profile ingestion --profile email up -d --build --wait
 ```
+
+Open [Adminer](http://127.0.0.1:8082/) to browse/query the existing database; [login and SQL examples](docs/DOCKER.md#database-browser) use the Compose development account. Change the `--scale ingestion-worker=4` value to adjust worker count.
 
 See [DOCKER.md](docs/DOCKER.md) for configuration, logs, refresh commands and restart
 steps. Stop with `docker compose --profile ingestion --profile email stop`; this
@@ -187,32 +190,26 @@ Manual ingestion works in PostgreSQL mode:
 pnpm --filter @jobbely/backend run sync --company openai
 ```
 
-Refresh the entire first-release cohort with `pnpm sync:wave-a`, equivalent to
-`pnpm --filter @jobbely/backend run sync --wave A`. Wave selection uses the company registry
-and includes every configured board for those companies, even when scheduling is disabled.
-Choose exactly one selector: `--company <slug>`, `--wave <A|B|C|D>`, or `--all-enabled`
-(scheduled sources only). A failed source is reported without preventing the remaining sources
-from running; any failure gives the command a nonzero exit code. Manual ingestion does not
-verify employer scope or enable scheduling.
+Refresh all scheduled sources with `pnpm sync --all-enabled`, or enqueue the audited background cycle with `pnpm sync:refresh`. Choose exactly one manual selector: `--company <slug>` (all company boards, including disabled) or `--all-enabled` (scheduled sources only). A failed source is reported without abandoning later sources; failures set a nonzero exit code. Imports do not approve coverage or change scheduling.
 
 Audit a company's official listings, hiring channels, policy evidence and provider feeds without publishing listings:
 
 ```powershell
 pnpm --filter @jobbely/backend run audit --company openai
-pnpm audit:wave-a
+pnpm --filter @jobbely/backend audit --all-enabled
 ```
 
 Raw audit evidence goes to ignored, timestamped `backend/data/audits/` directories; compact reports go to `backend/config/audit-evidence/`. Audits compare posting IDs, flag new boards, capture policy documents and require recorded scope/access approvals. See [AUDITING.md](docs/AUDITING.md) for review and activation commands. Candidate boards may be synced manually, but their missing postings cannot automatically close existing listings.
 
-Sources in `backend/config/sources.json` are currently candidates with scheduling disabled. After the company passes its audit, `audit --company <slug> --activate` can verify its sources and enable schedules; manually setting the flags without passing evidence is rejected. Restart affected processes and run the separate development worker:
+Scheduling and verification are independent. Candidate sources may be scheduled while access/display and absence-based closure remain gated. `audit --company <slug> --activate` still requires current complete approval evidence. Restart affected processes after registry changes.
 
-The **Coverage verified** badge now uses [automatic technical assessments](docs/AUTOMATIC_COVERAGE.md), independently of those legacy activation flags. The wave worker grants/revokes it from official-inventory matching, supported pagination and fresh imported runs, without manual approval or restart. Access/display review and absence-based closure remain separate policies.
+The **Coverage verified** badge now uses [automatic technical assessments](docs/AUTOMATIC_COVERAGE.md), independently of those legacy activation flags. The ingestion worker grants/revokes it from official-inventory matching, supported pagination and fresh imported runs, without manual approval or restart. Access/display review and absence-based closure remain separate policies.
 
 ```powershell
 pnpm --filter @jobbely/backend run worker
 ```
 
-With `INGESTION_WAVE_SYNC=true` (the Docker worker default), the worker refreshes A → B → C sequentially and audits each employer automatically, on startup and at 00:00/12:00 UTC. `pnpm sync:waves` requests another cycle through the same exclusive queue. See [WAVE_REFRESH.md](docs/WAVE_REFRESH.md) for persistent progress reports and audit blockers. With wave mode disabled, schedules refresh only audited enabled sources twice daily, staggered by minute in UTC. The API process does not start the worker; see [INGESTION.md](docs/INGESTION.md) and [SOURCES.md](docs/SOURCES.md).
+The worker has one ordered scheduling policy and audits each employer automatically. `pnpm sync:refresh` requests a cycle through the shared exclusive queue. See [INGESTION](docs/INGESTION.md) for order, progress, retries and upgrade steps. The API does not start the worker.
 
 ## Checks and troubleshooting
 
@@ -257,8 +254,8 @@ pnpm --filter @jobbely/frontend run format
 
 Start with [the documentation index](docs/README.md). Each decision reference records rationale, invariants, implementation links, and known limitations:
 
-- [RANKED_SYNC_PLAN](docs/RANKED_SYNC_PLAN.md): proposed financial-size ranking, parallel round-robin company sync and retirement of waves.
-- [RESUME_PERFORMANCE_PLAN](docs/RESUME_PERFORMANCE_PLAN.md): measured local query/freshness problems and a phased plan for usable analysis and scalable matching.
+- [RANKED_SYNC_PLAN](docs/PERFORMANCE.md): proposed financial-size ranking, parallel round-robin company sync and retirement of waves.
+- [RESUME_PERFORMANCE_PLAN](docs/PERFORMANCE.md): measured local query/freshness problems and a phased plan for usable analysis and scalable matching.
 
 - [ARCHITECTURE](docs/ARCHITECTURE.md): layers, dependency direction and composition.
 - [ADAPTER](docs/ADAPTER.md): provider translation and extension contract.
@@ -271,7 +268,7 @@ Start with [the documentation index](docs/README.md). Each decision reference re
 - [QUALIFICATIONS](docs/QUALIFICATIONS.md): reviewed degrees, explicit skill years and bounded responsibility relevance.
 - [SKILL_RELATIONS](docs/SKILL_RELATIONS.md): weighted evidence graph, confidence colors and description highlighting.
 - [SEMANTICS](docs/SEMANTICS.md): implemented engineering concepts, clause interpretation and scoped skill questions.
-- [SEMANTIC_MATCHING_PLAN](docs/SEMANTIC_MATCHING_PLAN.md): historical engineering roadmap; future work follows RESUME_MATCHING_REWORK.
+- [SEMANTIC_MATCHING_PLAN](docs/RESUME_MATCHING_REWORK.md): historical engineering roadmap; future work follows RESUME_MATCHING_REWORK.
 - [RESUME_MATCHING_REWORK](docs/RESUME_MATCHING_REWORK.md): proposed semantic matching replacement, current-code findings, backend-hosted model experiments and phased acceptance gates.
 - [ATS_QUALITY_PLAN](docs/ATS_QUALITY_PLAN.md): reproduced Airbnb matching failure, rules/NLP/model options, independent quality benchmarks and proposed release gates.
 - [SEMANTIC_EXPERIMENTS](docs/SEMANTIC_EXPERIMENTS.md): development evaluation, requirement algebra and local-model public-job shadow tools; live matching remains deterministic.
@@ -300,4 +297,4 @@ Full 60-company onboarding, indexed database search, classification replay, raw-
 
 Resume matching interprets reviewed engineering activities through a 239-concept local registry. Green means full evidence, yellow partial/uncertain evidence, purple a possible unmentioned skill to confirm, and red no supported evidence. Tool usage and development are separate; answers remain temporary and require updated-profile review. See [SEMANTICS.md](docs/SEMANTICS.md) for scope and limits.
 
-Matching now preserves job sections and logical resume evidence blocks, displaying required qualifications, preferred/nice-to-have qualifications and additional information. Comparisons retain unknown statements, OR alternatives, duration ranges, assessment coverage and evidence provenance. [MATCHING.md](docs/MATCHING.md#assessment-coverage-update-5-october-2026) defines separate fit/coverage labels and criterion-based ranking. See [STRUCTURED_MATCHING.md](docs/STRUCTURED_MATCHING.md) for the implemented stages 1-3 and [LLM_MATCHING.md](docs/LLM_MATCHING.md) for the remaining optional local-model experiment. No AI service is required to run this version.
+Matching now preserves job sections and logical resume evidence blocks, displaying required qualifications, preferred/nice-to-have qualifications and additional information. Comparisons retain unknown statements, OR alternatives, duration ranges, assessment coverage and evidence provenance. [MATCHING.md](docs/MATCHING.md#assessment-coverage-update-5-october-2026) defines separate fit/coverage labels and criterion-based ranking. See [STRUCTURED_MATCHING.md](docs/STRUCTURED_MATCHING.md) for the implemented stages 1-3 and [RESUME_MATCHING_REWORK.md](docs/RESUME_MATCHING_REWORK.md) for the remaining optional local-model experiment. No AI service is required to run this version.

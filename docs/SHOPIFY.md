@@ -47,4 +47,4 @@ pnpm --filter @jobbely/backend run sync --company shopify
 pnpm --filter @jobbely/backend run audit --company shopify
 ```
 
-Sync requires PostgreSQL. The standalone audit command fetches a fresh inventory and remains separate from imported-run verification; the wave worker reuses exact imported extraction evidence. Restart running API/worker processes after adding this source. See [WAVE_C](WAVE_C.md), [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md) and [QUALITY](QUALITY.md).
+Sync requires PostgreSQL. The standalone audit command fetches a fresh inventory and remains separate from imported-run verification; the ingestion worker reuses exact imported extraction evidence. Restart running API/worker processes after adding this source. See [PROVIDERS](PROVIDERS.md), [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md) and [QUALITY](QUALITY.md).

@@ -1,5 +1,6 @@
 import type { HtmlTransport, JsonSearchTransport } from '../ports/ingestion.js';
 import type { RawResponse } from '../domain/model.js';
+import type { HostBudget } from './host-budget.js';
 
 const allowedHosts = new Set([
   'boards-api.greenhouse.io',
@@ -33,6 +34,7 @@ export class HttpFailure extends Error {
   constructor(
     public readonly status: number,
     message: string,
+    public readonly retryAfterMs = 0,
   ) {
     super(message);
   }
@@ -45,6 +47,7 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
   constructor(
     private readonly fetcher: typeof fetch = fetch,
     private readonly minIntervalMs = 1000,
+    private readonly budget?: HostBudget,
   ) {}
 
   async get(url: string): Promise<RawResponse> {
@@ -139,7 +142,15 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
 
     const current = previous
       .catch(() => undefined)
-      .then(() => this.request(url, parsed.hostname, body, format));
+      .then(() =>
+        this.budget
+          ? this.budget.run(
+              parsed.hostname,
+              (signal) => this.request(url, parsed.hostname, body, format, signal),
+              this.minIntervalMs,
+            )
+          : this.request(url, parsed.hostname, body, format),
+      );
 
     this.tails.set(parsed.hostname, current);
 
@@ -151,6 +162,7 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
     host: string,
     requestBody?: string,
     format: 'json' | 'html' = 'json',
+    signal?: AbortSignal,
   ): Promise<RawResponse> {
     for (let attempt = 0; attempt < 4; attempt++) {
       await sleep(Math.max(0, (this.nextRequest.get(host) ?? 0) - Date.now()));
@@ -159,7 +171,7 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
       try {
         const response = await this.fetcher(url, {
           redirect: 'error',
-          signal: AbortSignal.timeout(30_000),
+          signal: AbortSignal.any([AbortSignal.timeout(30_000), ...(signal ? [signal] : [])]),
           ...(requestBody === undefined ? {} : { method: 'POST', body: requestBody }),
           headers: {
             Accept: format === 'json' ? 'application/json' : 'text/html',
@@ -183,7 +195,11 @@ export class PublicJsonTransport implements JsonSearchTransport, HtmlTransport {
 
           // Respect long delays by failing this run; never retry sooner than requested.
           if (attempt === 3 || waitMs > 30_000 || !Number.isFinite(waitMs)) {
-            throw new HttpFailure(response.status, `Upstream ${response.status}; retry later`);
+            throw new HttpFailure(
+              response.status,
+              `Upstream ${response.status}; retry later`,
+              Number.isFinite(waitMs) ? waitMs : 0,
+            );
           }
 
           await sleep(waitMs + Math.random() * 250);

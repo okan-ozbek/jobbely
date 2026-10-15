@@ -39,4 +39,4 @@ pnpm --filter @jobbely/backend run sync --company notion
 pnpm --filter @jobbely/backend run audit --company notion
 ```
 
-Sync requires PostgreSQL. Standalone audit fetches a new provider inventory and retains the traditional scope/access blockers; the wave worker assesses exact imported evidence instead. Restart API/worker processes after registry changes. See [ADAPTER](ADAPTER.md), [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [LIFECYCLE](LIFECYCLE.md) and [QUALITY](QUALITY.md).
+Sync requires PostgreSQL. Standalone audit fetches a new provider inventory and retains the traditional scope/access blockers; the ingestion worker assesses exact imported evidence instead. Restart API/worker processes after registry changes. See [ADAPTER](ADAPTER.md), [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [LIFECYCLE](LIFECYCLE.md) and [QUALITY](QUALITY.md).

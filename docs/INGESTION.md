@@ -1,53 +1,59 @@
-# Decision: application-owned ingestion
+# Ingestion and scheduling
 
-**Status:** Manual ingestion implemented; scheduled-worker implementation awaits operational validation. Recorded 30 September 2026.
+**Status:** Shared company queue implemented 15 October 2026. One worker runs one company at a time; replicas claim different companies. This supersedes sequential whole-cycle collection. Financial ranking and fixed lanes are not used.
 
-## Decision and rationale
+## Load sharing and order
 
-Public job requirement enrichment is a separate replayable workflow after publication. Operator sync backfills after imports; the worker backfills after a successful sync and schedules a public-feature backfill every 15 minutes. Missing/stale features remain visibly unenriched and do not block or falsify a successful source run. No candidate data enters these queues. See [JOB_FEATURES](JOB_FEATURES.md).
+[refresh-order.json](../backend/config/refresh-order.json) defines priority. Duplicate/unknown slugs fail startup; unlisted companies append alphabetically. Cohort metadata does not control selection. Each cycle atomically inserts one public task per enabled company, with descending priority and deterministic cycle/company IDs. Free workers claim the next task. Faster workers handle more companies instead of waiting on a fixed slice's slowest import; equal company counts would not guarantee equal elapsed work.
 
-`SyncSource` owns a source refresh. API requests read previously stored jobs; refreshes run through an operator CLI or a separate worker process. This keeps upstream latency and failures outside interactive requests and makes failure behavior reusable across entry points.
+Each worker imports a company's scheduled boards sequentially and audits every configured board using exact successful snapshots. Disabled/failed boards stay coverage gaps. Company singleton jobs and source leases prevent concurrent duplicate imports. Expected source/audit failures yield issue reports and do not block unrelated companies. Infrastructure failures retry that company, preserving completed siblings.
 
-```mermaid
-flowchart LR
-  Trigger[CLI / worker] --> Lease[Claim source lease]
-  Lease --> Extract[Provider adapter validates and enumerates]
-  Extract --> Prepare[Sanitize HTML and classify]
-  Prepare --> Commit[Atomic snapshot publication]
-  Extract -. failure .-> Fail[Record failed run]
-  Prepare -. failure .-> Fail
-  Commit -. failure .-> Fail
+One exclusive coordinator holds the cycle open while companies run. Startup, manual requests and 00:00/12:00 UTC cron use the same durable queue (legacy internal name `sync-waves`). Retrying an interrupted coordinator finds existing children instead of redispatching. It aggregates outcomes and performs the final public-feature backfill. Independent 15-minute catch-up backfill remains active. Startup retires legacy per-source schedules/jobs.
+
+## Start, scale and inspect
+
+```powershell
+docker compose stop ingestion-worker
+docker compose --profile ingestion up -d --build --scale ingestion-worker=4 ingestion-worker
+# Change the replica count later:
+docker compose --profile ingestion up -d --scale ingestion-worker=2 ingestion-worker
+docker compose logs --tail 50 -f ingestion-worker
+docker compose exec --index 1 ingestion-worker cat data/source-sync/latest.json
 ```
 
-After claiming the lease, the use case selects the adapter, invokes its injected `PostingValidation` port, rejects duplicate IDs, prepares HTML/text, rejects empty descriptions, classifies each posting and hashes the normalized content. Verified-source validation repeats official inventory reconciliation and current access-policy checks; candidate imports remain an investigation path. Explicitly blocked access/display plans now fail candidate validation before publication, preserving prior listings and absence counters; pending reviews retain the existing investigation behavior. The repository publishes postings, feed/audit evidence, versions and successful run state together. Any extraction/validation/preparation/publication exception records failure and is rethrown. A lease conflict fails before another run is created. See [AUDITING.md](AUDITING.md).
+Replicas use identical images/registries, PostgreSQL and the shared `ingestion-data` volume. Stop older versions before upgrading. Drain the active cycle before changing registry/order configuration, then restart all replicas; a public configuration hash rejects mismatched company workers. Scaling within one configuration is safe. The API/`pnpm dev` do not start ingestion. `INGESTION_WAVE_SYNC` is retired.
 
-## Commands and scheduling
-
-Since 6 October, [WAVE_REFRESH.md](WAVE_REFRESH.md) adds ordered A → B → C sync plus automatic employer audits. Docker ingestion opts into this mode; it requests one cycle on startup and at 00:00/12:00 UTC, suppresses overlaps globally and persists progress in `ingestion-data`. Automatic wave imports now honor each source’s scheduled flag. Explicit owner authorization enabled all 70 configured sources independently of audit verification; candidate imports remain partial and do not change closure eligibility. See [SCHEDULING.md](SCHEDULING.md). The per-source worker behavior below applies when `INGESTION_WAVE_SYNC` is disabled.
-
-From the repository root:
-
-```sh
-pnpm --filter @jobbely/backend run sync --company openai
-pnpm sync:wave-a
-pnpm sync:wave-b
-pnpm sync:wave-c
-pnpm --filter @jobbely/backend run sync --all-enabled
-pnpm --filter @jobbely/backend run worker
+```powershell
+pnpm sync:refresh                                      # enqueue a shared cycle
+pnpm --filter @jobbely/backend worker                  # one host replica; repeat in another terminal
+pnpm sync --company openai                             # targeted foreground import
+pnpm sync --all-enabled                                # foreground ordered imports
+pnpm --filter @jobbely/backend audit --company openai   # standalone audit
 ```
 
-Manual sync requires PostgreSQL mode. `--company` and `--wave` include configured candidate boards for evaluation; `--all-enabled` selects scheduled sources. Choose exactly one selector. One company may have multiple boards, synchronized separately. The CLI continues after a source error and exits unsuccessfully if any source failed.
+View/query PostgreSQL through the optional [database browser](DOCKER.md#database-browser). Queue tasks are in `pgboss.job`:
 
-Wave C currently selects its five configured priorities plus the configured Atlassian, Shopify, HubSpot, ServiceNow, Adyen, ASML, Canva, Notion, Vercel, Mistral AI, Cohere, Hugging Face, Perplexity, Anysphere (Cursor), Replit, Lovable, ElevenLabs, Runway, Supabase, Linear and Synthesia backlog expansions. Apple requires a full initial detail traversal, potentially over 100 minutes at default pacing; inventory diagnostics or samples cannot publish jobs. Native source errors and access gates preserve existing data. See [WAVE_C.md](WAVE_C.md).
+```sql
+SELECT data->>'companySlug' AS company, state, priority, started_on, completed_on
+FROM pgboss.job
+WHERE name = 'sync-company'
+ORDER BY created_on DESC, priority DESC;
+```
 
-The worker uses pg-boss in the same PostgreSQL database, with local concurrency one, keyed source schedules, UTC refreshes at staggered minutes every 12 hours, and a configured two retries with backoff. It rechecks enabled state before processing a job; the normal publication workflow still enforces access and verified-source evidence. The source lease is the cross-process overlap guard; local concurrency alone is not.
+## Budgets, failures and evidence
 
-## Invariants, tradeoffs and limits
+PostgreSQL-wired imports/audits share [host pacing](HTTP.md) across replicas, including body consumption, robots delays and long Retry-After cooldowns. Different hosts proceed independently. Adding workers does not multiply a provider host's allowance. Connection loss fails closed; no database transaction spans external network waits.
 
-Failed runs never reconcile removals or publish partial updates. Last successful listings remain readable. Quarantine affects removal reconciliation; valid observed postings still update. Successful snapshots retain raw evidence; failed runs currently retain an error summary rather than their fetched payloads.
+[SyncSource](../backend/src/application/sync-source.ts) preserves source leases/renewal, complete extraction, validation, sanitization, classification and atomic publication. Retain [audit/access gates](AUDITING.md), [transactions](STORAGE.md), [closure/quarantine](LIFECYCLE.md) and stable IDs. Candidates cannot close absent jobs or establish complete employer coverage. Leases renew every minute with a 30-minute crash expiry. Company jobs have a four-hour lifetime, 60-second heartbeat and two infrastructure retries after 60 seconds. The coordinator retains its 24-hour lifetime and one retry after 30 minutes. Provider traversal budgets remain active; complete imports can take hours.
 
-All 70 configured candidate sources are currently scheduled by explicit application-owner request. `SyncSource` renews ownership every minute during long extraction/validation; renewal failures prevent publication and cleanup stops the heartbeat. Workday extraction has a two-hour budget and the worker queue has a three-hour job lifetime. Worker startup removes disabled/orphaned per-source cron entries; queued disabled jobs are rejected, and wave mode excludes disabled sources. Queue restart/retry behavior remains an operational follow-up. Registry changes require process restart. The worker is not started by `pnpm dev` or the API entry point. SIGINT/SIGTERM trigger queue shutdown and repository closure.
+Coordinator interruption does not erase children: queued jobs remain durable and may finish while the coordinator retries. An interrupted company restarts that company's idempotent import; traversal checkpoints are not implemented. Permanently failed children yield a cycle with issues.
 
-## Implementation and verification
+Ignored `data/source-sync/` holds aggregate `<cycle-id>.json`/`latest.json`, per-task `<company-job-id>.json`, and audit artifacts under `<company-job-id>/<company>/`. Only the coordinator writes `latest.json`; company files are independent and temporary filenames unique. Old `wave-sync/` evidence remains untouched. Queues, pacing rows and reports contain public source metadata only; no candidate profiles. Retention remains unimplemented.
 
-[Use case](../backend/src/application/sync-source.ts), [behavior tests](../backend/src/application/sync-source.test.ts), [CLI](../backend/src/cli/sync.ts), [worker](../backend/src/worker/main.ts). Publication and expiry belong to [STORAGE.md](STORAGE.md); closure belongs to [LIFECYCLE.md](LIFECYCLE.md).
+## Code and verification
+
+[Coordinator](../backend/src/infrastructure/company-refresh-queue.ts), [company workflow](../backend/src/application/refresh-sources.ts), [queues](../backend/src/infrastructure/source-queue.ts), [worker](../backend/src/worker/main.ts), [reports/audits](../backend/src/infrastructure/audits/source-refresh.ts), [host budget](../backend/src/infrastructure/host-budget.ts).
+
+Dedicated PostgreSQL tests cover two consumers, simultaneous different-company work, same-company exclusion, interruption/resume without redispatch, exclusive cycles, shared-host spacing, independent hosts, failure release and Retry-After cooldowns. Existing source lifecycle/audit/publication tests remain required. Live worker/queue observations prove rollout only; full-cohort success and production capacity require actual run evidence.
+
+Local rollout on 15 October rebuilt the image, applied the pacing migration and started four replicas. An existing delayed coordinator retry was brought forward through pg-boss without changing its ID or overlap policy. PostgreSQL and Adminer both showed four distinct active company jobs, with queued companies remaining and no duplicate active company claims. `pnpm check` and the PostgreSQL-enabled backend suite passed. The full collection cycle remains in progress; restricted feeds retain explicit failures.

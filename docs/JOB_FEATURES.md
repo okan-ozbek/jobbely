@@ -1,12 +1,12 @@
 # Decision: indexed public job features and replayable backfill
 
-**Status:** Implemented and PostgreSQL integration-tested 1 October 2026, Europe/Amsterdam. General catalog search remains on its existing snapshot path.
+**Status:** Implemented and PostgreSQL integration-tested 1 October 2026, Europe/Amsterdam. Updated 15 October 2026 with compact ranking projections; catalog search uses the query path in [STORAGE](STORAGE.md).
 
 ## Structured evidence update, 2 October 2026
 
 The [9 October platform follow-up](MATCHING.md#platform-qualification-follow-up-9-october-2026) changes feature identity to `requirements-19:concepts-7:clauses-4:job-document-3`. Clause dispositions, example IDs and optional education/experience alternatives from the preceding baseline remain public feature data. The follow-up changes recognition/section boundaries without another schema change. Backfill public features and release API/ingestion with the same version so an older worker cannot overwrite the projection. No database migration or private-profile backfill is required. Earlier version records below remain dated history.
 
-[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) records the implemented job sections, logical resume blocks, required/preferred/additional groups and bounded source-reference contracts. Analysis is text-3; public features are requirements-13:concepts-2:clauses-2:job-document-1, scoring score-4:relations-3. Single-job comparison exposes completeness, review band and unresolved counts. Matching forwards only allowlisted evidence metadata; resume excerpts remain transient. Earlier dated verification below describes its own increment.
+[STRUCTURED_MATCHING](STRUCTURED_MATCHING.md) owns section/clause contracts. Current feature identity comes from `featureVersion` in [requirements.ts](../backend/src/domain/matching/requirements.ts); update policy versions and backfill together. Resume evidence stays transient.
 
 ## Storage and invariants
 
@@ -20,7 +20,9 @@ Only a projection matching the current posting content hash and feature policy v
 
 Backfill reads at most 100 pending postings at a time by stable ID. Extraction happens outside the write transaction. Publication takes the same global advisory lock as ingestion (721049), checks current content hash under a row-share lock, and conditionally upserts only changed hash/version rows. Generation advances once for each transaction with actual changes. Writers and ingestion share lock order, avoiding opposite-order posting/version locks. Concurrent identical backfills publish once; stale extraction inputs cannot overwrite a newer posting feature.
 
-If a job changes during an ID scan, it remains visibly unenriched and is picked up by the next backfill. Runs and feature generation are checked before/after matching; any concurrent data change aborts the result rather than returning a mixed revision. Snapshot counts use repeatable read; ranking fetches compact feature/public-summary rows in 250-row chunks and never fetches all descriptions for each candidate.
+If a job changes during an ID scan, it remains visibly unenriched and is picked up by the next backfill. Runs and feature generation are checked before/after matching; any concurrent data change aborts the result rather than returning a mixed revision. Snapshot counts use repeatable read; ranking fetches compact feature/public-summary rows in 500-row chunks and never fetches all descriptions for each candidate.
+
+The [15 October migration](../backend/prisma/migrations/202610150001_read_projections/migration.sql) maintains a second compact `ranking` JSON projection with a trigger, including older-worker writes. It omits full clause/block text and display excerpts while retaining all ranking inputs and criterion identities. Only selected winners fetch full evidence before the final revision fence. No candidate/result caching is introduced. See [PERFORMANCE](PERFORMANCE.md) for measurements and parity checks.
 
 ## Operation
 
@@ -29,7 +31,7 @@ pnpm db:migrate
 pnpm features:backfill
 ```
 
-Set the normal PostgreSQL environment first. Backfill is replayable and outputs inspected/updated counts only. Operator sync performs a backfill after imports. The worker schedules `backfill-job-features` every 15 minutes and also backfills after a successful scheduled sync. These queues contain public job work, never resumes. API startup does not mutate/backfill the database; run migrations/backfill before releasing new feature versions. Missing features are reported explicitly in matching responses.
+Set the normal PostgreSQL environment first. Backfill is replayable and outputs inspected/updated counts only. Operator sync performs a backfill after imports. The worker schedules `backfill-job-features` every 15 minutes and after each ordered refresh cycle. These queues contain public job work, never resumes. API startup does not mutate/backfill the database; run migrations/backfill before releasing new feature versions. Missing features are reported explicitly in matching responses.
 
 Matching capacity, eligibility, ranking and signed cursor semantics belong to [MATCHING](MATCHING.md). Additive migration leaves existing job versions/source IDs intact. Projection is derivative and can be rebuilt; no candidate state is recoverable from it.
 

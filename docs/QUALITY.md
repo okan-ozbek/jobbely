@@ -56,7 +56,7 @@ Unit/behavior tests use fake transport and memory storage for malformed fields, 
 
 PostgreSQL tests require a dedicated `TEST_DATABASE_URL` whose database name starts with `jobbely_test_`. They initialize the initial schema when missing and use unique sources without deleting existing data. With no variable they are skipped, so a default test pass is not a database integration pass. Provision that database separately and keep its connection secret.
 
-Earlier test counts and browser observations are preserved in [historical verification results](REFERENCE_HISTORY.md#historical-verification-results). They do not establish correctness for subsequent edits.
+Record new verification in the owning concern document, with its date and limitations. Historical pass counts do not establish correctness after later edits.
 
 ## Iteration and final verification
 

@@ -48,4 +48,4 @@ pnpm --filter @jobbely/backend run sync --company servicenow
 pnpm --filter @jobbely/backend run audit --company servicenow
 ```
 
-Sync requires PostgreSQL and can take over ten minutes at normal pacing. Standalone audit fetches a new provider inventory; the wave worker instead reuses exact imported extraction evidence. Restart the API and worker after registry changes. See [WAVE_C](WAVE_C.md), [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [INGESTION](INGESTION.md) and [QUALITY](QUALITY.md).
+Sync requires PostgreSQL and can take over ten minutes at normal pacing. Standalone audit fetches a new provider inventory; the ingestion worker instead reuses exact imported extraction evidence. Restart the API and worker after registry changes. See [PROVIDERS](PROVIDERS.md), [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [INGESTION](INGESTION.md) and [QUALITY](QUALITY.md).

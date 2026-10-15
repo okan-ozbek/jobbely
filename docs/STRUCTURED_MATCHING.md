@@ -1,6 +1,6 @@
 # Decision: structured documents and evidence contracts
 
-**Status:** Implemented stages 1-3 of [LLM_MATCHING](LLM_MATCHING.md), 2 October 2026, Europe/Amsterdam. Interpretation remains deterministic. Optional local-model extraction and held-out ranking calibration remain proposed.
+**Status:** Structured extraction/evidence contracts implemented 2 October 2026, Europe/Amsterdam. Interpretation remains deterministic. Optional local-model extraction and held-out ranking calibration remain proposed.
 
 ## Rationale and layers
 
@@ -38,4 +38,4 @@ Identity is text-3 for resume blocks and requirements-13:concepts-2:clauses-2:jo
 
 Public projection backfill inspected/updated 13,162 postings; a subsequent pass inspected/updated zero. Browser checks used fictional candidates, verifying qualification colors, zero colored application/footer terms, 3-5 year display, original-description access, local evidence, review gating, reload clearing and all three groups at 1280px and 375px without horizontal overflow. Real candidate content was not added to fixtures, logs or docs. Mobile/desktop viewport overrides were reset.
 
-This is a bounded rules implementation, not general sentence understanding, a particular ATS simulation or proof of qualification satisfaction. Role-specific duration intervals, structured candidate eligibility, public-job model shadow evaluation, held-out accuracy and production load calibration remain future work in [LLM_MATCHING](LLM_MATCHING.md).
+This is a bounded rules implementation, not general sentence understanding, a particular ATS simulation or proof of qualification satisfaction. Role-specific duration intervals, structured candidate eligibility, public-job model shadow evaluation, held-out accuracy and production load calibration remain future work in [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md).

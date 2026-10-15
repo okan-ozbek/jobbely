@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { Company, Source } from '../domain/model.js';
 import { requireVerifiedEvidence } from './audits/registry.js';
 import { ashbyBoardPattern } from './adapters/ashby.js';
+import { orderCompanies } from '../domain/source-order.js';
 
 const companySchema = z.object({
   slug: z.string(),
@@ -199,5 +200,11 @@ export function loadRegistry(options: { validateAudits?: boolean } = {}): {
     requireVerifiedEvidence(sources);
   }
 
-  return { companies, sources };
+  const priority = z
+    .array(z.string())
+    .parse(
+      JSON.parse(readFileSync(new URL('../../config/refresh-order.json', import.meta.url), 'utf8')),
+    );
+
+  return { companies: orderCompanies(companies, priority), sources };
 }

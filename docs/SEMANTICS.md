@@ -52,4 +52,4 @@ The corpus is a labeled development regression set with systematic polarity/cont
 
 The usage/development boundary is informed by [Clang's official frontend/tooling overview](https://clang.llvm.org/) and [LLVM's pass-development documentation](https://llvm.org/docs/WritingAnLLVMPass.html), checked 2 October 2026. These explain technology structure, not candidate proficiency or calibrated edge weights. No ESCO/O*NET data is imported in this increment.
 
-See [RESUME_TESTING](RESUME_TESTING.md) for commands and manual checks, and [SEMANTIC_MATCHING_PLAN](SEMANTIC_MATCHING_PLAN.md) for the remaining roadmap. Rules, aliases and relationships need new contrasting examples and version changes when extended.
+See [RESUME_TESTING](RESUME_TESTING.md) for commands and manual checks, and [RESUME_MATCHING_REWORK](RESUME_MATCHING_REWORK.md) for the remaining roadmap. Rules, aliases and relationships need new contrasting examples and version changes when extended.
