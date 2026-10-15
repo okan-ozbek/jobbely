@@ -12,7 +12,7 @@ import { selectSources } from './select-sources.js';
 const { values } = parseArgs({
   options: {
     company: { type: 'string' },
-    wave: { type: 'string' },
+    'all-enabled': { type: 'boolean' },
     activate: { type: 'boolean' },
   },
 });

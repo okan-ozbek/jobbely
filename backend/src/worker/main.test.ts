@@ -1,22 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-type Job = { id: string; data: { sourceId: string }; signal?: AbortSignal };
+type Job = { id: string; signal?: AbortSignal };
 
 const test = vi.hoisted(() => {
   const handlers = new Map<string, (jobs: Job[]) => Promise<void>>();
 
-  const sources = [
-    { id: 'candidate', scheduled: true, auditStatus: 'candidate' },
-    { id: 'disabled', scheduled: false, auditStatus: 'candidate' },
-  ];
-
-  const config = { DATA_MODE: 'postgres', DATABASE_URL: 'unused', INGESTION_WAVE_SYNC: false };
-
   const dependencies = {
-    sources,
-    sync: { execute: vi.fn() },
+    refreshSources: { execute: vi.fn() },
     backfill: { execute: vi.fn() },
-    refreshWaves: { execute: vi.fn() },
+    sync: { execute: vi.fn() },
     closeFeatures: vi.fn(),
     closeAccounts: vi.fn(),
     repository: { close: vi.fn() },
@@ -39,11 +31,11 @@ const test = vi.hoisted(() => {
     ),
   };
 
-  return { handlers, config, dependencies, boss };
+  return { handlers, dependencies, boss };
 });
 
 vi.mock('../bootstrap.js', () => ({
-  config: test.config,
+  config: { DATA_MODE: 'postgres', DATABASE_URL: 'unused' },
   bootstrap: async () => test.dependencies,
 }));
 
@@ -61,13 +53,7 @@ beforeEach(() => {
   vi.resetModules();
   vi.clearAllMocks();
   test.handlers.clear();
-  test.config.INGESTION_WAVE_SYNC = false;
-
-  test.boss.getSchedules.mockResolvedValue([
-    { key: 'candidate' },
-    { key: 'disabled' },
-    { key: 'removed' },
-  ]);
+  test.boss.getSchedules.mockResolvedValue([{ key: 'enabled' }, { key: 'removed' }]);
 
   listeners = new Map(
     (['SIGINT', 'SIGTERM'] as const).map((signal) => [signal, process.listeners(signal)]),
@@ -84,70 +70,30 @@ afterEach(() => {
   }
 });
 
-describe('ingestion worker scheduling', () => {
-  it('schedules and dispatches an enabled candidate while removing disabled and orphaned cron entries', async () => {
+describe('single ingestion scheduler', () => {
+  it('retires per-source schedules and routes startup, manual and cron work through one exclusive cycle', async () => {
     await import('./main.js');
 
-    expect(test.boss.unschedule).toHaveBeenCalledWith('sync-source', 'disabled');
-    expect(test.boss.unschedule).toHaveBeenCalledWith('sync-source', 'removed');
-    expect(test.boss.unschedule).not.toHaveBeenCalledWith('sync-source', 'candidate');
-
-    expect(test.boss.schedule).toHaveBeenCalledWith(
-      'sync-source',
-      '0 */12 * * *',
-      { sourceId: 'candidate' },
-      expect.objectContaining({ key: 'candidate', tz: 'UTC' }),
-    );
-
-    await test.handlers.get('sync-source')!([{ id: 'job', data: { sourceId: 'candidate' } }]);
-
-    expect(test.dependencies.sync.execute).toHaveBeenCalledWith(test.dependencies.sources[0]);
-    expect(test.dependencies.backfill.execute).toHaveBeenCalledOnce();
-    expect(test.dependencies.sources[0]?.auditStatus).toBe('candidate');
-  });
-
-  it('rejects queued disabled sources and does not project failed imports', async () => {
-    await import('./main.js');
-
-    await expect(
-      test.handlers.get('sync-source')!([{ id: 'job', data: { sourceId: 'disabled' } }]),
-    ).rejects.toThrow('not enabled');
-
-    expect(test.dependencies.sync.execute).not.toHaveBeenCalled();
-
-    test.dependencies.sync.execute.mockRejectedValueOnce(new Error('Publication blocked'));
-
-    await expect(
-      test.handlers.get('sync-source')!([{ id: 'job', data: { sourceId: 'candidate' } }]),
-    ).rejects.toThrow('Publication blocked');
-
-    expect(test.dependencies.backfill.execute).not.toHaveBeenCalled();
-  });
-
-  it('uses enabled-only UTC wave cycles and discards competing per-source jobs', async () => {
-    test.config.INGESTION_WAVE_SYNC = true;
-
-    await import('./main.js');
+    expect(test.boss.unschedule.mock.calls).toEqual([
+      ['sync-source', 'enabled'],
+      ['sync-source', 'removed'],
+    ]);
 
     expect(test.boss.schedule).toHaveBeenCalledWith('sync-waves', '0 */12 * * *', null, {
       tz: 'UTC',
     });
 
-    expect(test.boss.unschedule).toHaveBeenCalledWith('sync-source', 'candidate');
+    expect(test.boss.send).toHaveBeenCalledWith('sync-waves');
 
     const signal = new AbortController().signal;
 
-    await test.handlers.get('sync-waves')!([{ id: 'cycle', data: { sourceId: '' }, signal }]);
+    await test.handlers.get('sync-waves')!([{ id: 'cycle', signal }]);
 
-    expect(test.dependencies.refreshWaves.execute).toHaveBeenCalledWith(
-      'cycle',
-      undefined,
-      signal,
-      { scheduledOnly: true },
-    );
+    expect(test.dependencies.refreshSources.execute).toHaveBeenCalledWith('cycle', signal, {
+      scheduledOnly: true,
+    });
 
-    await test.handlers.get('sync-source')!([{ id: 'old', data: { sourceId: 'candidate' } }]);
-
+    await test.handlers.get('sync-source')!([{ id: 'legacy' }]);
     expect(test.dependencies.sync.execute).not.toHaveBeenCalled();
   });
 });

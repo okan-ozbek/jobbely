@@ -19,5 +19,11 @@ export interface JobFeatureRepository {
   saveFeatures(features: StoredFeature[]): Promise<number>;
   latestRuns(): Promise<SourceRun[]>;
   featureSnapshot(filter: FeatureFilter): Promise<FeatureSnapshot>;
-  featureJobs(filter: FeatureFilter, after: string, limit: number): Promise<FeatureJob[]>;
+  featureJobs(
+    filter: FeatureFilter,
+    after: string,
+    limit: number,
+    ranking?: boolean,
+  ): Promise<FeatureJob[]>;
+  featureDetails(ids: string[]): Promise<FeatureJob[]>;
 }

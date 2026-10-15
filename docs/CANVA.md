@@ -41,4 +41,4 @@ pnpm --filter @jobbely/backend run sync --company canva
 pnpm --filter @jobbely/backend run audit --company canva
 ```
 
-Sync requires PostgreSQL and hydrates every description at shared host pacing. Standalone audits fetch a new provider inventory; the wave worker audits exact imported evidence instead. Restart the API/worker after registry changes. See [SERVICENOW](SERVICENOW.md) for unchanged shared provider invariants, [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [LIFECYCLE](LIFECYCLE.md) and [QUALITY](QUALITY.md).
+Sync requires PostgreSQL and hydrates every description at shared host pacing. Standalone audits fetch a new provider inventory; the ingestion worker audits exact imported evidence instead. Restart the API/worker after registry changes. See [SERVICENOW](SERVICENOW.md) for unchanged shared provider invariants, [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [LIFECYCLE](LIFECYCLE.md) and [QUALITY](QUALITY.md).

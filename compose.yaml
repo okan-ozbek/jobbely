@@ -74,9 +74,6 @@ services:
     <<: *backend
     profiles: ['ingestion']
     command: ['node', 'dist/worker/main.js']
-    environment:
-      <<: *backend-environment
-      INGESTION_WAVE_SYNC: 'true'
     volumes:
       - ingestion-data:/app/backend/data
     depends_on:

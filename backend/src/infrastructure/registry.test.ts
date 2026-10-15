@@ -30,6 +30,8 @@ function registry(board: string, provider = 'ashby', scheduled = false) {
       ]),
     );
 
+  vi.mocked(readFileSync).mockReturnValueOnce('[]');
+
   return loadRegistry();
 }
 
@@ -40,7 +42,7 @@ describe('provider board identifiers', () => {
       scheduled: true,
     });
 
-    expect(readFileSync).toHaveBeenCalledTimes(2);
+    expect(readFileSync).toHaveBeenCalledTimes(3);
   });
 
   it('preserves dotted Ashby names as a single configured board identifier', () => {

@@ -39,4 +39,4 @@ The rebuilt local API and ingestion worker restarted healthy. Checks through `ht
 
 - [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [pending audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
 - [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [adapter tests](../backend/src/infrastructure/adapters/adapters.test.ts), [publication validation](../backend/src/infrastructure/audits/validation.ts), [gate/preservation tests](../backend/src/infrastructure/audits/validation.test.ts), [atomic workflow](../backend/src/application/sync-source.ts).
-- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [automatic coverage](AUTOMATIC_COVERAGE.md), [Wave C](WAVE_C.md), [quality gates](QUALITY.md).
+- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [automatic coverage](AUTOMATIC_COVERAGE.md), [Wave C](PROVIDERS.md), [quality gates](QUALITY.md).

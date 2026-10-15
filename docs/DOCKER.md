@@ -10,14 +10,14 @@ The document parser remains a local browser worker. Moving candidate files into 
 
 ## Services and invariants
 
-| Service            | Behavior                                                                                              |
-| ------------------ | ----------------------------------------------------------------------------------------------------- |
-| `postgres`         | Existing PostgreSQL 17 database and persistent `postgres-data` volume; loopback port 5432             |
-| `migrate`          | One-shot `prisma migrate deploy`; must succeed before API/workers start                               |
-| `api`              | Compiled Node 24 backend, readiness check, no published port                                          |
-| `web`              | Nginx frontend and same-origin `/api` proxy at loopback port 8080                                     |
-| `ingestion-worker` | Optional `ingestion` profile; ordered A/B/C refresh, automatic audits and matching-feature projection |
-| `email-worker`     | Optional `email` profile; encrypted account-email outbox, leases/retries and SMTP delivery            |
+| Service            | Behavior                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| `postgres`         | Existing PostgreSQL 17 database and persistent `postgres-data` volume; loopback port 5432              |
+| `migrate`          | One-shot `prisma migrate deploy`; must succeed before API/workers start                                |
+| `api`              | Compiled Node 24 backend, readiness check, no published port                                           |
+| `web`              | Nginx frontend and same-origin `/api` proxy at loopback port 8080                                      |
+| `ingestion-worker` | Optional `ingestion` profile; ordered source refresh, automatic audits and matching-feature projection |
+| `email-worker`     | Optional `email` profile; encrypted account-email outbox, leases/retries and SMTP delivery             |
 
 API and workers run as the non-root Node user with an init process and a 45-second shutdown grace period. API readiness checks the database. Worker restart supervision does not prove successful ingestion or email delivery: inspect logs and persisted run/queue states. Workers retain their existing concurrency and security policies.
 
@@ -49,7 +49,7 @@ docker compose ps -a
 docker compose logs --tail 50 api ingestion-worker email-worker
 ```
 
-Missing email settings fail worker startup explicitly. Since 6 October, ingestion automatically requests an ordered A/B/C sync and audit cycle on startup and twice daily; [WAVE_REFRESH.md](WAVE_REFRESH.md) explains progress reports and failure handling. Candidate sources stay partial and cannot reconcile closure. Starting the worker does not establish employer coverage or source activation. Audit/progress files persist in the `ingestion-data` volume. Run a manual refresh or feature backfill inside the same backend image:
+Missing email settings fail worker startup explicitly. Since 6 October, ingestion automatically requests an ordered source sync and audit cycle on startup and twice daily; [INGESTION.md](INGESTION.md) explains progress reports and failure handling. Candidate sources stay partial and cannot reconcile closure. Starting the worker does not establish employer coverage or source activation. Audit/progress files persist in the `ingestion-data` volume. Run a manual refresh or feature backfill inside the same backend image:
 
 ```powershell
 docker compose exec api node dist/cli/sync.js --company openai

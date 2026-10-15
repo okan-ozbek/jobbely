@@ -12,7 +12,7 @@ The [privacy policy](https://cursor.com/privacy) and recruitment page also ident
 
 ## Runtime invariants
 
-- Company/source ID `anysphere`, provider `ashby`, board `cursor`, Wave C, shared local N/A logo pending vector review. Source remains candidate; scheduling is separately enabled by the application owner's all-source request. See [SCHEDULING.md](SCHEDULING.md).
+- Company/source ID `anysphere`, provider `ashby`, board `cursor`, Wave C, shared local N/A logo pending vector review. Source remains candidate; scheduling is separately enabled by the application owner's all-source request. See [INGESTION.md](INGESTION.md).
 - Reuse the existing bounded public Ashby transport and adapter; no new provider, runtime host, credentials, private route or application submission.
 - Preserve native UUIDs, complete sanitized HTML/text, original URLs, locations, departments, dates and explicit employment/workplace labels. The captured aggregate has no structured compensation tiers; pay mentioned inside descriptions remains advertisement content.
 - Exact-run technical coverage remains partial because visible native title-slug links lack a validated UUID mapping. The audit binds the successful stored run and extraction; discovery comparisons do not establish worldwide employer scope.
@@ -27,8 +27,8 @@ Database checks compared every active job with that exact successful snapshot: n
 
 The [compact audit](../backend/config/audit-evidence/anysphere.json), captured at 17:45:44 UTC, establishes employer board association and retains terms/privacy/API document hashes. It binds the successful imported run; independent traversal and all 132 visible-link identity mappings remain unresolved. Persisted technical status is partial and access unreviewed. Local authorization does not invent employer approval or passing technical coverage.
 
-The runtime registry contains 74 companies and 63 sources; the 500-company shortlist has 54 configured targets, eight registered-only and 438 new candidates. Replit is the next discovery target. Scheduling, final repository/database checks and deployment evidence are recorded in [SCHEDULING.md](SCHEDULING.md).
+The runtime registry contains 74 companies and 63 sources; the 500-company shortlist has 54 configured targets, eight registered-only and 438 new candidates. Replit is the next discovery target. Scheduling, final repository/database checks and deployment evidence are recorded in [INGESTION.md](INGESTION.md).
 
 - [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
 - [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [publication validation](../backend/src/infrastructure/audits/validation.ts), [gate regression tests](../backend/src/infrastructure/audits/validation.test.ts), [atomic workflow](../backend/src/application/sync-source.ts).
-- [API metadata test](../backend/src/api/app.test.ts), [manual selection test](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](WAVE_C.md), [quality gates](QUALITY.md).
+- [API metadata test](../backend/src/api/app.test.ts), [manual selection test](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](PROVIDERS.md), [quality gates](QUALITY.md).

@@ -2,13 +2,13 @@ import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import pg from 'pg';
 import { PgBoss } from 'pg-boss';
-import { configureWaveRefreshQueue, waveRefreshQueue } from './wave-queue.js';
+import { configureSourceRefreshQueue, sourceRefreshQueue } from './source-queue.js';
 
 const connectionString = process.env['TEST_DATABASE_URL'];
 const integration = connectionString ? describe : describe.skip;
 
-integration('ordered wave queue (isolated PostgreSQL)', () => {
-  const schema = `wave_test_${randomUUID().replaceAll('-', '')}`;
+integration('ordered source queue (isolated PostgreSQL)', () => {
+  const schema = `source_test_${randomUUID().replaceAll('-', '')}`;
   let first: PgBoss;
   let second: PgBoss;
 
@@ -19,7 +19,7 @@ integration('ordered wave queue (isolated PostgreSQL)', () => {
       !connectionString ||
       !/^\/jobbely_test_[a-z0-9_]+$/.test(new URL(connectionString).pathname)
     ) {
-      throw new Error('Wave queue tests require an isolated jobbely_test_* database');
+      throw new Error('Source queue tests require an isolated jobbely_test_* database');
     }
 
     first = new PgBoss({ connectionString, schema });
@@ -29,9 +29,9 @@ integration('ordered wave queue (isolated PostgreSQL)', () => {
     second.on('error', () => {});
     await first.start();
     await second.start();
-    await configureWaveRefreshQueue(first);
-    await configureWaveRefreshQueue(second);
-    await first.schedule(waveRefreshQueue, '0 */12 * * *', null, { tz: 'UTC' });
+    await configureSourceRefreshQueue(first);
+    await configureSourceRefreshQueue(second);
+    await first.schedule(sourceRefreshQueue, '0 */12 * * *', null, { tz: 'UTC' });
   });
 
   afterAll(async () => {
@@ -48,10 +48,10 @@ integration('ordered wave queue (isolated PostgreSQL)', () => {
   });
 
   it('suppresses duplicate queued and active cycles across clients and permits the next cycle', async () => {
-    const firstId = await first.send(waveRefreshQueue);
+    const firstId = await first.send(sourceRefreshQueue);
 
     expect(firstId).not.toBeNull();
-    expect(await second.send(waveRefreshQueue)).toBeNull();
+    expect(await second.send(sourceRefreshQueue)).toBeNull();
 
     const gate = new Promise<void>((resolve) => {
       release = resolve;
@@ -59,27 +59,27 @@ integration('ordered wave queue (isolated PostgreSQL)', () => {
 
     let active = false;
 
-    await first.work(waveRefreshQueue, { pollingIntervalSeconds: 0.5 }, async () => {
+    await first.work(sourceRefreshQueue, { pollingIntervalSeconds: 0.5 }, async () => {
       active = true;
       await gate;
     });
 
     await vi.waitFor(() => expect(active).toBe(true), { timeout: 10_000 });
-    expect(await second.send(waveRefreshQueue)).toBeNull();
+    expect(await second.send(sourceRefreshQueue)).toBeNull();
     release();
 
     await vi.waitFor(
       async () => {
-        const job = await first.getJobById(waveRefreshQueue, firstId!);
+        const job = await first.getJobById(sourceRefreshQueue, firstId!);
 
         expect(job?.state).toBe('completed');
       },
       { timeout: 10_000 },
     );
 
-    expect(await second.send(waveRefreshQueue)).not.toBeNull();
+    expect(await second.send(sourceRefreshQueue)).not.toBeNull();
 
-    const [schedule] = await second.getSchedules(waveRefreshQueue);
+    const [schedule] = await second.getSchedules(sourceRefreshQueue);
 
     expect(schedule?.cron).toBe('0 */12 * * *');
     expect(schedule?.timezone).toBe('UTC');

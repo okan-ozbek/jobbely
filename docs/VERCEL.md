@@ -38,4 +38,4 @@ The rebuilt local API and ingestion worker restarted healthy. Checks through `ht
 
 - [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [pending audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
 - [Existing adapter](../backend/src/infrastructure/adapters/greenhouse.ts), [shared preparation](../backend/src/infrastructure/html.ts), [identity reconciliation](../backend/src/infrastructure/audits/reconcile.ts), [audit behavior tests](../backend/src/infrastructure/audits/auditor.test.ts), [API metadata](../backend/src/api/app.test.ts), [manual wave selection](../backend/src/cli/select-sources.test.ts).
-- [Audit rules](AUDITING.md), [automatic coverage](AUTOMATIC_COVERAGE.md), [Wave C](WAVE_C.md), [quality gates](QUALITY.md).
+- [Audit rules](AUDITING.md), [automatic coverage](AUTOMATIC_COVERAGE.md), [Wave C](PROVIDERS.md), [quality gates](QUALITY.md).

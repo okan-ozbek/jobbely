@@ -22,11 +22,11 @@ Provider adapters use the `JsonTransport` port. `PublicJsonTransport` owns reque
 | Body               | JSON content type required; streamed size bounded to 32 MiB                                                                            |
 | Evidence           | Requested URL, fetch timestamp and parsed JSON returned together                                                                       |
 
-`JsonSearchTransport` extends the JSON port with POST for Workday's read-only CXS jobs search. POST requires an explicitly allowlisted Workday host and `/wday/cxs/<tenant>/<site>/jobs` path; applications and arbitrary destinations are rejected. Retries, JSON validation, limits and host queues are shared with GET. No authentication or application submission is performed. See [WAVE_B.md](WAVE_B.md).
+`JsonSearchTransport` extends the JSON port with POST for Workday's read-only CXS jobs search. POST requires an explicitly allowlisted Workday host and `/wday/cxs/<tenant>/<site>/jobs` path; applications and arbitrary destinations are rejected. Retries, JSON validation, limits and host queues are shared with GET. No authentication or application submission is performed. See [PROVIDERS.md](PROVIDERS.md).
 
 Non-retryable HTTP errors and JSON/schema failures surface to ingestion. A challenge HTML page is an error, not job data. The application does not solve CAPTCHAs or fall back to another host automatically.
 
-Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netflix.net`, plus `HtmlTransport.getHtml` on Apple's public `/en-us/search` and `/en-us/details/<position>/<slug>` routes. HTML and JSON share the existing queue, pacing, retry and 32 MiB limit; HTML mode requires `text/html` and retains the raw body. Apple's internal JSON API and native account/application routes are rejected. Meta and Google are absent from the feed-fetch allowlist. See [WAVE_C.md](WAVE_C.md).
+Wave C adds exact native JSON paths on `www.amazon.jobs` and `explore.jobs.netflix.net`, plus `HtmlTransport.getHtml` on Apple's public `/en-us/search` and `/en-us/details/<position>/<slug>` routes. HTML and JSON share the existing queue, pacing, retry and 32 MiB limit; HTML mode requires `text/html` and retains the raw body. Apple's internal JSON API and native account/application routes are rejected. Meta and Google are absent from the feed-fetch allowlist. See [PROVIDERS.md](PROVIDERS.md).
 
 [Atlassian](ATLASSIAN.md) permits only JSON GET requests to `https://www.atlassian.com/endpoint/careers/listings`, without query parameters or fragments. Other paths, HTML requests and POSTs remain rejected. Validating outbound employer/application links does not authorize transport requests to its iCIMS application portals.
 

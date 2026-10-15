@@ -12,7 +12,7 @@ The application owner's continuing onboarding request authorizes the local integ
 
 ## Runtime invariants
 
-- Stable company/source/board ID `replit`, provider `ashby`, Wave C, shared local N/A logo pending vector review. Source candidate and scheduled through [SCHEDULING.md](SCHEDULING.md).
+- Stable company/source/board ID `replit`, provider `ashby`, Wave C, shared local N/A logo pending vector review. Source candidate and scheduled through [INGESTION.md](INGESTION.md).
 - Reuse `https://api.ashbyhq.com/posting-api/job-board/replit?includeCompensation=true` through the existing adapter and bounded transport. No new provider, destination allowlist, credentials, private API or application submission.
 - Preserve full sanitized HTML/text, publicly displayed compensation, native UUIDs, titles, original job/application URLs, departments/team, primary/secondary locations, employment/workplace labels and publication dates. Unknown optional values remain unknown.
 - The post-import audit reuses the exact successful extraction and source run ID. It does not fetch a second feed or equate matching counts to employer-wide completeness.
@@ -32,5 +32,5 @@ Final root `pnpm check` passed formatting, boundaries, logo validation, zero-war
 The rebuilt local API and ingestion worker restarted healthy. Checks through `http://localhost:8080` confirmed 70 Replit jobs, complete detail descriptions, a paid posting's native compensation and original Ashby application link. All 64 configured sources report scheduled candidate state; the persistent exclusive wave schedule remains 00:00 and 12:00 UTC with no competing per-source cron entries. Replit reports a successful latest import, partial technical coverage and unreviewed access. Cursor's 132 jobs remained available. The configured browser origin is accepted; an actual Firefox UI session was not exercised. Full-cohort success is not established by this employer import or schedule check.
 
 - [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
-- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [adapter tests](../backend/src/infrastructure/adapters/adapters.test.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/wave-refresh.ts).
-- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](WAVE_C.md), [quality checks](QUALITY.md).
+- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [adapter tests](../backend/src/infrastructure/adapters/adapters.test.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/source-refresh.ts).
+- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](PROVIDERS.md), [quality checks](QUALITY.md).

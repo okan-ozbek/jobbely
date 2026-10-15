@@ -25,8 +25,11 @@ import { PostgresPasswordAccounts } from './infrastructure/storage/password-acco
 import { ScryptPasswords } from './infrastructure/accounts/password-hasher.js';
 import { renderAccountEmail } from './infrastructure/accounts/account-email-template.js';
 import { EncryptedAccountEmail } from './infrastructure/accounts/email-cipher.js';
-import { RefreshWaves } from './application/refresh-waves.js';
-import { FileWaveAudits, FileWaveRefreshReports } from './infrastructure/audits/wave-refresh.js';
+import { RefreshSources } from './application/refresh-sources.js';
+import {
+  FileCompanyAudits,
+  FileSourceRefreshReports,
+} from './infrastructure/audits/source-refresh.js';
 import { PostgresCoverage } from './infrastructure/storage/coverage-postgres.js';
 import { loadAuditPlans } from './infrastructure/audits/registry.js';
 import { configurationHash } from './infrastructure/audits/model.js';
@@ -51,10 +54,6 @@ export const config = z
       .default('false')
       .transform((value) => value === 'true'),
     FRONTEND_ORIGIN: z.url().default('http://127.0.0.1:5173'),
-    INGESTION_WAVE_SYNC: z
-      .enum(['true', 'false'])
-      .default('false')
-      .transform((value) => value === 'true'),
     MATCH_CURSOR_SECRET: z.string().min(32).optional(),
     RESUME_REVIEW_OPENAI_KEY: z.string().min(1).optional(),
     RESUME_REVIEW_MODEL: z.string().min(1).max(120).optional(),
@@ -317,12 +316,12 @@ export async function bootstrap() {
       htmlJobDocumentReader,
     ),
     backfill,
-    refreshWaves: new RefreshWaves(
+    refreshSources: new RefreshSources(
       companies,
       sources,
       sync,
-      new FileWaveAudits(adapters, coverage),
-      new FileWaveRefreshReports(),
+      new FileCompanyAudits(adapters, coverage),
+      new FileSourceRefreshReports(),
       backfill,
     ),
     closeFeatures: async () => {

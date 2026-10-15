@@ -38,7 +38,7 @@ Live traversal success verifies the observed provider board. It does not prove t
 
 ## Wave A expansion
 
-On 30 September 2026, `pnpm sync:wave-a` successfully traversed and persisted all 11
+On 30 September 2026, `pnpm sync --all-enabled` successfully traversed and persisted all 11
 configured boards for the 10 companies in MVP plan section 4. Every run reported
 `enumerationComplete: true`; Anthropic excluded two prospect entries. The existing adapters
 handled all seven additional companies without payload changes.
@@ -75,7 +75,7 @@ completeness or permission for public redisplay.
 
 ## Evidence-backed official-site audits
 
-Observed 30 September 2026, approximately 20:37 UTC. `pnpm audit:wave-a` fetched official
+Observed 30 September 2026, approximately 20:37 UTC. `pnpm --filter @jobbely/backend audit --all-enabled` fetched official
 inventories, source feeds, robots rules and published policy/documentation references. The compact
 company reports are in `backend/config/audit-evidence/`; their `artifactDirectory` fields locate
 timestamped ignored raw evidence. The command correctly returned a nonzero exit code because
@@ -178,7 +178,7 @@ the required title and detail path. Complete extraction fails instead of droppin
 entry or publishing a partial board. LinkedIn's employer search lacks an authorized
 feed; the implementation reports an access blocker rather than scraping the restricted
 guest search or treating an empty historical ATS board as current coverage. Neither
-blocked result establishes zero vacancies. See [WAVE_B.md](WAVE_B.md).
+blocked result establishes zero vacancies. See [PROVIDERS.md](PROVIDERS.md).
 
 All successful feeds supplied full descriptions. Workday hydrated every enumerated
 posting before publication, including the capped/partitioned Adobe inventory. Salesforce
@@ -212,8 +212,8 @@ scheduling, posting closure or a worldwide completeness claim.
 Observed 1 October 2026, approximately 00:20–01:10 Europe/Amsterdam (30 September, 22:20–23:10 UTC).
 The first Wave C batch configures Meta, Apple, Netflix, Google and Amazon. At this observation,
 fourteen other Wave C employers were unconfigured. Later on 1 October 2026, seven of those
-employers were deferred to [Wave D](WAVE_D.md), without adding integrations or changing these
-live results. See [WAVE_C.md](WAVE_C.md) for implementation decisions.
+employers were deferred to [Wave D](PROVIDERS.md), without adding integrations or changing these
+live results. See [PROVIDERS.md](PROVIDERS.md) for implementation decisions.
 
 | Company | Live result                                                                                                                                               | Published postings |
 | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------: |

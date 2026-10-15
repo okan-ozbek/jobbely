@@ -3,10 +3,10 @@ import type { Company, Extraction, Provider, Source } from '../../domain/model.j
 import type { SourceAdapter } from '../../ports/ingestion.js';
 import type { CoverageAssessment, CoverageRepository } from '../../ports/coverage.js';
 import type {
-  WaveAudits,
-  WaveRefreshReport,
-  WaveRefreshReports,
-} from '../../ports/wave-refresh.js';
+  CompanyAudits,
+  SourceRefreshReport,
+  SourceRefreshReports,
+} from '../../ports/source-refresh.js';
 import { SourceAuditor, officialHosts } from './auditor.js';
 import { OfficialPageTransport } from './official-http.js';
 import { loadAuditPlans } from './registry.js';
@@ -26,17 +26,19 @@ async function atomicJson(file: URL, value: unknown) {
   await rename(temporary, file);
 }
 
-export class FileWaveRefreshReports implements WaveRefreshReports {
-  constructor(private readonly directory = new URL('../../../data/wave-sync/', import.meta.url)) {}
+export class FileSourceRefreshReports implements SourceRefreshReports {
+  constructor(
+    private readonly directory = new URL('../../../data/source-sync/', import.meta.url),
+  ) {}
 
-  async save(report: WaveRefreshReport) {
+  async save(report: SourceRefreshReport) {
     await mkdir(this.directory, { recursive: true });
     await atomicJson(new URL(`${segment(report.id)}.json`, this.directory), report);
     await atomicJson(new URL('latest.json', this.directory), report);
 
     console.log(
       JSON.stringify({
-        event: 'wave-refresh',
+        event: 'source-refresh',
         id: report.id,
         status: report.status,
         current: report.current,
@@ -45,11 +47,11 @@ export class FileWaveRefreshReports implements WaveRefreshReports {
   }
 }
 
-export class FileWaveAudits implements WaveAudits {
+export class FileCompanyAudits implements CompanyAudits {
   constructor(
     private readonly adapters: Readonly<Record<Provider, SourceAdapter>>,
     private readonly coverage?: CoverageRepository,
-    private readonly directory = new URL('../../../data/wave-sync/', import.meta.url),
+    private readonly directory = new URL('../../../data/source-sync/', import.meta.url),
   ) {}
 
   async verify(
@@ -77,7 +79,7 @@ export class FileWaveAudits implements WaveAudits {
       this.adapters,
     );
 
-    const artifactDirectory = `data/wave-sync/${runId}/${company.slug}/`;
+    const artifactDirectory = `data/source-sync/${runId}/${company.slug}/`;
     const reportPath = `${artifactDirectory}report.json`;
 
     const { report, rawPages, technicalBlockers } = await auditor.run(

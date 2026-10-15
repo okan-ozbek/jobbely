@@ -376,7 +376,7 @@ export class MatchJobs {
     const started = Date.now();
 
     for (;;) {
-      const jobs = await this.repository.featureJobs(filter, after, 250);
+      const jobs = await this.repository.featureJobs(filter, after, 500, true);
 
       if (!jobs.length) {
         break;
@@ -397,9 +397,24 @@ export class MatchJobs {
           continue;
         }
 
-        best.push(result);
-        best.sort(compareMatches);
-        best.length = Math.min(best.length, input.limit + 1);
+        // Binary insertion keeps the retained page bounded without re-sorting it per job.
+        let low = 0;
+        let high = best.length;
+
+        while (low < high) {
+          const middle = (low + high) >>> 1;
+
+          if (compareMatches(result, best[middle]!) < 0) {
+            high = middle;
+          } else {
+            low = middle + 1;
+          }
+        }
+
+        if (low <= input.limit) {
+          best.splice(low, 0, result);
+          best.length = Math.min(best.length, input.limit + 1);
+        }
       }
 
       after = jobs.at(-1)!.id;
@@ -407,11 +422,17 @@ export class MatchJobs {
       if (Date.now() - started > 10_000 || evaluated > 50_000) {
         throw new MatchError(
           'capacity_exceeded',
-          'Matching budget exceeded. Select fewer functions.',
+          'Job matching took too long. Try a narrower job category or retry shortly.',
         );
       }
     }
 
+    // Full evidence is fetched only for the displayed page, then fenced by revision checks.
+    const details = await this.repository.featureDetails(
+      best.slice(0, input.limit).map((item) => item.job.id),
+    );
+
+    const byId = new Map(details.map((job) => [job.id, job]));
     const final = await this.repository.featureSnapshot(filter);
     const finalRuns = await this.repository.latestRuns();
 
@@ -421,12 +442,24 @@ export class MatchJobs {
         final.generation,
         finalRuns.map((run) => [run.id, run.status, run.finishedAt]).sort(),
       ]) !== revision ||
-      evaluated !== snapshot.eligible - snapshot.unenriched
+      evaluated !== snapshot.eligible - snapshot.unenriched ||
+      details.length !== Math.min(best.length, input.limit)
     ) {
       throw new MatchError('cursor_stale', 'Jobs changed during matching. Restart matching.');
     }
 
-    const items = best.slice(0, input.limit);
+    const items = best
+      .slice(0, input.limit)
+      .map((item) =>
+        scoreJob(
+          byId.get(item.job.id)!,
+          input.profile,
+          this.companies,
+          input.employerContext,
+          prepared,
+        ),
+      );
+
     const last = items.at(-1);
 
     return {

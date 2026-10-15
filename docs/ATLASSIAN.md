@@ -39,4 +39,4 @@ pnpm --filter @jobbely/backend run sync --company atlassian
 pnpm --filter @jobbely/backend run audit --company atlassian
 ```
 
-Sync requires the configured PostgreSQL environment. The current upstream description defect is expected to return a failed run. Restart running API/worker processes after registry changes. See [WAVE_C](WAVE_C.md), [AUDITING](AUDITING.md) and [QUALITY](QUALITY.md).
+Sync requires the configured PostgreSQL environment. The current upstream description defect is expected to return a failed run. Restart running API/worker processes after registry changes. See [PROVIDERS](PROVIDERS.md), [AUDITING](AUDITING.md) and [QUALITY](QUALITY.md).

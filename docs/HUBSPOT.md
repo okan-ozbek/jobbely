@@ -36,4 +36,4 @@ pnpm --filter @jobbely/backend run sync --company hubspot
 pnpm --filter @jobbely/backend run audit --company hubspot
 ```
 
-Both commands are expected to report blockers. Sync requires PostgreSQL. Before replacing the failure gate, rediscover the official source, establish full unfiltered traversal and complete readable descriptions, validate employer/application identities, review access conditions, and reconcile exact imported-run evidence independently. See [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [WAVE_C](WAVE_C.md) and [QUALITY](QUALITY.md).
+Both commands are expected to report blockers. Sync requires PostgreSQL. Before replacing the failure gate, rediscover the official source, establish full unfiltered traversal and complete readable descriptions, validate employer/application identities, review access conditions, and reconcile exact imported-run evidence independently. See [AUDITING](AUDITING.md), [AUTOMATIC_COVERAGE](AUTOMATIC_COVERAGE.md), [PROVIDERS](PROVIDERS.md) and [QUALITY](QUALITY.md).

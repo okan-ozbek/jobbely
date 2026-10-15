@@ -45,6 +45,10 @@ model Posting {
   locations Json @default("[]")
   workplace String @default("unknown")
   lastSeenAt String @default("")
+  missingSince String?
+  url String @default("")
+  applyUrl String @default("")
+  searchText String @default("")
   payload Json
   versions PostingVersion[]
   features JobFeature?
@@ -60,6 +64,7 @@ model JobFeature {
   version String
   category String
   skillIds String[]
+  ranking Json @default("{}")
   payload Json
   @@index([version, category, postingId])
 }

@@ -14,7 +14,7 @@ The application owner's continuing onboarding request authorizes local integrati
 
 ## Runtime invariants
 
-- Stable company/source ID and Ashby board `synthesia`, Wave C, canonical careers URL and shared N/A logo pending vector review. Scheduling follows [SCHEDULING.md](SCHEDULING.md) independently of verification.
+- Stable company/source ID and Ashby board `synthesia`, Wave C, canonical careers URL and shared N/A logo pending vector review. Scheduling follows [INGESTION.md](INGESTION.md) independently of verification.
 - Reuse `https://api.ashbyhq.com/posting-api/job-board/synthesia?includeCompensation=true` through the existing adapter and bounded transport. No new adapter, private API, credentials, ingestion destination, identity parser, transport allowlist or public API schema is required.
 - Preserve complete sanitized HTML/text, native posting UUIDs, titles, original job/application URLs, department/team, primary/secondary locations, employment/workplace labels, publication dates and advertised salary/equity compensation. Unknown optional fields remain unknown.
 - Count the excluded general application explicitly. Empty employer/hosted HTML does not prove an empty or complete inventory. Widget configuration is separate from independently visible identity reconciliation and manual employer scope approval.
@@ -34,5 +34,5 @@ Root `pnpm check` passed formatting, architecture boundaries, logo validation, z
 The rebuilt API and ingestion worker are healthy. Live API checks returned all 44 vacancies with full descriptions, original application links and advertised compensation; partial coverage and unreviewed access remain visible. Requests from `http://localhost:8080` succeeded with the expected CORS header; Firefox UI behavior was not exercised. Linear's 31 vacancies remain available. The scheduler contains one exclusive wave refresh at 00:00 and 12:00 UTC, with all 70 candidate sources scheduled and no per-source cron entries. This confirms scheduling configuration, not a successful refresh of the entire cohort.
 
 - [Company registry](../backend/config/companies.json), [source registry](../backend/config/sources.json), [audit plan](../backend/config/source-audits.json), [backlog](TECH_COMPANIES_500.json).
-- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [non-vacancy rules](../backend/src/infrastructure/adapters/schemas.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/wave-refresh.ts).
-- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](WAVE_C.md), [quality checks](QUALITY.md).
+- [Ashby adapter](../backend/src/infrastructure/adapters/ashby.ts), [non-vacancy rules](../backend/src/infrastructure/adapters/schemas.ts), [atomic workflow](../backend/src/application/sync-source.ts), [audit workflow](../backend/src/infrastructure/audits/source-refresh.ts).
+- [API metadata](../backend/src/api/app.test.ts), [wave selection](../backend/src/cli/select-sources.test.ts), [audit rules](AUDITING.md), [Wave C](PROVIDERS.md), [quality checks](QUALITY.md).
