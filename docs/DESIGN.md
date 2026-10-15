@@ -20,6 +20,8 @@ The overview chart has selectable periods/data points, readable counts and expli
 
 ## Tokens and typography
 
+The 15 October Pro review panels share a soft lavender/blue/blush background, thin border, inline sparkles icon and Pro pill through [ProReviewPanel](../frontend/src/features/resume/ProReviewPanel.tsx) and [styles](../frontend/src/features/resume/pro-review.css). **Pro resume reviewer** is their stable annotation name; the role variant adds screening context. Suggested edits use muted removal/addition panes with text labels, stacked on mobile, and an explanation below. Limits remain in a title-adjacent accessible info popover. Styling never changes paid access, consent or evidence policies; see [ROLE_ASSESSMENT](ROLE_ASSESSMENT.md).
+
 ### Sign-in and registration, 8 October 2026
 
 Guest account dialogs enter with a 320 ms fade, small upward lift and scale, alongside a backdrop fade. Dismissal preserves the form for a 160 ms exit before native closure restores focus and clears secrets. Closing dialogs are inert; Escape uses the same exit path as the X/backdrop. Reduced-motion users get immediate opening/closing. Exit cancellation prevents a previous close animation from hiding a reopened dialog. Identity changes and signed-in action dialogs close immediately, preserving the existing sign-in/deletion transitions.
@@ -33,6 +35,9 @@ Glass surfaces use white gradients, fine white borders, subtle shadows and backd
 Primary actions, secondary review buttons and glass dropdown triggers share the `--control-height` token (42px). Primary buttons use horizontal padding only, including the mobile composer, so Review my resume, Find matching jobs and the company application action share the same height. Longer wrapping labels may grow to stay readable.
 
 ## Interaction invariants
+
+- Pro review panels share a subtle pointer-positioned lavender/blue glow through the existing surface-motion helper; it appears only on hover-capable devices with motion enabled. The shared [ProBadge](../frontend/src/components/ProBadge.tsx) uses a compact translucent pill with a fine neutral-lavender edge. [ReviewProgress](../frontend/src/features/resume/ReviewProgress.tsx) supplies the same floating symbol, breathing halo, orbiting dots and indeterminate strip to writing review and role assessment. Only pending work animates; reduced motion makes all indicators static. No fabricated progress percentage is shown.
+- Resume suggestions use neutral pearl/lavender for the original pane and soft lavender/blue for suggested wording, with explicit current/proposed labels and minus/plus markers. Add a role, Add a degree and Description & requirements use the same primary-button class as Analyze my resume. The internship summary is omitted only when both its maximum duration and unknown-entry count are zero; dated or uncertain internship evidence stays visible, and summary columns adapt.
 
 - The initial home page contains one single-line-height, resizable composer, concise privacy/format guidance and a transparent company-logo row with softer brand colors. A selected file replaces the raw text input and attachment action. Corrections, compact combined skill/competency chips, degrees, skill years, roles and experience live behind an animated profile-review disclosure; raw reading and evidence previews are omitted. Matching uses a compact function dropdown and action row, stacked on mobile. Find matching jobs confirms the current profile; pending analysis disables it, and edits invalidate prior confirmation/results.
 - Files continue through the existing isolated local worker. Analysis remains explicit and transient; no resume storage, automatic upload or privacy boundary change is introduced.

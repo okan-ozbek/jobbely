@@ -79,6 +79,15 @@ export function QualificationGroups({
                           Other alternatives to review: {clause.unresolvedAlternatives.join(' / ')}
                         </p>
                       )}
+                      {clause.disposition === 'needs-review' && (
+                        <p className="small-note">Some details in this statement need review.</p>
+                      )}
+                      {clause.exampleIds.length > 0 && (
+                        <p className="small-note">
+                          Named examples illustrate this qualification; each example is not a
+                          separate requirement.
+                        </p>
+                      )}
                     </li>
                   );
                 })}

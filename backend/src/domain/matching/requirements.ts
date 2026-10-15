@@ -8,7 +8,7 @@ import { skillsInText, vocabularyVersion } from '../resume/vocabulary.js';
 import { degreeMentions, degreeField, degreeRank } from '../resume/qualifications.js';
 import type { DegreeLevel, DegreeField } from '../resume/qualifications.js';
 
-export const requirementsVersion = 'requirements-15';
+export const requirementsVersion = 'requirements-19';
 
 export const featureVersion = `${requirementsVersion}:${vocabularyVersion}:${jobDocumentVersion}`;
 
@@ -48,6 +48,8 @@ export interface RequirementClause {
   logic: 'all-of' | 'any-of';
   groupIds: string[];
   unresolvedAlternatives: string[];
+  disposition: 'contextual' | 'represented' | 'needs-review';
+  exampleIds: string[];
   evidence: RequirementEvidence;
 }
 
@@ -63,6 +65,7 @@ export interface JobRequirements {
     minimumMonths: number;
     maximumMonths?: number;
     alternativeIds?: string[];
+    alternativeEvidence?: boolean;
     scope: 'professional' | 'function' | 'skill';
     skillId: string | null;
     importance: Importance;
@@ -73,6 +76,7 @@ export interface JobRequirements {
     education?: {
       level: DegreeLevel;
       field: DegreeField;
+      fields?: DegreeField[];
       related: boolean;
       alternativeExperience: boolean;
     };
@@ -87,6 +91,14 @@ export interface JobRequirements {
 }
 
 function importance(text: string, section: Importance): Importance {
+  if (
+    /\b(?:eagerness to learn|eager to learn|willingness to learn|curiosity about|interest in learning|(?:don(?:'|’)t|do not) need (?:to be |deep )|curious and willing)\b/i.test(
+      text,
+    )
+  ) {
+    return 'contextual';
+  }
+
   if (
     /\b(?:equal opportunity|equal employment|all qualified applicants|ethical hiring|recruitment fees|(?:we|employers?) (?:do not|never) charge|salary range|we offer|offers?[^.!?]{0,80}\bbenefits|benefits include|(?:health|dental|vision) insurance|paid (?:time off|leave)|(?:salary|compensation) range)\b/i.test(
       text,
@@ -120,10 +132,14 @@ function importance(text: string, section: Importance): Importance {
   }
 
   if (
-    /\b(?:must|required|at least \d+\s*\+?\s*years?|minimum (?:of )?\d+\s*years?|proficiency (?:in|with)|proficient (?:in|with)|experience (?:in|with|developing|building|working)|knowledge of|you (?:have|bring))\b/i.test(
+    /\b(?:must|required|at least \d+\s*\+?\s*years?|minimum (?:of )?\d+\s*years?|proficiency (?:in|with)|proficient (?:in|with)|experience (?:in|with|developing|building|working)|knowledge of|understanding (?:of|that)|(?:some )?exposure to|comfortable (?:with|collaborating)|you (?:have|bring))\b/i.test(
       text,
     )
   ) {
+    return 'required';
+  }
+
+  if (degreeMentions(text).length) {
     return 'required';
   }
 
@@ -192,7 +208,7 @@ export function extractRequirements(
     return result;
   }
 
-  for (const block of document.blocks) {
+  for (const [blockIndex, block] of document.blocks.entries()) {
     if (block.kind === 'heading') {
       continue;
     }
@@ -202,6 +218,8 @@ export function extractRequirements(
     const index = block.line - 1;
     const text = raw.replace(/^\s*[•*\-]\s*/, '').trim();
     const section = block.importance;
+    const nextBlock = document.blocks[blockIndex + 1];
+    const experienceContext = `${raw} ${nextBlock?.role === block.role ? nextBlock.text : ''}`;
 
     let sentenceSearch = 0;
 
@@ -232,7 +250,7 @@ export function extractRequirements(
         : skillsInText(sentence);
 
       // One interpreted activity contributes once, even when the recognizer emits related concepts.
-      const skills = recognized.filter(
+      const distinctSkills = recognized.filter(
         (item, position) =>
           !recognized
             .slice(0, position)
@@ -245,13 +263,51 @@ export function extractRequirements(
             ),
       );
 
+      // Illustrative tools do not create an obligation to know each named example.
+      const exampleRanges = [
+        ...sentence.matchAll(/\((?:e\.g\.,?|for example|such as)\s*([^)]*)\)/gi),
+      ].map((match) => ({ start: match.index, end: match.index + match[0].length }));
+
+      const exampleSkills = distinctSkills.filter((skill) =>
+        exampleRanges.some((range) => skill.position >= range.start && skill.position < range.end),
+      );
+
+      const primarySkills = distinctSkills.filter((skill) => !exampleSkills.includes(skill));
+
+      const testingAlternatives =
+        /\bautomated tests or (?:working with |using )?(?:a )?testing framework\b/i.test(sentence);
+
+      const skills = (
+        testingAlternatives ? distinctSkills : primarySkills.length ? primarySkills : distinctSkills
+      )
+        .filter(
+          (skill) =>
+            !(
+              testingAlternatives &&
+              skill.id === 'software-testing' &&
+              /^testing\s+framework\b/i.test(sentence.slice(skill.position))
+            ),
+        )
+        .map((skill) =>
+          level !== 'contextual' &&
+          /^(?:some )?exposure to\b/i.test(sentence) &&
+          skill.interpretation === 'ambiguous'
+            ? { ...skill, interpretation: 'explicit' as const }
+            : skill,
+        );
+
       const groups: SkillRequirement[] = [];
 
       const alternativeList =
-        /\b(?:one of|either|any of)\b/i.test(sentence) || /\bor\b/i.test(sentence);
+        /\b(?:one of|either|any of)\b/i.test(sentence) ||
+        /\bor\b/i.test(sentence) ||
+        (!primarySkills.length && exampleSkills.length > 0);
 
-      const unknownAlternatives =
-        alternativeList && skills.length ? unresolvedAlternatives(sentence, skills) : [];
+      const unknownAlternatives = testingAlternatives
+        ? ['another testing framework']
+        : alternativeList && skills.length && !exampleRanges.length
+          ? unresolvedAlternatives(sentence, skills)
+          : [];
 
       for (const [position, skill] of skills.entries()) {
         const previous = skills[position - 1];
@@ -262,7 +318,8 @@ export function extractRequirements(
 
         const alternative =
           previous &&
-          (/^\s*(?:,?\s*or(?:\s+(?:with|in|on|using))?|\/)\s*$/i.test(connector) ||
+          (testingAlternatives ||
+            /^\s*(?:,?\s*or(?:\s+(?:with|in|on|using))?|\/)\s*$/i.test(connector) ||
             (alternativeList &&
               /^\s*,[^.;:]*$/i.test(connector) &&
               !/\b(?:and|must|experience|required|with|in)\b/i.test(connector)));
@@ -341,6 +398,8 @@ export function extractRequirements(
         logic: groups.length === 1 && groups[0]?.logic === 'any-of' ? 'any-of' : 'all-of',
         groupIds: groups.map((group) => group.id!),
         unresolvedAlternatives: unknownAlternatives,
+        disposition: level === 'contextual' ? 'contextual' : 'represented',
+        exampleIds: exampleSkills.map((skill) => skill.id),
         evidence,
       });
 
@@ -411,6 +470,10 @@ export function extractRequirements(
         result.experience.push({
           minimumMonths: Number(tenure[1]) * 12,
           ...(tenure[2] ? { maximumMonths: Number(tenure[2]) * 12 } : {}),
+          ...(/\b(?:internship|project) experience\b/i.test(experienceContext) &&
+          /\b(?:welcome|acceptable|accepted|qualif|equivalent)\w*\b/i.test(experienceContext)
+            ? { alternativeEvidence: true }
+            : {}),
           ...(alternativeList
             ? {
                 alternativeIds: (
@@ -435,7 +498,7 @@ export function extractRequirements(
       }
 
       const constraint =
-        /\b(?:must (?:be (?:based|located)|reside|live)|based in|residents? of|remote (?:only )?(?:in|within|from)|on[ -]?site (?:in|at)|hybrid in|work from|relocat(?:e|ion) to)\b/i.test(
+        /\b(?:must (?:be (?:based|located)|reside|live)|(?:exclusively |only )?based in|(?:exclusively|only) based (?:across|at)|residents? of|remote (?:only )?(?:in|within|from)|on[ -]?site (?:in|at)|hybrid in|work from|relocat(?:e|ion) to)\b/i.test(
           sentence,
         )
           ? 'location'
@@ -445,7 +508,9 @@ export function extractRequirements(
             ? 'authorization'
             : degreeMentions(sentence).length > 0 || /\bdegree\b/i.test(sentence)
               ? 'qualification'
-              : /\b(?:fluent|fluency|native speaker|language proficiency)\b/i.test(sentence)
+              : /\b(?:fluent|fluency|native speaker|language proficiency|collaborating in (?:English|French|German|Spanish))\b/i.test(
+                    sentence,
+                  )
                 ? 'language'
                 : null;
 
@@ -472,9 +537,21 @@ export function extractRequirements(
                     (a, b) => degreeRank[a.level] - degreeRank[b.level],
                   )[0]!.level,
                   field: degreeField(sentence),
+                  ...(/\bor\b|\//i.test(sentence)
+                    ? {
+                        fields: [
+                          ...new Set(
+                            sentence
+                              .split(/\bor\b|\//i)
+                              .map(degreeField)
+                              .filter((field) => field !== 'unknown' && field !== 'other'),
+                          ),
+                        ],
+                      }
+                    : {}),
                   related: /\brelated (?:field|discipline|subject)\b/i.test(sentence),
                   alternativeExperience:
-                    /\b(?:equivalent|comparable) (?:practical |professional |work )?experience\b/i.test(
+                    /\b(?:equivalent|comparable)(?: (?:practical |professional |work )?experience)?\b/i.test(
                       sentence,
                     ) ||
                     /\b(?:or|and\/or) (?:\d+[+]?\s*years?[^.!?]{0,40})?experience\b/i.test(
@@ -493,12 +570,21 @@ export function extractRequirements(
         level !== 'contextual' &&
         !hasTenure &&
         !constraint &&
-        (!skills.length || remainingSkillStatement(sentence, skills))
+        (!skills.length || remainingSkillStatement(sentence, distinctSkills))
       ) {
         result.unparsed.push({
           importance: level,
           evidence: { ...evidence, rule: 'requirements:unparsed' },
         });
+      }
+
+      const clause = result.clauses.at(-1)!;
+
+      if (
+        result.unparsed.some((item) => item.evidence.clauseId === clauseId) ||
+        unknownAlternatives.length
+      ) {
+        clause.disposition = 'needs-review';
       }
     }
   }
@@ -560,27 +646,34 @@ function unresolvedAlternatives(
   skills: ReturnType<typeof skillsInText>,
 ): string[] {
   const list = sentence.split(/\b(?:one of|either|any of)\s*:?[ ]*/i).at(-1)!;
+  let search = sentence.length - list.length;
 
   return list
     .split(/,|\bor\b|\//i)
-    .map((part) => part.trim().replace(/\.$/, ''))
+    .map((raw) => {
+      const start = sentence.indexOf(raw, search);
+
+      search = start + raw.length;
+
+      return { text: raw.trim().replace(/\.$/, ''), start, end: search };
+    })
     .filter(
       (part) =>
-        part &&
+        part.text &&
         !skills.some(
           (skill) =>
-            part.toLowerCase().includes(skill.name.toLowerCase()) ||
-            skillsInText(part).some((mention) => mention.id === skill.id),
+            // Preserve sentence-level disambiguation, including aliases crossing a slash.
+            skill.position < part.end && skill.position + skill.length > part.start,
         ) &&
-        !/^(?:required|preferred)$/i.test(part),
+        !/^(?:required|preferred)$/i.test(part.text),
     )
     .slice(0, 10)
-    .map((part) => part.slice(0, 100));
+    .map((part) => part.text.slice(0, 100));
 }
 
 function requirementSentences(text: string): string[] {
   const boundary =
-    /(?<=[.!?])\s+(?=[A-Z])|,\s+(?=(?:[Pp]referably|[Ii]deally|[Nn]ice.to.have|[Pp]referred)\b)|\s+(?=(?:[Pp]referably|[Ii]deally)\b)/g;
+    /(?<=[.!?])\s+(?=[A-Z])|,?\s+and\s+(?=(?:an?\s+)?(?:eagerness to learn|willingness to learn|interest in learning)\b)|\s+and\s+(?=(?:the )?ability to\b)|,\s+(?=(?:[Pp]referably|[Ii]deally|[Nn]ice.to.have|[Pp]referred)\b)|\s+(?=(?:[Pp]referably|[Ii]deally)\b)/g;
 
   const parts: string[] = [];
   let start = 0;

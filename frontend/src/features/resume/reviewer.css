@@ -1,0 +1,116 @@
+.resume-reviewer {
+  margin: 24px 0;
+}
+.reviewer-heading,
+.reviewer-finding-heading,
+.reviewer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.reviewer-locked {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff8;
+}
+.reviewer-settings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+.reviewer-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.reviewer-settings input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--ink);
+  background: #fffc;
+  font: inherit;
+}
+.reviewer-settings input {
+  min-height: var(--control-height);
+}
+.resume-reviewer .reviewer-consent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0 8px;
+}
+.resume-reviewer .reviewer-consent input {
+  width: 18px;
+  height: 18px;
+  accent-color: #514abe;
+}
+.reviewer-actions {
+  justify-content: flex-start;
+  margin: 18px 0;
+}
+.resume-reviewer .secondary-button {
+  min-height: var(--control-height);
+  padding: 0 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #ffffffb3;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.resume-reviewer .secondary-button:hover {
+  background: white;
+}
+.reviewer-findings {
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+.reviewer-results h3 {
+  font-size: 16px;
+}
+.reviewer-findings > li {
+  padding: 18px;
+  background: #fffb;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.reviewer-finding-heading span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.reviewer-findings blockquote {
+  margin: 12px 0;
+  padding-left: 12px;
+  border-left: 3px solid #a5a0de;
+  white-space: pre-wrap;
+}
+.reviewer-findings p {
+  margin-bottom: 0;
+}
+.reviewer-rewrite {
+  padding: 12px;
+  background: #f1efff;
+  border-radius: 10px;
+}
+@media (max-width: 650px) {
+  .resume-reviewer {
+    padding: 18px;
+  }
+  .reviewer-settings {
+    grid-template-columns: 1fr;
+  }
+}

@@ -16,7 +16,10 @@ export function paragraph(text: string) {
   return `<w:p><w:r><w:t>${text}</w:t></w:r></w:p>`;
 }
 
-export function syntheticPdf(pages: { text: string; x: number; y: number }[][], encrypted = false) {
+export function syntheticPdf(
+  pages: { text: string; x: number; y: number; fontSize?: number }[][],
+  encrypted = false,
+) {
   const objects = [
     '<< /Type /Catalog /Pages 2 0 R >>',
     `<< /Type /Pages /Kids [${pages.map((_, index) => `${4 + index * 2} 0 R`).join(' ')}] /Count ${pages.length} >>`,
@@ -27,7 +30,7 @@ export function syntheticPdf(pages: { text: string; x: number; y: number }[][], 
     const stream = lines
       .map(
         (line) =>
-          `BT /F1 12 Tf ${line.x} ${line.y} Td (${line.text.replace(/[\\()]/g, '\\$&')}) Tj ET`,
+          `BT /F1 ${line.fontSize ?? 12} Tf ${line.x} ${line.y} Td (${line.text.replace(/[\\()]/g, '\\$&')}) Tj ET`,
       )
       .join('\n');
 

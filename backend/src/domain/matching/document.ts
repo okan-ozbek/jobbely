@@ -1,4 +1,4 @@
-export const jobDocumentVersion = 'job-document-1';
+export const jobDocumentVersion = 'job-document-3';
 
 export type JobSectionRole =
   | 'overview'
@@ -49,7 +49,7 @@ export function jobHeading(
   }
 
   if (
-    /^(?:minimum requirements|minimum qualifications|basic qualifications|required qualifications|key qualifications|requirements|what you bring|what you(?:'|’)ll need|what we need to see|what we(?:'|’)re looking for|what we look for|about you|qualifications|required skills|experience|education and training|our ideal .{1,100} will have)$/i.test(
+    /^(?:minimum requirements|minimum qualifications|basic qualifications|required qualifications|key qualifications|requirements|your expertise|what you bring|skills you(?:'|’)ll need to bring|you (?:might |will )?thrive in this role if you|what you(?:'|’)ll need|what we need to see|what we(?:'|’)re looking for|what we look for|about you|qualifications|required skills|experience|education and training|our ideal .{1,100} will have)$/i.test(
       text,
     )
   ) {
@@ -57,7 +57,7 @@ export function jobHeading(
   }
 
   if (
-    /^(?:key responsibilities|responsibilities|what you(?:'|’)ll do|the impact you(?:'|’)ll have|as (?:a|an) .{1,100} you will)$/i.test(
+    /^(?:key responsibilities|responsibilities|a typical day|what you(?:'|’)ll (?:do|achieve)|in this role,? you will|the impact you(?:'|’)ll have|as (?:a|an) .{1,100} you will)$/i.test(
       text,
     )
   ) {
@@ -65,7 +65,7 @@ export function jobHeading(
   }
 
   if (
-    /^(?:about us|about [\p{L}\d .&()-]{2,70}|our (?:company|mission)|company overview)$/iu.test(
+    /^(?:the community you will join|who we are|a note on AI|about us|about [\p{L}\d .&()-]{2,70}|our (?:company|mission)|company overview)$/iu.test(
       text,
     ) &&
     !/^about (?:the )?role$/i.test(text)
@@ -90,7 +90,7 @@ export function jobHeading(
   }
 
   if (
-    /^(?:compliance|posting statement|our commitment to diversity and inclusion|equal (?:employment )?opportunity|diversity and inclusion)$/i.test(
+    /^(?:compliance|posting statement|our commitment to inclusion and belonging|our commitment to diversity and inclusion|equal (?:employment )?opportunity|diversity and inclusion)$/i.test(
       text,
     )
   ) {
@@ -110,7 +110,7 @@ export function jobHeading(
 
 export function informationRole(text: string): JobSectionRole | null {
   if (
-    /\b(?:during (?:the |our )?(?:hiring|interview|application) process|(?:your|a) recruiting partner|accommodation.{0,100}(?:disability|interview)|(?:we|employers?) (?:do not|never) charge|recruitment fees)\b/i.test(
+    /\b(?:during (?:the |our )?(?:hiring|interview|application) process|(?:your|a) recruiting partner|accommodation.{0,100}(?:disability|interview)|(?:recruiting|applicant) privacy policy|submit application|(?:we|employers?) (?:do not|never) charge|recruitment fees)\b/i.test(
       text,
     )
   ) {

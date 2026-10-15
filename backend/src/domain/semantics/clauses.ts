@@ -1,7 +1,7 @@
 import type { Interpretation, SkillFacet } from './model.js';
 import { defaultFacet } from './concepts.js';
 
-export const clauseVersion = 'clauses-2';
+export const clauseVersion = 'clauses-4';
 
 export function normalizeText(text: string) {
   // These replacements preserve UTF-16 offsets into the original document.
@@ -25,9 +25,10 @@ export function assertionAt(
 
   // Scope extends through coordinated lists, but stops at contrast/statement boundaries.
   if (
-    /\b(?:no(?: professional)? experience (?:with|in)|not (?:experienced|proficient) (?:with|in)|never (?:used|worked with)|do not know|don't know|did not|didn't|not responsible for|without experience (?:in|with))\b[^.!?;]{0,160}$/i.test(
+    /\b(?:no(?: professional)? experience (?:with|in)|not (?:experienced|proficient) (?:with|in)|never (?:used|worked with|built|implemented|designed|developed|wrote|documented|collaborated|partnered|provisioned)|do not know|don't know|did not|didn't|not responsible for|without experience (?:in|with))\b[^.!?;]{0,160}$/i.test(
       prefix,
-    )
+    ) ||
+    /\bnever\s*$/i.test(prefix)
   ) {
     return 'negated';
   }
@@ -108,6 +109,23 @@ export interface PhraseRule {
 
 // Rules encode observable activities, not employer reputation or generic soft-skill adjectives.
 export const phraseRules: readonly PhraseRule[] = [
+  {
+    id: 'stakeholder-collaboration',
+    pattern:
+      /\b(?:work(?:ing|ed)?|collaborat(?:e|ed|ing)|partner(?:ed|ing)?|coordinat(?:e|ed|ing)|communicat(?:e|ed|ing))\b[^.!?;\n]{0,70}\b(?:with|across)\s+(?:(?:engineers?|developers?|teams?|colleagues)\s+and\s+)?(?:(?:internal|external|technical|business|senior|key|multiple|all|and)\s+){0,4}stakeholders\b/gi,
+    concepts: [{ id: 'stakeholder-communication' }],
+  },
+  {
+    id: 'clear-api-design',
+    pattern:
+      /\b(?:design(?:ed|ing)?|build(?:ing)?|built|implement(?:ed|ing)?|provid(?:e|ed|ing)|through)\b[^.!?;\n]{0,60}\bclear APIs?\b/gi,
+    concepts: [{ id: 'api-design' }],
+  },
+  {
+    id: 'datastore-connectors',
+    pattern: /\bconnectors?\b(?=[^.!?;\n]{0,150}\bdata\s?stores?\b)/gi,
+    concepts: [{ id: 'data-integration' }],
+  },
   {
     id: 'cross-team-delivery-scope',
     pattern: /\b(?:led|owned|delivered) (?:architecture and )?cross[ -]team delivery\b/gi,

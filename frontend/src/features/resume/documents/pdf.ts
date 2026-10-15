@@ -106,6 +106,8 @@ export async function extractPdf(bytes: Uint8Array) {
 
   const blocks: ReadingBlock[] = [];
   const warnings: string[] = [];
+  const columnPages: number[] = [];
+  const smallTextPages: number[] = [];
 
   try {
     const document = await task.promise;
@@ -139,6 +141,8 @@ export async function extractPdf(bytes: Uint8Array) {
       const reading = pdfReadingLines(words, page.getViewport({ scale: 1 }).width);
 
       if (reading.twoColumns) {
+        columnPages.push(number);
+
         warnings.push(
           `Page ${number}: column order was inferred. Review the detected skills and roles.`,
         );
@@ -146,6 +150,15 @@ export async function extractPdf(bytes: Uint8Array) {
 
       if (!reading.lines.length) {
         warnings.push(`Page ${number}: no text layer found. Images were not OCR'd.`);
+      }
+
+      const heights = words
+        .map((word) => word.height)
+        .filter((height) => height > 0)
+        .sort((a, b) => a - b);
+
+      if (heights.length >= 20 && heights[Math.floor(heights.length / 2)]! < 10) {
+        smallTextPages.push(number);
       }
 
       if (number > 1) {
@@ -166,10 +179,12 @@ export async function extractPdf(bytes: Uint8Array) {
       page.cleanup();
     }
 
-    return finishDocument('pdf', blocks, [
+    const result = finishDocument('pdf', blocks, [
       ...warnings,
       'Reading order is inferred from text positions. Inspect broken words, columns and headers; this does not reproduce a particular ATS.',
     ]);
+
+    return { ...result, layout: { pages: document.numPages, columnPages, smallTextPages } };
   } catch (error) {
     if (error instanceof DocumentError) {
       throw error;

@@ -8,13 +8,26 @@
       "name": "Overlapping engineering roles",
       "text": "Alex Example\nLocation: Amsterdam, Netherlands\nSummary\nBackend engineer building reliable services.\nExperience\nSoftware Engineer | Meta\nJan 2020 - Dec 2022\nBuilt APIs using TypeScript and PostgreSQL.\nManaged a team of six engineers.\nSoftware Engineer | Northstar Labs\nJan 2022 - Dec 2023\nDelivered a platform migration using Python.\nSkills\nTypeScript, PostgreSQL, Python, Docker\nEducation\nBSc Computer Science, 2015 - 2019",
       "expected": {
-        "skills": ["typescript", "postgresql", "python", "docker"],
+        "skills": [
+          "typescript",
+          "postgresql",
+          "python",
+          "docker",
+          "api-development",
+          "backend-development",
+          "system-reliability"
+        ],
         "competencies": ["leadership", "delivery-ownership"],
         "employers": ["Meta", "Northstar Labs"],
         "recognized": ["meta", null],
         "location": "Amsterdam, Netherlands",
         "professional": [48, 48],
-        "internships": [0, 0]
+        "internships": [0, 0],
+        "skillStatuses": {
+          "api-development": "work_evidenced",
+          "backend-development": "mentioned",
+          "system-reliability": "mentioned"
+        }
       }
     },
     {
@@ -140,13 +153,16 @@
       "name": "Promotions without double-counting",
       "text": "Drew Example\nExperience\nSoftware Engineer | Apple\nJan 2020 - Dec 2021\nDeveloped services using Java.\nSenior Software Engineer | Apple\nJun 2021 - Dec 2023\nDeveloped backend services using Java.\nSkills\nJava, SQL",
       "expected": {
-        "skills": ["java", "sql"],
+        "skills": ["java", "sql", "backend-development"],
         "competencies": [],
         "employers": ["Apple", "Apple"],
         "recognized": ["apple", "apple"],
         "location": "",
         "professional": [48, 48],
-        "internships": [0, 0]
+        "internships": [0, 0],
+        "skillStatuses": {
+          "backend-development": "work_evidenced"
+        }
       }
     }
   ],
@@ -158,7 +174,7 @@
       "synthetic": true,
       "description": "Required: TypeScript and either PostgreSQL or MySQL. At least 2 years of backend engineering. Onsite in Amsterdam, Netherlands. Python is preferred.",
       "expected": {
-        "requiredAlternatives": [["typescript"], ["postgresql", "mysql"]],
+        "requiredAlternatives": [["typescript"], ["postgresql", "mysql"], ["backend-development"]],
         "preferred": ["python"],
         "minimumRelevantYears": 2,
         "location": "Amsterdam, Netherlands"

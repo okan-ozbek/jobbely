@@ -58,6 +58,7 @@ export interface FeatureJob {
 export interface MatchExplanation {
   job: FeatureJob;
   baseScore: number;
+  fitScore: number | null;
   assessmentCoverage: AssessmentCoverage;
   band: 'strong' | 'possible' | 'exploratory' | 'review';
   requiredGaps: number;

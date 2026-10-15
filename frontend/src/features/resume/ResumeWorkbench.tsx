@@ -12,6 +12,8 @@ import { scrollToSection } from '../../components/motion.js';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton.js';
 import { moveSurface, resetSurface } from '../../components/surface-motion.js';
 import './resume.css';
+import type { Account } from '../../api/accounts.js';
+import { ResumeReviewer } from './ResumeReviewer.js';
 
 function formatDuration(duration: ResumeAnalysis['experience']['professional']) {
   const label = (months: number) => `${Math.floor(months / 12)}y ${months % 12}m`;
@@ -29,14 +31,23 @@ export function ResumeWorkbench({
   openJob,
   state,
   onReviewed,
+  account,
+  openPricing,
 }: {
   openJob: (id: string) => void;
   state: ReturnType<typeof useResumeAnalysis>;
   onReviewed: (analysis: ResumeAnalysis | null) => void;
+  account: Account | null | undefined;
+  openPricing: () => void;
 }) {
   const documentInput = useDocumentInput(state.setText);
   const [fileName, setFileName] = useState('');
   const analysis = state.analysis;
+
+  const hasInternships =
+    !!analysis &&
+    (analysis.experience.internships.maximumMonths > 0 ||
+      analysis.experience.internships.unknownEntries > 0);
 
   const fileWarnings =
     documentInput.document?.warnings.filter(
@@ -159,7 +170,7 @@ export function ResumeWorkbench({
                 type="submit"
                 disabled={!state.text.trim() || state.loading || documentInput.loading}
               >
-                {state.loading ? 'Reading resume…' : 'Review my resume'} <ArrowRight size={16} />
+                {state.loading ? 'Reading resume…' : 'Analyze my resume'} <ArrowRight size={16} />
               </button>
             </div>
           </form>
@@ -272,13 +283,21 @@ export function ResumeWorkbench({
             className="profile-review"
             summary={
               <>
-                Review your profile <span>Skills, experience & location</span>
+                Review your profile <span>Skills, experience, location & resume feedback</span>
               </>
             }
           >
             <div className="profile-review-content">
+              <ResumeReviewer
+                key={account?.user?.id ?? 'guest'}
+                text={state.text}
+                document={documentInput.document}
+                account={account}
+                pending={documentInput.loading}
+                openPricing={openPricing}
+              />
               <div
-                className="resume-summary"
+                className={`resume-summary${hasInternships ? ' has-internships' : ''}`}
                 aria-busy={state.loading}
               >
                 {state.loading ? (
@@ -297,11 +316,13 @@ export function ResumeWorkbench({
                           ` ${analysis.experience.professional.unknownEntries} role(s) have unknown duration.`}
                       </small>
                     </div>
-                    <div>
-                      <span>Internships</span>
-                      <strong>{formatDuration(analysis.experience.internships)}</strong>
-                      <small>Separate from professional experience.</small>
-                    </div>
+                    {hasInternships && (
+                      <div>
+                        <span>Internships</span>
+                        <strong>{formatDuration(analysis.experience.internships)}</strong>
+                        <small>Separate from professional experience.</small>
+                      </div>
+                    )}
                     <div>
                       <span>Detected skills</span>
                       <strong>{analysis.skills.length + analysis.competencies.length}</strong>

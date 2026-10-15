@@ -5302,6 +5302,8 @@
                               "logic",
                               "groupIds",
                               "unresolvedAlternatives",
+                              "disposition",
+                              "exampleIds",
                               "evidence"
                             ],
                             "properties": {
@@ -5573,6 +5575,34 @@
                                   "type": "string"
                                 }
                               },
+                              "disposition": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "contextual"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "represented"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "needs-review"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "exampleIds": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
                               "evidence": {
                                 "type": "object",
                                 "required": [
@@ -5798,6 +5828,9 @@
                                 "items": {
                                   "type": "string"
                                 }
+                              },
+                              "alternativeEvidence": {
+                                "type": "boolean"
                               },
                               "scope": {
                                 "anyOf": [
@@ -6048,6 +6081,55 @@
                                         ]
                                       }
                                     ]
+                                  },
+                                  "fields": {
+                                    "type": "array",
+                                    "items": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "computer-science"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "engineering"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "mathematics"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "physics"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "business"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "other"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "unknown"
+                                          ]
+                                        }
+                                      ]
+                                    }
                                   },
                                   "related": {
                                     "type": "boolean"
@@ -6732,6 +6814,7 @@
                       "type": "object",
                       "required": [
                         "baseScore",
+                        "fitScore",
                         "assessmentCoverage",
                         "band",
                         "unresolvedRequirements",
@@ -6745,6 +6828,12 @@
                       "properties": {
                         "baseScore": {
                           "type": "integer"
+                        },
+                        "fitScore": {
+                          "minimum": 0,
+                          "maximum": 100,
+                          "type": "number",
+                          "nullable": true
                         },
                         "assessmentCoverage": {
                           "type": "object",
@@ -7824,6 +7913,8 @@
                           "logic",
                           "groupIds",
                           "unresolvedAlternatives",
+                          "disposition",
+                          "exampleIds",
                           "evidence"
                         ],
                         "properties": {
@@ -8095,6 +8186,34 @@
                               "type": "string"
                             }
                           },
+                          "disposition": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contextual"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "represented"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "needs-review"
+                                ]
+                              }
+                            ]
+                          },
+                          "exampleIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
                           "evidence": {
                             "type": "object",
                             "required": [
@@ -8320,6 +8439,9 @@
                             "items": {
                               "type": "string"
                             }
+                          },
+                          "alternativeEvidence": {
+                            "type": "boolean"
                           },
                           "scope": {
                             "anyOf": [
@@ -8570,6 +8692,55 @@
                                     ]
                                   }
                                 ]
+                              },
+                              "fields": {
+                                "type": "array",
+                                "items": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "computer-science"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "engineering"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "mathematics"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "physics"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "business"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "other"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "unknown"
+                                      ]
+                                    }
+                                  ]
+                                }
                               },
                               "related": {
                                 "type": "boolean"
@@ -10002,6 +10173,7 @@
                         "required": [
                           "job",
                           "baseScore",
+                          "fitScore",
                           "assessmentCoverage",
                           "band",
                           "requiredGaps",
@@ -10233,6 +10405,8 @@
                                         "logic",
                                         "groupIds",
                                         "unresolvedAlternatives",
+                                        "disposition",
+                                        "exampleIds",
                                         "evidence"
                                       ],
                                       "properties": {
@@ -10504,6 +10678,34 @@
                                             "type": "string"
                                           }
                                         },
+                                        "disposition": {
+                                          "anyOf": [
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "contextual"
+                                              ]
+                                            },
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "represented"
+                                              ]
+                                            },
+                                            {
+                                              "type": "string",
+                                              "enum": [
+                                                "needs-review"
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        "exampleIds": {
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string"
+                                          }
+                                        },
                                         "evidence": {
                                           "type": "object",
                                           "required": [
@@ -10729,6 +10931,9 @@
                                           "items": {
                                             "type": "string"
                                           }
+                                        },
+                                        "alternativeEvidence": {
+                                          "type": "boolean"
                                         },
                                         "scope": {
                                           "anyOf": [
@@ -10980,6 +11185,55 @@
                                                 }
                                               ]
                                             },
+                                            "fields": {
+                                              "type": "array",
+                                              "items": {
+                                                "anyOf": [
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "computer-science"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "engineering"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "mathematics"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "physics"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "business"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "other"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "unknown"
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            },
                                             "related": {
                                               "type": "boolean"
                                             },
@@ -11105,6 +11359,12 @@
                           },
                           "baseScore": {
                             "type": "integer"
+                          },
+                          "fitScore": {
+                            "minimum": 0,
+                            "maximum": 100,
+                            "type": "number",
+                            "nullable": true
                           },
                           "assessmentCoverage": {
                             "type": "object",
@@ -15719,6 +15979,1257 @@
                       "enum": [
                         true
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/jobs/{id}/resume-assessment": {
+      "post": {
+        "operationId": "assessResumeRole",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "text",
+                  "aiConsent"
+                ],
+                "properties": {
+                  "text": {
+                    "minLength": 1,
+                    "maxLength": 40000,
+                    "type": "string"
+                  },
+                  "aiConsent": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "minLength": 1,
+              "maxLength": 100,
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "type": "object",
+                  "required": [
+                    "aiStatus",
+                    "ats",
+                    "recruiter",
+                    "coverage",
+                    "evidence",
+                    "limitations"
+                  ],
+                  "properties": {
+                    "aiStatus": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "completed"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "failed"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unavailable"
+                          ]
+                        }
+                      ]
+                    },
+                    "ats": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "alignment",
+                        "confidence",
+                        "evidenceCount",
+                        "requiredGaps",
+                        "screening"
+                      ],
+                      "properties": {
+                        "alignment": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "strong"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "partial"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "limited"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "unknown"
+                              ]
+                            }
+                          ]
+                        },
+                        "confidence": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "high"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "moderate"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "low"
+                              ]
+                            }
+                          ]
+                        },
+                        "evidenceCount": {
+                          "minimum": 0,
+                          "maximum": 24,
+                          "type": "integer"
+                        },
+                        "requiredGaps": {
+                          "minimum": 0,
+                          "maximum": 24,
+                          "type": "integer"
+                        },
+                        "screening": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "potential_fit"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "needs_clarification"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "requirements_not_demonstrated"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "insufficient_context"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "recruiter": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "alignment",
+                        "confidence",
+                        "evidenceCount",
+                        "requiredGaps",
+                        "screening"
+                      ],
+                      "properties": {
+                        "alignment": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "strong"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "partial"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "limited"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "unknown"
+                              ]
+                            }
+                          ]
+                        },
+                        "confidence": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "high"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "moderate"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "low"
+                              ]
+                            }
+                          ]
+                        },
+                        "evidenceCount": {
+                          "minimum": 0,
+                          "maximum": 24,
+                          "type": "integer"
+                        },
+                        "requiredGaps": {
+                          "minimum": 0,
+                          "maximum": 24,
+                          "type": "integer"
+                        },
+                        "screening": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "potential_fit"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "needs_clarification"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "requirements_not_demonstrated"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "insufficient_context"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "coverage": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "all_identified"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "partial"
+                          ]
+                        }
+                      ]
+                    },
+                    "evidence": {
+                      "maxItems": 24,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "area",
+                          "status",
+                          "priority",
+                          "jobQuote",
+                          "resumeQuote",
+                          "line",
+                          "explanation",
+                          "suggestion",
+                          "rewrite"
+                        ],
+                        "properties": {
+                          "area": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ats"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "recruiter"
+                                ]
+                              }
+                            ]
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "supported"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "partial"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "not_evidenced"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "contradicted"
+                                ]
+                              }
+                            ]
+                          },
+                          "priority": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "required"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "preferred"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "responsibility"
+                                ]
+                              }
+                            ]
+                          },
+                          "jobQuote": {
+                            "minLength": 1,
+                            "maxLength": 600,
+                            "type": "string"
+                          },
+                          "resumeQuote": {
+                            "minLength": 1,
+                            "maxLength": 600,
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "line": {
+                            "minimum": 1,
+                            "maximum": 2000,
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "explanation": {
+                            "maxLength": 600,
+                            "type": "string"
+                          },
+                          "suggestion": {
+                            "maxLength": 600,
+                            "type": "string"
+                          },
+                          "rewrite": {
+                            "minLength": 1,
+                            "maxLength": 600,
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "limitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/resume-review": {
+      "get": {
+        "operationId": "resumeReviewAvailability",
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "signedIn",
+                    "enabled",
+                    "aiAvailable",
+                    "aiProvider"
+                  ],
+                  "properties": {
+                    "signedIn": {
+                      "type": "boolean"
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "aiAvailable": {
+                      "type": "boolean"
+                    },
+                    "aiProvider": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "openai-api"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "codex-local"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "nullable": true,
+                          "enum": [
+                            null
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "reviewResume",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "text",
+                  "aiConsent",
+                  "language",
+                  "targetCountry",
+                  "jobDescription"
+                ],
+                "properties": {
+                  "text": {
+                    "minLength": 1,
+                    "maxLength": 40000,
+                    "type": "string"
+                  },
+                  "aiConsent": {
+                    "type": "boolean"
+                  },
+                  "language": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "en-US"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "en-GB"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "nl-NL"
+                        ]
+                      }
+                    ]
+                  },
+                  "targetCountry": {
+                    "maxLength": 80,
+                    "type": "string"
+                  },
+                  "jobDescription": {
+                    "maxLength": 12000,
+                    "type": "string"
+                  },
+                  "layout": {
+                    "additionalProperties": false,
+                    "type": "object",
+                    "required": [
+                      "format",
+                      "pages",
+                      "columnPages",
+                      "smallTextPages",
+                      "tableRows",
+                      "contactInHeaderFooter"
+                    ],
+                    "properties": {
+                      "format": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "enum": [
+                              "pdf"
+                            ]
+                          },
+                          {
+                            "type": "string",
+                            "enum": [
+                              "docx"
+                            ]
+                          }
+                        ]
+                      },
+                      "pages": {
+                        "minimum": 1,
+                        "maximum": 20,
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "columnPages": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minimum": 1,
+                          "maximum": 20,
+                          "type": "integer"
+                        }
+                      },
+                      "smallTextPages": {
+                        "maxItems": 20,
+                        "uniqueItems": true,
+                        "type": "array",
+                        "items": {
+                          "minimum": 1,
+                          "maximum": 20,
+                          "type": "integer"
+                        }
+                      },
+                      "tableRows": {
+                        "minimum": 0,
+                        "maximum": 2000,
+                        "type": "integer"
+                      },
+                      "contactInHeaderFooter": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "type": "object",
+                  "required": [
+                    "version",
+                    "aiStatus",
+                    "findings",
+                    "limitations"
+                  ],
+                  "properties": {
+                    "version": {
+                      "type": "string",
+                      "enum": [
+                        "review-1"
+                      ]
+                    },
+                    "aiStatus": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "not_requested"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "unavailable"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "completed"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "failed"
+                          ]
+                        }
+                      ]
+                    },
+                    "findings": {
+                      "maxItems": 42,
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "required": [
+                          "id",
+                          "source",
+                          "severity",
+                          "category",
+                          "title",
+                          "explanation",
+                          "suggestion",
+                          "quote",
+                          "line",
+                          "page",
+                          "rewrite"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "source": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "rule"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "ai"
+                                ]
+                              }
+                            ]
+                          },
+                          "severity": {
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "error"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "risk"
+                                ]
+                              },
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "suggestion"
+                                ]
+                              }
+                            ]
+                          },
+                          "category": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "explanation": {
+                            "type": "string"
+                          },
+                          "suggestion": {
+                            "type": "string"
+                          },
+                          "quote": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "line": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "page": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "rewrite": {
+                            "type": "string",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    },
+                    "limitations": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   }
                 }

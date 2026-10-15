@@ -1,4 +1,4 @@
-import { isQualificationBlock, readJobDocument } from '../../domain/matching/document.js';
+import { readJobDocument } from '../../domain/matching/document.js';
 import { degreeMentions } from '../../domain/resume/qualifications.js';
 import type { JobDocumentReader } from '../../ports/job-document.js';
 import { conceptsById } from '../../domain/semantics/concepts.js';
@@ -178,36 +178,39 @@ export class MatchJobs {
       descriptionText: document.text,
       document,
       requirements,
-      skills: skillMentions(document.text)
-        .filter((mention) =>
-          document.blocks.some(
-            (block) =>
-              block.kind !== 'heading' &&
-              (isQualificationBlock(block) ||
-                block.role === 'responsibilities' ||
-                block.role === 'role') &&
-              mention.position >= block.start &&
-              mention.position < block.end &&
-              requirements.skills.some(
+      // Score deduplication must not erase repeated evidence in the original description.
+      // Recognize within each clause so unrelated neighboring sections cannot disambiguate it.
+      skills: requirements.clauses.flatMap((clause) => {
+        if (
+          ['overview', 'legal', 'application', 'benefits', 'compensation'].includes(clause.role)
+        ) {
+          return [];
+        }
+
+        return skillMentions(clause.evidence.excerpt)
+          .filter((mention) => [...clause.objectIds, ...clause.exampleIds].includes(mention.id))
+          .map((mention) => {
+            const alternative = requirements.skills
+              .find(
                 (group) =>
-                  group.evidence.start !== undefined &&
-                  mention.position >= group.evidence.start &&
-                  mention.position < (group.evidence.end ?? 0),
-              ),
-          ),
-        )
-        .map((mention) => ({
-          ...mention,
-          ...skillMatch(prepared.matches, mention.id, mention.facet, mention.interpretation),
-          ...(!document.blocks.some(
-            (block) =>
-              isQualificationBlock(block) &&
-              mention.position >= block.start &&
-              mention.position < block.end,
-          )
-            ? { rule: `role-context:${mention.rule}` }
-            : {}),
-        })),
+                  clause.groupIds.includes(group.id!) &&
+                  group.alternatives.some((item) => item.id === mention.id),
+              )
+              ?.alternatives.find((item) => item.id === mention.id);
+
+            const interpretation = alternative?.interpretation ?? mention.interpretation;
+
+            return {
+              ...mention,
+              position: (clause.evidence.start ?? 0) + mention.position,
+              interpretation,
+              ...skillMatch(prepared.matches, mention.id, mention.facet, interpretation),
+              ...(['role', 'responsibilities'].includes(clause.role)
+                ? { rule: `role-context:${mention.rule}` }
+                : {}),
+            };
+          });
+      }),
       metrics: [
         ...requirements.constraints
           .filter((constraint) => constraint.education && constraint.importance !== 'contextual')
@@ -235,7 +238,7 @@ export class MatchJobs {
                   : match.status === 'below'
                     ? ('red' as const)
                     : ('yellow' as const),
-              credit: Number(match.status === 'met'),
+              credit: match.status === 'met' ? 1 : match.status === 'uncertain' ? 0.25 : 0,
               sourceId: null,
               sourceName: null,
               path: [],
@@ -272,7 +275,7 @@ export class MatchJobs {
                   : match.status === 'below'
                     ? ('red' as const)
                     : ('yellow' as const),
-              credit: Number(match.status === 'met'),
+              credit: match.status === 'met' ? 1 : match.status === 'uncertain' ? 0.25 : 0,
               sourceId: null,
               sourceName: null,
               path: [],

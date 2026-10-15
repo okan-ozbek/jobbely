@@ -127,7 +127,11 @@ export const coreCompetencies: [string, string, string[]][] = [
     'Stakeholder communication',
     ['stakeholder communication', 'stakeholder management'],
   ],
-  ['delivery-ownership', 'Delivery ownership', ['delivery ownership', 'project ownership']],
+  [
+    'delivery-ownership',
+    'Delivery ownership',
+    ['delivery ownership', 'project ownership', 'taking ownership'],
+  ],
   [
     'cross-functional-leadership',
     'Cross-functional leadership',

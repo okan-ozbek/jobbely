@@ -12,6 +12,7 @@
     "build": "pnpm --filter @jobbely/backend build && pnpm contracts && pnpm --filter @jobbely/frontend build",
     "contracts": "pnpm --filter @jobbely/backend export:openapi && pnpm --filter @jobbely/frontend generate:api",
     "features:backfill": "pnpm --filter @jobbely/backend features:backfill",
+    "vocabulary:audit": "pnpm --filter @jobbely/backend vocabulary:audit",
     "matching:evaluate": "pnpm --filter @jobbely/backend matching:evaluate",
     "matching:shadow": "pnpm --filter @jobbely/backend matching:shadow",
     "typecheck": "pnpm -r typecheck",

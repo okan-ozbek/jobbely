@@ -1,0 +1,14 @@
+.pro-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border: 1px solid #ded9eb;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffffb3, #f1eef880);
+  color: #73698d;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  box-shadow: inset 0 1px 0 #ffffffb3;
+}

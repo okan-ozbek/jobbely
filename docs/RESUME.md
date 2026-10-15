@@ -8,6 +8,8 @@
 
 ## Pipeline and layers
 
+The 14 October [paid mistake reviewer](RESUME_REVIEWER.md) is separate from this deterministic profile/matching pipeline. Its optional hosted writing suggestions never modify profile evidence or fit scores. The free composer action is now labeled **Analyze my resume** to distinguish profile analysis from Pro mistake checks.
+
 PDF and DOCX are separate [local document adapters](DOCUMENTS.md). They produce text, ordered reading blocks and warnings in an isolated browser worker. Candidates explicitly request analysis of the selected file, then edit the resulting profile. Pasted text remains editable and uses the same bounded text-analysis contract. Backend domain policies remain pure; `AnalyzeResume` orchestrates extraction/corrections without IO or persistence. The frontend consumes generated API types and never imports backend internals.
 
 The [text reader](../backend/src/domain/resume/document.ts) preserves line order and offsets into CRLF-normalized text. English headings inform section detection. [The vocabulary](../backend/src/domain/resume/vocabulary.ts) now contains 59 skill concepts and four explicit competency rules, covering an initial engineering/data/product/sales/people set. Named aliases, contextual collision guards, negation and learning states retain evidence; unknown skills can be added manually. This is a reviewed starter set, not universal skill coverage.

@@ -10,6 +10,8 @@
 
 Use a TypeScript adjacency list, with canonical vocabulary IDs as nodes and directed edges containing kind, permitted mode, weight and reason. A graph database adds no useful capability to this bounded, versioned policy. Language, infrastructure, systems concepts and cross-team competencies can offer partial evidence for another requirement without rewriting the candidate's claimed skills.
 
+The [9 October color-weighted policy](MATCHING.md#color-weighted-qualification-fit-9-october-2026) maps green to 100%, yellow to 25% and red/purple to zero qualification credit. The varying graph/path weights below remain evidence provenance and strongest-route selection, not the yellow qualification contribution. Yellow learning/uncertain claims receive 25% for their own identified requirement but still do not start inference traversal or establish tenure. Unknown job alternatives/constraints remain unassessed while contributing 25% to fit.
+
 Each original work-evidenced/user-confirmed claim starts with credit 1; a listed mention starts with 0.6. Learning and negated claims start no traversal. Multiply edge weights along paths of at most two edges, discard credit below 0.025, and cap inferred credit at 0.8 at each step. Choose the strongest path, with deterministic source/edge ordering; never sum paths, inflate confidence through cycles, or start traversal from inferred profile claims. Explicit learning/negation blocks inference into or through that node.
 
 For example, Redis → cloud infrastructure (0.25) → AWS (0.12) produces 0.03 credit. AWS remains yellow and its required gap remains visible. C++ offers stronger evidence for systems programming, and weaker evidence for threading. Cloud usage, latency, benchmarks, fault tolerance and availability provide different degrees of related systems evidence. A large team alone does not establish distributed systems expertise. Some vocabulary nodes remain intentionally disconnected until a justified relation is reviewed.
@@ -27,6 +29,8 @@ For example, Redis → cloud infrastructure (0.25) → AWS (0.12) produces 0.03 
 - Policy changes increment `relationsVersion` and therefore scoring/cursor identity. Vocabulary/extraction changes also invalidate public job features and require `pnpm features:backfill`.
 
 ## Description comparison and privacy
+
+The 15 October [compact assessment presentation](ROLE_ASSESSMENT.md#match-presentation) omits purple/red zero-credit entries from the rounded legend only. Their actual evidence, questions and description highlights remain distinct, and graph/scoring policies below are unchanged. The optional AI action reviews selected original resume/job excerpts separately; it cannot establish skills, tenure or deterministic match credit.
 
 `POST /api/v1/jobs/:id/resume-match` accepts the same strict profile allowlist as ranking, including optional competency IDs/statuses, supported/denied/uncertain facets and interpretation. It performs transient comparison of a stored public description, with no private persistence and `no-store` responses. Its body limit is 256 KiB, with same-origin validation, generic private errors and 15 requests/minute per connection IP. Retained closed/stale/demo descriptions can be inspected, but the response explicitly labels whether the job passes recommendation availability checks.
 

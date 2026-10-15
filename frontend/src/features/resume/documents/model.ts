@@ -21,6 +21,7 @@ export interface ExtractedDocument {
   text: string;
   blocks: ReadingBlock[];
   warnings: string[];
+  layout?: { pages: number; columnPages: number[]; smallTextPages: number[] };
 }
 
 export class DocumentError extends Error {}

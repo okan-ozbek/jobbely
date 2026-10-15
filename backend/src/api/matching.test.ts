@@ -67,9 +67,62 @@ async function setup(description?: string) {
 }
 
 describe('private matching API and public requirements', () => {
+  it('highlights repeated qualification evidence without counting duplicate criteria', async () => {
+    const { app, input, repository } = await setup(
+      'Requirements\nTypeScript required.\nExperience with TypeScript required.\nCompensation\nTypeScript training allowance.',
+    );
+
+    const job = (await repository.read()).jobs[0]!;
+
+    const response = await app.inject({
+      method: 'POST',
+      url: `/api/v1/jobs/${job.id}/resume-match`,
+      payload: { profile: input.profile },
+    });
+
+    const result = response.json();
+    const mentions = result.skills.filter((item: { id: string }) => item.id === 'typescript');
+
+    expect(response.statusCode).toBe(200);
+    expect(mentions).toHaveLength(2);
+    expect(result.requirements.skills).toHaveLength(1);
+    expect(result.comparison.assessmentCoverage.total).toBe(1);
+
+    for (const mention of mentions) {
+      expect(
+        result.descriptionText.slice(mention.position, mention.position + mention.length),
+      ).toBe('TypeScript');
+
+      expect(mention.confidence).toBe('green');
+    }
+  });
+
+  it('uses the job exposure interpretation consistently in comparisons and keyword colors', async () => {
+    const { app, input, repository } = await setup(
+      'Your Expertise\nSome exposure to writing automated tests or working with a testing framework (e.g., Playwright, Cypress, Espresso, XCUITest).',
+    );
+
+    const job = (await repository.read()).jobs[0]!;
+
+    const response = await app.inject({
+      method: 'POST',
+      url: `/api/v1/jobs/${job.id}/resume-match`,
+      payload: {
+        profile: { ...input.profile, skills: [{ id: 'espresso', status: 'user_confirmed' }] },
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json().comparison.skills[0]).toMatchObject({ credit: 1, confidence: 'green' });
+
+    expect(
+      response.json().skills.find((item: { id: string }) => item.id === 'espresso'),
+    ).toMatchObject({ credit: 1, confidence: 'green', interpretation: 'explicit' });
+  });
+
   it('returns the same criterion coverage in recommendations and single-job comparison', async () => {
     const { app, input } = await setup(
-      'Requirements\nTypeScript required.\nKnowledge of VHDL required.',
+      'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL required.',
     );
 
     const matched = await app.inject({
@@ -90,6 +143,7 @@ describe('private matching API and public requirements', () => {
     });
 
     expect(item).not.toHaveProperty('completeness');
+    expect(item.fitScore).toBe(62.5);
 
     const compared = await app.inject({
       method: 'POST',
@@ -99,6 +153,7 @@ describe('private matching API and public requirements', () => {
 
     expect(compared.statusCode).toBe(200);
     expect(compared.json().comparison.assessmentCoverage).toEqual(item.assessmentCoverage);
+    expect(compared.json().comparison.fitScore).toBe(item.fitScore);
   });
 
   it('compares degree and duration annotations, includes responsibility skills and keeps candidate metadata transient', async () => {
@@ -560,11 +615,11 @@ describe('private matching API and public requirements', () => {
     expect(compared.statusCode).toBe(200);
 
     expect(compared.json()).toMatchObject({
-      document: { version: 'job-document-1' },
+      document: { version: 'job-document-3' },
       requirements: {
         clauses: expect.arrayContaining([expect.objectContaining({ modality: 'obligation' })]),
       },
-      comparison: { band: 'strong', unresolvedRequirements: 0 },
+      comparison: { band: 'strong', unresolvedRequirements: 0, fitScore: 100 },
     });
   });
 

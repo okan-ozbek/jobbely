@@ -33,6 +33,11 @@ import { configurationHash } from './infrastructure/audits/model.js';
 import Stripe from 'stripe';
 import { StripeTestBilling } from './infrastructure/accounts/stripe-test-billing.js';
 import { TestBilling } from './application/accounts/test-billing.js';
+import { ReviewResume } from './application/resume/review-resume.js';
+import {
+  createResumeWritingReviewer,
+  reviewConfigurationError,
+} from './infrastructure/resume/reviewer-factory.js';
 
 export const config = z
   .object({
@@ -40,12 +45,21 @@ export const config = z
     DATABASE_URL: z.string().optional(),
     PORT: z.coerce.number().int().min(1).max(65535).default(3001),
     HOST: z.string().default('127.0.0.1'),
+    NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+    TEMPORARY_PRO_ACCESS: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((value) => value === 'true'),
     FRONTEND_ORIGIN: z.url().default('http://127.0.0.1:5173'),
     INGESTION_WAVE_SYNC: z
       .enum(['true', 'false'])
       .default('false')
       .transform((value) => value === 'true'),
     MATCH_CURSOR_SECRET: z.string().min(32).optional(),
+    RESUME_REVIEW_OPENAI_KEY: z.string().min(1).optional(),
+    RESUME_REVIEW_MODEL: z.string().min(1).max(120).optional(),
+    RESUME_REVIEW_PROVIDER: z.enum(['openai-api', 'codex-local']).default('openai-api'),
+    RESUME_REVIEW_CODEX_COMMAND: z.string().min(1).optional(),
     GITHUB_CLIENT_ID: z.string().min(1).optional(),
     GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
     LINKEDIN_CLIENT_ID: z.string().min(1).optional(),
@@ -82,6 +96,27 @@ export const config = z
     SMTP_PASSWORD: z.string().min(1).optional(),
   })
   .superRefine((value, context) => {
+    if (
+      value.TEMPORARY_PRO_ACCESS &&
+      (value.NODE_ENV === 'production' ||
+        !['127.0.0.1', 'localhost', '::1'].includes(value.HOST) ||
+        !['127.0.0.1', 'localhost', '[::1]'].includes(new URL(value.FRONTEND_ORIGIN).hostname))
+    ) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Temporary Pro access is restricted to non-production loopback development.',
+      });
+    }
+
+    const reviewError = reviewConfigurationError(value);
+
+    if (reviewError) {
+      context.addIssue({
+        code: 'custom',
+        message: reviewError,
+      });
+    }
+
     for (const provider of ['GITHUB', 'LINKEDIN'] as const) {
       if (!!value[`${provider}_CLIENT_ID`] !== !!value[`${provider}_CLIENT_SECRET`]) {
         context.addIssue({
@@ -239,7 +274,18 @@ export async function bootstrap() {
       : {}),
     repository,
     adapters,
-    ...(accountRepository ? { accounts: new Accounts(accountRepository, providers) } : {}),
+    ...(accountRepository
+      ? {
+          accounts: new Accounts(
+            accountRepository,
+            providers,
+            undefined,
+            config.TEMPORARY_PRO_ACCESS
+              ? new Date(Date.now() + 24 * 60 * 60_000).toISOString()
+              : null,
+          ),
+        }
+      : {}),
     ...(passwordRepository && config.AUTH_CODE_SECRET
       ? {
           passwordAccounts: new PasswordAccounts(
@@ -256,6 +302,11 @@ export async function bootstrap() {
     },
     catalog: new JobCatalog(repository, companies, sources, config.DATA_MODE, undefined, coverage),
     resume: new AnalyzeResume(companies),
+    resumeReviewer: new ReviewResume(
+      createResumeWritingReviewer(config),
+      undefined,
+      htmlJobDocumentReader,
+    ),
     matcher: new MatchJobs(
       features,
       companies,

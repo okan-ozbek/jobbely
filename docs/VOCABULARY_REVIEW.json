@@ -1,0 +1,1805 @@
+{
+  "status": "Reviewed local vocabulary increment; mention counts are not accuracy or proficiency.",
+  "date": "2026-10-08",
+  "snapshot": {
+    "version": 578,
+    "featureGeneration": 294,
+    "postings": 16994,
+    "companies": 57,
+    "categories": {
+      "engineering": 5292,
+      "unclassified": 6494,
+      "product": 479,
+      "marketing": 502,
+      "people": 269,
+      "sales": 2077,
+      "research": 214,
+      "finance": 413,
+      "data-ai": 291,
+      "customer-success": 301,
+      "legal": 195,
+      "security-it": 247,
+      "design": 154,
+      "quant-trading": 50,
+      "manufacturing": 8,
+      "operations": 8
+    }
+  },
+  "policy": "concepts-4:clauses-4",
+  "totalConcepts": 500,
+  "addedConcepts": 252,
+  "emptyDescriptions": 0,
+  "truncatedDescriptions": 0,
+  "unknownTerms": 694237,
+  "recurringCandidates": 148128,
+  "reportedCandidates": 10000,
+  "candidateListTruncated": true,
+  "discoverySkippedBlocks": 140129,
+  "additions": [
+    {
+      "id": "ruby",
+      "name": "Ruby",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 431,
+      "exampleEmployers": ["shopify", "datadog"]
+    },
+    {
+      "id": "swift",
+      "name": "Swift",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 53,
+      "exampleEmployers": ["slack", "stripe"]
+    },
+    {
+      "id": "objective-c",
+      "name": "Objective-C",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 13,
+      "exampleEmployers": ["stripe", "okta"]
+    },
+    {
+      "id": "r",
+      "name": "R",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 230,
+      "exampleEmployers": ["pinterest", "reddit"]
+    },
+    {
+      "id": "bash",
+      "name": "Bash",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 389,
+      "exampleEmployers": ["nvidia", "paypal"]
+    },
+    {
+      "id": "powershell",
+      "name": "PowerShell",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 93,
+      "exampleEmployers": ["discord", "anthropic"]
+    },
+    {
+      "id": "perl",
+      "name": "Perl",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 709,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "tcl",
+      "name": "Tcl",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 294,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "verilog",
+      "name": "Verilog",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 426,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "systemverilog",
+      "name": "SystemVerilog",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 381,
+      "exampleEmployers": ["intel", "nvidia"]
+    },
+    {
+      "id": "vhdl",
+      "name": "VHDL",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 87,
+      "exampleEmployers": ["amd", "optiver"]
+    },
+    {
+      "id": "spring",
+      "name": "Spring Framework",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 59,
+      "exampleEmployers": ["zoom", "ing"]
+    },
+    {
+      "id": "spring-boot",
+      "name": "Spring Boot",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 83,
+      "exampleEmployers": ["zoom", "ing"]
+    },
+    {
+      "id": "hibernate",
+      "name": "Hibernate ORM",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 20,
+      "exampleEmployers": ["okta", "mongodb"]
+    },
+    {
+      "id": "django",
+      "name": "Django",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 62,
+      "exampleEmployers": ["mozilla", "workday"]
+    },
+    {
+      "id": "flask",
+      "name": "Flask",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 33,
+      "exampleEmployers": ["discord", "paypal"]
+    },
+    {
+      "id": "fastapi",
+      "name": "FastAPI",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 53,
+      "exampleEmployers": ["workday", "servicenow"]
+    },
+    {
+      "id": "rails",
+      "name": "Ruby on Rails",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 69,
+      "exampleEmployers": ["amd", "gitlab"]
+    },
+    {
+      "id": "dotnet",
+      "name": ".NET",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 49,
+      "exampleEmployers": ["datadog", "workday"]
+    },
+    {
+      "id": "aspnet",
+      "name": "ASP.NET",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 3,
+      "exampleEmployers": ["intel", "workday"]
+    },
+    {
+      "id": "nextjs",
+      "name": "Next.js",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 83,
+      "exampleEmployers": ["riot-games", "vercel"]
+    },
+    {
+      "id": "svelte",
+      "name": "Svelte",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 17,
+      "exampleEmployers": ["supabase", "vercel"]
+    },
+    {
+      "id": "react-native",
+      "name": "React Native",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 35,
+      "exampleEmployers": ["adobe", "stripe"]
+    },
+    {
+      "id": "flutter",
+      "name": "Flutter",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 13,
+      "exampleEmployers": ["adobe", "airbnb"]
+    },
+    {
+      "id": "jquery",
+      "name": "jQuery",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 6,
+      "exampleEmployers": ["adobe", "nvidia"]
+    },
+    {
+      "id": "tailwind",
+      "name": "Tailwind CSS",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 11,
+      "exampleEmployers": ["adobe", "lovable"]
+    },
+    {
+      "id": "webpack",
+      "name": "Webpack",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 29,
+      "exampleEmployers": ["palantir", "okta"]
+    },
+    {
+      "id": "vite",
+      "name": "Vite",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 14,
+      "exampleEmployers": ["okta", "adobe"]
+    },
+    {
+      "id": "junit",
+      "name": "JUnit",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 35,
+      "exampleEmployers": ["ing", "stripe"]
+    },
+    {
+      "id": "mockito",
+      "name": "Mockito",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 18,
+      "exampleEmployers": ["ing", "stripe"]
+    },
+    {
+      "id": "pytest",
+      "name": "pytest",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 25,
+      "exampleEmployers": ["nvidia", "gitlab"]
+    },
+    {
+      "id": "jest",
+      "name": "Jest",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 41,
+      "exampleEmployers": ["ing", "gitlab"]
+    },
+    {
+      "id": "vitest",
+      "name": "Vitest",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 4,
+      "exampleEmployers": ["snowflake", "cloudflare"]
+    },
+    {
+      "id": "cypress",
+      "name": "Cypress",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 18,
+      "exampleEmployers": ["snowflake", "okta"]
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 47,
+      "exampleEmployers": ["snowflake", "amd"]
+    },
+    {
+      "id": "selenium",
+      "name": "Selenium",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 32,
+      "exampleEmployers": ["discord", "okta"]
+    },
+    {
+      "id": "postman",
+      "name": "Postman",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 33,
+      "exampleEmployers": ["adyen", "workday"]
+    },
+    {
+      "id": "perforce",
+      "name": "Perforce",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 77,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "uvm",
+      "name": "Universal Verification Methodology",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 251,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "nix",
+      "name": "Nix",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 7,
+      "exampleEmployers": ["supabase", "gitlab"]
+    },
+    {
+      "id": "packer",
+      "name": "Packer",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 9,
+      "exampleEmployers": ["supabase", "adobe"]
+    },
+    {
+      "id": "chef",
+      "name": "Chef Infra",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 68,
+      "exampleEmployers": ["nvidia", "datadog"]
+    },
+    {
+      "id": "puppet",
+      "name": "Puppet",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 89,
+      "exampleEmployers": ["nvidia", "palantir"]
+    },
+    {
+      "id": "splunk",
+      "name": "Splunk",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 111,
+      "exampleEmployers": ["servicenow", "okta"]
+    },
+    {
+      "id": "sentry",
+      "name": "Sentry",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 19,
+      "exampleEmployers": ["workday", "riot-games"]
+    },
+    {
+      "id": "spice-simulation",
+      "name": "SPICE simulation",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 10,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "hspice",
+      "name": "HSPICE",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 37,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "rocm",
+      "name": "ROCm",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 105,
+      "exampleEmployers": ["amd", "openai"]
+    },
+    {
+      "id": "nccl",
+      "name": "NCCL",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 164,
+      "exampleEmployers": ["mistral-ai", "nvidia"]
+    },
+    {
+      "id": "opencl",
+      "name": "OpenCL",
+      "family": "application-development",
+      "postingsWithRecognizedMention": 80,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "snowflake",
+      "name": "Snowflake",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 317,
+      "exampleEmployers": ["okta", "snowflake"]
+    },
+    {
+      "id": "hadoop",
+      "name": "Apache Hadoop",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 126,
+      "exampleEmployers": ["snowflake", "pinterest"]
+    },
+    {
+      "id": "hive",
+      "name": "Apache Hive",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 20,
+      "exampleEmployers": ["figma", "ing"]
+    },
+    {
+      "id": "trino",
+      "name": "Trino",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 36,
+      "exampleEmployers": ["stripe", "openai"]
+    },
+    {
+      "id": "presto",
+      "name": "Presto",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 19,
+      "exampleEmployers": ["figma", "nvidia"]
+    },
+    {
+      "id": "iceberg",
+      "name": "Apache Iceberg",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 79,
+      "exampleEmployers": ["okta", "stripe"]
+    },
+    {
+      "id": "delta-lake",
+      "name": "Delta Lake",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 104,
+      "exampleEmployers": ["databricks", "nvidia"]
+    },
+    {
+      "id": "debezium",
+      "name": "Debezium",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 10,
+      "exampleEmployers": ["discord", "anthropic"]
+    },
+    {
+      "id": "fivetran",
+      "name": "Fivetran",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 14,
+      "exampleEmployers": ["workday", "snowflake"]
+    },
+    {
+      "id": "airbyte",
+      "name": "Airbyte",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 1,
+      "exampleEmployers": ["snowflake"]
+    },
+    {
+      "id": "dagster",
+      "name": "Dagster",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 13,
+      "exampleEmployers": ["discord", "openai"]
+    },
+    {
+      "id": "looker",
+      "name": "Looker",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 100,
+      "exampleEmployers": ["reddit", "cohere"]
+    },
+    {
+      "id": "matlab",
+      "name": "MATLAB",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 152,
+      "exampleEmployers": ["palantir", "nvidia"]
+    },
+    {
+      "id": "numpy",
+      "name": "NumPy",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 28,
+      "exampleEmployers": ["adobe", "nvidia"]
+    },
+    {
+      "id": "scipy",
+      "name": "SciPy",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 6,
+      "exampleEmployers": ["nvidia", "hrt"]
+    },
+    {
+      "id": "scikit-learn",
+      "name": "scikit-learn",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 63,
+      "exampleEmployers": ["databricks", "stripe"]
+    },
+    {
+      "id": "xgboost",
+      "name": "XGBoost",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 15,
+      "exampleEmployers": ["stripe", "amd"]
+    },
+    {
+      "id": "lightgbm",
+      "name": "LightGBM",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 5,
+      "exampleEmployers": ["shopify", "snowflake"]
+    },
+    {
+      "id": "jax",
+      "name": "JAX",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 184,
+      "exampleEmployers": ["amd", "mistral-ai"]
+    },
+    {
+      "id": "keras",
+      "name": "Keras",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 7,
+      "exampleEmployers": ["nvidia", "adobe"]
+    },
+    {
+      "id": "mlflow",
+      "name": "MLflow",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 78,
+      "exampleEmployers": ["pinterest", "databricks"]
+    },
+    {
+      "id": "kubeflow",
+      "name": "Kubeflow",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 11,
+      "exampleEmployers": ["discord", "nvidia"]
+    },
+    {
+      "id": "tensorrt",
+      "name": "TensorRT",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 166,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "onnx-runtime",
+      "name": "ONNX Runtime",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 25,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "vllm",
+      "name": "vLLM",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 189,
+      "exampleEmployers": ["nvidia", "servicenow"]
+    },
+    {
+      "id": "sglang",
+      "name": "SGLang",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 123,
+      "exampleEmployers": ["nvidia", "servicenow"]
+    },
+    {
+      "id": "langchain",
+      "name": "LangChain",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 152,
+      "exampleEmployers": ["gitlab", "workday"]
+    },
+    {
+      "id": "langgraph",
+      "name": "LangGraph",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 79,
+      "exampleEmployers": ["mongodb", "gitlab"]
+    },
+    {
+      "id": "llamaindex",
+      "name": "LlamaIndex",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 43,
+      "exampleEmployers": ["workday", "servicenow"]
+    },
+    {
+      "id": "ray",
+      "name": "Ray",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 60,
+      "exampleEmployers": ["reddit", "mistral-ai"]
+    },
+    {
+      "id": "opencv",
+      "name": "OpenCV",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 8,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "jupyter",
+      "name": "Jupyter",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 10,
+      "exampleEmployers": ["ing", "adobe"]
+    },
+    {
+      "id": "pinecone",
+      "name": "Pinecone",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 11,
+      "exampleEmployers": ["servicenow", "amd"]
+    },
+    {
+      "id": "weaviate",
+      "name": "Weaviate",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 7,
+      "exampleEmployers": ["servicenow", "amd"]
+    },
+    {
+      "id": "qdrant",
+      "name": "Qdrant",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 4,
+      "exampleEmployers": ["discord", "workday"]
+    },
+    {
+      "id": "pgvector",
+      "name": "pgvector",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 7,
+      "exampleEmployers": ["servicenow", "supabase"]
+    },
+    {
+      "id": "unity-catalog",
+      "name": "Unity Catalog",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 57,
+      "exampleEmployers": ["databricks", "riot-games"]
+    },
+    {
+      "id": "mariadb",
+      "name": "MariaDB",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 8,
+      "exampleEmployers": ["adobe", "servicenow"]
+    },
+    {
+      "id": "neo4j",
+      "name": "Neo4j",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 15,
+      "exampleEmployers": ["servicenow", "reddit"]
+    },
+    {
+      "id": "polars",
+      "name": "Polars",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 5,
+      "exampleEmployers": ["hrt", "optiver"]
+    },
+    {
+      "id": "dask",
+      "name": "Dask",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 8,
+      "exampleEmployers": ["nvidia", "intel"]
+    },
+    {
+      "id": "knime",
+      "name": "KNIME",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 6,
+      "exampleEmployers": ["ing", "amd"]
+    },
+    {
+      "id": "alteryx",
+      "name": "Alteryx",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 10,
+      "exampleEmployers": ["reddit", "ing"]
+    },
+    {
+      "id": "sas",
+      "name": "SAS analytics",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 22,
+      "exampleEmployers": ["ing", "intel"]
+    },
+    {
+      "id": "stata",
+      "name": "Stata",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 3,
+      "exampleEmployers": ["stripe"]
+    },
+    {
+      "id": "oracle-database",
+      "name": "Oracle Database",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 82,
+      "exampleEmployers": ["snowflake", "ing"]
+    },
+    {
+      "id": "gcp-storage",
+      "name": "Google Cloud Storage",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 21,
+      "exampleEmployers": ["reddit", "shopify"]
+    },
+    {
+      "id": "aws-redshift",
+      "name": "Amazon Redshift",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 39,
+      "exampleEmployers": ["okta", "figma"]
+    },
+    {
+      "id": "aws-glue",
+      "name": "AWS Glue",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 6,
+      "exampleEmployers": ["snowflake", "paypal"]
+    },
+    {
+      "id": "aws-cloudwatch",
+      "name": "Amazon CloudWatch",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 23,
+      "exampleEmployers": ["workday", "optiver"]
+    },
+    {
+      "id": "gcp-vertex",
+      "name": "Vertex AI",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 37,
+      "exampleEmployers": ["servicenow", "databricks"]
+    },
+    {
+      "id": "gcp-cloud-run",
+      "name": "Cloud Run",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 8,
+      "exampleEmployers": ["ing", "anthropic"]
+    },
+    {
+      "id": "gcp-dataproc",
+      "name": "Dataproc",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 6,
+      "exampleEmployers": ["ing", "nvidia"]
+    },
+    {
+      "id": "azure-devops",
+      "name": "Azure DevOps",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 75,
+      "exampleEmployers": ["ing", "adobe"]
+    },
+    {
+      "id": "azure-data-factory",
+      "name": "Azure Data Factory",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 6,
+      "exampleEmployers": ["snowflake"]
+    },
+    {
+      "id": "azure-synapse",
+      "name": "Azure Synapse",
+      "family": "cloud",
+      "postingsWithRecognizedMention": 27,
+      "exampleEmployers": ["databricks", "ing"]
+    },
+    {
+      "id": "parquet",
+      "name": "Apache Parquet",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 22,
+      "exampleEmployers": ["nvidia", "ing"]
+    },
+    {
+      "id": "avro",
+      "name": "Apache Avro",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 4,
+      "exampleEmployers": ["ing", "servicenow"]
+    },
+    {
+      "id": "protobuf",
+      "name": "Protocol Buffers",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 32,
+      "exampleEmployers": ["reddit", "servicenow"]
+    },
+    {
+      "id": "onnx",
+      "name": "ONNX",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 24,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "data-analysis",
+      "name": "Data analysis",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 734,
+      "exampleEmployers": ["pinterest", "anthropic"]
+    },
+    {
+      "id": "data-warehousing",
+      "name": "Data warehousing",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 314,
+      "exampleEmployers": ["ing", "databricks"]
+    },
+    {
+      "id": "data-lakes",
+      "name": "Data lakes",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 179,
+      "exampleEmployers": ["okta", "nvidia"]
+    },
+    {
+      "id": "change-data-capture",
+      "name": "Change data capture",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 17,
+      "exampleEmployers": ["snowflake", "okta"]
+    },
+    {
+      "id": "schema-evolution",
+      "name": "Schema evolution",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 36,
+      "exampleEmployers": ["gitlab", "nvidia"]
+    },
+    {
+      "id": "data-integration",
+      "name": "Data integration",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 95,
+      "exampleEmployers": ["hrt", "ing"]
+    },
+    {
+      "id": "deep-learning",
+      "name": "Deep learning",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 943,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "nlp",
+      "name": "Natural language processing",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 198,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "computer-vision",
+      "name": "Computer vision",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 177,
+      "exampleEmployers": ["nvidia", "pinterest"]
+    },
+    {
+      "id": "reinforcement-learning",
+      "name": "Reinforcement learning",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 202,
+      "exampleEmployers": ["amd", "pinterest"]
+    },
+    {
+      "id": "causal-inference",
+      "name": "Causal inference",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 86,
+      "exampleEmployers": ["reddit", "openai"]
+    },
+    {
+      "id": "experimental-design",
+      "name": "Experimental design",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 131,
+      "exampleEmployers": ["intel", "cohere"]
+    },
+    {
+      "id": "statistical-modeling",
+      "name": "Statistical modeling",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 71,
+      "exampleEmployers": ["pinterest", "hrt"]
+    },
+    {
+      "id": "predictive-modeling",
+      "name": "Predictive modeling",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 45,
+      "exampleEmployers": ["cohere", "cloudflare"]
+    },
+    {
+      "id": "llm",
+      "name": "Large language models",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 1835,
+      "exampleEmployers": ["workday", "openai"]
+    },
+    {
+      "id": "rag",
+      "name": "Retrieval-augmented generation",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 481,
+      "exampleEmployers": ["nvidia", "mongodb"]
+    },
+    {
+      "id": "model-fine-tuning",
+      "name": "Model fine-tuning",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 37,
+      "exampleEmployers": ["stripe", "airbnb"]
+    },
+    {
+      "id": "feature-stores",
+      "name": "Feature stores",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 33,
+      "exampleEmployers": ["stripe", "nvidia"]
+    },
+    {
+      "id": "vector-search",
+      "name": "Vector search",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 225,
+      "exampleEmployers": ["nvidia", "mongodb"]
+    },
+    {
+      "id": "information-retrieval",
+      "name": "Information retrieval",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 60,
+      "exampleEmployers": ["pinterest", "workday"]
+    },
+    {
+      "id": "recommender-systems",
+      "name": "Recommender systems",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 113,
+      "exampleEmployers": ["nvidia", "airbnb"]
+    },
+    {
+      "id": "time-series-analysis",
+      "name": "Time-series analysis",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 18,
+      "exampleEmployers": ["mistral-ai", "intel"]
+    },
+    {
+      "id": "mlops",
+      "name": "MLOps",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 239,
+      "exampleEmployers": ["nvidia", "adobe"]
+    },
+    {
+      "id": "distributed-training",
+      "name": "Distributed training",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 194,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "quantization",
+      "name": "Model quantization",
+      "family": "data-ai",
+      "postingsWithRecognizedMention": 7,
+      "exampleEmployers": ["airbnb", "shopify"]
+    },
+    {
+      "id": "technical-documentation",
+      "name": "Technical documentation",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 1193,
+      "exampleEmployers": ["intel", "nvidia"]
+    },
+    {
+      "id": "dead-letter-queues",
+      "name": "Dead-letter queues",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 4,
+      "exampleEmployers": ["reddit", "anysphere"]
+    },
+    {
+      "id": "automated-provisioning",
+      "name": "Automated provisioning",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 41,
+      "exampleEmployers": ["reddit", "okta"]
+    },
+    {
+      "id": "safe-defaults",
+      "name": "Safe defaults",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 5,
+      "exampleEmployers": ["reddit", "openai"]
+    },
+    {
+      "id": "infrastructure-as-code",
+      "name": "Infrastructure as code",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 545,
+      "exampleEmployers": ["nvidia", "okta"]
+    },
+    {
+      "id": "test-automation",
+      "name": "Test automation",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 379,
+      "exampleEmployers": ["ing", "nvidia"]
+    },
+    {
+      "id": "code-review",
+      "name": "Code review",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 764,
+      "exampleEmployers": ["ing", "discord"]
+    },
+    {
+      "id": "site-reliability",
+      "name": "Site reliability engineering",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 209,
+      "exampleEmployers": ["shopify", "databricks"]
+    },
+    {
+      "id": "embedded-systems",
+      "name": "Embedded systems",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 661,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "firmware-development",
+      "name": "Firmware development",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 94,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "rtl-design",
+      "name": "RTL design",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 239,
+      "exampleEmployers": ["amd", "intel"]
+    },
+    {
+      "id": "asic-design",
+      "name": "ASIC design",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 222,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "fpga-development",
+      "name": "FPGA development",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 33,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "physical-design",
+      "name": "Physical design",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 317,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "formal-verification",
+      "name": "Formal verification",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 131,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "pcie",
+      "name": "PCI Express",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 463,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "ethernet",
+      "name": "Ethernet",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 412,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "tcp-ip",
+      "name": "TCP/IP",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 162,
+      "exampleEmployers": ["nvidia", "mongodb"]
+    },
+    {
+      "id": "dns",
+      "name": "Domain Name System",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 387,
+      "exampleEmployers": ["cloudflare", "mongodb"]
+    },
+    {
+      "id": "bgp",
+      "name": "Border Gateway Protocol",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 126,
+      "exampleEmployers": ["booking", "coinbase"]
+    },
+    {
+      "id": "tls",
+      "name": "Transport Layer Security",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 194,
+      "exampleEmployers": ["mongodb", "okta"]
+    },
+    {
+      "id": "rate-limiting",
+      "name": "Rate limiting",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 92,
+      "exampleEmployers": ["databricks", "cloudflare"]
+    },
+    {
+      "id": "nosql",
+      "name": "NoSQL databases",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 137,
+      "exampleEmployers": ["zoom", "adobe"]
+    },
+    {
+      "id": "saml",
+      "name": "SAML",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 171,
+      "exampleEmployers": ["figma", "palantir"]
+    },
+    {
+      "id": "sso",
+      "name": "Single sign-on",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 155,
+      "exampleEmployers": ["anthropic", "servicenow"]
+    },
+    {
+      "id": "scim",
+      "name": "SCIM",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 104,
+      "exampleEmployers": ["figma", "nvidia"]
+    },
+    {
+      "id": "rbac",
+      "name": "Role-based access control",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 116,
+      "exampleEmployers": ["mongodb", "databricks"]
+    },
+    {
+      "id": "abac",
+      "name": "Attribute-based access control",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 39,
+      "exampleEmployers": ["replit", "servicenow"]
+    },
+    {
+      "id": "openapi",
+      "name": "OpenAPI",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 24,
+      "exampleEmployers": ["github", "blizzard"]
+    },
+    {
+      "id": "websockets",
+      "name": "WebSockets",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 34,
+      "exampleEmployers": ["adobe", "anthropic"]
+    },
+    {
+      "id": "mqtt",
+      "name": "MQTT",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 3,
+      "exampleEmployers": ["anthropic", "nvidia"]
+    },
+    {
+      "id": "rdma",
+      "name": "RDMA",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 178,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "nvme",
+      "name": "NVMe",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 44,
+      "exampleEmployers": ["amd", "nvidia"]
+    },
+    {
+      "id": "configuration-management",
+      "name": "Configuration management",
+      "family": "engineering-practices",
+      "postingsWithRecognizedMention": 188,
+      "exampleEmployers": ["nvidia", "shopify"]
+    },
+    {
+      "id": "threat-modeling",
+      "name": "Threat modeling",
+      "family": "security",
+      "postingsWithRecognizedMention": 126,
+      "exampleEmployers": ["anthropic", "replit"]
+    },
+    {
+      "id": "vulnerability-management",
+      "name": "Vulnerability management",
+      "family": "security",
+      "postingsWithRecognizedMention": 137,
+      "exampleEmployers": ["replit", "servicenow"]
+    },
+    {
+      "id": "identity-access-management",
+      "name": "Identity and access management",
+      "family": "security",
+      "postingsWithRecognizedMention": 322,
+      "exampleEmployers": ["servicenow", "okta"]
+    },
+    {
+      "id": "zero-trust",
+      "name": "Zero trust",
+      "family": "security",
+      "postingsWithRecognizedMention": 187,
+      "exampleEmployers": ["servicenow", "okta"]
+    },
+    {
+      "id": "cloud-security",
+      "name": "Cloud security",
+      "family": "security",
+      "postingsWithRecognizedMention": 159,
+      "exampleEmployers": ["ing", "nvidia"]
+    },
+    {
+      "id": "application-security",
+      "name": "Application security",
+      "family": "security",
+      "postingsWithRecognizedMention": 151,
+      "exampleEmployers": ["cloudflare", "replit"]
+    },
+    {
+      "id": "secure-coding",
+      "name": "Secure coding",
+      "family": "security",
+      "postingsWithRecognizedMention": 71,
+      "exampleEmployers": ["zoom", "okta"]
+    },
+    {
+      "id": "cryptography",
+      "name": "Cryptography",
+      "family": "security",
+      "postingsWithRecognizedMention": 89,
+      "exampleEmployers": ["databricks", "okta"]
+    },
+    {
+      "id": "security-operations",
+      "name": "Security operations",
+      "family": "security",
+      "postingsWithRecognizedMention": 173,
+      "exampleEmployers": ["nvidia", "databricks"]
+    },
+    {
+      "id": "threat-intelligence",
+      "name": "Threat intelligence",
+      "family": "security",
+      "postingsWithRecognizedMention": 120,
+      "exampleEmployers": ["paypal", "anthropic"]
+    },
+    {
+      "id": "vulnerability-assessment",
+      "name": "Vulnerability assessment",
+      "family": "security",
+      "postingsWithRecognizedMention": 8,
+      "exampleEmployers": ["ing", "anthropic"]
+    },
+    {
+      "id": "secrets-management",
+      "name": "Secrets management",
+      "family": "security",
+      "postingsWithRecognizedMention": 84,
+      "exampleEmployers": ["servicenow", "nvidia"]
+    },
+    {
+      "id": "jira",
+      "name": "Jira",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 300,
+      "exampleEmployers": ["adobe", "nvidia"]
+    },
+    {
+      "id": "confluence",
+      "name": "Confluence",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 96,
+      "exampleEmployers": ["adobe", "nvidia"]
+    },
+    {
+      "id": "sap",
+      "name": "SAP",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 268,
+      "exampleEmployers": ["servicenow", "openai"]
+    },
+    {
+      "id": "netsuite",
+      "name": "NetSuite",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 124,
+      "exampleEmployers": ["okta", "openai"]
+    },
+    {
+      "id": "workday",
+      "name": "Workday",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 393,
+      "exampleEmployers": ["workday", "anthropic"]
+    },
+    {
+      "id": "greenhouse",
+      "name": "Greenhouse",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 56,
+      "exampleEmployers": ["mongodb", "okta"]
+    },
+    {
+      "id": "marketo",
+      "name": "Marketo",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 58,
+      "exampleEmployers": ["adobe", "gitlab"]
+    },
+    {
+      "id": "zendesk",
+      "name": "Zendesk",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 145,
+      "exampleEmployers": ["coinbase", "servicenow"]
+    },
+    {
+      "id": "servicenow",
+      "name": "ServiceNow",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 777,
+      "exampleEmployers": ["ing", "servicenow"]
+    },
+    {
+      "id": "google-sheets",
+      "name": "Google Sheets",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 73,
+      "exampleEmployers": ["canva", "riot-games"]
+    },
+    {
+      "id": "powerpoint",
+      "name": "PowerPoint",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 181,
+      "exampleEmployers": ["intel", "paypal"]
+    },
+    {
+      "id": "coupa",
+      "name": "Coupa",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 34,
+      "exampleEmployers": ["servicenow", "okta"]
+    },
+    {
+      "id": "anaplan",
+      "name": "Anaplan",
+      "family": "business-tools",
+      "postingsWithRecognizedMention": 41,
+      "exampleEmployers": ["adobe", "coinbase"]
+    },
+    {
+      "id": "product-management",
+      "name": "Product management",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 1344,
+      "exampleEmployers": ["workday", "adobe"]
+    },
+    {
+      "id": "product-analytics",
+      "name": "Product analytics",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 56,
+      "exampleEmployers": ["elevenlabs", "paypal"]
+    },
+    {
+      "id": "market-research",
+      "name": "Market research",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 98,
+      "exampleEmployers": ["workday", "paypal"]
+    },
+    {
+      "id": "competitive-analysis",
+      "name": "Competitive analysis",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 106,
+      "exampleEmployers": ["paypal", "stripe"]
+    },
+    {
+      "id": "requirements-gathering",
+      "name": "Requirements gathering",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 85,
+      "exampleEmployers": ["intel", "anthropic"]
+    },
+    {
+      "id": "usability-testing",
+      "name": "Usability testing",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 26,
+      "exampleEmployers": ["slack", "anthropic"]
+    },
+    {
+      "id": "interaction-design",
+      "name": "Interaction design",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 66,
+      "exampleEmployers": ["reddit", "okta"]
+    },
+    {
+      "id": "visual-design",
+      "name": "Visual design",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 62,
+      "exampleEmployers": ["runway", "okta"]
+    },
+    {
+      "id": "design-systems",
+      "name": "Design systems",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 223,
+      "exampleEmployers": ["paypal", "stripe"]
+    },
+    {
+      "id": "information-architecture",
+      "name": "Information architecture",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 42,
+      "exampleEmployers": ["stripe", "booking"]
+    },
+    {
+      "id": "wireframing",
+      "name": "Wireframing",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 14,
+      "exampleEmployers": ["servicenow", "discord"]
+    },
+    {
+      "id": "ui-prototyping",
+      "name": "UI prototyping",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 9,
+      "exampleEmployers": ["databricks", "discord"]
+    },
+    {
+      "id": "web-accessibility",
+      "name": "Web accessibility",
+      "family": "product-design",
+      "postingsWithRecognizedMention": 32,
+      "exampleEmployers": ["okta", "paypal"]
+    },
+    {
+      "id": "photoshop",
+      "name": "Adobe Photoshop",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 49,
+      "exampleEmployers": ["nvidia", "adobe"]
+    },
+    {
+      "id": "illustrator",
+      "name": "Adobe Illustrator",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 24,
+      "exampleEmployers": ["adobe", "discord"]
+    },
+    {
+      "id": "blender",
+      "name": "Blender",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 9,
+      "exampleEmployers": ["nvidia", "amd"]
+    },
+    {
+      "id": "maya",
+      "name": "Autodesk Maya",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 15,
+      "exampleEmployers": ["nvidia", "riot-games"]
+    },
+    {
+      "id": "houdini",
+      "name": "Houdini",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 7,
+      "exampleEmployers": ["nvidia", "riot-games"]
+    },
+    {
+      "id": "unreal-engine",
+      "name": "Unreal Engine",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 54,
+      "exampleEmployers": ["nvidia", "riot-games"]
+    },
+    {
+      "id": "unity-engine",
+      "name": "Unity game engine",
+      "family": "creative-tools",
+      "postingsWithRecognizedMention": 1,
+      "exampleEmployers": ["riot-games"]
+    },
+    {
+      "id": "enterprise-sales",
+      "name": "Enterprise sales",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 525,
+      "exampleEmployers": ["datadog", "databricks"]
+    },
+    {
+      "id": "sales-forecasting",
+      "name": "Sales forecasting",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 28,
+      "exampleEmployers": ["nvidia", "servicenow"]
+    },
+    {
+      "id": "account-planning",
+      "name": "Account planning",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 619,
+      "exampleEmployers": ["databricks", "cloudflare"]
+    },
+    {
+      "id": "sales-pipeline",
+      "name": "Sales pipeline management",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 132,
+      "exampleEmployers": ["openai", "cloudflare"]
+    },
+    {
+      "id": "territory-planning",
+      "name": "Territory planning",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 180,
+      "exampleEmployers": ["openai", "servicenow"]
+    },
+    {
+      "id": "sales-enablement",
+      "name": "Sales enablement",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 220,
+      "exampleEmployers": ["nvidia", "mongodb"]
+    },
+    {
+      "id": "customer-success",
+      "name": "Customer success",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 1355,
+      "exampleEmployers": ["openai", "datadog"]
+    },
+    {
+      "id": "customer-onboarding",
+      "name": "Customer onboarding",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 58,
+      "exampleEmployers": ["coinbase", "databricks"]
+    },
+    {
+      "id": "demand-generation",
+      "name": "Demand generation",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 213,
+      "exampleEmployers": ["servicenow", "nvidia"]
+    },
+    {
+      "id": "product-marketing",
+      "name": "Product marketing",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 534,
+      "exampleEmployers": ["workday", "adobe"]
+    },
+    {
+      "id": "growth-marketing",
+      "name": "Growth marketing",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 79,
+      "exampleEmployers": ["stripe", "openai"]
+    },
+    {
+      "id": "content-marketing",
+      "name": "Content marketing",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 41,
+      "exampleEmployers": ["stripe", "booking"]
+    },
+    {
+      "id": "email-marketing",
+      "name": "Email marketing",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 12,
+      "exampleEmployers": ["stripe", "datadog"]
+    },
+    {
+      "id": "seo",
+      "name": "Search engine optimization",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 86,
+      "exampleEmployers": ["discord", "adobe"]
+    },
+    {
+      "id": "marketing-automation",
+      "name": "Marketing automation",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 86,
+      "exampleEmployers": ["adobe", "nvidia"]
+    },
+    {
+      "id": "crm",
+      "name": "Customer relationship management",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 606,
+      "exampleEmployers": ["datadog", "coinbase"]
+    },
+    {
+      "id": "social-media-marketing",
+      "name": "Social media marketing",
+      "family": "sales-marketing",
+      "postingsWithRecognizedMention": 1,
+      "exampleEmployers": ["snowflake"]
+    },
+    {
+      "id": "workforce-planning",
+      "name": "Workforce planning",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 87,
+      "exampleEmployers": ["stripe", "openai"]
+    },
+    {
+      "id": "compensation-planning",
+      "name": "Compensation planning",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 14,
+      "exampleEmployers": ["patreon", "stripe"]
+    },
+    {
+      "id": "benefits-administration",
+      "name": "Benefits administration",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 12,
+      "exampleEmployers": ["figma", "cohere"]
+    },
+    {
+      "id": "applicant-tracking",
+      "name": "Applicant tracking systems",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 30,
+      "exampleEmployers": ["palantir", "gitlab"]
+    },
+    {
+      "id": "succession-planning",
+      "name": "Succession planning",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 46,
+      "exampleEmployers": ["snowflake", "blizzard"]
+    },
+    {
+      "id": "organizational-design",
+      "name": "Organizational design",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 57,
+      "exampleEmployers": ["riot-games", "openai"]
+    },
+    {
+      "id": "financial-reporting",
+      "name": "Financial reporting",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 166,
+      "exampleEmployers": ["paypal", "coinbase"]
+    },
+    {
+      "id": "public-accounting",
+      "name": "Public accounting",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 79,
+      "exampleEmployers": ["palantir", "reddit"]
+    },
+    {
+      "id": "technical-accounting",
+      "name": "Technical accounting",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 73,
+      "exampleEmployers": ["intel", "paypal"]
+    },
+    {
+      "id": "internal-controls",
+      "name": "Internal controls",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 117,
+      "exampleEmployers": ["anthropic", "ing"]
+    },
+    {
+      "id": "revenue-recognition",
+      "name": "Revenue recognition",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 98,
+      "exampleEmployers": ["okta", "databricks"]
+    },
+    {
+      "id": "gaap",
+      "name": "GAAP",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 123,
+      "exampleEmployers": ["anthropic", "intel"]
+    },
+    {
+      "id": "ifrs",
+      "name": "IFRS",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 57,
+      "exampleEmployers": ["anthropic", "coinbase"]
+    },
+    {
+      "id": "budgeting",
+      "name": "Budgeting",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 162,
+      "exampleEmployers": ["databricks", "amd"]
+    },
+    {
+      "id": "procurement",
+      "name": "Procurement",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 691,
+      "exampleEmployers": ["nvidia", "anthropic"]
+    },
+    {
+      "id": "supply-chain",
+      "name": "Supply chain management",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 767,
+      "exampleEmployers": ["anthropic", "palantir"]
+    },
+    {
+      "id": "risk-management",
+      "name": "Risk management",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 565,
+      "exampleEmployers": ["ing", "servicenow"]
+    },
+    {
+      "id": "change-management",
+      "name": "Change management",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 399,
+      "exampleEmployers": ["adobe", "snowflake"]
+    },
+    {
+      "id": "project-management",
+      "name": "Project management",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 899,
+      "exampleEmployers": ["datadog", "ing"]
+    },
+    {
+      "id": "program-management",
+      "name": "Program management",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 714,
+      "exampleEmployers": ["openai", "databricks"]
+    },
+    {
+      "id": "process-improvement",
+      "name": "Process improvement",
+      "family": "people-finance-operations",
+      "postingsWithRecognizedMention": 842,
+      "exampleEmployers": ["nvidia", "anthropic"]
+    }
+  ],
+  "postingsWithAddedConcepts": 13857
+}

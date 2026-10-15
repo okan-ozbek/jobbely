@@ -4,7 +4,11 @@ export const freeMatchLimit = 5;
 
 export const paidPageLimit = 50;
 
-export const paidCapabilities = ['ranked_matches.all', 'job_comparison.all'] as const;
+export const paidCapabilities = [
+  'ranked_matches.all',
+  'job_comparison.all',
+  'resume_review',
+] as const;
 
 export type PaidCapability = (typeof paidCapabilities)[number];
 

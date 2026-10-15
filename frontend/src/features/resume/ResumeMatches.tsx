@@ -202,40 +202,38 @@ export function ResumeMatches({
                     </div>
                   </div>
                   <span className="resume-status">
-                    {item.band === 'review' ? 'Needs review' : item.band}
+                    {item.band === 'review'
+                      ? item.fitScore === null
+                        ? 'Score unavailable'
+                        : 'Partial assessment'
+                      : item.band}
                   </span>
                 </div>
-                <MatchMetrics comparison={item} />
-                <p className="small-note">
-                  {item.requiredGaps} recognized required gap(s) · {item.unresolvedRequirements}{' '}
-                  unresolved requirement(s) · checked{' '}
-                  {new Date(item.job.lastSeenAt).toLocaleString()}
-                  <br />
-                  {item.coverage}
-                </p>
-                <Disclosure
-                  summary="Why this result"
-                  className="match-explanation"
-                >
-                  <ConfidenceLegend />
-                  <MatchEvidence
-                    comparison={item}
-                    analysis={analysis}
-                  />
-                  <p>{formatLocation(item.location)}</p>
-                  {item.employerAdjustment.reasons.map((value, index) => (
-                    <p
-                      className="small-note"
-                      key={index}
-                    >
-                      {value}
-                    </p>
-                  ))}
-                </Disclosure>
+                <MatchMetrics comparison={item}>
+                  <Disclosure
+                    summary="Why this result"
+                    className="match-explanation"
+                  >
+                    <ConfidenceLegend />
+                    <MatchEvidence
+                      comparison={item}
+                      analysis={analysis}
+                    />
+                    <p>{formatLocation(item.location)}</p>
+                    {item.employerAdjustment.reasons.map((value, index) => (
+                      <p
+                        className="small-note"
+                        key={index}
+                      >
+                        {value}
+                      </p>
+                    ))}
+                  </Disclosure>
+                </MatchMetrics>
                 <div className="resume-actions">
                   <button
                     type="button"
-                    className="resume-secondary-button"
+                    className="primary-button"
                     onClick={() => openJob(item.job.id)}
                   >
                     Description & requirements

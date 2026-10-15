@@ -183,7 +183,8 @@ describe('evidence-backed requirement extraction', () => {
     expect(result).toMatchObject({
       band: 'review',
       assessmentCoverage: { assessed: 0, total: 0, percentage: null },
-      baseScore: 100,
+      baseScore: 0,
+      fitScore: null,
     });
   });
 
@@ -208,7 +209,9 @@ describe('evidence-backed requirement extraction', () => {
 
   it('keeps unsupported mandatory statements unresolved instead of treating them as a fit', () => {
     const result = scoreJob(
-      featureJob('Requirements\nTypeScript required.\nKnowledge of VHDL and RTL required.'),
+      featureJob(
+        'Requirements\nTypeScript required.\nKnowledge of UncataloguedHDL and UncataloguedCircuitPractice required.',
+      ),
       candidate(),
       employers,
       true,
@@ -216,12 +219,12 @@ describe('evidence-backed requirement extraction', () => {
 
     expect(result.band).toBe('review');
     expect(result.assessmentCoverage.percentage).toBeLessThan(60);
-    expect(result.uncertainties.join(' ')).toContain('VHDL');
+    expect(result.uncertainties.join(' ')).toContain('UncataloguedHDL');
     expect(result.employerAdjustment.points).toBe(0);
 
     expect(
       scoreJob(
-        featureJob('Requirements\nTypeScript and VHDL required.'),
+        featureJob('Requirements\nTypeScript and UncataloguedHDL required.'),
         candidate(),
         employers,
         true,

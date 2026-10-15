@@ -3,7 +3,7 @@ import { Accounts, accountSecretHash } from './accounts.js';
 import { MemoryAccounts } from '../../infrastructure/storage/accounts-memory.js';
 import type { IdentityProvider } from '../../ports/accounts.js';
 
-function setup() {
+function setup(proPreviewEndsAt: string | null = null) {
   let now = new Date('2026-10-05T12:00:00Z');
   const repository = new MemoryAccounts();
 
@@ -19,7 +19,7 @@ function setup() {
     })),
   };
 
-  const service = new Accounts(repository, [provider], () => now);
+  const service = new Accounts(repository, [provider], () => now, proPreviewEndsAt);
 
   async function signIn() {
     const start = await service.start('github');
@@ -41,6 +41,51 @@ function setup() {
 }
 
 describe('application-owned sign-in and sessions', () => {
+  it('temporarily grants every authenticated account Pro without changing stored users', async () => {
+    const { service, signIn, provider, repository, setTime } = setup('2026-10-06T12:00:00Z');
+    const first = await signIn();
+
+    vi.mocked(provider.verify).mockResolvedValue({
+      provider: 'github',
+      issuer: 'https://github.com',
+      subject: 'second-user',
+      email: 'second@example.invalid',
+    });
+
+    const second = await signIn();
+    const before = [...repository.users.values()].map((user) => ({ ...user }));
+
+    for (const token of [first.token, second.token]) {
+      expect(await service.resolve({ kind: 'account', binding: token })).toMatchObject({
+        planRevisionId: 'local-pro-preview',
+        capabilities: ['ranked_matches.all', 'job_comparison.all', 'resume_review'],
+        accessEndsAt: '2026-10-06T12:00:00.000Z',
+      });
+    }
+
+    expect([...repository.users.values()]).toEqual(before);
+    expect((await service.resolve({ kind: 'guest', binding: '' })).capabilities).toEqual([]);
+    await expect(service.resolve({ kind: 'account', binding: 'forged' })).rejects.toThrow();
+    setTime('2026-10-06T12:00:00Z');
+
+    expect((await service.resolve({ kind: 'account', binding: first.token })).capabilities).toEqual(
+      [],
+    );
+  });
+
+  it('never grants preview access after a session is revoked or the account is disabled', async () => {
+    const { service, signIn, repository } = setup('2026-10-06T12:00:00Z');
+    const first = await signIn();
+
+    await service.logout(first.token, first.session.csrfToken);
+    await expect(service.resolve({ kind: 'account', binding: first.token })).rejects.toThrow();
+
+    const second = await signIn();
+
+    repository.users.get(second.session.user.id)!.state = 'disabled';
+    await expect(service.resolve({ kind: 'account', binding: second.token })).rejects.toThrow();
+  });
+
   it('requires a session and CSRF to delete, removes all sessions, and permits fresh registration', async () => {
     const { service, repository, signIn } = setup();
     const first = await signIn();

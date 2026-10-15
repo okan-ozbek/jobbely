@@ -1,7 +1,7 @@
 import { createHash, randomBytes, timingSafeEqual } from 'node:crypto';
 import type { AccountRepository, IdentityProvider } from '../../ports/accounts.js';
 import type { MatchingAccessProvider, MatchingSubject } from '../../ports/account-access.js';
-import { AccountAccessError, freeAccess } from '../../domain/accounts/access.js';
+import { AccountAccessError, freeAccess, paidCapabilities } from '../../domain/accounts/access.js';
 import type { SignInProvider } from '../../domain/accounts/identity.js';
 import {
   sessionAbsoluteMs,
@@ -27,6 +27,7 @@ export class Accounts implements MatchingAccessProvider {
     private readonly repository: AccountRepository,
     private readonly providers: readonly IdentityProvider[],
     private readonly clock: () => Date = () => new Date(),
+    private readonly proPreviewEndsAt: string | null = null,
   ) {}
 
   availableProviders() {
@@ -188,6 +189,19 @@ export class Accounts implements MatchingAccessProvider {
     }
 
     const session = await this.current(subject.binding);
+
+    const previewEnd = Date.parse(this.proPreviewEndsAt ?? '');
+
+    if (Number.isFinite(previewEnd) && this.clock().getTime() < previewEnd) {
+      return {
+        ...freeAccess(session!.user.id),
+        planRevisionId: 'local-pro-preview',
+        capabilities: [...paidCapabilities],
+        accessEndsAt: new Date(
+          Math.min(previewEnd, Date.parse(session!.absoluteExpiresAt)),
+        ).toISOString(),
+      };
+    }
 
     // Billing projection is deliberately not enabled until Stripe reconciliation is implemented.
     return freeAccess(session!.user.id);
